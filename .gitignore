@@ -1,0 +1,4 @@
+build/
+Builds/
+sandBox/
+*.pyc
