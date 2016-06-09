@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="p6kwk3" name="JUCEPython" projectType="audioplug" version="1.0.0"
+              bundleIdentifier="com.yourcompany.JUCEPython" includeBinaryInAppConfig="1"
+              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
+              buildAAX="0" pluginName="JUCEPython" pluginDesc="JUCEPython"
+              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginCode="P6kw" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="1"
+              pluginProducesMidiOut="1" pluginIsMidiEffectPlugin="1" pluginEditorRequiresKeys="0"
+              pluginAUExportPrefix="JUCEPythonAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.JUCEPython"
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.1">
+  <MAINGROUP id="wIfrjA" name="JUCEPython">
+    <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
+      <FILE id="a8P8mA" name="pythonWrap.h" compile="0" resource="0" file="Source/pythonWrap.h"/>
+      <FILE id="K8JZrl" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="K0hucz" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="dJDdys" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks="Python"
+               extraCompilerFlags="" extraLinkerFlags="" customXcodeResourceFolders="python">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
+                       headerPath="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
+                       libraryPath=""/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>
+        <CONFIGURATION name="Debug_custom" isDebug="1" optimisation="1" targetName="JUCEPython"
+                       headerPath="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
+                       defines="CUSTOM_PYTHON=1"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+</JUCERPROJECT>
