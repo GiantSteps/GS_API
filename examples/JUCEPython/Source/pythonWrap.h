@@ -14,7 +14,7 @@
 //#define CUSTOM_PYTHON
 
 #ifndef CUSTOM_PYTHON
-#include <Python/Python.h>
+#include <Python.h>
 #else
 #include "Python.h"
 #endif
