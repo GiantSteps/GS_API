@@ -46,14 +46,16 @@ public:
 	length(_length),
 	pitch(_pitch),
 	velocity(_velocity),
-	eventIds(_eventIds),
+	eventTags(_eventIds),
 	ids(_Ids)
 	{}
+	
+	
 	double onTime;
 	double length;
 	int pitch;
 	int velocity;
-	vector<int> eventIds;
+	vector<int> eventTags;
 	
 	
 	 vector<string> getTagNames() const;

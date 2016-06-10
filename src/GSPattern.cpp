@@ -14,7 +14,7 @@ GSPattern::GSPattern(){};
 GSPattern::~GSPattern(){};
 
 void GSPattern::addEvent(const vector<string> & tags,GSPatternEvent && event){
-	event.eventIds = allTags.getOrAddTagIds(tags);
+	event.eventTags = allTags.getOrAddTagIds(tags);
 	events.emplace_back(event);
 }
 

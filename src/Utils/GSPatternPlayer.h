@@ -14,7 +14,7 @@
 
 
 #include "GSPattern.h"
-
+#include <map>
 
 typedef struct MIDIMapEntry{
 	MIDIMapEntry(int ch,int pi,int vel):channel(ch),pitch(pi),velocity(vel){}
@@ -39,7 +39,7 @@ public:
 	int baseNote = 60;
 	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
 		vector<MIDIMapEntry> res;
-		for(auto & ev:e.eventIds){
+		for(auto & ev:e.eventTags){
 			res.push_back(MIDIMapEntry(1,ev+baseNote,e.velocity));
 		}
 		return res;

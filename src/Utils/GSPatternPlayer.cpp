@@ -9,7 +9,7 @@
 */
 
 #include "GSPatternPlayer.h"
-
+#include <cmath>
 
 void GSPatternPlayer::updatePlayHead(double pH){
 	double lastPlayHead=playHead;

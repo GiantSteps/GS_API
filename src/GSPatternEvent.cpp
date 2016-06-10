@@ -14,9 +14,9 @@
 vector<string>  GSPatternEvent::getTagNames() const{
 	vector<string> res;
 	if(ids!=nullptr){
-		res.resize(eventIds.size());
+		res.resize(eventTags.size());
 		int idx = 0;
-		for(auto i:eventIds){
+		for(auto i:eventTags){
 			res [idx]= ids->getTagForId(i);
 			idx++;
 		}
