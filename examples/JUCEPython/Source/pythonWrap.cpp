@@ -31,7 +31,7 @@ void PythonWrap::initPath(){
 #ifdef CUSTOM_PYTHON
     Py_SetProgramName("python2.7");
 
-    Py_SetPythonHome(currentVSTPath+"/../Frameworks/Python.framework/Versions/2.7");
+    Py_SetPythonHome(getVSTPath()+"/../Frameworks/Python.framework/Versions/2.7");
 #endif
 
     cout << Py_GetPath() << endl;
