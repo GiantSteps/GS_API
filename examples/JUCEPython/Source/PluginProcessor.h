@@ -12,7 +12,9 @@
 #define PLUGINPROCESSOR_H_INCLUDED
 
 #include "JuceHeader.h"
-#include "pythonWrap.h"
+#include "GS_API.h"
+#include "GSPatternPlayer.h"
+#include "PyJUCEAPI.h"
 
 //==============================================================================
 /**
@@ -23,7 +25,10 @@ public:
     //==============================================================================
     JucepythonAudioProcessor();
     ~JucepythonAudioProcessor();
-    PythonWrap py;
+
+    GSPatternPlayer player;
+    GSLiveMapper mapper;
+    PyJUCEAPI pyAPI;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

@@ -75,7 +75,7 @@ typedef enum _PyBindGenWrapperFlags {
 #endif
 
 
-#include "../src/GSPattern.h"
+#include "GSPattern.h"
 /* --- forward declarations --- */
 
 
@@ -350,7 +350,7 @@ PyObject *
 _wrap_PyGSPattern___len__(PyGSPattern *self)
 {
     PyObject *py_retval;
-    unsigned long retval;
+//    unsigned long retval;
 
     
     py_retval = PyLong_FromSize_t(self->obj->events.size());

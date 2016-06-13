@@ -13,7 +13,7 @@
 
 
 //==============================================================================
-JucepythonAudioProcessor::JucepythonAudioProcessor()
+JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper)
 {
 
 }
@@ -81,17 +81,9 @@ void JucepythonAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
 
-    if(!Py_IsInitialized())
-    {
-        py.initPath();
-        Py_Initialize();
-    }
+    pyAPI.init();
 
-    File f (py.getVSTPath()+"/../../Resources/python");
-    py.initSearchPath();
-    py.addSearchPath(f.getFullPathName().toStdString());
-    py.load();
-    DBG(py.test("lala"));
+//    player.setMidiMapper(&mapper);
 }
 
 void JucepythonAudioProcessor::releaseResources()
@@ -129,7 +121,16 @@ void JucepythonAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 {
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
-
+    juce::AudioPlayHead::CurrentPositionInfo ct;
+    getPlayHead()->getCurrentPosition(ct);
+    double pos = ct.timeInSeconds/60.0*ct.bpm;
+    player.updatePlayHead(pos);
+    for(auto & n:player.getCurrentNoteOn()){
+        midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);
+    }
+    for(auto & n:player.getCurrentNoteOff()){
+        midiMessages.addEvent(MidiMessage::noteOff(1,n.pitch,(uint8)n.velocity),0);
+    }
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).

@@ -27,7 +27,8 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    TextButton reloadB;
+    TextButton reloadB,generateB;
+
 
 private:
     // This reference is provided as a quick way for your editor to

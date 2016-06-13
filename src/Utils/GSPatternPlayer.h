@@ -34,18 +34,18 @@ public:
 };
 
 
-class GSDummyMapper:public GSPatternMidiMapper{
-public:
-	int baseNote = 60;
-	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
-		vector<MIDIMapEntry> res;
-		for(auto & ev:e.eventTags){
-			res.push_back(MIDIMapEntry(1,ev+baseNote,e.velocity));
-		}
-		return res;
-	}
-	
-};
+//class GSDummyMapper:public GSPatternMidiMapper{
+//public:
+//	int baseNote = 60;
+//	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
+//		vector<MIDIMapEntry> res;
+//		for(auto & ev:e.eventTags){
+//			res.push_back(MIDIMapEntry(1,ev+baseNote,e.velocity));
+//		}
+//		return res;
+//	}
+//	
+//};
 
 class GSLiveMapper:public GSPatternMidiMapper{
 public:
@@ -81,7 +81,7 @@ public:
 		double startTime;
 	}MIDINoteEntries;
 	
-	GSPatternPlayer(GSPatternMidiMapper * mmap):isLooping(true),ownedMapper(mmap){}
+	GSPatternPlayer(GSPatternMidiMapper * mmap):isLooping(true),ownedMapper(mmap),currentPattern(nullptr){}
 	
 	
 	void updatePlayHead(double pH);
@@ -89,10 +89,10 @@ public:
 	vector<MIDIMapEntry> &getCurrentNoteOff();
 	
 	
-	GSPattern currentPattern;
+	GSPattern * currentPattern;
 	
 	void setMidiMapper(GSPatternMidiMapper * mmap);
-	void setPattern(GSPattern &);
+	void setPattern(GSPattern *);
 	void stop();
 	bool isLooping;
 private:

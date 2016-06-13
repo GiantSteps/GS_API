@@ -92,6 +92,19 @@ bool PythonWrap::load(){
 
 bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 
+PyObject * PythonWrap::callFunction(const string & func){
+    PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
+    if(pyFunc ==nullptr){
+        cout << "function not found : " << func << endl;
+        return nullptr;
+    }
+
+    return PyObject_CallObject(pyFunc,nullptr);
+
+    
+
+}
+
 string PythonWrap::test(const string& s){
 
 

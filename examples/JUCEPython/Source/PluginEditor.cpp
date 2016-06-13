@@ -21,7 +21,8 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
     owner = dynamic_cast<JucepythonAudioProcessor*>(&p);
     setSize (400, 300);
     addAndMakeVisible(reloadB);
-    reloadB.setColour(TextButton::buttonColourId,owner->py.isFileLoaded()?Colours::green:Colours::red);
+    addAndMakeVisible(generateB);
+    reloadB.setColour(TextButton::buttonColourId,owner->pyAPI.isLoaded()?Colours::green:Colours::red);
     reloadB.addListener(this);
 }
 
@@ -44,19 +45,23 @@ void JucepythonAudioProcessorEditor::resized()
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
     Rectangle<int> area = getLocalBounds();
-    Rectangle<int> header = area.removeFromTop(20);
-    reloadB.setBounds(header.removeFromLeft(20));
+    Rectangle<int> header = area.removeFromTop(30);
+    reloadB.setBounds(header.removeFromLeft(60));
+    generateB.setBounds(header.removeFromLeft(60));
 }
 
 void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
     if(b==&reloadB){
-        bool loadOK = owner->py.load();
-        if(loadOK){
+        owner->pyAPI.load();
+        if(owner->pyAPI.isLoaded()){
             reloadB.setColour(TextButton::buttonColourId,Colours::green);
 //            reloadB.setColour(Button::colo)
         }
         else
             reloadB.setColour(TextButton::buttonColourId,Colours::red);
+    }
+    else if(b==&generateB){
+        owner->player.setPattern(owner->pyAPI.getNewPattern());
     }
 
 }

@@ -23,6 +23,33 @@
             file="Source/PluginEditor.cpp"/>
       <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
+    <GROUP id="{28874B65-F313-7096-819C-A589B9634659}" name="GSAPI">
+      <GROUP id="{7B524538-94DF-1F8F-3E17-1D2151D2EC91}" name="3rdParty">
+        <GROUP id="{0FB31AE9-DD46-8925-8CF1-C3713D78E6D9}" name="json">
+          <FILE id="aUouTX" name="json.hpp" compile="0" resource="0" file="../../src/3rdParty/json/json.hpp"/>
+        </GROUP>
+      </GROUP>
+      <GROUP id="{6B741C0D-29EE-EC5C-BEA5-155079E49D8F}" name="Utils">
+        <FILE id="tTpIxY" name="GSPatternPlayer.cpp" compile="1" resource="0"
+              file="../../src/Utils/GSPatternPlayer.cpp"/>
+        <FILE id="lv3Qsx" name="GSPatternPlayer.h" compile="0" resource="0"
+              file="../../src/Utils/GSPatternPlayer.h"/>
+      </GROUP>
+      <FILE id="ExHtrI" name="GS_API.h" compile="0" resource="0" file="../../src/GS_API.h"/>
+      <FILE id="nspHIL" name="GSPattern.cpp" compile="1" resource="0" file="../../src/GSPattern.cpp"/>
+      <FILE id="WTmCa5" name="GSPattern.h" compile="0" resource="0" file="../../src/GSPattern.h"/>
+      <FILE id="XUJ1e1" name="GSPatternEvent.cpp" compile="1" resource="0"
+            file="../../src/GSPatternEvent.cpp"/>
+      <FILE id="PUGQCN" name="GSPatternEvent.h" compile="0" resource="0"
+            file="../../src/GSPatternEvent.h"/>
+      <FILE id="ouLIJw" name="GSStyle.cpp" compile="1" resource="0" file="../../src/GSStyle.cpp"/>
+      <FILE id="YJJ2nI" name="GSStyle.h" compile="0" resource="0" file="../../src/GSStyle.h"/>
+      <FILE id="EizpRw" name="JSONSerializable.cpp" compile="1" resource="0"
+            file="../../src/JSONSerializable.cpp"/>
+      <FILE id="DBpLz0" name="JSONSerializable.h" compile="0" resource="0"
+            file="../../src/JSONSerializable.h"/>
+    </GROUP>
+    <FILE id="HAH6FA" name="PyGSPattern.cpp" compile="1" resource="0" file="../../pythonWrap/generated/PyGSPattern.cpp"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks=""
