@@ -13,7 +13,7 @@ cppSources = libSources+bindingSources
 
 
 from pythonWrap.gen import genBindings
-genBindings.generate(bindingsFolder)
+# genBindings.generate(bindingsFolder)
 
 
 import distutils.ccompiler
@@ -25,7 +25,7 @@ if __name__ == '__main__':
       toAppend = ['clean','--all']
       # toAppend = ['remove']
       toAppend = ['build']
-      # toAppend  = ['install']
+      toAppend  = ['install']
       if len(sys.argv)==1:
             for s in toAppend:
                   sys.argv.append(s)

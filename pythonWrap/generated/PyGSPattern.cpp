@@ -135,6 +135,9 @@ extern PyTypeObject Pystd__vector__lt__GSPatternEvent__gt__Iter_Type;
 
 int _wrap_convert_py2c__std__vector__lt___GSPatternEvent___gt__(PyObject *arg, std::vector<GSPatternEvent> *container);
 
+int _wrap_convert_py2c__GSPattern(PyObject *value, GSPattern *address);
+
+
 int _wrap_convert_py2c__std__string(PyObject *value, std::string *address);
 
 
@@ -325,7 +328,38 @@ _wrap_PyGSPattern__tp_init(PyGSPattern *self, PyObject *args, PyObject *kwargs)
     return 0;
 }
 
+
+PyObject *
+_wrap_PyGSPattern_addEvent(PyGSPattern *self, PyObject *args, PyObject *kwargs)
+{
+    PyObject *py_retval;
+    PyGSPatternEvent *event;
+    const char *keywords[] = {"event", NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "O!", (char **) keywords, &PyGSPatternEvent_Type, &event)) {
+        return NULL;
+    }
+    self->obj->addEvent(*((PyGSPatternEvent *) event)->obj);
+    Py_INCREF(Py_None);
+    py_retval = Py_None;
+    return py_retval;
+}
+
+
+PyObject *
+_wrap_PyGSPattern___len__(PyGSPattern *self)
+{
+    PyObject *py_retval;
+    unsigned long retval;
+
+    
+    py_retval = PyLong_FromSize_t(self->obj->events.size());
+    cout << PyObject_Str(py_retval) << endl;
+    return py_retval;
+}
+
 static PyMethodDef PyGSPattern_methods[] = {
+    {(char *) "addEvent", (PyCFunction) _wrap_PyGSPattern_addEvent, METH_KEYWORDS|METH_VARARGS, NULL },
     {NULL, NULL, 0, NULL}
 };
 
@@ -373,6 +407,65 @@ _wrap_PyGSPattern__tp_richcompare (PyGSPattern *PYBINDGEN_UNUSED(self), PyGSPatt
     return Py_NotImplemented;
 }
 
+
+int _wrap_convert_py2c__GSPattern(PyObject *value, GSPattern *address)
+{
+    PyObject *py_retval;
+    PyGSPattern *tmp_GSPattern;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "O!", &PyGSPattern_Type, &tmp_GSPattern)) {
+        Py_DECREF(py_retval);
+        return 0;
+    }
+    *address = *tmp_GSPattern->obj;
+    Py_DECREF(py_retval);
+    return 1;
+}
+
+
+static Py_ssize_t
+GSPattern__sq_length (PyGSPattern *py_self)
+{
+    PyObject *py_result;
+    Py_ssize_t result;
+
+    py_result = _wrap_PyGSPattern___len__(py_self);
+    if (py_result == NULL) {
+        PyErr_SetString(PyExc_RuntimeError, "Unknown error in attempting to determine __len__.");
+        Py_XDECREF(py_result);
+        return -1;
+    }
+    result = PyLong_AsSsize_t(py_result);
+    Py_DECREF(py_result);
+    return result;
+}
+
+
+
+static PySequenceMethods GSPattern__py_sequence_methods = {
+    (lenfunc) GSPattern__sq_length,
+    (binaryfunc) NULL,
+    (ssizeargfunc) NULL,
+    (ssizeargfunc) NULL,
+#if PY_MAJOR_VERSION < 3
+    (ssizessizeargfunc) NULL,
+#else
+    NULL,
+#endif
+    (ssizeobjargproc) NULL,
+#if PY_MAJOR_VERSION < 3
+    (ssizessizeobjargproc) NULL,
+#else
+    NULL,
+#endif
+    (objobjproc) NULL,
+    /* Added in release 2.0 */
+    (binaryfunc) NULL,
+    (ssizeargfunc) NULL,
+};
+
+
 PyTypeObject PyGSPattern_Type = {
     PyVarObject_HEAD_INIT(NULL, 0)
     (char *) "gsapi.GSPattern",            /* tp_name */
@@ -386,7 +479,7 @@ PyTypeObject PyGSPattern_Type = {
     (cmpfunc)NULL,           /* tp_compare */
     (reprfunc)NULL,             /* tp_repr */
     (PyNumberMethods*)NULL,     /* tp_as_number */
-    (PySequenceMethods*)NULL, /* tp_as_sequence */
+    (PySequenceMethods*)&GSPattern__py_sequence_methods, /* tp_as_sequence */
     (PyMappingMethods*)NULL,   /* tp_as_mapping */
     (hashfunc)NULL,             /* tp_hash */
     (ternaryfunc)NULL,          /* tp_call */
@@ -425,6 +518,142 @@ PyTypeObject PyGSPattern_Type = {
 
 
 
+static PyObject* _wrap_PyGSPatternEvent__get_length(PyGSPatternEvent *self, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "d", self->obj->length);
+    return py_retval;
+}
+static int _wrap_PyGSPatternEvent__set_length(PyGSPatternEvent *self, PyObject *value, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "d", &self->obj->length)) {
+        Py_DECREF(py_retval);
+        return -1;
+    }
+    Py_DECREF(py_retval);
+    return 0;
+}
+static PyObject* _wrap_PyGSPatternEvent__get_start(PyGSPatternEvent *self, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "d", self->obj->start);
+    return py_retval;
+}
+static int _wrap_PyGSPatternEvent__set_start(PyGSPatternEvent *self, PyObject *value, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "d", &self->obj->start)) {
+        Py_DECREF(py_retval);
+        return -1;
+    }
+    Py_DECREF(py_retval);
+    return 0;
+}
+static PyObject* _wrap_PyGSPatternEvent__get_pitch(PyGSPatternEvent *self, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "i", self->obj->pitch);
+    return py_retval;
+}
+static int _wrap_PyGSPatternEvent__set_pitch(PyGSPatternEvent *self, PyObject *value, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "i", &self->obj->pitch)) {
+        Py_DECREF(py_retval);
+        return -1;
+    }
+    Py_DECREF(py_retval);
+    return 0;
+}
+static PyObject* _wrap_PyGSPatternEvent__get_velocity(PyGSPatternEvent *self, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "i", self->obj->velocity);
+    return py_retval;
+}
+static int _wrap_PyGSPatternEvent__set_velocity(PyGSPatternEvent *self, PyObject *value, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "i", &self->obj->velocity)) {
+        Py_DECREF(py_retval);
+        return -1;
+    }
+    Py_DECREF(py_retval);
+    return 0;
+}
+static PyObject* _wrap_PyGSPatternEvent__get_eventTags(PyGSPatternEvent *self, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+    Pystd__vector__lt__std__string__gt__ *py_std__vector__lt__std__string__gt__;
+
+    py_std__vector__lt__std__string__gt__ = PyObject_New(Pystd__vector__lt__std__string__gt__, &Pystd__vector__lt__std__string__gt___Type);
+    py_std__vector__lt__std__string__gt__->obj = new std::vector<std::string>(self->obj->eventTags);
+    py_retval = Py_BuildValue((char *) "N", py_std__vector__lt__std__string__gt__);
+    return py_retval;
+}
+static int _wrap_PyGSPatternEvent__set_eventTags(PyGSPatternEvent *self, PyObject *value, void * PYBINDGEN_UNUSED(closure))
+{
+    PyObject *py_retval;
+
+    py_retval = Py_BuildValue((char *) "(O)", value);
+    if (!PyArg_ParseTuple(py_retval, (char *) "O&", _wrap_convert_py2c__std__vector__lt___std__string___gt__, &self->obj->eventTags)) {
+        Py_DECREF(py_retval);
+        return -1;
+    }
+    Py_DECREF(py_retval);
+    return 0;
+}
+static PyGetSetDef PyGSPatternEvent__getsets[] = {
+    {
+        (char*) "start", /* attribute name */
+        (getter) _wrap_PyGSPatternEvent__get_start, /* C function to get the attribute */
+        (setter) _wrap_PyGSPatternEvent__set_start, /* C function to set the attribute */
+        NULL, /* optional doc string */
+        NULL /* optional additional data for getter and setter */
+    },
+    {
+        (char*) "length", /* attribute name */
+        (getter) _wrap_PyGSPatternEvent__get_length, /* C function to get the attribute */
+        (setter) _wrap_PyGSPatternEvent__set_length, /* C function to set the attribute */
+        NULL, /* optional doc string */
+        NULL /* optional additional data for getter and setter */
+    },
+    {
+        (char*) "velocity", /* attribute name */
+        (getter) _wrap_PyGSPatternEvent__get_velocity, /* C function to get the attribute */
+        (setter) _wrap_PyGSPatternEvent__set_velocity, /* C function to set the attribute */
+        NULL, /* optional doc string */
+        NULL /* optional additional data for getter and setter */
+    },
+    {
+        (char*) "eventTags", /* attribute name */
+        (getter) _wrap_PyGSPatternEvent__get_eventTags, /* C function to get the attribute */
+        (setter) _wrap_PyGSPatternEvent__set_eventTags, /* C function to set the attribute */
+        NULL, /* optional doc string */
+        NULL /* optional additional data for getter and setter */
+    },
+    {
+        (char*) "pitch", /* attribute name */
+        (getter) _wrap_PyGSPatternEvent__get_pitch, /* C function to get the attribute */
+        (setter) _wrap_PyGSPatternEvent__set_pitch, /* C function to set the attribute */
+        NULL, /* optional doc string */
+        NULL /* optional additional data for getter and setter */
+    },
+    { NULL, NULL, NULL, NULL, NULL }
+};
 
 
 static int
@@ -573,7 +802,7 @@ PyTypeObject PyGSPatternEvent_Type = {
     (iternextfunc)NULL,     /* tp_iternext */
     (struct PyMethodDef*)PyGSPatternEvent_methods, /* tp_methods */
     (struct PyMemberDef*)0,              /* tp_members */
-    0,                     /* tp_getset */
+    PyGSPatternEvent__getsets,                     /* tp_getset */
     NULL,                              /* tp_base */
     NULL,                              /* tp_dict */
     (descrgetfunc)NULL,    /* tp_descr_get */

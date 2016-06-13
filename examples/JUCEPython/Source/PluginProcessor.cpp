@@ -88,10 +88,9 @@ void JucepythonAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     }
 
     File f (py.getVSTPath()+"/../../Resources/python");
-    string pathToAppend = "import sys;\nsys.path.append(\""+f.getFullPathName().toStdString()+"\");\nprint sys.path;";
-//        string pathToAppend = "import sys;\nsys.path.append(\"/Users/Tintamar/Dev/GS_API/sandBox/JUCEPython/Resources\");\nprint sys.path;";
-    cout <<pathToAppend << endl;
-    PyRun_SimpleString(pathToAppend.c_str());
+    py.initSearchPath();
+    py.addSearchPath(f.getFullPathName().toStdString());
+    py.load();
     DBG(py.test("lala"));
 }
 

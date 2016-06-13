@@ -11,6 +11,8 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.1">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <FILE id="ba77Pr" name="PyJUCEAPI.cpp" compile="1" resource="0" file="Source/PyJUCEAPI.cpp"/>
+      <FILE id="jnIpwV" name="PyJUCEAPI.h" compile="0" resource="0" file="Source/PyJUCEAPI.h"/>
       <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
       <FILE id="a8P8mA" name="pythonWrap.h" compile="0" resource="0" file="Source/pythonWrap.h"/>
       <FILE id="K8JZrl" name="PluginProcessor.cpp" compile="1" resource="0"
@@ -24,17 +26,14 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks=""
-               extraCompilerFlags="-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch x86_64 -arch i386 -g -pipe -fno-common -fno-strict-aliasing -fwrapv -DENABLE_DTRACE -DMACOSX -DNDEBUG -Wall -Wstrict-prototypes -Wshorten-64-to-32 -DNDEBUG -g -fwrapv -Os -Wall -Wstrict-prototypes -DENABLE_DTRACE&#10;"
-               extraLinkerFlags="-L/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config"
+               extraCompilerFlags="-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -g -Os -pipe -fno-common -fno-strict-aliasing -fwrapv -DENABLE_DTRACE -DMACOSX -DNDEBUG -Wall -Wstrict-prototypes -Wshorten-64-to-32 -DNDEBUG -g -fwrapv -Os -Wall -Wstrict-prototypes -DENABLE_DTRACE"
+               extraLinkerFlags="-L/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config "
                customXcodeResourceFolders="python" externalLibraries="python2.7">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
                        headerPath="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
                        libraryPath=""/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>
-        <CONFIGURATION name="Debug_custom" isDebug="1" optimisation="1" targetName="JUCEPython"
-                       headerPath="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
-                       defines="CUSTOM_PYTHON=1"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
@@ -43,23 +42,37 @@
         <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
-        <MODULEPATH id="juce_cryptography" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_devices" path="../../../JUCE/modules"/>
-        <MODULEPATH id="juce_audio_formats" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags="-I/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes"
+               extraLinkerFlags="-L/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config"
+               extraDefs="CUSTOM_PYTHON=1" externalLibraries="python2.7" customXcodeResourceFolders="python">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
+                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
         <MODULEPATH id="juce_audio_plugin_client" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_events" showAllCode="1" useLocalCopy="0"/>
     <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0"/>

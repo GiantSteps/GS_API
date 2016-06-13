@@ -26,16 +26,20 @@ using namespace std;
 class PythonWrap{
     public :
 
-    PythonWrap(){}
+    PythonWrap():pluginModule(nullptr){}
     void initPath();
     string test(const string& s);
     string getVSTPath();
-    bool loadFile();
-
+    bool load();
+    void initSearchPath();
+    void addSearchPath(const string &);
+    bool isFileLoaded();
 
 private:
-    void prependPath(const string &env,const string& newpath);
+    void prependEnvPath(const string &env,const string& newpath);
 
+
+    PyObject* pluginModule;
 
 };
 
