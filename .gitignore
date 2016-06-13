@@ -4,3 +4,4 @@ sandBox/
 dist/
 *.pyc
 *egg-info/
+*.log

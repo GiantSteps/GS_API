@@ -21,6 +21,7 @@ public:
 	GSPattern();
 	virtual ~GSPattern();
 	
+	string name;
 	double originBPM;
 	int timeSigNumerator,timeSigDenominator;
 	double length;
