@@ -426,8 +426,28 @@ PyTypeObject PyGSPattern_Type = {
 
 
 
+
 static int
-_wrap_PyGSPatternEvent__tp_init(PyGSPatternEvent *self, PyObject *args, PyObject *kwargs)
+_wrap_PyGSPatternEvent__tp_init__0(PyGSPatternEvent *self, PyObject *args, PyObject *kwargs, PyObject **return_exception)
+{
+    const char *keywords[] = {NULL};
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "", (char **) keywords)) {
+        {
+            PyObject *exc_type, *traceback;
+            PyErr_Fetch(&exc_type, return_exception, &traceback);
+            Py_XDECREF(exc_type);
+            Py_XDECREF(traceback);
+        }
+        return -1;
+    }
+    self->obj = new GSPatternEvent();
+    self->flags = PYBINDGEN_WRAPPER_FLAG_NONE;
+    return 0;
+}
+
+static int
+_wrap_PyGSPatternEvent__tp_init__1(PyGSPatternEvent *self, PyObject *args, PyObject *kwargs, PyObject **return_exception)
 {
     double start;
     double length;
@@ -437,11 +457,41 @@ _wrap_PyGSPatternEvent__tp_init(PyGSPatternEvent *self, PyObject *args, PyObject
     const char *keywords[] = {"start", "length", "pitch", "velocity", "tags", NULL};
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "ddiiO&", (char **) keywords, &start, &length, &pitch, &velocity, _wrap_convert_py2c__std__vector__lt___std__string___gt__, &tags_value)) {
+        {
+            PyObject *exc_type, *traceback;
+            PyErr_Fetch(&exc_type, return_exception, &traceback);
+            Py_XDECREF(exc_type);
+            Py_XDECREF(traceback);
+        }
         return -1;
     }
     self->obj = new GSPatternEvent(start, length, pitch, velocity, tags_value);
     self->flags = PYBINDGEN_WRAPPER_FLAG_NONE;
     return 0;
+}
+
+int _wrap_PyGSPatternEvent__tp_init(PyGSPatternEvent *self, PyObject *args, PyObject *kwargs)
+{
+    int retval;
+    PyObject *error_list;
+    PyObject *exceptions[2] = {0,};
+    retval = _wrap_PyGSPatternEvent__tp_init__0(self, args, kwargs, &exceptions[0]);
+    if (!exceptions[0]) {
+        return retval;
+    }
+    retval = _wrap_PyGSPatternEvent__tp_init__1(self, args, kwargs, &exceptions[1]);
+    if (!exceptions[1]) {
+        Py_DECREF(exceptions[0]);
+        return retval;
+    }
+    error_list = PyList_New(2);
+    PyList_SET_ITEM(error_list, 0, PyObject_Str(exceptions[0]));
+    Py_DECREF(exceptions[0]);
+    PyList_SET_ITEM(error_list, 1, PyObject_Str(exceptions[1]));
+    Py_DECREF(exceptions[1]);
+    PyErr_SetObject(PyExc_TypeError, error_list);
+    Py_DECREF(error_list);
+    return -1;
 }
 
 static PyMethodDef PyGSPatternEvent_methods[] = {

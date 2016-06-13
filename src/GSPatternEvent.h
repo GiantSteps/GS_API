@@ -17,19 +17,19 @@ using namespace std;
 
 class GSPatternEvent{
 public:
-	
+	GSPatternEvent(){}
 	GSPatternEvent(const double _start,
 				   const double _length,
 				   const int _pitch,
 				   const int _velocity,
-				   const vector<string> & tags,
+				   const vector<string> & tags
 				   )
 	:
 	start(_start),
 	length(_length),
 	pitch(_pitch),
 	velocity(_velocity),
-	eventTags(_eventIds)
+	eventTags(tags)
 	{}
 	
 	

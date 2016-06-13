@@ -12,7 +12,7 @@
 
 
 vector<string>  GSPatternEvent::getTagNames() const{
-	return tags;	
+	return eventTags;	
 }
 
 

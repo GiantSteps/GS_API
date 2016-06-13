@@ -18,6 +18,7 @@ def generate(buildPath):
 
 	vecEv = mod.add_container('std::vector<std::string>', 'std::string', 'vector',custom_name="VecTags")
 	cl.add_instance_attribute('name','std::string')
+	ev.add_constructor([]);
 	ev.add_constructor([Parameter.new('double','start'),
 		Parameter.new('double','length'),
 		Parameter.new('int','pitch'),

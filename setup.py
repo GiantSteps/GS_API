@@ -10,7 +10,7 @@ bindingsFolder = "pythonWrap/generated/"
 libSources = [f for f in glob.glob(libFolder+"*.cpp")]
 bindingSources = [f for f in glob.glob(bindingsFolder+"*.cpp")]
 cppSources = libSources+bindingSources
-print cppSources
+
 
 from pythonWrap.gen import genBindings
 genBindings.generate(bindingsFolder)
@@ -33,14 +33,14 @@ if __name__ == '__main__':
 
 
 
-boost_include_dirs = "/usr/local/Cellar/boost/1.60.0_2/include"
+
 
 
 gsapiModule = Extension('gsapi',
                     # define_macros = [('MAJOR_VERSION', '1'),
                     #                  ('MINOR_VERSION', '0')],
-                    include_dirs = [libFolder,libFolder+"3rdParty/json/",boost_include_dirs],
-                    libraries = ["boost_python"],
+                    include_dirs = [libFolder,libFolder+"3rdParty/json/"],
+                    libraries = [],
                     extra_compile_args=['-std=c++11','-w'],
                     library_dirs = ['/usr/local/lib'],
                     

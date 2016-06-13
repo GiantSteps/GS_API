@@ -26,13 +26,12 @@ public:
 	int timeSigNumerator,timeSigDenominator;
 	double length;
 	
-	
-	GSPatternEventTags allTags;
+
 	vector<GSPatternEvent> events;
 	
 	// for dynamicly adding event
-	void addEvent(const vector<string> & tags,GSPatternEvent && );
-	void addEvent(GSPatternEvent && );
+	// void addEvent(const vector<string> & tags,GSPatternEvent && );
+	void addEvent(GSPatternEvent & );
 	
 	
 	
