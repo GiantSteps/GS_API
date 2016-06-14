@@ -81,7 +81,7 @@ public:
 		double startTime;
 	}MIDINoteEntries;
 	
-	GSPatternPlayer(GSPatternMidiMapper * mmap):isLooping(true),ownedMapper(mmap),currentPattern(nullptr){}
+	GSPatternPlayer(GSPatternMidiMapper * mmap):isLooping(true),ownedMapper(mmap){}
 	
 	
 	void updatePlayHead(double pH);
@@ -89,10 +89,10 @@ public:
 	vector<MIDIMapEntry> &getCurrentNoteOff();
 	
 	
-	GSPattern * currentPattern;
+	GSPattern  currentPattern;
 	
 	void setMidiMapper(GSPatternMidiMapper * mmap);
-	void setPattern(GSPattern *);
+	void setPattern(const GSPattern &);
 	void stop();
 	bool isLooping;
 private:

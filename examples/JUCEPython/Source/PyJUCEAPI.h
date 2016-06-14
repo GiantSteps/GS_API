@@ -26,7 +26,7 @@ public:
     void load();
     void init();
     bool isLoaded();
-    GSPattern * getNewPattern();
+    GSPattern  getNewPattern();
     PythonWrap  py ;
 };
 

@@ -49,7 +49,7 @@
       <FILE id="DBpLz0" name="JSONSerializable.h" compile="0" resource="0"
             file="../../src/JSONSerializable.h"/>
     </GROUP>
-    <FILE id="HAH6FA" name="PyGSPattern.cpp" compile="1" resource="0" file="../../pythonWrap/generated/PyGSPattern.cpp"/>
+    <FILE id="HAH6FA" name="PyGSPattern.h" compile="1" resource="0" file="../../pythonWrap/generated/PyGSPattern.h"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks=""

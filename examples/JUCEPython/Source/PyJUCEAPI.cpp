@@ -9,12 +9,25 @@
 */
 
 #include "PyJUCEAPI.h"
+//#include "PyGSPattern.h"
 
-
-GSPattern * PyJUCEAPI::getNewPattern(){
+GSPattern  PyJUCEAPI::getNewPattern(){
     PyObject * o = py.callFunction("onGenerateNew");
-    GSPattern * p;
-    _wrap_convert_py2c__GSPattern(o,p);
+    GSPattern p ;
+    if(o){
+//        PyGSPattern *tmp_GSPattern;
+//
+//        py_retval = Py_BuildValue((char *) "(O)", value);
+//        if (!PyArg_ParseTuple(py_retval, (char *) "O!", &PyGSPattern_Type, &tmp_GSPattern)) {
+//            Py_DECREF(py_retval);
+//            return 0;
+//        }
+//        *address = *tmp_GSPattern->obj;
+//        PyGSPattern *  tmp =reinterpret_cast<PyGSPattern *> (o);
+//        p = *tmp->obj;
+//        p = *o->obj;
+    _wrap_convert_py2c__GSPattern(o,&p);
+    }
     return p;
 }
 

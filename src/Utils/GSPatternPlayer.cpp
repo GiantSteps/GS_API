@@ -12,10 +12,10 @@
 #include <cmath>
 
 void GSPatternPlayer::updatePlayHead(double pH){
-    if(currentPattern==nullptr)return;
+    
 	double lastPlayHead=playHead;
 	if(isLooping){
-		playHead = fmod(pH,currentPattern->length);
+		playHead = fmod(pH,currentPattern.length);
 	}
 	if(lastPlayHead==playHead){
 		stop();
@@ -24,7 +24,7 @@ void GSPatternPlayer::updatePlayHead(double pH){
 	}
 	vector<MIDIMapEntry> newNotes;
 	
-	for(auto & n:currentPattern->events){
+	for(auto & n:currentPattern.events){
 		if (playHead>=n.start && playHead<n.start+n.length) {
 			vector<MIDIMapEntry> nNotes=ownedMapper->getMIDINoteForEvent(n);
 			if(nNotes.size()>0)
@@ -72,7 +72,7 @@ void GSPatternPlayer::updatePlayHead(double pH){
 	
 	
 }
-void GSPatternPlayer::setPattern(GSPattern *p){
+void GSPatternPlayer::setPattern(const GSPattern &p){
 	currentPattern = p;
 }
 

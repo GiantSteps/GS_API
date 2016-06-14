@@ -24,6 +24,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
     addAndMakeVisible(generateB);
     reloadB.setColour(TextButton::buttonColourId,owner->pyAPI.isLoaded()?Colours::green:Colours::red);
     reloadB.addListener(this);
+    generateB.addListener(this);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()

@@ -412,10 +412,14 @@ int _wrap_convert_py2c__GSPattern(PyObject *value, GSPattern *address)
 {
     PyObject *py_retval;
     PyGSPattern *tmp_GSPattern;
-
+    tmp_GSPattern = (PyGSPattern*)value;
+    *address = *tmp_GSPattern->obj;
+    
     py_retval = Py_BuildValue((char *) "(O)", value);
     if (!PyArg_ParseTuple(py_retval, (char *) "O!", &PyGSPattern_Type, &tmp_GSPattern)) {
         Py_DECREF(py_retval);
+        tmp_GSPattern = (PyGSPattern*)value;
+        *address = *tmp_GSPattern->obj;
         return 0;
     }
     *address = *tmp_GSPattern->obj;

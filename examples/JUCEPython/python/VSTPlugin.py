@@ -22,9 +22,9 @@ def onGenerateNew():
 def transformPattern(patt):
 	i = 0;
 	
-	print len(patt)
-	# for e in patt:
-	# 	print patt
+	l =list(patt.events)
+	for e in l:
+		print patt
 
 	patt.events = l
 		
