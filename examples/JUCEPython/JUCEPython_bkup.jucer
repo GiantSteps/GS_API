@@ -49,12 +49,34 @@
       <FILE id="DBpLz0" name="JSONSerializable.h" compile="0" resource="0"
             file="../../src/JSONSerializable.h"/>
     </GROUP>
+    <FILE id="HAH6FA" name="PyGSPattern.cpp" compile="1" resource="0" file="../../pythonWrap/generated/PyGSPattern.cpp"/>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags=""
-               extraLinkerFlags="-L/Users/Tintamar/Dev/GS_API/build/lib.macosx-10.11-intel-2.7/"
-               extraDefs="" externalLibraries="dl&#10;" customXcodeResourceFolders="python"
-               extraFrameworks="Python">
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks=""
+               extraCompilerFlags="-I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -g -Os -pipe -fno-common -fno-strict-aliasing -fwrapv -DENABLE_DTRACE -DMACOSX -DNDEBUG -Wall -Wstrict-prototypes -Wshorten-64-to-32 -DNDEBUG -g -fwrapv -Os -Wall -Wstrict-prototypes -DENABLE_DTRACE"
+               extraLinkerFlags="-L/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config "
+               customXcodeResourceFolders="python" externalLibraries="python2.7">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
+                       headerPath="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
+                       libraryPath=""/>
+        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags="-I/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -Xlinker"
+               extraLinkerFlags="/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config/libpython2.7.a"
+               extraDefs="CUSTOM_PYTHON=1" externalLibraries="&#10;dl" customXcodeResourceFolders="python">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
                        defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"/>

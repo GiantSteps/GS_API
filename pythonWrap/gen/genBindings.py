@@ -9,7 +9,7 @@ def generate(buildPath):
 	
 	mod = pybindgen.Module('gsapi')
 
-	sourcePath = '../src/'
+	sourcePath = '../../src/'
 	mod.add_include('"'+sourcePath+'GSPattern.h"')
 	cl = mod.add_class('GSPattern')
 	cl.add_constructor([])

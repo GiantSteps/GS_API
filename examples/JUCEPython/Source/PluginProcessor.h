@@ -16,6 +16,7 @@
 #include "GSPatternPlayer.h"
 #include "PyJUCEAPI.h"
 
+#define FAKETRANSPORT
 //==============================================================================
 /**
 */
@@ -27,8 +28,9 @@ public:
     ~JucepythonAudioProcessor();
 
     GSPatternPlayer player;
-    GSLiveMapper mapper;
+    GSDummyMapper mapper;
     PyJUCEAPI pyAPI;
+  double playHead;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

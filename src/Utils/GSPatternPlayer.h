@@ -34,18 +34,18 @@ public:
 };
 
 
-//class GSDummyMapper:public GSPatternMidiMapper{
-//public:
-//	int baseNote = 60;
-//	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
-//		vector<MIDIMapEntry> res;
+class GSDummyMapper:public GSPatternMidiMapper{
+public:
+	int baseNote = 0;
+	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
+		vector<MIDIMapEntry> res;
 //		for(auto & ev:e.eventTags){
-//			res.push_back(MIDIMapEntry(1,ev+baseNote,e.velocity));
+			res.push_back(MIDIMapEntry(1,e.pitch+baseNote,e.velocity));
 //		}
-//		return res;
-//	}
-//	
-//};
+		return res;
+	}
+	
+};
 
 class GSLiveMapper:public GSPatternMidiMapper{
 public:

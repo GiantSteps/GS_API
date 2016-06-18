@@ -34,9 +34,9 @@ public:
 	void addEvent(GSPatternEvent & );
 	
 	
-	
-	
-
+    void checkLengthValid();
+    double getLastNoteOff();
+    GSPatternEvent & getLastEvent();
 private:
 	
 	

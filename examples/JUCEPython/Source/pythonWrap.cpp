@@ -23,32 +23,111 @@ string PythonWrap::getVSTPath(){
     return currentVSTPath;
 }
 
+void PythonWrap::init(){
+    if(!Py_IsInitialized())
+    {
+
+        initPath();
+        Py_NoSiteFlag = 0;
+//        void * h = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW | RTLD_GLOBAL);
+//        if(h==nullptr){
+//            cout <<"preloading failed : " <<dlerror()<< endl;
+//        }
+
+        Py_InitializeEx(0);
+
+        if(Py_NoSiteFlag>0){
+            PyRun_SimpleString("import sys;print sys.executable;");
+            PyRun_SimpleString("print sys.path;");
+
+            PyRun_SimpleString("print sys.exec_prefix;");
+            PyRun_SimpleString("print sys.flags;");
+            PyRun_SimpleString("print sys.meta_path;");
+            PyRun_SimpleString("import pdb;import ctypes; ctypes.cdll.LoadLibrary('/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so');");
+            {
+                char * c =  dlerror();
+                if(c){
+                    cout<< "error dlopen : " << endl;
+                }
+            }
+
+            PyRun_SimpleString("print sys.getdlopenflags();");
+            PyRun_SimpleString("import dl;sys.setdlopenflags(dl.RTLD_NOW|dl.RTLD_GLOBAL) ");
+            PyRun_SimpleString("print sys.getdlopenflags();");
+
+            PyRun_SimpleString("import _locale");
+            PyErr_Print();
+            char * c =  dlerror();
+            if(c){
+                cout<< "error dlopen : " << endl;
+            }
+
+            PyRun_SimpleString("import os;");
+            PyRun_SimpleString("print os.path.abspath(_locale.__file__)");
+            PyRun_SimpleString("import site");
+            PyRun_SimpleString("print os.path.abspath(site.__file__)");
+
+        }
+
+    }
+}
 
 void PythonWrap::initPath(){
 
 #ifdef CUSTOM_PYTHON
 
+
+    Py_SetPythonHome("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7");
+
     Py_SetProgramName("/usr/local/bin/python");
 
-//    Py_SetPythonHome(getVSTPath()+"/../Frameworks/Python.framework/Versions/2.7");
+    printEnv("PATH") ;
+    prependEnvPath("DYLD_LIBRARY_PATH","/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload");
+    printEnv("LD_LIBRARY_PATH");
+    printEnv("PYTHONPATH") ;
+    printEnv("PYTHONHOME") ;
+    printEnv("DYLD_LIBRARY_PATH");
+    printEnv("DYLD_FALLBACK_LIBRARY_PATH");
+    printEnv("PYTHON_INCLUDE_DIR");
+
+
 #endif
 
-    cout << Py_GetPath() << endl;
-//        if(!Py_GetPythonHome()){
-//
-//        }
+    cout << "pre : " << Py_GetPrefix() <<endl;
+    cout <<"execpre : "<<Py_GetExecPrefix() << endl;
+    cout << "pypath : " << Py_GetPath() << endl;
+    cout << "version : " << Py_GetVersion() << endl;
+    cout << "compiler : " << Py_GetCompiler() << endl;
+    cout << "buildI : " << Py_GetBuildInfo() << endl;
+    //        if(!Py_GetPythonHome()){
+    //
+    //        }
     if(Py_GetPythonHome())
-        cout << Py_GetPythonHome() << endl;
-    cout << Py_GetProgramFullPath() << endl;
+        cout <<"home : "<< Py_GetPythonHome() << endl;
+    cout <<"full : " <<  Py_GetProgramFullPath() << endl;
 
 
 
 }
 
+void PythonWrap::printEnv(const string & p){
+    char * c = getenv(p.c_str());
+    cout<<p<<" : " ;
+    if(c){
+        cout<<c << endl;
+
+    }
+    else{
+        cout<< "isempty" << endl;
+    }
+
+}
+
 
 void PythonWrap::initSearchPath(){
-    PyRun_SimpleString("import sys");
+    PyRun_SimpleString("import sys;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
     addSearchPath("/usr/local/lib/python2.7/site-packages");
+
 }
 
 void PythonWrap::addSearchPath(const string & p){
@@ -75,16 +154,20 @@ bool PythonWrap::load(){
     // Import the module "plugin" (from the file "plugin.py")
     PyRun_SimpleString("print sys.path;");
 
-    
+
     PyObject* moduleName = PyString_FromString("VSTPlugin");
     Py_XDECREF(pluginModule);
     if (isFileLoaded()) {
         cout << "reload" << endl;
         PyRun_SimpleString("reload(VSTPlugin)");
     }
-    else{pluginModule = PyImport_Import(moduleName);}
-    // spitout errors if importing fails
-        PyRun_SimpleString("import VSTPlugin");
+    else{pluginModule = PyImport_Import(moduleName);
+        if(!pluginModule){
+            // spitout errors if importing fails
+            PyRun_SimpleString("import VSTPlugin");
+        }
+    }
+
 
     Py_DECREF(moduleName);
     return pluginModule!=nullptr;
@@ -101,7 +184,7 @@ PyObject * PythonWrap::callFunction(const string & func){
 
     return PyObject_CallObject(pyFunc,nullptr);
 
-    
+
 
 }
 
@@ -122,10 +205,10 @@ string PythonWrap::test(const string& s){
         // Free all temporary Python objects.
         Py_DECREF(transformFunc);
         Py_DECREF(argsTuple); Py_DECREF(result);
-            return resultStr;
+        return resultStr;
     }
     return "";
-
+    
     
 }
 

@@ -14,9 +14,9 @@
 //#define CUSTOM_PYTHON
 
 #ifndef CUSTOM_PYTHON
-#include <Python.h>
+#include <Python/Python.h>
 #else
-#include "Python.h"
+#include "/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7/Python.h"
 #endif
 
 #include <string>
@@ -30,6 +30,7 @@ class PythonWrap{
     void initPath();
     string test(const string& s);
     string getVSTPath();
+    void init();
     bool load();
     void initSearchPath();
     void addSearchPath(const string &);
@@ -38,7 +39,7 @@ class PythonWrap{
     
 private:
     void prependEnvPath(const string &env,const string& newpath);
-
+    void printEnv(const string & p);
 
     PyObject* pluginModule;
 

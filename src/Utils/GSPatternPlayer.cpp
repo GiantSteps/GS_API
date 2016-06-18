@@ -14,7 +14,7 @@
 void GSPatternPlayer::updatePlayHead(double pH){
     
 	double lastPlayHead=playHead;
-	if(isLooping){
+	if(isLooping && currentPattern.length>0){
 		playHead = fmod(pH,currentPattern.length);
 	}
 	if(lastPlayHead==playHead){

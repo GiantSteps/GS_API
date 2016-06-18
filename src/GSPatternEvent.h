@@ -17,7 +17,7 @@ using namespace std;
 
 class GSPatternEvent{
 public:
-	GSPatternEvent(){}
+    GSPatternEvent():length(0){}
 	GSPatternEvent(const double _start,
 				   const double _length,
 				   const int _pitch,
@@ -38,7 +38,10 @@ public:
 	int pitch;
 	int velocity;
 	vector<string> eventTags;
-	
+
+    bool isValid();
+
+    static GSPatternEvent empty;
 	
 	 vector<string> getTagNames() const;
 	

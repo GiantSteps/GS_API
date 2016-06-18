@@ -121,10 +121,14 @@ void JucepythonAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 {
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
+#ifndef FAKETRANSPORT
     juce::AudioPlayHead::CurrentPositionInfo ct;
     getPlayHead()->getCurrentPosition(ct);
-    double pos = ct.timeInSeconds/60.0*ct.bpm;
-    player.updatePlayHead(pos);
+    playHead = ct.timeInSeconds/60.0*ct.bpm;
+#else
+    playHead+=  buffer.getNumSamples()*1.0/getSampleRate();
+#endif
+    player.updatePlayHead(playHead);
     for(auto & n:player.getCurrentNoteOn()){
         midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);
     }

@@ -13,7 +13,7 @@ cppSources = libSources+bindingSources
 
 
 from pythonWrap.gen import genBindings
-# genBindings.generate(bindingsFolder)
+genBindings.generate(bindingsFolder)
 
 
 import distutils.ccompiler

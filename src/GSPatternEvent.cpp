@@ -11,10 +11,14 @@
 #include "GSPatternEvent.h"
 
 
+GSPatternEvent GSPatternEvent::empty;
+
 vector<string>  GSPatternEvent::getTagNames() const{
 	return eventTags;	
 }
 
-
+bool GSPatternEvent::isValid(){
+    return length>0 ;
+}
 
 
