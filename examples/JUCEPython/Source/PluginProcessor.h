@@ -20,7 +20,7 @@
 //==============================================================================
 /**
 */
-class JucepythonAudioProcessor  : public AudioProcessor
+class JucepythonAudioProcessor  : public AudioProcessor,PyJUCEAPI::Listener
 {
 public:
     //==============================================================================
@@ -30,7 +30,10 @@ public:
     GSPatternPlayer player;
     GSDummyMapper mapper;
     PyJUCEAPI pyAPI;
-  double playHead;
+    double playHead;
+
+  void newFileLoaded(const File & f)override;
+  void updatePattern();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;

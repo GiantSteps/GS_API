@@ -10,7 +10,7 @@
 
 #include "GSPattern.h"
 
-GSPattern::GSPattern(){};
+GSPattern::GSPattern():duration(-1){};
 GSPattern::~GSPattern(){};
 // void GSPattern::addEvent(const vector<string> & tags,GSPatternEvent && event){
 // 	event.eventTags = allTags.getOrAddTagIds(tags);
@@ -28,24 +28,24 @@ bool GSPattern::fillJSONData(json & j) {
     //	originBPM = timeInfo["BPM"].get<double>();
     //	timeSigNumerator = timeInfo["timeSignature"][0];
     //	timeSigDenominator = timeInfo["timeSignature"][1];
-    //	length = timeInfo["length"];
+    //	duration = timeInfo["duration"];
     //	allTags.initialize(j["eventTags"]);
     //
     //	for(auto & e:j["eventList"]){
-    //		events.emplace_back(e["on"],e["length"],e["pitch"],e["velocity"],e["tagsIdx"],&allTags);
+    //		events.emplace_back(e["on"],e["duration"],e["pitch"],e["velocity"],e["tagsIdx"],&allTags);
     //	}
     return false;
 };
 
-void GSPattern::checkLengthValid(){
+void GSPattern::checkDurationValid(){
 
-    bool isValid = (length>0) ;
+    bool isValid = (duration>0) ;
     if(!isValid){
         double lastNoteOff = getLastNoteOff();
-        isValid = length> lastNoteOff && (length - lastNoteOff < 20.0);
+        isValid = duration> lastNoteOff && (duration - lastNoteOff < 20.0);
 
         if(!isValid){
-            length = lastNoteOff;
+            duration = lastNoteOff;
         }
     }
 
@@ -55,7 +55,7 @@ void GSPattern::checkLengthValid(){
 
 double GSPattern::getLastNoteOff(){
     GSPatternEvent lastEv = getLastEvent();
-    return (lastEv.isValid())?lastEv.start+ lastEv.length : 0;
+    return (lastEv.isValid())?lastEv.start+ lastEv.duration : 0;
 }
 
 GSPatternEvent & GSPattern::getLastEvent(){
@@ -68,11 +68,11 @@ bool GSPattern::getJSONData(const json & j) {
     originBPM = timeInfo["BPM"].get<double>();
     timeSigNumerator = timeInfo["timeSignature"][0];
     timeSigDenominator = timeInfo["timeSignature"][1];
-    length = timeInfo["length"];
+    duration = timeInfo["duration"];
     // allTags.initialize(j["eventTags"]);
 
     for(auto & e:j["eventList"]){
-        events.emplace_back(e["on"],e["length"],e["pitch"],e["velocity"],e["tagsIdx"]);
+        events.emplace_back(e["on"],e["duration"],e["pitch"],e["velocity"],e["tagsIdx"]);
     }
     
     return true;

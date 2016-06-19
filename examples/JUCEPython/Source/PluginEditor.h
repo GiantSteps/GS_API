@@ -27,7 +27,10 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    TextButton reloadB,generateB;
+    TextButton reloadB,generateB,showB,autoWatchB;
+
+
+
 
 
 private:

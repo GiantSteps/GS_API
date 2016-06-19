@@ -24,7 +24,7 @@ public:
 	string name;
 	double originBPM;
 	int timeSigNumerator,timeSigDenominator;
-	double length;
+	double duration;
 	
 
 	vector<GSPatternEvent> events;
@@ -34,7 +34,7 @@ public:
 	void addEvent(GSPatternEvent & );
 	
 	
-    void checkLengthValid();
+    void checkDurationValid();
     double getLastNoteOff();
     GSPatternEvent & getLastEvent();
 private:

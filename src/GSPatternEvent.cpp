@@ -18,7 +18,7 @@ vector<string>  GSPatternEvent::getTagNames() const{
 }
 
 bool GSPatternEvent::isValid(){
-    return length>0 ;
+    return duration>0 ;
 }
 
 

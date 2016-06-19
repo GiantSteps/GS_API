@@ -24,6 +24,17 @@
       <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
     <GROUP id="{28874B65-F313-7096-819C-A589B9634659}" name="GSAPI">
+      <GROUP id="{6583CFA6-26D6-6DBD-8F91-6218A9CF8C7C}" name="python">
+        <FILE id="WcF8Ox" name="GSPatternEventPyWrap.cpp" compile="1" resource="0"
+              file="../../src/python/GSPatternEventPyWrap.cpp"/>
+        <FILE id="wdOP5E" name="GSPatternEventPyWrap.h" compile="0" resource="0"
+              file="../../src/python/GSPatternEventPyWrap.h"/>
+        <FILE id="rSi6PQ" name="GSPatternPyWrap.cpp" compile="1" resource="0"
+              file="../../src/python/GSPatternPyWrap.cpp"/>
+        <FILE id="k4V85u" name="GSPatternPyWrap.h" compile="0" resource="0"
+              file="../../src/python/GSPatternPyWrap.h"/>
+        <FILE id="RYVnNo" name="PythonUtils.h" compile="0" resource="0" file="../../src/python/PythonUtils.h"/>
+      </GROUP>
       <GROUP id="{7B524538-94DF-1F8F-3E17-1D2151D2EC91}" name="3rdParty">
         <GROUP id="{0FB31AE9-DD46-8925-8CF1-C3713D78E6D9}" name="json">
           <FILE id="aUouTX" name="json.hpp" compile="0" resource="0" file="../../src/3rdParty/json/json.hpp"/>
@@ -52,8 +63,7 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags=""
-               extraLinkerFlags="-L/Users/Tintamar/Dev/GS_API/build/lib.macosx-10.11-intel-2.7/"
-               extraDefs="" externalLibraries="dl&#10;" customXcodeResourceFolders="python"
+               extraLinkerFlags="" extraDefs="" externalLibraries="" customXcodeResourceFolders="python"
                extraFrameworks="Python">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"

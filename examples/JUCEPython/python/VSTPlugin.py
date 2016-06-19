@@ -1,5 +1,5 @@
 
-from gsapi import *
+from gsapi.gsapi import *
 
 
 def test(s):
@@ -14,11 +14,13 @@ def onNewTime(time):
 
 def onGenerateNew():
 	pattern = GSPattern();
-	pattern.addEvent(GSPatternEvent(0,1,60,100,["lala"]));
-	pattern.addEvent(GSPatternEvent(2,2,60,100,["lala"]));
-
+	
+	for i in range(32):
+		pattern.addEvent(GSPatternEvent(i/4.0,.25,60+i,100,["lala"]));
+	
 	transformPattern(pattern)
 	return pattern
+
 
 def transformPattern(patt):
 	i = 0;
@@ -34,6 +36,7 @@ def transformPattern(patt):
 
 if __name__ =='__main__':
 	patt = onGenerateNew();
+	print patt.__dict__
 	
 	for i in patt.events:
 		print i
