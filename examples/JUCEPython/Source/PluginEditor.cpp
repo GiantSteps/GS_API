@@ -20,11 +20,17 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   // editor's size to whatever you need it to be.
   owner = dynamic_cast<JucepythonAudioProcessor*>(&p);
   setSize (400, 300);
+
   addAndMakeVisible(reloadB);
+  reloadB.setButtonText("load");
   addAndMakeVisible(generateB);
+  generateB.setButtonText("generate New");
   addAndMakeVisible(autoWatchB);
+  autoWatchB.setButtonText("autoWatch");
   addAndMakeVisible(showB);
+  showB.setButtonText("show File");
   reloadB.setColour(TextButton::buttonColourId,owner->pyAPI.isLoaded()?Colours::green:Colours::red);
+
   reloadB.addListener(this);
   generateB.addListener(this);
   autoWatchB.setClickingTogglesState(true);
@@ -53,7 +59,7 @@ void JucepythonAudioProcessorEditor::resized()
   // subcomponents in your editor..
   Rectangle<int> area = getLocalBounds();
   Rectangle<int> header = area.removeFromTop(30);
-  const int bSize= 60;
+  const int bSize= header.getWidth()/4;
   reloadB.setBounds(header.removeFromLeft(bSize));
   generateB.setBounds(header.removeFromLeft(bSize));
   showB.setBounds(header.removeFromLeft(bSize));

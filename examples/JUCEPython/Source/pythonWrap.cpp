@@ -18,49 +18,53 @@
 
 
 void PythonWrap::init(){
-    if(!Py_IsInitialized())
-    {
-      Py_InitializeEx(0);
-    }
+  if(!Py_IsInitialized())
+  {
+    Py_InitializeEx(0);
+  }
 }
 
 
 void PythonWrap::initSearchPath(){
-//  default brew python on OSX
-    PyRun_SimpleString("import sys;import site;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
-//    addSearchPath("/usr/local/lib/python2.7/site-packages");
-      PyRun_SimpleString("print sys.path;");
+  //  default brew python on OSX
+  PyRun_SimpleString("import sys;import site;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
+  //    addSearchPath("/usr/local/lib/python2.7/site-packages");
+  PyRun_SimpleString("print sys.path;");
 
 }
 
 void PythonWrap::addSearchPath(const string & p){
-    string pathToAppend = "sys.path.append(\""+p+"\");";
-    PyRun_SimpleString(pathToAppend.c_str());
+  string pathToAppend = "sys.path.append(\""+p+"\");";
+  PyRun_SimpleString(pathToAppend.c_str());
 
 }
 
 
 bool PythonWrap::load(const string & name){
-    // Import the module "plugin" (from the file "plugin.py")
-    PyObject* moduleName = PyString_FromString(name.c_str());
-//    Py_XDECREF(pluginModule);
-    if (isFileLoaded()) {
-        cout << "reloading : " << name << endl;
-        const string reloadS = "reload("+name+")";
-        PyRun_SimpleString(reloadS.c_str());
-    }
-    else{pluginModule = PyImport_Import(moduleName);
-        if(!pluginModule){
-            // spitout errors if importing fails
-          const string importS = "import "+name;
-        cout << "opening : " << name << endl;
-          PyRun_SimpleString(importS.c_str());
-        }
-    }
+  // Import the module "plugin" (from the file "plugin.py")
+  PyObject* moduleName = PyString_FromString(name.c_str());
+  //    Py_XDECREF(pluginModule);
+
+  if (isFileLoaded()) {
+    //        cout << "reloading : " << name << endl;
+    //        const string reloadS = "reload("+name+")";
+    pluginModule = PyImport_ReloadModule(pluginModule);
+    //        PyRun_SimpleString(reloadS.c_str());
+  }
+  else{
+    pluginModule = PyImport_Import(moduleName);
+  }
+  if(!pluginModule){
+      // spitout errors if importing fails
+      const string importS = "import "+name;
+      cout << "failed : " << name << endl;
+      PyRun_SimpleString(importS.c_str());
+    
+  }
 
 
-    Py_DECREF(moduleName);
-    return pluginModule!=nullptr;
+  Py_DECREF(moduleName);
+  return pluginModule!=nullptr;
 }
 
 
@@ -68,14 +72,18 @@ bool PythonWrap::load(const string & name){
 bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 
 PyObject * PythonWrap::callFunction(const string & func){
+  if(isFileLoaded()){
     PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
     if(pyFunc ==nullptr){
-        cout << "function not found : " << func << endl;
-        return nullptr;
+      cout << "function not found : " << func << endl;
+      return nullptr;
     }
 
     return PyObject_CallObject(pyFunc,nullptr);
-
+  }
+  else{
+    return nullptr;
+  }
 
 
 }
@@ -96,23 +104,23 @@ string PythonWrap::getVSTPath(){
 
 string PythonWrap::test(const string& s){
 
-    if(pluginModule){
-        // Retrieve the "transform()" function from the module.
-        PyObject* transformFunc = PyObject_GetAttrString(pluginModule, "test");
-        // Build an argument tuple containing the string.
-        PyObject* argsTuple = Py_BuildValue("(s)", s.c_str());
-        // Invoke the function, passing the argument tuple.
-        PyObject* result = PyObject_CallObject(transformFunc, argsTuple);
-        // Convert the result to a std::string.
-        std::string resultStr(PyString_AsString(result));
-        // Free all temporary Python objects.
-        Py_DECREF(transformFunc);
-        Py_DECREF(argsTuple); Py_DECREF(result);
-        return resultStr;
-    }
-    return "";
-    
-    
+  if(pluginModule){
+    // Retrieve the "transform()" function from the module.
+    PyObject* transformFunc = PyObject_GetAttrString(pluginModule, "test");
+    // Build an argument tuple containing the string.
+    PyObject* argsTuple = Py_BuildValue("(s)", s.c_str());
+    // Invoke the function, passing the argument tuple.
+    PyObject* result = PyObject_CallObject(transformFunc, argsTuple);
+    // Convert the result to a std::string.
+    std::string resultStr(PyString_AsString(result));
+    // Free all temporary Python objects.
+    Py_DECREF(transformFunc);
+    Py_DECREF(argsTuple); Py_DECREF(result);
+    return resultStr;
+  }
+  return "";
+
+
 }
 
 void PythonWrap::printPyState(){
