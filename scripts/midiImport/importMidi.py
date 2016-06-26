@@ -1,5 +1,6 @@
 import midi
 import math
+import copy
 
 
 '''
@@ -20,7 +21,7 @@ defaultNoteMapping = {
 	"Kick":[(33,10),(34,10),(35,10),(36,10)]
 	,"Snare":[(38,'*'),40]
 	,"ClosedHH":[42,43]
-	,"OpenHH":44
+	,"OpenHH":46
 	,"Clap":39
 	,"Rimshot":37 # also reffered as sidestick
 	,"LowConga":64
@@ -59,9 +60,10 @@ def getPatterns(f,searchOnlyTrackNameEvent=False,noteMapping = defaultNoteMappin
 	lastNoteOff = 0;
 	for tracks in globalMidi:
 		patternLength = 0	
-		noteType = []
+		
 		
 		for e in tracks:
+			noteType = []
 			
 			if midi.MetaEvent.is_event(e.statusmsg):
 				if e.metacommand==midi.TrackNameEvent.metacommand:
@@ -73,33 +75,40 @@ def getPatterns(f,searchOnlyTrackNameEvent=False,noteMapping = defaultNoteMappin
 						continue
 					noteType = findTypesFromPithchAndChannel(e.pitch,e.channel,noteMapping)
 				if noteType ==[]:
-					# print "not processed "+str(e.channel) +" "+str(e.pitch)
+					print "not processed "+str(e.channel) +" "+str(e.pitch)
 					continue;
 
 				
 				if midi.NoteOnEvent.is_event(e.statusmsg):
-
+					
 					res["eventList"]+=[{
 					"tagsIdx":noteType
 					,"on": e.tick*tick2quarterNote
 					,"velocity":e.velocity
-					,"pitch":e.pitch,"length":-1}]
+					,"pitch":e.pitch,"duration":-1}]
 					
-
-				elif midi.NoteOffEvent.is_event(e.statusmsg):
+				# we forbid overlapping of two consecutive note of the same pitch
+				if midi.NoteOnEvent.is_event(e.statusmsg) or midi.NoteOffEvent.is_event(e.statusmsg):
 					foundNoteOn = False
+					
 					for i in reversed(res["eventList"]):
-						if (i["pitch"] == e.pitch) and (i["tagsIdx"]==noteType) and i["length"]<0:
+						
+						if (i["pitch"] == e.pitch) and (i["tagsIdx"]==noteType) and e.tick*tick2quarterNote > i["on"] and i["duration"]<0:
 							foundNoteOn = True
-							i["length"]= e.tick*tick2quarterNote - i["on"]
+							duration = e.tick*tick2quarterNote - i["on"]
+							i["duration"]= duration
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
-					if not foundNoteOn:
-						print "not found note on "+str(e) + str(res["eventList"])
-						exit()
+					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
+						print "not found note on "+str(e)+str(res["eventList"][-1])
+						# exit()
+					
 
 
-
+	for e in res['eventList']:
+		if e['on']<=0:
+			print 'midi file not valid'
+			exit();
 	elementSize = 4.0/res["timeInfo"]["timeSignature"][1]
 	barSize = res["timeInfo"]["timeSignature"][0]*elementSize;
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
@@ -156,16 +165,30 @@ def findTypesFromName(name,noteMapping):
 def findTypesFromPithchAndChannel(pitch,channel,noteMapping):
 	res = []
 	idx =0;
+	
 	for l in noteMapping:
-		cMap = noteMapping[l]
-		if isinstance(cMap, int):
-			if cMap == pitch:
-				res+=[idx]
-		elif isinstance(cMap, tuple):
-			if cMap[0] in {'*',pitch} and cMap[1] in {'*',channel}:
-				res+=[idx]
-		idx+=1;
 
+		cMap = noteMapping[l]
+		listToCheck  = []
+		if isinstance(cMap,int) or isinstance(cMap,tuple):
+			listToCheck = [cMap]
+		elif isinstance(cMap,list):
+			listToCheck = cMap;
+		else:
+
+			print "wrongMapping : "+str(cMap)
+		
+		for le in listToCheck:
+			if isinstance(le, int):
+				if le == pitch:
+					res+=[idx]
+					continue
+			elif isinstance(le, tuple):
+				if le[0] in {'*',pitch} and le[1] in {'*',channel}:
+					res+=[idx]
+					continue
+		idx+=1;
+	
 	return res
 
 

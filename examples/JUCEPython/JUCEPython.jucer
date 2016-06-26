@@ -67,7 +67,9 @@
                extraFrameworks="Python">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
-                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"/>
+                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
+                       osxSDK="default" osxCompatibility="10.8 SDK" cppLanguageStandard="c++11"
+                       cppLibType="libc++"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
