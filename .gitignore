@@ -1,9 +1,0 @@
-build/
-Builds/
-sandBox/
-dist/
-*.pyc
-*egg-info/
-*.log
-*.so
-*.dll
