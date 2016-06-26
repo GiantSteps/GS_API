@@ -11,13 +11,8 @@
 #ifndef PYTHONWRAP_H_INCLUDED
 #define PYTHONWRAP_H_INCLUDED
 
-//#define CUSTOM_PYTHON
+#include "PythonUtils.h"
 
-#ifndef CUSTOM_PYTHON
-#include <Python/Python.h>
-#else
-#include "/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/include/python2.7/Python.h"
-#endif
 
 #include <string>
 #include <iostream>
@@ -27,11 +22,11 @@ class PythonWrap{
     public :
 
     PythonWrap():pluginModule(nullptr){}
-    void initPath();
     string test(const string& s);
     string getVSTPath();
-    void init();
-    bool load();
+    void printPyState();
+  void init();
+    bool load(const string & name);
     void initSearchPath();
     void addSearchPath(const string &);
     bool isFileLoaded();

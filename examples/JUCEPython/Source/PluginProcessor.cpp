@@ -15,13 +15,23 @@
 //==============================================================================
 JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper)
 {
-
+  pyAPI.addListener(this);
 }
 
 JucepythonAudioProcessor::~JucepythonAudioProcessor()
 {
 }
 
+
+void JucepythonAudioProcessor::updatePattern(){
+  GSPattern * p = pyAPI.getNewPattern();
+  if(p)
+    player.setPattern(*p);
+}
+
+void JucepythonAudioProcessor::newFileLoaded(const juce::File &f){
+  updatePattern();
+}
 //==============================================================================
 const String JucepythonAudioProcessor::getName() const
 {

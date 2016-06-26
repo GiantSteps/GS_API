@@ -14,8 +14,8 @@
 void GSPatternPlayer::updatePlayHead(double pH){
     
 	double lastPlayHead=playHead;
-	if(isLooping && currentPattern.length>0){
-		playHead = fmod(pH,currentPattern.length);
+	if(isLooping && currentPattern.duration>0){
+		playHead = fmod(pH,currentPattern.duration);
 	}
 	if(lastPlayHead==playHead){
 		stop();
@@ -25,7 +25,7 @@ void GSPatternPlayer::updatePlayHead(double pH){
 	vector<MIDIMapEntry> newNotes;
 	
 	for(auto & n:currentPattern.events){
-		if (playHead>=n.start && playHead<n.start+n.length) {
+		if (playHead>=n.start && playHead<n.start+n.duration) {
 			vector<MIDIMapEntry> nNotes=ownedMapper->getMIDINoteForEvent(n);
 			if(nNotes.size()>0)
 				newNotes.insert(newNotes.end(), nNotes.begin(),nNotes.end());

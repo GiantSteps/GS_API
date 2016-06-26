@@ -1,12 +1,12 @@
 /*
-  ==============================================================================
+ ==============================================================================
 
-    PyJUCEAPI.h
-    Created: 13 Jun 2016 5:00:10pm
-    Author:  Martin Hermant
+ PyJUCEAPI.h
+ Created: 13 Jun 2016 5:00:10pm
+ Author:  Martin Hermant
 
-  ==============================================================================
-*/
+ ==============================================================================
+ */
 
 #ifndef PYJUCEAPI_H_INCLUDED
 #define PYJUCEAPI_H_INCLUDED
@@ -17,17 +17,43 @@
 #include "pythonWrap.h"
 #include "JuceHeader.h"
 
-extern int _wrap_convert_py2c__GSPattern(PyObject *value, GSPattern *address);
+//#define GETDICTOBJ(
 
-class PyJUCEAPI{
+#include "GSPatternPyWrap.h"
+
+
+
+
+class PyJUCEAPI : public Timer{
 public:
-    PyJUCEAPI(){}
+  PyJUCEAPI(){}
 
-    void load();
-    void init();
-    bool isLoaded();
-    GSPattern  getNewPattern();
-    PythonWrap  py ;
+  void load();
+  void init();
+  bool isLoaded();
+  void setWatching(bool);
+  GSPattern *  getNewPattern();
+  PythonWrap  py ;
+
+
+  File pythonFile;
+  class Listener{
+  public:
+    virtual ~Listener(){};
+    virtual void newFileLoaded(const File & f){};
+  };
+  ListenerList<Listener> listeners;
+  void addListener(Listener * l){listeners.add(l);}
+  void removeListener(Listener * l){listeners.remove(l);}
+
+protected:
+
+  void timerCallback()override;
+  Time lastPythonFileMod;
+
+  GSPatternPyWrap GSPatternWrap;
+
+
 };
 
 

@@ -17,16 +17,16 @@ using namespace std;
 
 class GSPatternEvent{
 public:
-    GSPatternEvent():length(0){}
+    GSPatternEvent():duration(0){}
 	GSPatternEvent(const double _start,
-				   const double _length,
+				   const double _duration,
 				   const int _pitch,
 				   const int _velocity,
 				   const vector<string> & tags
 				   )
 	:
 	start(_start),
-	length(_length),
+	duration(_duration),
 	pitch(_pitch),
 	velocity(_velocity),
 	eventTags(tags)
@@ -34,7 +34,7 @@ public:
 	
 	
 	double start;
-	double length;
+	double duration;
 	int pitch;
 	int velocity;
 	vector<string> eventTags;

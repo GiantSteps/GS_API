@@ -1,44 +1,65 @@
 /*
-  ==============================================================================
+ ==============================================================================
 
-    PyJUCEAPI.cpp
-    Created: 13 Jun 2016 5:00:10pm
-    Author:  Martin Hermant
+ PyJUCEAPI.cpp
+ Created: 13 Jun 2016 5:00:10pm
+ Author:  Martin Hermant
 
-  ==============================================================================
-*/
+ ==============================================================================
+ */
 
 #include "PyJUCEAPI.h"
 //#include "PyGSPattern.h"
 
 
-extern int _wrap_convert_py2c__GSPattern(PyObject *value, GSPattern *address);
 
+GSPattern *  PyJUCEAPI::getNewPattern(){
+  PyObject * o = py.callFunction("onGenerateNew");
+  GSPattern*  p =nullptr;
+  if(o){
 
-GSPattern  PyJUCEAPI::getNewPattern(){
-    PyObject * o = py.callFunction("onGenerateNew");
-    GSPattern p ;
-    if(o){
+    p = nullptr;
+    p = GSPatternWrap.GenerateFromObj(o);
 
-        _wrap_convert_py2c__GSPattern(o,&p);
-        p.checkLengthValid();
-        cout << p.length << endl;
-
+    if(p){
+      p->checkDurationValid();
+      DBG( p->duration );
     }
-    return p;
+
+  }
+  return p;
 }
+//
+
 
 void PyJUCEAPI::init(){
-    py.init();
-    File f (py.getVSTPath()+"/../../Resources/python");
-    py.initSearchPath();
-    py.addSearchPath(f.getFullPathName().toStdString());
-}
-void PyJUCEAPI::load(){
-    py.load();
-    DBG(py.test("lala"));
+  py.init();
+  pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+  py.initSearchPath();
+  py.addSearchPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
 }
 
+
+void PyJUCEAPI::load(){
+  py.load(pythonFile.getFileNameWithoutExtension().toStdString());
+  lastPythonFileMod = pythonFile.getLastModificationTime();
+  listeners.call(&Listener::newFileLoaded,pythonFile);
+
+}
+
+
+
+
+void PyJUCEAPI::setWatching(bool w){
+  if(w){startTimer(200);}
+  else{stopTimer();}
+}
+
+void PyJUCEAPI::timerCallback(){
+  if(pythonFile.getLastModificationTime()!=lastPythonFileMod){
+    load();
+  };
+}
 bool PyJUCEAPI::isLoaded(){
-    return py.isFileLoaded();
+  return py.isFileLoaded();
 }

@@ -1,9 +1,7 @@
 
-from gsapi import *
+from gsapi.gsapi import *
+import random
 
-
-def test(s):
-	return s+"kklolo"
 
 
 def setup():
@@ -14,27 +12,34 @@ def onNewTime(time):
 
 def onGenerateNew():
 	pattern = GSPattern();
-	pattern.addEvent(GSPatternEvent(0,1,60,100,["lala"]));
-	pattern.addEvent(GSPatternEvent(2,2,60,100,["lala"]));
-
+	
+	for i in range(32):
+		pattern.addEvent(GSPatternEvent(i/4.0,.25,random.randint(60,60+i),127,["lala"]));
+	
 	transformPattern(pattern)
 	return pattern
 
+
 def transformPattern(patt):
 	i = 0;
+	j=1
 	
-	l =list(patt.events)
-	for e in l:
-		print patt
 
-	patt.events = l
+	for e in patt.events:
+		e.startTime+=(random.random()*2.0 - 1)*.4
+		e.duration=max(0.1,e.duration+(random.random()*2.0-1)*.4)
+
 		
 	
 	return patt
 
+
+def test(s):
+	return s+"kklolo"
+
+
 if __name__ =='__main__':
 	patt = onGenerateNew();
-	
+	print patt.__dict__
 	for i in patt.events:
-		print i
-		print i.length
+		print i.duration
