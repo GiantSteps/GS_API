@@ -10,18 +10,18 @@ class GSPatternEvent(object):
 
 	an event is made of start and length , origin pitch , velocity and associated tags
 	Args:
-	start: startTime of event
-	duration: duration of event
-	pitch : pitch of event
-	velocity: velocity of event
-	tags: list of tags representing the event
+		start: startTime of event
+		duration: duration of event
+		pitch : pitch of event
+		velocity: velocity of event
+		tags: list of tags representing the event
 
 	Attributes:
-	startTime: startTime of event
-	duration: duration of event
-	pitch : pitch of event
-	velocity: velocity of event
-	tags: list of tags representing the event
+		startTime: startTime of event
+		duration: duration of event
+		pitch : pitch of event
+		velocity: velocity of event
+		tags: list of tags representing the event
 	"""
 	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
@@ -33,6 +33,7 @@ class GSPatternEvent(object):
 
 	def hasOneCommonTagWith(self,event):
 		""" compare tags between events
+
 		Args:
 			event: event to compare with
 		Returns:
@@ -42,6 +43,7 @@ class GSPatternEvent(object):
 
 	def hasOneOfTags(self,tags):
 		""" Compare this event's tags with a list of strings
+
 		Args:
 			tags: list of strings to compare with
 		Returns:
@@ -55,6 +57,7 @@ class GSPatternEvent(object):
 
 	def tagsAre(self,tags):
 		""" Compare this event's tags with a list of strings
+
 		Args:
 			tags: list of strings to compare with
 		Returns:
@@ -65,6 +68,7 @@ class GSPatternEvent(object):
 
 	def allTagsAreEqualWith(self,event):
 		""" Compare this event's tags with an other event
+
 		Args:
 			event: event to compare with
 		Returns:
@@ -83,6 +87,7 @@ class GSPatternEvent(object):
 
 	def cutInSteps(self,stepSize):
 		""" Cut an event in steps of stepsize length
+
 		Args:
 			stepSize: the desired size of each produced events
 		"""
@@ -100,7 +105,8 @@ class GSPatternEvent(object):
 # ///////////////
 #  GSPattern
 class GSPattern(object):
-	""" class representing a pattern made of GSPatternEvent
+	""" Class representing a pattern made of GSPatternEvent
+
 	hold a list of GSEvents and provide basic manipulation function
 	"""
 	def __init__(self):
@@ -109,7 +115,8 @@ class GSPattern(object):
 		self.bpm = 0;
 
 	def checkDuration(self):
-		""" verify that duration member is consistent 
+		""" Verify that duration member is consistent 
+
 		if inner events have a bigger time span than self.duration, increase duration to fit
 		"""
 		total = self.getLastNoteOff();
@@ -122,6 +129,7 @@ class GSPattern(object):
 
 	def getLastNoteOff(self):
 		""" Gets last event end time
+
 		Returns:
 			lastNoteOff, i.e the time corresponding to the end of the last event
 		"""
@@ -134,6 +142,7 @@ class GSPattern(object):
 
 	def addEvent(self,GSPatternEvent ):
 		"""Add an event increasing duration if needed
+
 		Parameter:
 			GSPatternEvent : the event to be added
 		"""
@@ -141,7 +150,7 @@ class GSPattern(object):
 		self.checkDuration()
 
 	def quantize(self,beatDivision,postMultiplier=1.0):
-		"""quantize events
+		""" Quantize events
 
 		Parameter:
 			beatDivision : the fraction of beat that we want to quantize to
@@ -151,7 +160,7 @@ class GSPattern(object):
 		
 
 	def getStartingEventsAtTime(self,time,tolerance = 0):
-		""" get all events activating at a givent time
+		""" Get all events activating at a givent time
 
 		Args:
 			time: time asked for 
@@ -166,7 +175,7 @@ class GSPattern(object):
 		return res
 
 	def getActiveEventAtTime(self,time):
-		""" get all events currently active at a givent time
+		""" Get all events currently active at a givent time
 
 		Args:
 			time: time asked for 
@@ -182,13 +191,14 @@ class GSPattern(object):
 
 
 	def copy(self):
-		""" deepcopy a pattern
+		""" Deepcopy a pattern
 		"""
 		import copy
 		return copy.deepcopy(self)
 
 	def getAllTags(self):
-		"""returns all used tags in this pattern
+		""" Returns all used tags in this pattern
+
 		Returns:
 			list of string composed of all possible tags
 		"""
@@ -200,7 +210,8 @@ class GSPattern(object):
 		return tags
 
 	def discretize(self,stepSize,repeatibleTags = ['silence']):
-		"""discretize
+		""" Discretize a pattern
+
 		"""
 		self.checkDuration();
 		newEvents = []
@@ -217,7 +228,8 @@ class GSPattern(object):
 
 
 	def getAllIdenticalEvents(self,event,allTagsMustBeEquals = True):
-		""" get a list of event with same tags
+		""" Get a list of event with same tags
+
 		Args:
 			event:event to compare with
 			allTagsMustBeEquals : shall we get exact tags equality or be fine with one common tag
@@ -235,8 +247,9 @@ class GSPattern(object):
 
 			
 
-	def fillWithSilences(self,silenceTag = 'silence'):
-		""" fill empty (i.e no event active) spaces with silence event
+	def fillWithSilences(self,desiredLength,silenceTag = 'silence'):
+		""" Fill empty (i.e no event active) spaces with silence event
+
 		Args:
 			silenceTag: tag that will be used when inserting the silence event 
 
@@ -249,10 +262,18 @@ class GSPattern(object):
 				newEvents+= [silence]
 			newEvents+=[e]
 			lastOff = max(lastOff,e.startTime+e.duration)
+		if lastOff<desiredLength:
+			newEvents += [GSPatternEvent(lastOff,desiredLength-lastOff,0,0,[silenceTag])]
 		self.events = newEvents;
 
 	def getPatternForTimeSlice(self,startTime,length,trimEnd = True):
-		"""
+		""" Returns a pattern within given timeslice
+
+		Args:
+			startTime: start time for time slice
+			length: length of time slice
+		Returns:
+			a new GSpattern within time slice
 		"""
 		p = self.copy()
 		p.duration = length;
@@ -272,13 +293,14 @@ class GSPattern(object):
 
 
 	def printEvents(self):
-		"""nicely print out an event
+		""" Nicely print out an event
 		"""
 		for e in self.events:
 			print e.tags , e.startTime , e.duration
 
 	def fromJSONDict(self,json):
-		"""load a json API dict object to this pattern
+		""" Loads a json API dict object to this pattern
+
 		Args:
 			json: a dict created from reading json file with GS API JSON format
 		"""
