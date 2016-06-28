@@ -1,16 +1,27 @@
 GS_API
 ===
 
-GS_API is a c++ library for manipulating musical symbolic data
+GS_API is a Python /C++ library for manipulating musical symbolic data
 
 
 Overview
 ==
-GS_API provide c++ classes and interface for dealing with musical data, main features are :
+GS_API provide Python/C++ classes and interface for dealing with musical data, main features are :
 
-* rythm generation
+* rythm generation ; agnostic and style based
+* style based harmony progression generation
 * more to come
 
+
+Using the library
+==
+Python
+-
+python code resides in pythonWrap folder:
+Building : run python setup.py build
+Installing : run python setup.py install
+
+using it
 
 JSON vs MIDI
 ==

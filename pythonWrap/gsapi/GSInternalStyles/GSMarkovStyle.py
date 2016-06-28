@@ -1,4 +1,4 @@
-from GSStyle import GSStyle
+from gsapi import GSStyle
 import random
 import numpy as np
 from numpy.random import random_sample
@@ -175,15 +175,16 @@ class GSMarkovStyle(GSStyle):
 
 
 if __name__ == '__main__':
+
 	import glob,json
 	from GSPattern import GSPattern
-	searchPath = "../test/slicedMidi/*.json"
+	searchPath = "../../test/slicedMidi/*.json"
 	s = GSMarkovStyle(2,32)
 	patterns = []
 	for f in glob.glob(searchPath):
 		with open(f) as j:
 			d = json.load(j)
-			p = GSPattern.GSPattern();
+			p = GSPattern();
 			p.fromJSONDict(d);
 			p = p.getPatternForTimeSlice(0,4);
 			print p.duration
