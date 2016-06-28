@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['tags',['tags',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html#af209994b7f4a12dbabc98fa0dfe272a0',1,'pythonWrap::GSPattern::GSPattern::GSPatternEvent']]],
-  ['tagsare',['tagsAre',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html#aa083e356eb9b00c3e60ba8c5d6c125fb',1,'pythonWrap::GSPattern::GSPattern::GSPatternEvent']]]
+  ['pitch',['pitch',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html#a1bfad09fb32c1e464d6d398675422906',1,'pythonWrap::GSPattern::GSPattern::GSPatternEvent']]],
+  ['printevents',['printEvents',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a85a9fa1649aeaa61be07cefb2cc9a3d4',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]]
 ];

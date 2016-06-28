@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['getactiveeventattime',['getActiveEventAtTime',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a0a4fece00921b36361f7388aaa21b851',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getallidenticalevents',['getAllIdenticalEvents',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a6da0f1981132e51aeb0a1b174de8b95b',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getalltags',['getAllTags',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#adf607ca8fc8d85d48e04eeb9faa2089d',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getlastnoteoff',['getLastNoteOff',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a69a86065c12a222349c1444f563b55de',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getpatternfortimeslice',['getPatternForTimeSlice',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a5fa9d8970febf1b7f0bd975bb177dc55',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getstartingeventsattime',['getStartingEventsAtTime',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a2d4c5aa660f8eeac2fb3c8b942e276f0',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]]
+  ['fillwithsilences',['fillWithSilences',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#ab9583bb46eb4e41b7d72c1b5a5e955b9',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
+  ['fromjsondict',['fromJSONDict',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#aab0ea659aae49830b6ea382d6ff47528',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]]
 ];

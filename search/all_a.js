@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['velocity',['velocity',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html#aacb64fd5870feb4155192934ff50c8d5',1,'pythonWrap::GSPattern::GSPattern::GSPatternEvent']]]
+  ['quantize',['quantize',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a2c95abc9256305d18008fc0a4837ef58',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]]
 ];

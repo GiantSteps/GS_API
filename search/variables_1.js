@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pitch',['pitch',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html#a1bfad09fb32c1e464d6d398675422906',1,'pythonWrap::GSPattern::GSPattern::GSPatternEvent']]]
+  ['numsteps',['numSteps',['../classpython_wrap_1_1_g_s_style_1_1_g_s_markov_style_1_1_g_s_markov_style.html#a90975b21f8781feae0c087be7480273f',1,'pythonWrap::GSStyle::GSMarkovStyle::GSMarkovStyle']]]
 ];
