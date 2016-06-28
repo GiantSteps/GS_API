@@ -21,7 +21,15 @@ python code resides in pythonWrap folder:
 Building : run python setup.py build
 Installing : run python setup.py install
 
-using it
+using it :
+sample code : 
+>>> from gsapi import *
+>>> p = GSPattern()
+>>> p.addEvent(GSPatternEvent(0,1,64,127,["Kick"]))
+
+all modules are documented so typing help(GSPattern) provides relovent informations
+
+
 
 JSON vs MIDI
 ==

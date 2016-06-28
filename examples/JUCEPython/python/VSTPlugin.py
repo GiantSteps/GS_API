@@ -1,5 +1,5 @@
 
-from gsapi.gsapi import *
+from gsapi import *
 import random
 
 
