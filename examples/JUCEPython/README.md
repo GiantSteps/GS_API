@@ -5,6 +5,7 @@ this VST Plugin is for testing purpose only .
 a basic interface allow to show python file being processed, reloading it and autowatch changes on the file
 the file is in the VST bundle, under Resources/python
 
+you need to install python gsapi first see GS_API readme
 
 
 

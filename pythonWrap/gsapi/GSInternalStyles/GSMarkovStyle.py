@@ -1,4 +1,4 @@
-from gsapi import GSStyle
+from gsapi import GSStyle,GSPattern,GSPatternEvent
 import random
 import numpy as np
 from numpy.random import random_sample
@@ -16,11 +16,12 @@ class GSMarkovStyle(GSStyle):
 		numSteps: number of steps to consider (binarization of pattern)
 
 	"""
-	def __init__(self,order,numSteps):
+	def __init__(self,order,numSteps,loopDuration):
 		super(GSStyle,self).__init__()
 		self.type = "None"
 		self.order = order;
 		self.numSteps = numSteps;
+		self.loopDuration = loopDuration
 
 
 	def generateStyle(self, PatternClasses):
@@ -44,21 +45,26 @@ class GSMarkovStyle(GSStyle):
 		self.binarizedPatterns = copy.deepcopy(self.originPatterns)
 		for p in self.binarizedPatterns:
 			self.formatPattern(p)
-			for e in p.events :
-				lastEvents = self.getLastEvents(p,e,self.order,1)
-				curDic = self.transitionTable[int(e.startTime)]
-				combinationName = self._buildNameForEvents(lastEvents)
+			self.checkSilences(p)
+			print p.duration
+			for step in range(p.duration):
+				l = [p.getStartingEventsAtTime(step)];
+				self.checkSilenceInList(l)
+				curEvent = self._buildNameForEvents(l);
+				combinationName = self._buildNameForEvents(self.getLastEvents(p,step,self.order,1));
+				curDic = self.transitionTable[int(step)]
+				
 
 				
 				if combinationName not in curDic:
 					curDic[combinationName] = {}
-				for n in e.tags:
-					if n not in curDic[combinationName]:
-						curDic[combinationName][n] = 1
-					else:
-						curDic[combinationName][n] += 1
+				
+				if curEvent not in curDic[combinationName]:
+					curDic[combinationName][curEvent] = 1
+				else:
+					curDic[combinationName][curEvent] += 1
 				# print e.tags , [ x.tags  for t in lastEvents for x in t]
-		print self.transitionTable
+		
 		def _normalize():
 			for t in self.transitionTable:
 				for d in t:
@@ -69,7 +75,7 @@ class GSMarkovStyle(GSStyle):
 					for pe in t[d]:
 						t[d][pe]/=1.0*sum
 		_normalize()
-		print self.transitionTable
+		
 
 	def generatePattern(self,seed = None):
 		""" generate a new pattern
@@ -89,16 +95,27 @@ class GSMarkovStyle(GSStyle):
 
 		def _isValidState(step,previousTags):
 			d = self.transitionTable[step]
+			print d,previousTags
 			return previousTags in d
 
 		def _generateEventAtStep(step,previousTags):
-			if not previousTags in self.transitionTable[step] : return None
+			
+			if not previousTags in self.transitionTable[step] :  return None
 			d = self.transitionTable[step][previousTags]
-			bins = np.cumsum([d[x] for x in d])
-			chosenIdx = np.digitize(random.random(), bins);
-			
+
+			chosenIdx = 0
+			if len(d)>1:
+				bins = np.cumsum([d[x] for x in d])
+				r = random.random()
+				for i in range(1,len(bins)):
+					if bins[i-1]<=r and bins[i]>r:
+						chosenIdx = i-1
+						break;
+				print chosenIdx
+				
 			return d.keys()[chosenIdx]
-			
+
+
 			
 			
 
@@ -108,6 +125,7 @@ class GSMarkovStyle(GSStyle):
 		startHypothesis =[]
 		for n in range (self.order):
 			startHypothesis+=[random.choice(_getAvailableAtStep(n))]
+		startHypothesis.sort()
 		while not _isValidState(cIdx,','.join(startHypothesis)):
 			startHypothesis =[]
 			for n in range (self.order):
@@ -116,47 +134,78 @@ class GSMarkovStyle(GSStyle):
 		print startHypothesis
 		events = startHypothesis
 		i = self.order
+		print self.transitionTable
 		while i <self.numSteps:
-			print "ii"+str(i)
-			print events[i-self.order:i]
-			newEv =  _generateEventAtStep(i,','.join(events[i-self.order:i]))
+			newPast =  events[i-self.order:i]
+			newPast.sort();
+			print newPast , i , self.numSteps,','.join(newPast)
+			newEv =  _generateEventAtStep(i,','.join(newPast))
+			print newEv
 			if newEv:
+				print i,newEv
 				events+=[newEv]
 				i+=1
-			
-
-
-
+			else:
+				print "not found combination", ','.join(newPast) ,self.transitionTable[i] ;
 		
+
+		pattern = GSPattern()
+		idx = 0;
+		for el in events:
+			l = el.split("/")
+			for e in l:
+				pattern.events+=[GSPatternEvent(idx*1.0*self.loopDuration/self.numSteps,1,100,127,e)]
+			idx+=1
+		return pattern
+
+	def checkSilences(self,p):
+		for i in range(p.duration):
+			c = p.getStartingEventsAtTime(i)
+			if len(c)>1 and( 'silence' in c):
+				print "wrong silence"
+				exit()
+	def checkSilenceInList(self,c):
+		if len(c)>1 and( 'silence' in c):
+			print "wrong silence"
+			exit()
+
 
 
 	def _buildNameForEvents(self,events):
-		res = ""
+		res = []
 		for n in events:
+			curL = []
 			for s in n:
-				s.tags.sort()
-				res+='/'.join(s.tags)+'/'
-			res = res[:-1]
-			res+=','
-		res = res[:-1]
-		return res
+				for t in s.tags:
+					if t not in curL : curL+=[t]
+			curL.sort()
+			res+=[curL]
+		res.sort()
+		out = ""
+		for l in res:
+			out+='/'.join(l)
+			out+=","
+		out = out[:-1]
+			
+		return out
 
 	def formatPattern(self,p):
-		p.quantize(8,8);
+		p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);
 		p.discretize(1)
-		p.fillWithSilences(32);
+		p.fillWithSilences(self.numSteps);
 		p.discretize(1)
-		print "len" + str(len(p.events))
+		p.checkDuration()
 		
 
-	def getLastEvents(self,pattern,event,num,stepSize):
+
+
+	def getLastEvents(self,pattern,step,num,stepSize):
 		events = []
 		for i  in range(1,num+1):
-			idx = event.startTime - i*stepSize;
+			idx = step - i*stepSize;
 			if idx < 0 :
 				idx+=pattern.duration
-				print idx
-			events += [pattern.getStartingEventsAtTime(idx,stepSize)]
+			events += [pattern.getStartingEventsAtTime(idx)]
 		return events
 
 
@@ -177,9 +226,9 @@ class GSMarkovStyle(GSStyle):
 if __name__ == '__main__':
 
 	import glob,json
-	from GSPattern import GSPattern
+	
 	searchPath = "../../test/slicedMidi/*.json"
-	s = GSMarkovStyle(2,32)
+	s = GSMarkovStyle(2,32,4)
 	patterns = []
 	for f in glob.glob(searchPath):
 		with open(f) as j:
@@ -189,8 +238,11 @@ if __name__ == '__main__':
 			loopLength = 4;
 			for i in range(int(p.duration/loopLength)):
 				p = p.getPatternForTimeSlice(i*loopLength,loopLength); # the current dataset can be splitted in loops of 4
-				print p.duration
+				
 				patterns+=[p]
 
 	s.generateStyle(patterns)
-	s.generatePattern()
+	print s.transitionTable
+	p = s.generatePattern()
+
+	p.printEvents()

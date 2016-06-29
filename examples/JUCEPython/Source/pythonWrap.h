@@ -30,7 +30,7 @@ class PythonWrap{
     void initSearchPath();
     void addSearchPath(const string &);
     bool isFileLoaded();
-    PyObject* callFunction(const string&);
+    PyObject* callFunction(const string&,PyObject * args=nullptr);
     
 private:
     void prependEnvPath(const string &env,const string& newpath);

@@ -26,7 +26,8 @@ class GSPatternEvent(object):
 	"""
 	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
-		self.tags=[]
+		if not isinstance(tags,list):tags = [tags]
+		self.tags=tags
 		self.startTime = start;
 		self.pitch = pitch;
 		self.velocity = velocity
@@ -122,7 +123,7 @@ class GSPattern(object):
 		"""
 		total = self.getLastNoteOff();
 		if (total and (total > self.duration)):
-			print "resizing : "+str(self.duration) +'old : '+ str(total)
+			print "resizing : "+str(total) +'old : '+ str(self.duration)
 			self.duration = total
 
 	def reorderEvents(self):
@@ -171,7 +172,7 @@ class GSPattern(object):
 		"""
 		res = []
 		for e in self.events:
-			if(time - e.startTime>=0 and time - e.startTime<tolerance ):
+			if(time - e.startTime>=0 and time - e.startTime<=tolerance ):
 				res+=[e]
 		return res
 
@@ -186,7 +187,7 @@ class GSPattern(object):
 		"""
 		res = []
 		for e in self.events:
-			if(e.startTime-time>=0 and e.startTime-time<e.duration ):
+			if(time-e.startTime>=0 and time-e.startTime<=e.duration ):
 				res+=[e]
 		return res
 
@@ -214,7 +215,7 @@ class GSPattern(object):
 		""" Discretize a pattern
 
 		"""
-		self.checkDuration();
+		
 		newEvents = []
 		for e in self.events:
 			if e.tagsAre(repeatibleTags):
@@ -280,13 +281,13 @@ class GSPattern(object):
 		p.duration = length;
 		p.events = []
 		for e in self.events:
-			if e.startTime - startTime>=0 and e.startTime+e.duration-startTime<length:
+			if e.startTime - startTime>=0 and e.startTime-startTime<length:
 				newEv = e.copy()
 				newEv.startTime-=startTime
 				p.events +=[newEv]
 		if trimEnd:
 			for e in p.events:
-				toCrop = e.startTime+e.duration - length
+				toCrop = e.startTime+e.duration - startTime+length
 				if toCrop>0:
 					e.duration-=toCrop;
 		return p
@@ -297,7 +298,7 @@ class GSPattern(object):
 		""" Nicely print out an event
 		"""
 		for e in self.events:
-			print e.tags , e.startTime , e.duration
+			print e.tags , e.startTime , e.duration,e.pitch
 
 	def fromJSONDict(self,json):
 		""" Loads a json API dict object to this pattern

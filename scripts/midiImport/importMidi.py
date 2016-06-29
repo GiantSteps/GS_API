@@ -99,8 +99,8 @@ def getPatterns(f,searchOnlyTrackNameEvent=False,noteMapping = defaultNoteMappin
 							i["duration"]= duration
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
-					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-						print "not found note on "+str(e)+str(res["eventList"][-1])
+					# if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
+					# 	print "not found note on "+str(e)+str(res["eventList"][-1])
 						# exit()
 					
 

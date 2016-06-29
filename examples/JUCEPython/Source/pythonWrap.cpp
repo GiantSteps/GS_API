@@ -33,6 +33,8 @@ void PythonWrap::initSearchPath(){
 
 }
 
+
+
 void PythonWrap::addSearchPath(const string & p){
   string pathToAppend = "sys.path.append(\""+p+"\");";
   PyRun_SimpleString(pathToAppend.c_str());
@@ -53,6 +55,7 @@ bool PythonWrap::load(const string & name){
   }
   else{
     pluginModule = PyImport_Import(moduleName);
+
   }
   if(!pluginModule){
       // spitout errors if importing fails
@@ -71,7 +74,7 @@ bool PythonWrap::load(const string & name){
 
 bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 
-PyObject * PythonWrap::callFunction(const string & func){
+PyObject * PythonWrap::callFunction(const string & func,PyObject * args){
   if(isFileLoaded()){
     PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
     if(pyFunc ==nullptr){
@@ -79,7 +82,7 @@ PyObject * PythonWrap::callFunction(const string & func){
       return nullptr;
     }
 
-    return PyObject_CallObject(pyFunc,nullptr);
+    return PyObject_CallObject(pyFunc,args);
   }
   else{
     return nullptr;

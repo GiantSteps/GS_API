@@ -138,7 +138,8 @@ if(!useInternalTransport){
     playHead = ct.timeInSeconds/60.0*ct.bpm;
 }
 else{
-    playHead+=  buffer.getNumSamples()*1.0/getSampleRate();
+  // 120bpm
+    playHead+=  buffer.getNumSamples()*2.0/getSampleRate();
 }
     player.updatePlayHead(playHead);
     for(auto & n:player.getCurrentNoteOn()){
