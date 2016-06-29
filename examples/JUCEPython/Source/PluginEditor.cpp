@@ -31,12 +31,19 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   showB.setButtonText("show File");
   reloadB.setColour(TextButton::buttonColourId,owner->pyAPI.isLoaded()?Colours::green:Colours::red);
 
+useInternalTransportB.setButtonText("internalBPM");
+addAndMakeVisible(useInternalTransportB);
+
   reloadB.addListener(this);
   generateB.addListener(this);
   autoWatchB.setClickingTogglesState(true);
   autoWatchB.addListener(this);
   autoWatchB.setColour(TextButton::buttonOnColourId, Colours::orange);
   showB.addListener(this);
+  useInternalTransportB.addListener(this);
+  useInternalTransportB.setClickingTogglesState(true);
+  useInternalTransportB.setColour(TextButton::buttonOnColourId, Colours::orange);
+  useInternalTransportB.setToggleState(owner->useInternalTransport, dontSendNotification);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
@@ -64,6 +71,7 @@ void JucepythonAudioProcessorEditor::resized()
   generateB.setBounds(header.removeFromLeft(bSize));
   showB.setBounds(header.removeFromLeft(bSize));
   autoWatchB.setBounds(header.removeFromLeft(bSize));
+  useInternalTransportB.setBounds(area.removeFromTop(30));
 }
 
 void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
@@ -84,6 +92,9 @@ void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
   }
   else if (b==& showB){
     owner->pyAPI.pythonFile.startAsProcess();
+  }
+  else if(b==&useInternalTransportB){
+    owner->useInternalTransport = useInternalTransportB.getToggleState();
   }
 
 }

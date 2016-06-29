@@ -16,7 +16,7 @@
 #include "GSPatternPlayer.h"
 #include "PyJUCEAPI.h"
 
-#define FAKETRANSPORT
+
 //==============================================================================
 /**
 */
@@ -31,6 +31,7 @@ public:
     GSDummyMapper mapper;
     PyJUCEAPI pyAPI;
     double playHead;
+    bool useInternalTransport;
 
   void newFileLoaded(const File & f)override;
   void updatePattern();

@@ -13,7 +13,7 @@
 
 
 //==============================================================================
-JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper)
+JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),useInternalTransport(true)
 {
   pyAPI.addListener(this);
 }
@@ -92,6 +92,7 @@ void JucepythonAudioProcessor::prepareToPlay (double sampleRate, int samplesPerB
     // initialisation that you need..
 
     pyAPI.init();
+    pyAPI.load();
 
 //    player.setMidiMapper(&mapper);
 }
@@ -131,13 +132,14 @@ void JucepythonAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
 {
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
-#ifndef FAKETRANSPORT
+if(!useInternalTransport){
     juce::AudioPlayHead::CurrentPositionInfo ct;
     getPlayHead()->getCurrentPosition(ct);
     playHead = ct.timeInSeconds/60.0*ct.bpm;
-#else
+}
+else{
     playHead+=  buffer.getNumSamples()*1.0/getSampleRate();
-#endif
+}
     player.updatePlayHead(playHead);
     for(auto & n:player.getCurrentNoteOn()){
         midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);
@@ -155,13 +157,13 @@ void JucepythonAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuff
         buffer.clear (i, 0, buffer.getNumSamples());
 
     // This is the place where you'd normally do the guts of your plugin's
-    // audio processing...
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
-    {
-        float* channelData = buffer.getWritePointer (channel);
-
-        // ..do something to the data...
-    }
+//    // audio processing...
+//    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+//    {
+//        float* channelData = buffer.getWritePointer (channel);
+//
+//        // ..do something to the data...
+//    }
 }
 
 //==============================================================================

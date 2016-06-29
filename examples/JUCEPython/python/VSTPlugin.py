@@ -2,15 +2,26 @@
 from gsapi import *
 import random
 
-
+""" this example generates random notes to demonstrate passing GSPattern to C++ plugin
+"""
 
 def setup():
     pass
 
 def onNewTime(time):
-    pass
+	""" called when user press generate new
+	Returns:
+ 		the new GSpattern to be played
+	"""
+	pass
+
+
 
 def onGenerateNew():
+	""" called when user press generate new
+	Returns:
+	 the new GSpattern to be played
+	"""
 	pattern = GSPattern();
 	
 	for i in range(32):
@@ -23,8 +34,6 @@ def onGenerateNew():
 def transformPattern(patt):
 	i = 0;
 	j=1
-	
-
 	for e in patt.events:
 		e.startTime+=(random.random()*2.0 - 1)*.4
 		e.duration=max(0.1,e.duration+(random.random()*2.0-1)*.4)
@@ -34,8 +43,6 @@ def transformPattern(patt):
 	return patt
 
 
-def test(s):
-	return s+"kklolo"
 
 
 if __name__ =='__main__':
