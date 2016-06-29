@@ -186,9 +186,11 @@ if __name__ == '__main__':
 			d = json.load(j)
 			p = GSPattern();
 			p.fromJSONDict(d);
-			p = p.getPatternForTimeSlice(0,4);
-			print p.duration
-			patterns+=[p]
+			loopLength = 4;
+			for i in range(int(p.duration/loopLength)):
+				p = p.getPatternForTimeSlice(i*loopLength,loopLength); # the current dataset can be splitted in loops of 4
+				print p.duration
+				patterns+=[p]
 
 	s.generateStyle(patterns)
 	s.generatePattern()
