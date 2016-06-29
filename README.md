@@ -27,7 +27,7 @@ sample code :
 >>> p = GSPattern()
 >>> p.addEvent(GSPatternEvent(0,1,64,127,["Kick"]))
 
-all modules are documented so typing help(GSPattern) provides relovent informations
+all modules are documented so typing help(GSPattern) provides relevent informations
 
 
 
