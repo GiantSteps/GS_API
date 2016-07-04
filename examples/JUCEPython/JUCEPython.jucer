@@ -11,6 +11,10 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.1">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <FILE id="ksScxZ" name="PatternComponent.cpp" compile="1" resource="0"
+            file="Source/PatternComponent.cpp"/>
+      <FILE id="drpP5U" name="PatternComponent.h" compile="0" resource="0"
+            file="Source/PatternComponent.h"/>
       <FILE id="ba77Pr" name="PyJUCEAPI.cpp" compile="1" resource="0" file="Source/PyJUCEAPI.cpp"/>
       <FILE id="jnIpwV" name="PyJUCEAPI.h" compile="0" resource="0" file="Source/PyJUCEAPI.h"/>
       <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
@@ -63,11 +67,11 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags=""
-               extraLinkerFlags="" extraDefs="" externalLibraries="" customXcodeResourceFolders="python"
-               extraFrameworks="Python">
+               extraLinkerFlags="" extraDefs="PYTHON_FWPATH=$(PYTHONFWPATH)&#10;PYTHON_HEADER=$(PYTHONFWPATH)/Python.framework/Versions/Current/Headers/Python.h&#10;PYTHON_ROOT=$(PYTHONFWPATH)/Python.framework/Versions/Current/&#10;PYTHON_BIN=$(PYTHONFWPATH)/Python.framework/Versions/Current/bin/python"
+               externalLibraries="" customXcodeResourceFolders="python" extraFrameworks="Python">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
-                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES"
+                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES,PYTHONFWPATH=/usr/local/Cellar/python/2.7.11/Frameworks"
                        osxSDK="default" osxCompatibility="10.8 SDK" cppLanguageStandard="c++11"
                        cppLibType="libc++"/>
         <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"/>

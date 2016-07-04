@@ -13,6 +13,7 @@
 
 
 #include "PluginProcessor.h"
+#include "PatternComponent.h"
 
 
 //==============================================================================
@@ -31,6 +32,7 @@ public:
 
 
 
+	PatternComponent patternComponent;
 
 
 private:

@@ -29,9 +29,9 @@ public:
     Py_DECREF(EventsObjName);
   }
   void init(){
-    NameObjName = PyString_FromString("name");
-    DurationObjName = PyString_FromString("duration");
-    EventsObjName = PyString_FromString("events");
+    NameObjName = PyFromString("name");
+    DurationObjName = PyFromString("duration");
+    EventsObjName = PyFromString("events");
 
   }
 
@@ -48,7 +48,7 @@ public:
     p = new GSPattern();
     {
       PyObject * n = PyDict_GetItem(dict, NameObjName);
-      if(n){p->name = PyString_AsString(n);}
+      if(n){p->name = PyToString(n);}
     }
     {
       PyObject * n = PyDict_GetItem(dict, DurationObjName);

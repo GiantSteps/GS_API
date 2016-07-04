@@ -41,6 +41,7 @@ public:
   public:
     virtual ~Listener(){};
     virtual void newFileLoaded(const File & f){};
+	virtual void newPatternLoaded( GSPattern * p){};
   };
   ListenerList<Listener> listeners;
   void addListener(Listener * l){listeners.add(l);}

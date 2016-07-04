@@ -44,10 +44,15 @@ addAndMakeVisible(useInternalTransportB);
   useInternalTransportB.setClickingTogglesState(true);
   useInternalTransportB.setColour(TextButton::buttonOnColourId, Colours::orange);
   useInternalTransportB.setToggleState(owner->useInternalTransport, dontSendNotification);
+	
+	addAndMakeVisible(patternComponent);
+	owner->pyAPI.addListener(&patternComponent);
+	
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 {
+	owner->pyAPI.removeListener(&patternComponent);
 }
 
 //==============================================================================
@@ -72,6 +77,10 @@ void JucepythonAudioProcessorEditor::resized()
   showB.setBounds(header.removeFromLeft(bSize));
   autoWatchB.setBounds(header.removeFromLeft(bSize));
   useInternalTransportB.setBounds(area.removeFromTop(30));
+	
+	
+	Rectangle<int> prec = area.removeFromTop(60);
+	patternComponent.setBounds(prec);
 }
 
 void JucepythonAudioProcessorEditor::buttonClicked (Button* b){

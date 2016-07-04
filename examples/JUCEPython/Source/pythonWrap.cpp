@@ -20,6 +20,19 @@
 void PythonWrap::init(){
   if(!Py_IsInitialized())
   {
+//	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
+//			 RTLD_NOW|RTLD_GLOBAL);
+//	  if(!handle){
+//		  DBG("error loading .so" <<dlerror());
+//	  }
+	  Py_SetPythonHome(_toxstr(PYTHON_ROOT));
+	  Py_SetProgramName(_toxstr(PYTHON_BIN));
+	  
+	  char* c =  Py_GetPythonHome();
+	  if(c){ DBG("home : "<<c);}
+	  char* cc =  Py_GetProgramName();
+	  if(cc){ DBG("prog : " <<cc);}
+		  
     Py_InitializeEx(0);
   }
 }
@@ -44,7 +57,7 @@ void PythonWrap::addSearchPath(const string & p){
 
 bool PythonWrap::load(const string & name){
   // Import the module "plugin" (from the file "plugin.py")
-  PyObject* moduleName = PyString_FromString(name.c_str());
+  PyObject* moduleName = PyFromString(name.c_str());
   //    Py_XDECREF(pluginModule);
 
   if (isFileLoaded()) {
@@ -115,7 +128,7 @@ string PythonWrap::test(const string& s){
     // Invoke the function, passing the argument tuple.
     PyObject* result = PyObject_CallObject(transformFunc, argsTuple);
     // Convert the result to a std::string.
-    std::string resultStr(PyString_AsString(result));
+    std::string resultStr(PyToString(result));
     // Free all temporary Python objects.
     Py_DECREF(transformFunc);
     Py_DECREF(argsTuple); Py_DECREF(result);

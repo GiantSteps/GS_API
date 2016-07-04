@@ -27,6 +27,8 @@ GSPattern *  PyJUCEAPI::getNewPattern(){
     }
 
   }
+	
+	listeners.call(&Listener::newPatternLoaded,p);
   return p;
 }
 //

@@ -32,11 +32,11 @@ public:
   void init(){
 
 
-    StartObjName = PyString_FromString("startTime");
-    DurationObjName = PyString_FromString("duration");
-    PitchObjName = PyString_FromString("pitch");
-    VelocityObjName = PyString_FromString("velocity");
-    TagsObjName = PyString_FromString("tags");
+    StartObjName = PyFromString("startTime");
+    DurationObjName = PyFromString("duration");
+    PitchObjName = PyFromString("pitch");
+    VelocityObjName = PyFromString("velocity");
+    TagsObjName = PyFromString("tags");
 
   }
 
@@ -59,12 +59,12 @@ public:
 
       {
         PyObject * n = PyDict_GetItem(dict, PitchObjName);
-        if(n){e->pitch = PyInt_AsLong(n);}
+        if(n){e->pitch = PyLong_AsLong(n);}
       }
 
       {
         PyObject * n = PyDict_GetItem(dict, VelocityObjName);
-        if(n){e->velocity = PyInt_AsLong(n);}
+        if(n){e->velocity = PyLong_AsLong(n);}
       }
 
     }
