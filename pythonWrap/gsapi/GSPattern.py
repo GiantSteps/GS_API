@@ -24,7 +24,8 @@ class GSPatternEvent(object):
 		velocity: velocity of event
 		tags: list of tags representing the event
 	"""
-	
+	_copyScheme='deep'
+
 	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
 		if not isinstance(tags,list):tags = [tags]
@@ -87,7 +88,13 @@ class GSPatternEvent(object):
 		Returns:
 			 A deep copy of this event to be manipulated without changing original
 		"""
-		return copy.deepcopy(self)
+		# return copy.deepcopy(self)
+		if GSPatternEvent._copyScheme==None or GSPatternEvent._copyScheme=='None':
+			return self
+		elif GSPatternEvent._copyScheme=='shallow':
+			return copy.shallow(self)
+		elif GSPatternEvent._copyScheme=='deep':
+			return copy.deepcopy(self)
 
 	def cutInSteps(self,stepSize):
 		""" Cut an event in steps of stepsize length
@@ -120,6 +127,7 @@ class GSPattern(object):
 	"""
 	defaultTimeSignature =[4,4];
 	defaultBPM = 120
+	_copyScheme = 'deep' # can be 'None' / 'shallow' / 'deep' // useful for batch import/export where no copy operation are needed
 	def __init__(self):
 		self.duration = 0;
 		self.events = [];
@@ -212,8 +220,13 @@ class GSPattern(object):
 	def copy(self):
 		""" Deepcopy a pattern
 		"""
-		import copy
-		return copy.deepcopy(self)
+
+		if GSPattern._copyScheme==None or GSPattern._copyScheme=='None':
+			return self
+		elif GSPattern._copyScheme=='shallow':
+			return copy.shallow(self)
+		elif GSPattern._copyScheme=='deep':
+			return copy.deepcopy(self)
 
 	def getAllTags(self):
 		""" Returns all used tags in this pattern
