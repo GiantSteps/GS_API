@@ -1,15 +1,18 @@
 var searchData=
 [
-  ['generatepattern',['generatePattern',['../classpython_wrap_1_1_g_s_style_1_1_g_s_markov_style_1_1_g_s_markov_style.html#a5559deb841a9119ed666001443f92687',1,'pythonWrap::GSStyle::GSMarkovStyle::GSMarkovStyle']]],
-  ['generatestyle',['generateStyle',['../classpython_wrap_1_1_g_s_style_1_1_g_s_markov_style_1_1_g_s_markov_style.html#a12f852dd5d85a4b7d2740ec0ffa076f8',1,'pythonWrap::GSStyle::GSMarkovStyle::GSMarkovStyle']]],
-  ['getactiveeventattime',['getActiveEventAtTime',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a0a4fece00921b36361f7388aaa21b851',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getallidenticalevents',['getAllIdenticalEvents',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a6da0f1981132e51aeb0a1b174de8b95b',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getalltags',['getAllTags',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#adf607ca8fc8d85d48e04eeb9faa2089d',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getlastnoteoff',['getLastNoteOff',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a69a86065c12a222349c1444f563b55de',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getpatternfortimeslice',['getPatternForTimeSlice',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a5fa9d8970febf1b7f0bd975bb177dc55',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['getstartingeventsattime',['getStartingEventsAtTime',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a2d4c5aa660f8eeac2fb3c8b942e276f0',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]],
-  ['gsmarkovstyle',['GSMarkovStyle',['../classpython_wrap_1_1_g_s_style_1_1_g_s_markov_style_1_1_g_s_markov_style.html',1,'pythonWrap::GSStyle::GSMarkovStyle']]],
-  ['gspattern',['GSPattern',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html',1,'pythonWrap::GSPattern::GSPattern']]],
-  ['gspatternevent',['GSPatternEvent',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern_event.html',1,'pythonWrap::GSPattern::GSPattern']]],
-  ['gsstyle',['GSStyle',['../classpython_wrap_1_1_g_s_style_1_1_g_s_style_1_1_g_s_style.html',1,'pythonWrap::GSStyle::GSStyle']]]
+  ['generatepattern',['generatePattern',['../classpython_wrap_1_1gsapi_1_1_g_s_internal_styles_1_1_g_s_markov_style_1_1_g_s_markov_style.html#a2b180cebc8f5c39da706a72a551d978d',1,'pythonWrap::gsapi::GSInternalStyles::GSMarkovStyle::GSMarkovStyle']]],
+  ['generatestyle',['generateStyle',['../classpython_wrap_1_1gsapi_1_1_g_s_internal_styles_1_1_g_s_markov_style_1_1_g_s_markov_style.html#ae8a335dbf87d4c51a6b34608140487df',1,'pythonWrap::gsapi::GSInternalStyles::GSMarkovStyle::GSMarkovStyle']]],
+  ['getacopywithoutevents',['getACopyWithoutEvents',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#ac79f5c925ad28b57509602cdba3ab184',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getactiveeventattime',['getActiveEventAtTime',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a361ea2d65f9b725db594f2acd060bc59',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getallidenticalevents',['getAllIdenticalEvents',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a6a82d10933e03e1a98fa4ac04ecb1450',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getalltags',['getAllTags',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a0cea0f747de9070e67f3e80097d02b52',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getlastnoteoff',['getLastNoteOff',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a00f741e4db6fd80571fd7be14717a160',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getpatternfortimeslice',['getPatternForTimeSlice',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a73d414d29ccac230256b41ca8f6fd8b4',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['getstartingeventsattime',['getStartingEventsAtTime',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#ad78fa0f57e3eef8946a674e0d4cc2865',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['gsdbstyle',['GSDBStyle',['../classpython_wrap_1_1gsapi_1_1_g_s_internal_styles_1_1_g_s_d_b_style_1_1_g_s_d_b_style.html',1,'pythonWrap::gsapi::GSInternalStyles::GSDBStyle']]],
+  ['gsmarkovstyle',['GSMarkovStyle',['../classpython_wrap_1_1gsapi_1_1_g_s_internal_styles_1_1_g_s_markov_style_1_1_g_s_markov_style.html',1,'pythonWrap::gsapi::GSInternalStyles::GSMarkovStyle']]],
+  ['gspattern',['GSPattern',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html',1,'pythonWrap::gsapi::GSPattern']]],
+  ['gspatternevent',['GSPatternEvent',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern_event.html',1,'pythonWrap::gsapi::GSPattern']]],
+  ['gspatterntransformer',['GSPatternTransformer',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_transformer_1_1_g_s_pattern_transformer.html',1,'pythonWrap::gsapi::GSPatternTransformer']]],
+  ['gsstyle',['GSStyle',['../classpython_wrap_1_1gsapi_1_1_g_s_style_1_1_g_s_style.html',1,'pythonWrap::gsapi::GSStyle']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['quantize',['quantize',['../classpython_wrap_1_1_g_s_pattern_1_1_g_s_pattern_1_1_g_s_pattern.html#a2c95abc9256305d18008fc0a4837ef58',1,'pythonWrap::GSPattern::GSPattern::GSPattern']]]
+  ['quantize',['quantize',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a9cb2f78a8eff140180af9663fe4222e8',1,'pythonWrap::gsapi::GSPattern::GSPattern']]]
 ];
