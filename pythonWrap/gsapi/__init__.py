@@ -1,6 +1,7 @@
 from GSPattern import *
 from GSStyle import *
 from GSInternalStyles import *
+from GSIO import *
 
 if __name__ == '__main__':
 	p = GSPattern()

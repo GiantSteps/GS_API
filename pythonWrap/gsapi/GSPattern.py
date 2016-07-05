@@ -24,14 +24,16 @@ class GSPatternEvent(object):
 		velocity: velocity of event
 		tags: list of tags representing the event
 	"""
+	
 	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
 		if not isinstance(tags,list):tags = [tags]
 		self.tags=tags
 		self.startTime = start;
 		self.pitch = pitch;
-		self.velocity = velocity
-		self.tags = tags
+		self.velocity = velocity;
+		self.tags = tags;
+		
 
 	def hasOneCommonTagWith(self,event):
 		""" compare tags between events
@@ -41,7 +43,7 @@ class GSPatternEvent(object):
 		Returns:
 			true if at least one tag is equal
 		"""
-		return self.hasOneOfTags(events.tags)
+		return self.hasOneOfTags(events.tags);
 
 	def hasOneOfTags(self,tags):
 		""" Compare this event's tags with a list of strings
@@ -54,8 +56,8 @@ class GSPatternEvent(object):
 
 		for t in tags:
 			if t in self.tags:
-				return True
-		return False
+				return True;
+		return False;
 
 	def tagsAre(self,tags):
 		""" Compare this event's tags with a list of strings
@@ -110,11 +112,22 @@ class GSPattern(object):
 	""" Class representing a pattern made of GSPatternEvent
 
 	hold a list of GSEvents and provide basic manipulation function
+	Args:
+	duration: length of pattern usually in beat, but time scale is up to the user (can be useful if working on 32th note steps)
+	events: list of GSPatternEvent for this pattern
+	bpm:origin BPM for this pattern (default: 120)
+	timeSignature: list of integer representing time signature ; i.e [numerator,denominator]
 	"""
+	defaultTimeSignature =[4,4];
+	defaultBPM = 120
 	def __init__(self):
 		self.duration = 0;
 		self.events = [];
-		self.bpm = 0;
+		self.bpm = GSPattern.defaultBPM;
+		self.timeSignature = GSPattern.defaultTimeSignature;
+		self.originFilePath=""
+		self.name=""
+
 
 	def checkDuration(self):
 		""" Verify that duration member is consistent 
@@ -127,6 +140,10 @@ class GSPattern(object):
 			self.duration = total
 
 	def reorderEvents(self):
+		""" ensure than our events are time sorted 
+			
+			can be useful for some algorithm
+		"""
 		self.events.sort(key=lambda x: x.startTime, reverse=False)
 
 	def getLastNoteOff(self):
@@ -312,3 +329,38 @@ class GSPattern(object):
 		for e in json['eventList']:
 			self.events+=[GSPatternEvent(e['on'],e['duration'],e['pitch'],e['velocity'],[tags[f] for f in e['tagsIdx']])]
 		self.checkDuration()
+
+	def splitInEqualLengthPatterns(self,desiredLength):
+		""" splits a pattern in consecutive equal length cuts
+
+		Args:
+			desiredLength: length desired for each pattern
+
+		Returns:
+			a list of patterns of length desiredLength
+		"""
+		patterns = {}
+		for e in self.events:
+			p = int(e.startTime/desiredLength);
+			numPattern = str(p)
+			if numPattern not in patterns:
+				patterns[numPattern] = self.copy()
+				patterns[numPattern].events = []
+				patterns[numPattern].duration = desiredLength;
+				patterns[numPattern].name = self.name + "_"+numPattern;
+			newEv = e.copy();
+			newEv.startTime-=p*desiredLength;
+			patterns[numPattern].events+=[newEv];
+		
+		res = []
+		for p in patterns:
+			patterns[p].checkDuration();
+			res+=[patterns[p]]
+
+		return res;
+
+
+
+
+
+	

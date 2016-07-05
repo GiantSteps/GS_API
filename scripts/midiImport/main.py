@@ -35,7 +35,7 @@ customNoteMapping = {
 
 desiredPatternLength = 4;
 
-def splitInequalLengthPatterns(pattern,desiredLength):
+def splitInEqualLengthPatterns(pattern,desiredLength):
 	patterns = {}
 	for e in pattern['eventList']:
 		p = int(e["on"]/desiredLength);
@@ -58,7 +58,7 @@ for f in glob.glob(crawledFolder):
 	print "getting "+name
 	res =  getPatterns(f,False,customNoteMapping);
 	
-	splitted = splitInequalLengthPatterns(res,desiredPatternLength)
+	splitted = splitInEqualLengthPatterns(res,desiredPatternLength)
 
 	indx = 0;
 	needIndexing = len(splitted)>1
