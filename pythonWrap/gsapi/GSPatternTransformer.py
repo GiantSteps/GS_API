@@ -12,7 +12,11 @@ class GSPatternTransformer(object):
 		self.type = "None"
 
 	def configure(self, paramDict):
+		"""configure current transformer based on implenmentation specific parameters passed in dict argument
+		"""
 		raise NotImplementedError( "Should have implemented this" )
 
 	def TransformPattern(self,pattern):
+		"""return a transformed version of GSPattern
+		"""
 		raise NotImplementedError( "Should have implemented this" )
