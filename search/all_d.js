@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['tags',['tags',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern_event.html#a4836efed30eb40776252e98e7b420073',1,'pythonWrap::gsapi::GSPattern::GSPatternEvent']]],
-  ['tagsare',['tagsAre',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern_event.html#ad7b2b9b4943e3385e612c8e9ddedf215',1,'pythonWrap::gsapi::GSPattern::GSPatternEvent']]],
-  ['tojsondict',['toJSONDict',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a06c0cf96f463a70dfb5b62d70c05406a',1,'pythonWrap::gsapi::GSPattern::GSPattern']]]
+  ['setinternalstate',['setInternalState',['../classpython_wrap_1_1gsapi_1_1_g_s_style_1_1_g_s_style.html#a88c61e3e1f6249a754364c558757f461',1,'pythonWrap::gsapi::GSStyle::GSStyle']]],
+  ['splitinequallengthpatterns',['splitInEqualLengthPatterns',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern.html#a91ecfd6a4936f2a78d1f1605bf21ed58',1,'pythonWrap::gsapi::GSPattern::GSPattern']]],
+  ['starttime',['startTime',['../classpython_wrap_1_1gsapi_1_1_g_s_pattern_1_1_g_s_pattern_event.html#a75793f92b38781c6e00ba1df0ef856a6',1,'pythonWrap::gsapi::GSPattern::GSPatternEvent']]]
 ];
