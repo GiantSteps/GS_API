@@ -78,17 +78,17 @@ void PyJUCEAPI::init(){
   py.init();
   pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
   py.initSearchPath();
-  py.addSearchPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+  py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
 }
 
 
 void PyJUCEAPI::load(){
   bool hasLoaded = py.load(pythonFile.getFileNameWithoutExtension().toStdString());
   lastPythonFileMod = pythonFile.getLastModificationTime();
-  listeners.call(&Listener::newFileLoaded,pythonFile);
+
 	if (hasLoaded)
 		callSetupFunction();
-	
+  listeners.call(&Listener::newFileLoaded,pythonFile);	
 	
 }
 

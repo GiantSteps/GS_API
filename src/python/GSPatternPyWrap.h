@@ -27,11 +27,13 @@ public:
     Py_DECREF(NameObjName);
     Py_DECREF(DurationObjName);
     Py_DECREF(EventsObjName);
+		Py_DECREF(timeSignatureName);
   }
   void init(){
     NameObjName = PyFromString("name");
     DurationObjName = PyFromString("duration");
     EventsObjName = PyFromString("events");
+		timeSignatureName =PyFromString("timeSignature");
 
   }
 
@@ -54,6 +56,13 @@ public:
     {
       PyObject * n = PyDict_GetItem(dict, DurationObjName);
       if(n){p->duration = PyFloat_AsDouble(n);}
+    }
+		{
+      PyObject * n = PyDict_GetItem(dict, timeSignatureName);
+      if(n && PyList_GET_SIZE(n)==2){
+				p->timeSigNumerator=  PyInt_AsLong( PyList_GET_ITEM(n, 0));
+				p->timeSigDenominator=  PyInt_AsLong( PyList_GET_ITEM(n, 1));
+			}
     }
 
     {
@@ -82,6 +91,7 @@ private:
   PyObject * NameObjName;
   PyObject * DurationObjName;
   PyObject * EventsObjName;
+	PyObject * timeSignatureName;
   
   GSPatternEventPyWrap eventWrap;
   

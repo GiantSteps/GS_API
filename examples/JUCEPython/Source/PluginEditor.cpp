@@ -48,12 +48,14 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	addAndMakeVisible(patternComponent);
 	owner->pyAPI.addListener(&patternComponent);
 	owner->pyAPI.addListener(this);
+	owner->addTimeListener(&patternComponent);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 {
 	owner->pyAPI.removeListener(&patternComponent);
 	owner->pyAPI.removeListener(this);
+	owner->removeTimeListener(&patternComponent);
 }
 
 //==============================================================================

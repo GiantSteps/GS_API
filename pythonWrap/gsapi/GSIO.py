@@ -122,7 +122,7 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
 					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-						print "not found note on "+str(e)+str(res["eventList"][-1])
+						print "not found note on "+str(e)+str(pattern.events[-1])
 						# exit()
 					
 
@@ -197,4 +197,20 @@ if __name__=='__main__':
 		p = pstats.Stats('profiled')
 		p.strip_dirs().sort_stats(1).print_stats()
 
+
+def PatternFromJSONFile(filePath):
+	""" load a pattern to internal JSON Format
+	Args:
+		filePath:filePath where to load it
+	"""
+	with open(filePath,'r') as f:
+		return GSPattern().fromJSONDict(json.load(f))
+
+def PatternToJSONFile(pattern,filePath):
+	""" save a pattern to internal JSON Format
+	Args:
+		filePath:filePath where to save it
+	"""
+	with open(filePath,'w') as f:
+		return json.dump(pattern.toJSONDict(),f)
 

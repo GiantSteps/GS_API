@@ -38,6 +38,12 @@ void PythonWrap::init(){
 }
 
 
+void PythonWrap::setFolderPath(const string & s){
+	curentFolderPath = s;
+	addSearchPath(s);
+	
+}
+
 void PythonWrap::initSearchPath(){
   //  default brew python on OSX
   PyRun_SimpleString("import sys;import site;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
@@ -63,7 +69,19 @@ bool PythonWrap::load(const string & name){
   if (isFileLoaded()) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
-    pluginModule = PyImport_ReloadModule(pluginModule);
+		setFolderPath(curentFolderPath);
+    PyObject * newPluginModule = PyImport_ReloadModule(pluginModule);
+		if(newPluginModule){
+			Py_DECREF(pluginModule);pluginModule = newPluginModule;
+		}
+		else{
+			printPyState();
+			
+			const string importS = "reload("+name+")";
+			cout << "failed reimport: " << name << endl;
+			PyRun_SimpleString(importS.c_str());
+		}
+		
     //        PyRun_SimpleString(reloadS.c_str());
   }
   else{
@@ -97,7 +115,6 @@ PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
 		PyObject * targs = nullptr;
 		if(args) targs =PyTuple_Pack(1,args);
    PyObject *res= PyObject_CallObject(pyFunc,targs);
-//		if(targs)Py_DECREF(targs);
 		return res;
 
   }

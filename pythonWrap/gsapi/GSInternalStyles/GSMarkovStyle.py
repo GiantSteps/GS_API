@@ -22,6 +22,7 @@ class GSMarkovStyle(GSStyle):
 		self.order = order;
 		self.numSteps = numSteps;
 		self.loopDuration = loopDuration
+		self.transitionTable = {}
 
 
 	def generateStyle(self, PatternClasses):
@@ -219,6 +220,22 @@ class GSMarkovStyle(GSStyle):
 
 	def getInterpolated(self,PatternA,PatternB,distanceFromA,seed=0):
 		raise NotImplementedError( "Should have implemented this" )
+
+	def getInternalState(self):
+		res = {}
+		res["transitionTable"] 	= self.transitionTable
+		res["order"] 			= self.order ;
+		res["numSteps"] 		= self.numSteps ;
+		res["loopDuration"] 	= self.loopDuration ;
+		return res
+	def setInternalState(self,state):
+		self.transitionTable=state["transitionTable"]
+		self.order =state["order"] 			
+		self.numSteps =state["numSteps"] 		
+		self.loopDuration =state["loopDuration"] 	
+	def isBuilt(self):
+		self.transitionTable !={}
+
 
 
 

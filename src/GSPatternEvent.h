@@ -41,6 +41,8 @@ public:
 
     bool isValid();
 
+	double getEndTime(){return start+duration;}
+
     static GSPatternEvent empty;
 	
 	 vector<string> getTagNames() const;

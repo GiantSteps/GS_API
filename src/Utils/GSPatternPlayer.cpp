@@ -13,7 +13,7 @@
 
 void GSPatternPlayer::updatePlayHead(double pH){
     
-	double lastPlayHead=playHead;
+	lastPlayHead=playHead;
 	if(isLooping && currentPattern.duration>0){
 		playHead = fmod(pH,currentPattern.duration);
 	}
@@ -22,16 +22,22 @@ void GSPatternPlayer::updatePlayHead(double pH){
 		
 		return;
 	}
+	
+	
+	
 	vector<MIDIMapEntry> newNotes;
 	
 	for(auto & n:currentPattern.events){
-		if (playHead>=n.start && playHead<n.start+n.duration) {
+		if (playHead>=n.start && playHead<n.getEndTime()) {
 			vector<MIDIMapEntry> nNotes=ownedMapper->getMIDINoteForEvent(n);
+			for (auto & nn:nNotes){
+				nn.endTime = n.getEndTime();
+			}
 			if(nNotes.size()>0)
 				newNotes.insert(newNotes.end(), nNotes.begin(),nNotes.end());
 		}
 	}
-	
+
 	
 	
 //	add new notes on
@@ -40,7 +46,7 @@ void GSPatternPlayer::updatePlayHead(double pH){
 	for(auto &nn:newNotes){
 		bool found =false;
 		for(auto &n:currentNote){
-			if ((nn.channel==n.channel) && (nn.pitch==n.pitch)) {
+			if ((nn.channel==n.channel) && (nn.pitch==n.pitch) && n.endTime>playHead) {
 				found=true;
 				break;
 			}

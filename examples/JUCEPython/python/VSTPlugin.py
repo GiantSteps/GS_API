@@ -1,4 +1,5 @@
 
+
 from gsapi import *
 from gsapi.GSInternalStyles import *
 import json
@@ -28,6 +29,15 @@ midiMap = {
 		"CowBell":51
 }
 
+localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
+searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
+styleSavingPath = os.path.join(localDirectory,"style.json");
+
+# style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
+style = GSDBStyle(generatePatternOrdering = "increasing");
+hasStyleSaved = os.path.isfile(styleSavingPath) 
+needStyleUpdate = False
+
 def setup():
 	print "settingUp"
 	
@@ -37,7 +47,7 @@ def onTimeChanged(time):
 	Returns:
  		the new GSpattern to be played if needed
 	"""
-	print time
+	
 	return None
 
 
@@ -47,25 +57,10 @@ def onGenerateNew():
 	Returns:
 	 the new GSpattern to be played
 	"""
-	searchPath = os.path.abspath(os.path.join(__file__,os.path.pardir))
-	searchPath = os.path.join(searchPath,"funkyfresh_style/*.json");
-	print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-	s = GSMarkovStyle(2,32,4)
-	patterns = []
-	for f in glob.glob(searchPath):
-		with open(f) as j:
-			d = json.load(j)
-			p = GSPattern();
-			p.fromJSONDict(d);
-			loopLength = 4;
-			for i in range(int(p.duration/loopLength)):
-				p = p.getPatternForTimeSlice(i*loopLength,loopLength); # the current dataset can be splitted in loops of 4
-				
-				patterns+=[p]
-
-	s.generateStyle(patterns)
+	
+	generateStyleIfNeeded();
 	print "start generating pattern"
-	pattern = s.generatePattern();
+	pattern = style.generatePattern();
 	print "mapMidi"
 	mapMidi(pattern)
 
@@ -79,6 +74,18 @@ def mapMidi(pattern):
 			e.pitch = midiMap[e.tags[0]]
 
 
+def generateStyleIfNeeded():
+	if not style.isBuilt():
+		if(not hasStyleSaved  or needStyleUpdate ):
+			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
+			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = 4)
+			style.generateStyle(patterns)
+			style.saveToJSON(styleSavingPath)
+			needStyleUpdate =False
+		else:
+			style.loadFromJSON(styleSavingPath)
+	
+
 
 def transformPattern(patt):
 	i = 0;
@@ -89,8 +96,8 @@ def transformPattern(patt):
 	return patt
 
 
-print __dict__
-
 if __name__ =='__main__':
+	print "runMain"
+	needStyleUpdate=True
 	patt = onGenerateNew();
 	# patt.printEvents()

@@ -21,6 +21,7 @@ typedef struct MIDIMapEntry{
 	int channel;
 	int pitch;
 	int velocity;
+	double endTime;
 }MIDIMapEntry;
 
 
@@ -97,7 +98,7 @@ public:
 	bool isLooping;
 private:
 	
-	double playHead;
+	double playHead,lastPlayHead;
 	GSPatternMidiMapper * ownedMapper;
 	
 	vector<MIDIMapEntry> currentNote;

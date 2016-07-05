@@ -26,17 +26,19 @@ class PythonWrap{
     string getVSTPath();
     void printPyState();
   void init();
+	void setFolderPath(const string & s);
     bool load(const string & name);
     void initSearchPath();
     void addSearchPath(const string &);
     bool isFileLoaded();
 	PyObject * callFunction(const string & func,PyObject * args=nullptr);
+	
 
     
 private:
     void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
-
+	string curentFolderPath;
     PyObject* pluginModule;
 
 };

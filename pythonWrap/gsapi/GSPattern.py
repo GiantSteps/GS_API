@@ -238,7 +238,7 @@ class GSPattern(object):
 		for e in self.events:
 			for  t in e.tags:
 				if not t in tags:
-					tags+=t;
+					tags+=[t];
 		return tags
 
 	def discretize(self,stepSize,repeatibleTags = ['silence']):
@@ -330,6 +330,22 @@ class GSPattern(object):
 		for e in self.events:
 			print e.tags , e.startTime , e.duration,e.pitch
 
+	def toJSONDict(self):
+		""" gives a standard dict for json output
+		"""
+		res = {}
+		self.checkDuration()
+		allTags =self.getAllTags()
+		res['eventTags'] = allTags
+		res['timeInfo'] = {'duration':self.duration,'BPM':self.bpm}
+		res['eventList'] = []
+		def findIdxforTags(tags,allTags):
+			return [allTags.index(x) for x in tags]
+		for e in self.events:
+			res['eventList']+=[{'on':e.startTime,'duration':e.duration,'pitch':e.pitch,'velocity':e.velocity,'tagsIdx':findIdxforTags(e.tags,allTags)}]
+		return res
+		
+
 	def fromJSONDict(self,json):
 		""" Loads a json API dict object to this pattern
 
@@ -337,11 +353,12 @@ class GSPattern(object):
 			json: a dict created from reading json file with GS API JSON format
 		"""
 		tags = json['eventTags']
-		self.duration = json['timeInfo']['length']
+		self.duration = json['timeInfo']['duration']
 		self.bpm = json['timeInfo']['BPM']
 		for e in json['eventList']:
 			self.events+=[GSPatternEvent(e['on'],e['duration'],e['pitch'],e['velocity'],[tags[f] for f in e['tagsIdx']])]
 		self.checkDuration()
+		return self
 
 	def splitInEqualLengthPatterns(self,desiredLength,copy=True):
 		""" splits a pattern in consecutive equal length cuts
