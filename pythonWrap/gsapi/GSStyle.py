@@ -8,6 +8,9 @@ class GSStyle(object):
 		getDistanceFromStyle(self,Pattern) : return a normalized value representing the "styliness" of a pattern 1 being farthest from style
 		getClosestPattern(self,Pattern,seed=0) : return the closest pattern in this style
 		getInterpolated(self,PatternA,PatternB,distanceFromA,seed=0) : interpolate between two pattern given this style constraints
+		getInternalState(self): should return a dict representing current internal state
+		loadInternalState(self,internalStateDict): load internal state from a given dict
+
 
 	"""
 	def __init__():
@@ -24,3 +27,32 @@ class GSStyle(object):
 
 	def getInterpolated(self,PatternA,PatternB,distanceFromA,seed=0):
 		raise NotImplementedError( "Should have implemented this" )
+
+	def getInternalState(self):
+		raise NotImplementedError( "Should have implemented this" )
+
+	def loadInternalState(self,internalStateDict):
+		raise NotImplementedError( "Should have implemented this" )	
+
+	def saveToJSON(self, filePath):
+		import json
+		state = self.getInternalState();
+		with open(filePath,'w') as f:
+			json.dump(f,state)
+
+
+	def loadFromJSON(self,filePath):
+		import json
+		
+		with open(filePath,'r') as f:
+			state = json.loads(f)
+		if state:
+			self.setInternalState(state);
+
+
+	def saveToPickle(self,filePath):
+		import cPickle
+		cPickle.dump(self,filePath)
+	def loadFromPickle(self,filePath):
+		import cPickle
+		self = cPickle.load(filePath)

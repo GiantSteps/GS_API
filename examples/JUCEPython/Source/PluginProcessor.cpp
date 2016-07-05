@@ -16,10 +16,12 @@
 JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),useInternalTransport(true)
 {
   pyAPI.addListener(this);
+	addTimeListener(&pyAPI);
 }
 
 JucepythonAudioProcessor::~JucepythonAudioProcessor()
 {
+	removeTimeListener(&pyAPI);
 }
 
 
@@ -141,6 +143,7 @@ else{
   // 120bpm
     playHead+=  buffer.getNumSamples()*2.0/getSampleRate();
 }
+	timeListeners.call(&TimeListener::setTime,playHead);
     player.updatePlayHead(playHead);
     for(auto & n:player.getCurrentNoteOn()){
         midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);

@@ -1,10 +1,10 @@
 /*
  ==============================================================================
-
+ 
  pythonWrap.cpp
  Created: 9 Jun 2016 10:52:18am
  Author:  Martin Hermant
-
+ 
  ==============================================================================
  */
 
@@ -20,11 +20,11 @@
 void PythonWrap::init(){
   if(!Py_IsInitialized())
   {
-//	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
-//			 RTLD_NOW|RTLD_GLOBAL);
-//	  if(!handle){
-//		  DBG("error loading .so" <<dlerror());
-//	  }
+		//	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
+		//			 RTLD_NOW|RTLD_GLOBAL);
+		//	  if(!handle){
+		//		  DBG("error loading .so" <<dlerror());
+		//	  }
 	  Py_SetPythonHome(_toxstr(PYTHON_ROOT));
 	  Py_SetProgramName(_toxstr(PYTHON_BIN));
 	  
@@ -32,7 +32,7 @@ void PythonWrap::init(){
 	  if(c){ DBG("home : "<<c);}
 	  char* cc =  Py_GetProgramName();
 	  if(cc){ DBG("prog : " <<cc);}
-		  
+		
     Py_InitializeEx(0);
   }
 }
@@ -43,7 +43,7 @@ void PythonWrap::initSearchPath(){
   PyRun_SimpleString("import sys;import site;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
   //    addSearchPath("/usr/local/lib/python2.7/site-packages");
   PyRun_SimpleString("print sys.path;");
-
+	
 }
 
 
@@ -51,7 +51,7 @@ void PythonWrap::initSearchPath(){
 void PythonWrap::addSearchPath(const string & p){
   string pathToAppend = "sys.path.append(\""+p+"\");";
   PyRun_SimpleString(pathToAppend.c_str());
-
+	
 }
 
 
@@ -59,7 +59,7 @@ bool PythonWrap::load(const string & name){
   // Import the module "plugin" (from the file "plugin.py")
   PyObject* moduleName = PyFromString(name.c_str());
   //    Py_XDECREF(pluginModule);
-
+	
   if (isFileLoaded()) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
@@ -68,17 +68,17 @@ bool PythonWrap::load(const string & name){
   }
   else{
     pluginModule = PyImport_Import(moduleName);
-
+		
   }
   if(!pluginModule){
-      // spitout errors if importing fails
-      const string importS = "import "+name;
-      cout << "failed : " << name << endl;
-      PyRun_SimpleString(importS.c_str());
+		// spitout errors if importing fails
+		const string importS = "import "+name;
+		cout << "failed : " << name << endl;
+		PyRun_SimpleString(importS.c_str());
     
   }
-
-
+	
+	
   Py_DECREF(moduleName);
   return pluginModule!=nullptr;
 }
@@ -87,21 +87,25 @@ bool PythonWrap::load(const string & name){
 
 bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 
-PyObject * PythonWrap::callFunction(const string & func,PyObject * args){
+PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
   if(isFileLoaded()){
     PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
     if(pyFunc ==nullptr){
       cout << "function not found : " << func << endl;
       return nullptr;
     }
+		PyObject * targs = nullptr;
+		if(args) targs =PyTuple_Pack(1,args);
+   PyObject *res= PyObject_CallObject(pyFunc,targs);
+//		if(targs)Py_DECREF(targs);
+		return res;
 
-    return PyObject_CallObject(pyFunc,args);
   }
-  else{
-    return nullptr;
-  }
-
-
+	
+	return nullptr;
+  
+	
+	
 }
 
 void* dummyFunc(){return nullptr;};
@@ -119,7 +123,7 @@ string PythonWrap::getVSTPath(){
 // debug utils
 
 string PythonWrap::test(const string& s){
-
+	
   if(pluginModule){
     // Retrieve the "transform()" function from the module.
     PyObject* transformFunc = PyObject_GetAttrString(pluginModule, "test");
@@ -135,13 +139,13 @@ string PythonWrap::test(const string& s){
     return resultStr;
   }
   return "";
-
-
+	
+	
 }
 
 void PythonWrap::printPyState(){
-
-
+	
+	
   cout << "pre : " << Py_GetPrefix() <<endl;
   cout <<"execpre : "<<Py_GetExecPrefix() << endl;
   cout << "pypath : " << Py_GetPath() << endl;
@@ -154,9 +158,9 @@ void PythonWrap::printPyState(){
   if(Py_GetPythonHome())
     cout <<"home : "<< Py_GetPythonHome() << endl;
   cout <<"full : " <<  Py_GetProgramFullPath() << endl;
-
-
-
+	
+	
+	
 }
 
 
@@ -165,7 +169,7 @@ void PythonWrap::printEnv(const string & p){
   cout<<p<<" : " ;
   if(c){cout<<c << endl;}
   else{cout<< "isempty" << endl;}
-
+	
 }
 
 

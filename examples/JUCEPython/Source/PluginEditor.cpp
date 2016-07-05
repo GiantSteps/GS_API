@@ -31,8 +31,8 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   showB.setButtonText("show File");
   reloadB.setColour(TextButton::buttonColourId,owner->pyAPI.isLoaded()?Colours::green:Colours::red);
 
-useInternalTransportB.setButtonText("internalBPM");
-addAndMakeVisible(useInternalTransportB);
+	useInternalTransportB.setButtonText("internalBPM");
+	addAndMakeVisible(useInternalTransportB);
 
   reloadB.addListener(this);
   generateB.addListener(this);
@@ -47,12 +47,13 @@ addAndMakeVisible(useInternalTransportB);
 	
 	addAndMakeVisible(patternComponent);
 	owner->pyAPI.addListener(&patternComponent);
-	
+	owner->pyAPI.addListener(this);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 {
 	owner->pyAPI.removeListener(&patternComponent);
+	owner->pyAPI.removeListener(this);
 }
 
 //==============================================================================
@@ -83,16 +84,21 @@ void JucepythonAudioProcessorEditor::resized()
 	patternComponent.setBounds(prec);
 }
 
+
+void JucepythonAudioProcessorEditor::updateButtonColor(){
+	if(owner->pyAPI.isLoaded()){reloadB.setColour(TextButton::buttonColourId,Colours::green);}
+	else { reloadB.setColour(TextButton::buttonColourId,Colours::red);}
+}
+
+
+void JucepythonAudioProcessorEditor::newFileLoaded(const File & f){updateButtonColor();}
+void JucepythonAudioProcessorEditor::newPatternLoaded( GSPattern * p){}
+
 void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
   if(b==&reloadB){
     owner->pyAPI.load();
-    if(owner->pyAPI.isLoaded()){
-      reloadB.setColour(TextButton::buttonColourId,Colours::green);
-      //            reloadB.setColour(Button::colo)
-    }
-    else
-      reloadB.setColour(TextButton::buttonColourId,Colours::red);
-  }
+		updateButtonColor();
+	}
   else if(b==&generateB){
     owner->updatePattern();
   }

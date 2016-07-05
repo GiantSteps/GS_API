@@ -6,6 +6,7 @@ import glob
 import random
 import os
 
+
 """ this example generates random notes to demonstrate passing GSPattern to C++ plugin
 """
 midiMap = {
@@ -28,14 +29,16 @@ midiMap = {
 }
 
 def setup():
-    pass
+	print "settingUp"
+	
 
-def onNewTime(time):
+def onTimeChanged(time):
 	""" called when user press generate new
 	Returns:
- 		the new GSpattern to be played
+ 		the new GSpattern to be played if needed
 	"""
-	pass
+	print time
+	return None
 
 
 
@@ -72,7 +75,6 @@ def onGenerateNew():
 
 def mapMidi(pattern):
 	for e in pattern.events:
-		print e.tags
 		if len(e.tags) > 0 and (e.tags[0] in midiMap):
 			e.pitch = midiMap[e.tags[0]]
 
@@ -84,14 +86,11 @@ def transformPattern(patt):
 	for e in patt.events:
 		e.startTime+=(random.random()*2.0 - 1)*.4
 		e.duration=max(0.1,e.duration+(random.random()*2.0-1)*.4)
-
-		
-	
 	return patt
 
 
-
+print __dict__
 
 if __name__ =='__main__':
 	patt = onGenerateNew();
-	patt.printEvents()
+	# patt.printEvents()

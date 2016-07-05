@@ -36,6 +36,7 @@ public:
   }
 
   GSPattern* GenerateFromObj(PyObject* o){
+		if(!o)return nullptr;
     PyObject ** obj = _PyObject_GetDictPtr(o);
     if(!obj){DBG("weird class passed back"); return nullptr;}
     PyObject * dict = *obj;
