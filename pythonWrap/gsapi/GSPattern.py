@@ -24,7 +24,7 @@ class GSPatternEvent(object):
 		velocity: velocity of event
 		tags: list of tags representing the event
 	"""
-	_copyScheme='deep'
+
 
 	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
@@ -89,12 +89,7 @@ class GSPatternEvent(object):
 			 A deep copy of this event to be manipulated without changing original
 		"""
 		# return copy.deepcopy(self)
-		if GSPatternEvent._copyScheme==None or GSPatternEvent._copyScheme=='None':
-			return self
-		elif GSPatternEvent._copyScheme=='shallow':
-			return copy.shallow(self)
-		elif GSPatternEvent._copyScheme=='deep':
-			return copy.deepcopy(self)
+		return copy.deepcopy(self)
 
 	def cutInSteps(self,stepSize):
 		""" Cut an event in steps of stepsize length
@@ -127,7 +122,7 @@ class GSPattern(object):
 	"""
 	defaultTimeSignature =[4,4];
 	defaultBPM = 120
-	_copyScheme = 'deep' # can be 'None' / 'shallow' / 'deep' // useful for batch import/export where no copy operation are needed
+
 	def __init__(self):
 		self.duration = 0;
 		self.events = [];
@@ -220,13 +215,18 @@ class GSPattern(object):
 	def copy(self):
 		""" Deepcopy a pattern
 		"""
-
-		if GSPattern._copyScheme==None or GSPattern._copyScheme=='None':
-			return self
-		elif GSPattern._copyScheme=='shallow':
-			return copy.shallow(self)
-		elif GSPattern._copyScheme=='deep':
-			return copy.deepcopy(self)
+		return copy.deepcopy(self)
+	def getACopyWithoutEvents(self):
+		""" copy all fields but events
+			useful for creating patterns from patterns
+		"""
+		p = GSPattern();
+		p.duration =self.duration;
+		p.bpm =self.bpm ;
+		p.timeSignature =self.timeSignature ;
+		p.originFilePath=self.originFilePath;
+		p.name=self.name;
+		return p
 
 	def getAllTags(self):
 		""" Returns all used tags in this pattern
@@ -343,27 +343,33 @@ class GSPattern(object):
 			self.events+=[GSPatternEvent(e['on'],e['duration'],e['pitch'],e['velocity'],[tags[f] for f in e['tagsIdx']])]
 		self.checkDuration()
 
-	def splitInEqualLengthPatterns(self,desiredLength):
+	def splitInEqualLengthPatterns(self,desiredLength,copy=True):
 		""" splits a pattern in consecutive equal length cuts
 
 		Args:
 			desiredLength: length desired for each pattern
+			copy: retruns a distinc copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
 
 		Returns:
 			a list of patterns of length desiredLength
 		"""
 		patterns = {}
+		
 		for e in self.events:
 			p = int(e.startTime/desiredLength);
 			numPattern = str(p)
 			if numPattern not in patterns:
-				patterns[numPattern] = self.copy()
-				patterns[numPattern].events = []
+				patterns[numPattern] = self.getACopyWithoutEvents()
 				patterns[numPattern].duration = desiredLength;
 				patterns[numPattern].name = self.name + "_"+numPattern;
-			newEv = e.copy();
+			if copy:
+				newEv = e.copy();
+			else:
+				newEv = e;
 			newEv.startTime-=p*desiredLength;
 			patterns[numPattern].events+=[newEv];
+		
+		
 		
 		res = []
 		for p in patterns:

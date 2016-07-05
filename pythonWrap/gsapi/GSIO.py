@@ -1,11 +1,12 @@
 import glob 
 import os
 
+# inject local gsapi if debugging
 if __name__=='__main__':
 	import sys
 	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir))
 	sys.path.insert(1,pathToAdd)
-	print sys.path
+	
 import gsapi
 import math
 from gsapi import *
@@ -26,13 +27,6 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
 		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi contained named tracks
 	"""
-
-	#  pops out copy scheme to set to None
-	old_copySchemeEvents = GSPatternEvent._copyScheme;
-	old_copySchemePatterns = GSPattern._copyScheme;
-
-	GSPatternEvent._copyScheme=None
-	GSPattern._copyScheme=None
 
 	def findTimeInfoFromMidi(pattern,midiFile):
 		
@@ -113,9 +107,8 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 
 				
 				if midi.NoteOnEvent.is_event(e.statusmsg):
-					
 					pattern.events+=[GSPatternEvent(e.tick*tick2quarterNote,-1,e.pitch,e.velocity,noteTags)]
-
+					
 					
 				# we forbid overlapping of two consecutive note of the same pitch
 				if midi.NoteOnEvent.is_event(e.statusmsg) or midi.NoteOffEvent.is_event(e.statusmsg):
@@ -128,26 +121,21 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 							i.duration = e.tick*tick2quarterNote - i.startTime
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
-					# if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-					# 	print "not found note on "+str(e)+str(res["eventList"][-1])
+					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
+						print "not found note on "+str(e)+str(res["eventList"][-1])
 						# exit()
 					
 
 
 
 	for e in pattern.events:
-		if e.startTime<=0:
+		if e.startTime<0:
 			print 'midi file not valid'
 			exit();
 	elementSize = 4.0/pattern.timeSignature[1]
 	barSize = pattern.timeSignature[0]*elementSize;
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
 	pattern.duration = lastBarPos
-
-
-	
-	GSPatternEvent._copyScheme = old_copySchemeEvents ;
-	GSPattern._copyScheme = old_copySchemePatterns ;
 
 	return pattern
 
@@ -172,26 +160,18 @@ def fromMidiCollection(midiGlobPath,NoteToTagsMap,TagsFromTrackNameEvents=False,
 		a list of GSPattern build from Midi folder
 	"""
 
-#  pops out copy scheme to set to None for the time of the import
-	old_copySchemeEvents = GSPatternEvent._copyScheme;
-	old_copySchemePatterns = GSPattern._copyScheme;
 
-	GSPatternEvent._copyScheme=None
-	GSPattern._copyScheme=None
 	res = []
+	print glob.glob(midiGlobPath)
 	for f in glob.glob(midiGlobPath):
 		name =  os.path.splitext(os.path.basename(f))[0]
 		print "getting "+name
 		p = fromMidi(f,NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents);
 		
 		if desiredLength>0:
-			res+= p.splitInEqualLengthPatterns(desiredLength);
+			res+= p.splitInEqualLengthPatterns(desiredLength,copy=False);
 		else:
 			res+=[p];
-
-
-	GSPatternEvent._copyScheme=old_copySchemeEvents ;
-	GSPattern.copyScheme=old_copySchemePatterns ;
 	return res;
 
 
@@ -201,17 +181,20 @@ if __name__=='__main__':
 	crawledFolder = "../test/midi/*.mid"
 	customNoteMapping = {"Kick":36,"Rimshot":37,"Snare":38,"Clap":39,"Clave":40,"LowTom":41,"ClosedHH":42,"MidTom":43,"Shake":44,"HiTom":45,"OpenHH":46,"LowConga":47,"HiConga":48,"Cymbal":49,"Conga":50,"CowBell":51}
 
+
+
 	profile =True
 	if profile:
 		import cProfile
 		import re
-		cProfile.run('fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)',filename='profiled')
+		cProfile.run('patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)',filename='profiled')
+		patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)
+		print patterns
+		for p in patterns:
+			p.printEvents()
 	else:
 		import pstats
 		p = pstats.Stats('profiled')
 		p.strip_dirs().sort_stats(1).print_stats()
-	# patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)
-	# print patterns
-	# for p in patterns:
-	# 	p.printEvents()
+
 
