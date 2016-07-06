@@ -105,15 +105,8 @@ bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
   if(isFileLoaded()){
     PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
-    if(pyFunc ==nullptr){
-      cout << "function not found : " << func << endl;
-      return nullptr;
-    }
-		PyObject * targs = nullptr;
-		if(args) targs =PyTuple_Pack(1,args);
-   PyObject *res= PyObject_CallObject(pyFunc,targs);
-		PyErr_Print();
-		return res;
+		if(pyFunc ==nullptr){cout << "function not found " << func<< endl;return nullptr;}
+		return callFunction(pyFunc,args);
 
   }
 	
@@ -121,6 +114,14 @@ PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
   
 	
 	
+}
+PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * args){
+	if(pyFunc ==nullptr){return nullptr;}
+	PyObject * targs = nullptr;
+	if(args) targs =PyTuple_Pack(1,args);
+	PyObject *res= PyObject_CallObject(pyFunc,targs);
+	PyErr_Print();
+	return res;
 }
 
 void* dummyFunc(){return nullptr;};

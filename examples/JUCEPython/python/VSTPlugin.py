@@ -11,6 +11,7 @@ import json
 import glob
 import random
 import os
+from UIParameter import UIParameter
 
 
 """ this example generates random notes to demonstrate passing GSPattern to C++ plugin
@@ -41,7 +42,7 @@ styleSavingPath = os.path.join(localDirectory,"MarkovStyle.json");
 style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
 # style = GSDBStyle(generatePatternOrdering = "increasing");
 hasStyleSaved = os.path.isfile(styleSavingPath) ;
-needStyleUpdate = True;
+needStyleUpdate = False;
 
 def setup():
 	print "settingThingsUp"
@@ -56,6 +57,19 @@ def onTimeChanged(time):
 	"""
 	
 	return None
+
+def updateTest():
+	print "pyrcv"
+
+def getAllParameters():
+	""" should return a list of params to be displayed in VST GUI
+	"""
+	res = []
+	test = UIParameter(10)
+	test.onChange = updateTest
+	test.value = 10
+	res+=[test]
+	return res;
 
 
 
@@ -109,6 +123,7 @@ def transformPattern(patt):
 
 if __name__ =='__main__':
 	print "runMain"
-	needStyleUpdate=True
+	needStyleUpdate=False
 	patt = onGenerateNew();
+	params =  getAllParams()
 	# patt.printEvents()

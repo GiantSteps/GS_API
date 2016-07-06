@@ -33,7 +33,7 @@ class PythonWrap{
     void addSearchPath(const string &);
     bool isFileLoaded();
 	PyObject * callFunction(const string & func,PyObject * args=nullptr);
-	
+	PyObject * callFunction(PyObject * func,PyObject * args);
 
     
 private:

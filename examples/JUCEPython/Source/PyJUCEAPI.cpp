@@ -85,11 +85,37 @@ void PyJUCEAPI::init(){
 void PyJUCEAPI::load(){
   bool hasLoaded = py.load(pythonFile.getFileNameWithoutExtension().toStdString());
   lastPythonFileMod = pythonFile.getLastModificationTime();
-
-	if (hasLoaded)
-		callSetupFunction();
-  listeners.call(&Listener::newFileLoaded,pythonFile);	
 	
+	if (hasLoaded){
+		callSetupFunction();
+		buildParamsFromScript();
+	}
+  listeners.call(&Listener::newFileLoaded,pythonFile);
+	
+}
+
+void PyJUCEAPI::buildParamsFromScript(){
+	params.clear();
+	listeners.call(&Listener::newParamsLoaded,params);
+	
+	PyObject * o = py.callFunction("getAllParameters");
+	if (o){
+		
+		if(PyList_Check(o)) {
+			int s = PyList_GET_SIZE(o);
+			for (int i = 0 ; i < s; i++){
+				PyObject * it = PyList_GET_ITEM(o, i);
+				PyJUCEParameter * p = PyJUCEParameterBuilder::buildParamFromObject(it);
+				if(p){
+					p->linkToPyWrap(&py);
+				}
+				params.add(p);
+			}
+		}
+    Py_DECREF(o);
+	}
+	
+	listeners.call(&Listener::newParamsLoaded,params);
 }
 
 void PyJUCEAPI::timeChanged(double time) {

@@ -35,6 +35,7 @@ public:
   GSPattern *  getNewPattern();
   void callSetupFunction();
 	GSPattern * callTimeChanged(double time);
+	void buildParamsFromScript();
 	
 	// python wrapper object
   PythonWrap  py ;
@@ -46,6 +47,7 @@ public:
     virtual ~Listener(){};
     virtual void newFileLoaded(const File & f){};
 		virtual void newPatternLoaded( GSPattern * p){};
+		virtual void newParamsLoaded(const OwnedArray<PyJUCEParameter> &){};
   };
   ListenerList<Listener> listeners;
   void addListener(Listener * l){listeners.add(l);}
@@ -62,7 +64,7 @@ protected:
 	
   GSPatternPyWrap GSPatternWrap;
 	
-	OwnedArray<PyJUCEParameter*> params;
+	OwnedArray<PyJUCEParameter> params;
 	
 };
 

@@ -11,15 +11,23 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <GROUP id="{4D0B4318-A514-6A3F-FD2E-A4871C68B511}" name="UI">
+        <FILE id="ywgcqP" name="PythonCanvas.cpp" compile="1" resource="0"
+              file="Source/PythonCanvas.cpp"/>
+        <FILE id="tJYf4n" name="PythonCanvas.h" compile="0" resource="0" file="Source/PythonCanvas.h"/>
+        <FILE id="drpP5U" name="PatternComponent.h" compile="0" resource="0"
+              file="Source/PatternComponent.h"/>
+        <FILE id="ksScxZ" name="PatternComponent.cpp" compile="1" resource="0"
+              file="Source/PatternComponent.cpp"/>
+        <FILE id="dJDdys" name="PluginEditor.cpp" compile="1" resource="0"
+              file="Source/PluginEditor.cpp"/>
+        <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      </GROUP>
       <FILE id="qvtP6d" name="PyJUCEParameter.cpp" compile="1" resource="0"
             file="Source/PyJUCEParameter.cpp"/>
       <FILE id="sFdDuz" name="PyJUCEParameter.h" compile="0" resource="0"
             file="Source/PyJUCEParameter.h"/>
       <FILE id="LG9RSl" name="TimeListener.h" compile="0" resource="0" file="Source/TimeListener.h"/>
-      <FILE id="ksScxZ" name="PatternComponent.cpp" compile="1" resource="0"
-            file="Source/PatternComponent.cpp"/>
-      <FILE id="drpP5U" name="PatternComponent.h" compile="0" resource="0"
-            file="Source/PatternComponent.h"/>
       <FILE id="ba77Pr" name="PyJUCEAPI.cpp" compile="1" resource="0" file="Source/PyJUCEAPI.cpp"/>
       <FILE id="jnIpwV" name="PyJUCEAPI.h" compile="0" resource="0" file="Source/PyJUCEAPI.h"/>
       <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
@@ -28,9 +36,6 @@
             file="Source/PluginProcessor.cpp"/>
       <FILE id="K0hucz" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="dJDdys" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
     <GROUP id="{28874B65-F313-7096-819C-A589B9634659}" name="GSAPI">
       <GROUP id="{6583CFA6-26D6-6DBD-8F91-6218A9CF8C7C}" name="python">
