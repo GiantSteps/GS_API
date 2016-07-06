@@ -75,11 +75,10 @@ bool PythonWrap::load(const string & name){
 			Py_DECREF(pluginModule);pluginModule = newPluginModule;
 		}
 		else{
+			cout << "failed reload: " << name << endl;
 			printPyState();
+			PyErr_Print();
 			
-			const string importS = "reload("+name+")";
-			cout << "failed reimport: " << name << endl;
-			PyRun_SimpleString(importS.c_str());
 		}
 		
     //        PyRun_SimpleString(reloadS.c_str());
@@ -90,9 +89,7 @@ bool PythonWrap::load(const string & name){
   }
   if(!pluginModule){
 		// spitout errors if importing fails
-		const string importS = "import "+name;
-		cout << "failed : " << name << endl;
-		PyRun_SimpleString(importS.c_str());
+		PyErr_Print();
     
   }
 	
@@ -115,6 +112,7 @@ PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
 		PyObject * targs = nullptr;
 		if(args) targs =PyTuple_Pack(1,args);
    PyObject *res= PyObject_CallObject(pyFunc,targs);
+		PyErr_Print();
 		return res;
 
   }

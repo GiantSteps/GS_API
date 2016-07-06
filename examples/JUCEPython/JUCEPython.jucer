@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="p6kwk3" name="JUCEPython" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="com.yourcompany.JUCEPython" includeBinaryInAppConfig="1"
+              bundleIdentifier="com.GiantSteps.JUCEPython" includeBinaryInAppConfig="1"
               buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
               buildAAX="0" pluginName="JUCEPython" pluginDesc="JUCEPython"
-              pluginManufacturer="yourcompany" pluginManufacturerCode="Manu"
+              pluginManufacturer="yourcompany" pluginManufacturerCode="GiSt"
               pluginCode="P6kw" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="1"
               pluginProducesMidiOut="1" pluginIsMidiEffectPlugin="1" pluginEditorRequiresKeys="0"
               pluginAUExportPrefix="JUCEPythonAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.JUCEPython"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.1">
+              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
       <FILE id="LG9RSl" name="TimeListener.h" compile="0" resource="0" file="Source/TimeListener.h"/>
@@ -68,8 +68,9 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags=""
-               extraLinkerFlags="" extraDefs="PYTHON_FWPATH=$(PYTHONFWPATH)&#10;PYTHON_HEADER=$(PYTHONFWPATH)/Python.framework/Versions/Current/Headers/Python.h&#10;PYTHON_ROOT=$(PYTHONFWPATH)/Python.framework/Versions/Current/&#10;PYTHON_BIN=$(PYTHONFWPATH)/Python.framework/Versions/Current/bin/python"
-               externalLibraries="" customXcodeResourceFolders="python" extraFrameworks="Python">
+               extraLinkerFlags="-F$(PYTHONFWPATH)" extraDefs="PYTHON_FWPATH=$(PYTHONFWPATH)&#10;PYTHON_HEADER=$(PYTHONFWPATH)/Python.framework/Versions/Current/Headers/Python.h&#10;PYTHON_ROOT=$(PYTHONFWPATH)/Python.framework/Versions/Current/&#10;PYTHON_BIN=$(PYTHONFWPATH)/Python.framework/Versions/Current/bin/python"
+               externalLibraries="" customXcodeResourceFolders="python" extraFrameworks="Python"
+               prebuildCommand="touch $SRCROOT/../../python">
       <CONFIGURATIONS>
         <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
                        defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES,PYTHONFWPATH=/usr/local/Cellar/python/2.7.11/Frameworks"

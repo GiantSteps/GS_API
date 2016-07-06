@@ -35,11 +35,13 @@ styleSavingPath = os.path.join(localDirectory,"style.json");
 
 # style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
 style = GSDBStyle(generatePatternOrdering = "increasing");
-hasStyleSaved = os.path.isfile(styleSavingPath) 
-needStyleUpdate = False
+hasStyleSaved = os.path.isfile(styleSavingPath) ;
+needStyleUpdate = False;
 
 def setup():
-	print "settingUp"
+	global needStyleUpdate
+	needStyleUpdate=True
+	print "settingThingsUp"
 	
 
 def onTimeChanged(time):
@@ -57,7 +59,7 @@ def onGenerateNew():
 	Returns:
 	 the new GSpattern to be played
 	"""
-	
+	global style
 	generateStyleIfNeeded();
 	print "start generating pattern"
 	pattern = style.generatePattern();
@@ -75,6 +77,10 @@ def mapMidi(pattern):
 
 
 def generateStyleIfNeeded():
+	global needStyleUpdate
+	global hasStyleSaved
+	global midiMap
+	global style
 	if not style.isBuilt():
 		if(not hasStyleSaved  or needStyleUpdate ):
 			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
