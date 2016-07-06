@@ -47,12 +47,14 @@ public:
     virtual ~Listener(){};
     virtual void newFileLoaded(const File & f){};
 		virtual void newPatternLoaded( GSPattern * p){};
-		virtual void newParamsLoaded(const OwnedArray<PyJUCEParameter> &){};
+		virtual void newParamsLoaded( OwnedArray<PyJUCEParameter> *){};
   };
   ListenerList<Listener> listeners;
   void addListener(Listener * l){listeners.add(l);}
   void removeListener(Listener * l){listeners.remove(l);}
 	void timeChanged(double time) override;
+	
+	OwnedArray<PyJUCEParameter> params;
 	
 protected:
 	
@@ -64,7 +66,7 @@ protected:
 	
   GSPatternPyWrap GSPatternWrap;
 	
-	OwnedArray<PyJUCEParameter> params;
+	
 	
 };
 

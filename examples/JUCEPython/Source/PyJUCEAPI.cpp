@@ -96,7 +96,7 @@ void PyJUCEAPI::load(){
 
 void PyJUCEAPI::buildParamsFromScript(){
 	params.clear();
-	listeners.call(&Listener::newParamsLoaded,params);
+	listeners.call(&Listener::newParamsLoaded,&params);
 	
 	PyObject * o = py.callFunction("getAllParameters");
 	if (o){
@@ -115,12 +115,10 @@ void PyJUCEAPI::buildParamsFromScript(){
     Py_DECREF(o);
 	}
 	
-	listeners.call(&Listener::newParamsLoaded,params);
+	listeners.call(&Listener::newParamsLoaded,&params);
 }
 
-void PyJUCEAPI::timeChanged(double time) {
-	callTimeChanged(time);
-};
+void PyJUCEAPI::timeChanged(double time) {callTimeChanged(time);};
 
 
 

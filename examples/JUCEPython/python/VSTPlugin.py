@@ -65,7 +65,7 @@ def getAllParameters():
 	""" should return a list of params to be displayed in VST GUI
 	"""
 	res = []
-	test = UIParameter(10)
+	test = UIParameter(10,0,0,50,100)
 	test.onChange = updateTest
 	test.value = 10
 	res+=[test]
@@ -125,5 +125,9 @@ if __name__ =='__main__':
 	print "runMain"
 	needStyleUpdate=False
 	patt = onGenerateNew();
-	params =  getAllParams()
+	params =  getAllParameters()
+	print dir(params[0])
+	for property, value in vars(params[0]).iteritems():
+		print property, ": ", value
+	
 	# patt.printEvents()

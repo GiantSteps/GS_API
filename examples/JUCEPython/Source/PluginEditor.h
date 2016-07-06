@@ -15,7 +15,7 @@
 #include "PluginProcessor.h"
 #include "PatternComponent.h"
 #include "TimeListener.h"
-
+#include "PythonCanvas.h"
 
 //==============================================================================
 /**
@@ -36,6 +36,7 @@ public:
 	void newPatternLoaded( GSPattern * p)override;
 	
 	PatternComponent patternComponent;
+	PythonCanvas pyCnv;
 
 
 private:

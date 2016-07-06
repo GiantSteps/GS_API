@@ -50,6 +50,11 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	owner->pyAPI.addListener(this);
 	owner->addTimeListener(&patternComponent);
 	patternComponent.newPatternLoaded(&owner->player.currentPattern);
+	
+	
+	owner->pyAPI.addListener(&pyCnv);
+	addAndMakeVisible(pyCnv);
+	pyCnv.newParamsLoaded(&owner->pyAPI.params);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
@@ -57,6 +62,7 @@ JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 	owner->pyAPI.removeListener(&patternComponent);
 	owner->pyAPI.removeListener(this);
 	owner->removeTimeListener(&patternComponent);
+	owner->pyAPI.removeListener(&pyCnv);
 }
 
 //==============================================================================
@@ -85,6 +91,8 @@ void JucepythonAudioProcessorEditor::resized()
 	
 	Rectangle<int> prec = area.removeFromTop(60);
 	patternComponent.setBounds(prec);
+	
+	pyCnv.setBounds(area);
 }
 
 
