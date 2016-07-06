@@ -139,7 +139,7 @@ class GSPattern(object):
 		"""
 		total = self.getLastNoteOff();
 		if (total and (total > self.duration)):
-			print "resizing : "+str(total) +'old : '+ str(self.duration)
+			# print "resizing : "+str(total) +'old : '+ str(self.duration)
 			self.duration = total
 
 	def reorderEvents(self):

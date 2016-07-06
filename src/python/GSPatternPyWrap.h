@@ -21,6 +21,10 @@ class GSPatternPyWrap{
 public:
 
   GSPatternPyWrap(){
+		NameObjName = PyFromString("name");
+    DurationObjName = PyFromString("duration");
+    EventsObjName = PyFromString("events");
+		timeSignatureName =PyFromString("timeSignature");
     init();
   }
   ~GSPatternPyWrap(){
@@ -30,10 +34,7 @@ public:
 		Py_DECREF(timeSignatureName);
   }
   void init(){
-    NameObjName = PyFromString("name");
-    DurationObjName = PyFromString("duration");
-    EventsObjName = PyFromString("events");
-		timeSignatureName =PyFromString("timeSignature");
+
 
   }
 

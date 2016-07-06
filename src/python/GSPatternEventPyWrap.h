@@ -19,6 +19,13 @@ class GSPatternEventPyWrap{
 public:
 
   GSPatternEventPyWrap(){
+		
+    StartObjName = PyFromString("startTime");
+    DurationObjName = PyFromString("duration");
+    PitchObjName = PyFromString("pitch");
+    VelocityObjName = PyFromString("velocity");
+    TagsObjName = PyFromString("tags");
+
     init();
   }
   ~GSPatternEventPyWrap(){
@@ -31,12 +38,6 @@ public:
 
   void init(){
 
-
-    StartObjName = PyFromString("startTime");
-    DurationObjName = PyFromString("duration");
-    PitchObjName = PyFromString("pitch");
-    VelocityObjName = PyFromString("velocity");
-    TagsObjName = PyFromString("tags");
 
   }
 

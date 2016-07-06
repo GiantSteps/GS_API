@@ -11,6 +11,10 @@
               pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <FILE id="qvtP6d" name="PyJUCEParameter.cpp" compile="1" resource="0"
+            file="Source/PyJUCEParameter.cpp"/>
+      <FILE id="sFdDuz" name="PyJUCEParameter.h" compile="0" resource="0"
+            file="Source/PyJUCEParameter.h"/>
       <FILE id="LG9RSl" name="TimeListener.h" compile="0" resource="0" file="Source/TimeListener.h"/>
       <FILE id="ksScxZ" name="PatternComponent.cpp" compile="1" resource="0"
             file="Source/PatternComponent.cpp"/>

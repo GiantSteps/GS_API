@@ -47,24 +47,28 @@ class GSMarkovStyle(GSStyle):
 		for p in self.binarizedPatterns:
 			self.formatPattern(p)
 			self.checkSilences(p)
-			print p.duration
+			
 			for step in range(p.duration):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
 				curEvent = self._buildNameForEvents(l);
 				combinationName = self._buildNameForEvents(self.getLastEvents(p,step,self.order,1));
+
 				curDic = self.transitionTable[int(step)]
 				
 
 				
 				if combinationName not in curDic:
+					
 					curDic[combinationName] = {}
 				
 				if curEvent not in curDic[combinationName]:
+					
 					curDic[combinationName][curEvent] = 1
 				else:
 					curDic[combinationName][curEvent] += 1
 				# print e.tags , [ x.tags  for t in lastEvents for x in t]
+
 		
 		def _normalize():
 			for t in self.transitionTable:
@@ -76,6 +80,7 @@ class GSMarkovStyle(GSStyle):
 					for pe in t[d]:
 						t[d][pe]/=1.0*sum
 		_normalize()
+		
 		
 
 	def generatePattern(self,seed = None):
@@ -96,12 +101,12 @@ class GSMarkovStyle(GSStyle):
 
 		def _isValidState(step,previousTags):
 			d = self.transitionTable[step]
-			print d,previousTags
+			# print d,previousTags
 			return previousTags in d
 
 		def _generateEventAtStep(step,previousTags):
 			
-			if not previousTags in self.transitionTable[step] :  return None
+			if not previousTags in self.transitionTable[step] :  print "zero state for "+str(previousTags);return None
 			d = self.transitionTable[step][previousTags]
 
 			chosenIdx = 0
@@ -112,7 +117,7 @@ class GSMarkovStyle(GSStyle):
 					if bins[i-1]<=r and bins[i]>r:
 						chosenIdx = i-1
 						break;
-				print chosenIdx
+				# print chosenIdx
 				
 			return d.keys()[chosenIdx]
 
@@ -126,37 +131,47 @@ class GSMarkovStyle(GSStyle):
 		startHypothesis =[]
 		for n in range (self.order):
 			startHypothesis+=[random.choice(_getAvailableAtStep(n))]
-		startHypothesis.sort()
+		
 		while not _isValidState(cIdx,','.join(startHypothesis)):
 			startHypothesis =[]
 			for n in range (self.order):
 				startHypothesis+=[random.choice(_getAvailableAtStep(n))]
 
-		print startHypothesis
+		# print startHypothesis
 		events = startHypothesis
 		i = self.order
-		print self.transitionTable
-		while i <self.numSteps:
+		maxNumtries = 10
+		maxTries = maxNumtries
+		while i <self.numSteps and (maxTries) >0:
+			
+
 			newPast =  events[i-self.order:i]
-			newPast.sort();
-			print newPast , i , self.numSteps,','.join(newPast)
+			
+			
 			newEv =  _generateEventAtStep(i,','.join(newPast))
-			print newEv
+			print i , ','.join(newPast),"\t==>", newEv
 			if newEv:
-				print i,newEv
+				# print i,newEv
 				events+=[newEv]
+				maxTries = maxNumtries
 				i+=1
 			else:
+				maxTries-=1
 				print "not found combination", ','.join(newPast) ,self.transitionTable[i] ;
 		
 
 		pattern = GSPattern()
 		idx = 0;
+
+		stepSize = 1.0*self.loopDuration/self.numSteps
+
 		for el in events:
 			l = el.split("/")
 			for e in l:
-				pattern.events+=[GSPatternEvent(idx*1.0*self.loopDuration/self.numSteps,1,100,127,e)]
+				if(e!='silence') : pattern.events+=[GSPatternEvent(idx*stepSize,stepSize,100,127,e)]
 			idx+=1
+		pattern.duration = self.loopDuration
+		
 		return pattern
 
 	def checkSilences(self,p):
@@ -181,7 +196,7 @@ class GSMarkovStyle(GSStyle):
 					if t not in curL : curL+=[t]
 			curL.sort()
 			res+=[curL]
-		res.sort()
+		
 		out = ""
 		for l in res:
 			out+='/'.join(l)
@@ -202,7 +217,7 @@ class GSMarkovStyle(GSStyle):
 
 	def getLastEvents(self,pattern,step,num,stepSize):
 		events = []
-		for i  in range(1,num+1):
+		for i  in reversed(range(1,num+1)):
 			idx = step - i*stepSize;
 			if idx < 0 :
 				idx+=pattern.duration

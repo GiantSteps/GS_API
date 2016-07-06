@@ -1,6 +1,6 @@
 from gsapi import *
 
-crawledFolder = "../../pythonWrap/test/midi/*.mid"
+crawledFolder = "../../python/test/midi/*.mid"
 
 
 customNoteMapping = {

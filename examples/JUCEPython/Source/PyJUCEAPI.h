@@ -11,18 +11,15 @@
 #ifndef PYJUCEAPI_H_INCLUDED
 #define PYJUCEAPI_H_INCLUDED
 
-
-#include "GS_API.h"
-
-#include "pythonWrap.h"
 #include "JuceHeader.h"
 
-//#define GETDICTOBJ(
-
+#include "GS_API.h"
 #include "GSPatternPyWrap.h"
 
-
+#include "pythonWrap.h"
 #include "TimeListener.h"
+
+#include "PyJUCEParameter.h"
 
 class PyJUCEAPI : public Timer,public TimeListener{
 public:
@@ -65,6 +62,7 @@ protected:
 	
   GSPatternPyWrap GSPatternWrap;
 	
+	OwnedArray<PyJUCEParameter*> params;
 	
 };
 

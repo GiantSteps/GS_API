@@ -13,8 +13,8 @@
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
       <FILE id="ba77Pr" name="PyJUCEAPI.cpp" compile="1" resource="0" file="Source/PyJUCEAPI.cpp"/>
       <FILE id="jnIpwV" name="PyJUCEAPI.h" compile="0" resource="0" file="Source/PyJUCEAPI.h"/>
-      <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
-      <FILE id="a8P8mA" name="pythonWrap.h" compile="0" resource="0" file="Source/pythonWrap.h"/>
+      <FILE id="GrDvMf" name="python.cpp" compile="1" resource="0" file="Source/python.cpp"/>
+      <FILE id="a8P8mA" name="python.h" compile="0" resource="0" file="Source/python.h"/>
       <FILE id="K8JZrl" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="K0hucz" name="PluginProcessor.h" compile="0" resource="0"
@@ -49,7 +49,7 @@
       <FILE id="DBpLz0" name="JSONSerializable.h" compile="0" resource="0"
             file="../../src/JSONSerializable.h"/>
     </GROUP>
-    <FILE id="HAH6FA" name="PyGSPattern.cpp" compile="1" resource="0" file="../../pythonWrap/generated/PyGSPattern.cpp"/>
+    <FILE id="HAH6FA" name="PyGSPattern.cpp" compile="1" resource="0" file="../../python/generated/PyGSPattern.cpp"/>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraFrameworks=""

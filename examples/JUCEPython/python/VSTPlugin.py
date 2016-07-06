@@ -1,4 +1,9 @@
-
+# inject develop version of gsapi if debugging
+if __name__=='__main__':
+	import sys,os
+	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
+	sys.path.insert(1,pathToAdd)
+	print sys.path
 
 from gsapi import *
 from gsapi.GSInternalStyles import *
@@ -31,21 +36,21 @@ midiMap = {
 
 localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
-styleSavingPath = os.path.join(localDirectory,"style.json");
+styleSavingPath = os.path.join(localDirectory,"MarkovStyle.json");
 
-# style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
-style = GSDBStyle(generatePatternOrdering = "increasing");
+style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
+# style = GSDBStyle(generatePatternOrdering = "increasing");
 hasStyleSaved = os.path.isfile(styleSavingPath) ;
-needStyleUpdate = False;
+needStyleUpdate = True;
 
 def setup():
-	global needStyleUpdate
-	needStyleUpdate=True
 	print "settingThingsUp"
 	
 
 def onTimeChanged(time):
-	""" called when user press generate new
+	""" called at eacch beat when pattern is playing
+	Args:
+		a dictionary {'time':timeinBeat}
 	Returns:
  		the new GSpattern to be played if needed
 	"""

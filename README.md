@@ -17,7 +17,7 @@ Using the Library
 ==
 Python
 -
-The python code resides in the **pythonWrap** folder:
+The python code resides in the **python** folder:
 Build: run python setup.py build
 Install: run python setup.py install
 

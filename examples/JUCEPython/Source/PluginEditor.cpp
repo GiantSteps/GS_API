@@ -49,6 +49,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	owner->pyAPI.addListener(&patternComponent);
 	owner->pyAPI.addListener(this);
 	owner->addTimeListener(&patternComponent);
+	patternComponent.newPatternLoaded(&owner->player.currentPattern);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
