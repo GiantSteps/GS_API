@@ -36,13 +36,17 @@ midiMap = {
 }
 
 localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
-searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
-styleSavingPath = os.path.join(localDirectory,"MarkovStyle.json");
 
-style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
-# style = GSDBStyle(generatePatternOrdering = "increasing");
-hasStyleSaved = os.path.isfile(styleSavingPath) ;
-needStyleUpdate = False;
+searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
+searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
+searchPath = os.path.join(localDirectory,"midi","motown.mid");
+searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+
+styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
+
+# style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
+style = GSDBStyle(generatePatternOrdering = "increasing");
+needStyleUpdate = True;
 
 def setup():
 	print "settingThingsUp"
@@ -97,10 +101,11 @@ def mapMidi(pattern):
 
 def generateStyleIfNeeded():
 	global needStyleUpdate
-	global hasStyleSaved
 	global midiMap
 	global style
+
 	if not style.isBuilt():
+		hasStyleSaved = os.path.isfile(styleSavingPath)
 		if(not hasStyleSaved  or needStyleUpdate ):
 			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
 			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = 4)
@@ -123,7 +128,7 @@ def transformPattern(patt):
 
 if __name__ =='__main__':
 	print "runMain"
-	needStyleUpdate=False
+	needStyleUpdate=True
 	patt = onGenerateNew();
 	params =  getAllParameters()
 	print dir(params[0])
