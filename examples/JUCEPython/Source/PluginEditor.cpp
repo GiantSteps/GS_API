@@ -55,6 +55,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	owner->pyAPI.addListener(&pyCnv);
 	addAndMakeVisible(pyCnv);
 	pyCnv.newParamsLoaded(&owner->pyAPI.params);
+	setSize(500,400);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
@@ -89,7 +90,7 @@ void JucepythonAudioProcessorEditor::resized()
   useInternalTransportB.setBounds(area.removeFromTop(30));
 	
 	
-	Rectangle<int> prec = area.removeFromTop(60);
+	Rectangle<int> prec = area.removeFromTop(150);
 	patternComponent.setBounds(prec);
 	
 	pyCnv.setBounds(area);
