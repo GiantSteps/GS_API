@@ -87,7 +87,7 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 	pattern.events=[]
 	lastNoteOff = 0;
 
-
+	notFoundTags = []
 	for tracks in globalMidi:
 		for e in tracks:
 			noteTags = []
@@ -101,8 +101,9 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 					if TagsFromTrackNameEvents:
 						continue
 					noteTags = findTagsFromPitchAndChannel(e.pitch,e.channel,NoteToTagsMap)
-				if noteTags ==[]:
-					print "not processed "+str(e.channel) +" "+str(e.pitch)
+				if noteTags ==[] and ([e.channel,e.pitch] not in notFoundTags):
+					print "no tags found for "+str(e.channel) +" "+str(e.pitch)
+					notFoundTags+=[[e.channel,e.pitch]]
 					continue;
 
 				
@@ -121,8 +122,8 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 							i.duration = e.tick*tick2quarterNote - i.startTime
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
-					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-						print "not found note on "+str(e)+str(pattern.events[-1])
+					# if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
+						# print "not found note on "+str(e)+str(pattern.events[-1])
 						# exit()
 					
 

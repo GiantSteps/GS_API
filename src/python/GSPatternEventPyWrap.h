@@ -67,6 +67,23 @@ public:
         PyObject * n = PyDict_GetItem(dict, VelocityObjName);
         if(n){e->velocity = PyLong_AsLong(n);}
       }
+			{
+        PyObject * n = PyDict_GetItem(dict, TagsObjName);
+        if(n){
+					if(PyList_Check(n)){
+						e->eventTags.clear();
+						int s = PyList_GET_SIZE(n);
+						for(int i = 0 ; i < s; i++){
+							PyObject * to = PyList_GET_ITEM(n,i);
+							if(PyUnicode_Check(to)){to = PyUnicode_AsUTF8String(to);}
+							if(PyString_Check(to)){e->eventTags.push_back(PyToString(to));}
+
+							else{DBG("wrong type of tags : " << to->ob_type->tp_name);}
+						}
+
+					}
+				}
+      }
 
     }
 

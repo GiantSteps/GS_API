@@ -38,14 +38,14 @@ midiMap = {
 localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 
 searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
-searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
-searchPath = os.path.join(localDirectory,"midi","motown.mid");
-searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+# searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
+# searchPath = os.path.join(localDirectory,"midi","motown.mid");
+# searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
 
 styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
 
-# style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
-style = GSDBStyle(generatePatternOrdering = "increasing");
+style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
+# style = GSDBStyle(generatePatternOrdering = "increasing");
 needStyleUpdate = True;
 
 def setup():
