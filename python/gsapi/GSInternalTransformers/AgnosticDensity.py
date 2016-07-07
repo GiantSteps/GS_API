@@ -6,7 +6,7 @@ class AgnosticDensity(GSPatternTransformer):
 		self.individualdensities = {}
 
 	def configure(self, paramDict):
-		raise NotImplementedError( "Should have implemented this" )
+		
 
-	def TransformPattern(self,pattern):
+	def TransformPattern(self,pattern,paramDict):
 		raise NotImplementedError( "Should have implemented this" )

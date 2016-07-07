@@ -4,7 +4,8 @@ crawledFolder = "../../python/test/midi/*.mid"
 
 
 customNoteMapping = {
-		"Kick":36,
+		"spam":[(35,'*'),45],
+		"Kick":(36),
 		"Rimshot":37,
 		"Snare":38,
 		"Clap":39,
@@ -28,8 +29,6 @@ customNoteMapping = {
 
 
 desiredPatternLength = 4;
-
-
 
 patterns = GSIO.fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False)
 
