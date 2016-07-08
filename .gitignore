@@ -7,5 +7,6 @@ dist/
 *.log
 *.so
 *.dll
-doc/
+**/doc/html/
+**/doc/latex/
 test/
