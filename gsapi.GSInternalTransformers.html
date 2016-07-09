@@ -135,9 +135,12 @@
 <span id="gsapi-gsinternaltransformers-agnosticdensity-module"></span><h2>gsapi.GSInternalTransformers.AgnosticDensity module<a class="headerlink" href="#module-gsapi.GSInternalTransformers.AgnosticDensity" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity">
-<em class="property">class </em><code class="descclassname">gsapi.GSInternalTransformers.AgnosticDensity.</code><code class="descname">AgnosticDensity</code><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">gsapi.GSInternalTransformers.AgnosticDensity.</code><code class="descname">AgnosticDensity</code><span class="sig-paren">(</span><em>mode='random'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="gsapi.html#gsapi.GSPatternTransformer.GSPatternTransformer" title="gsapi.GSPatternTransformer.GSPatternTransformer"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSPatternTransformer.GSPatternTransformer</span></code></a></p>
-<p>Agnostic transformation algorithm</p>
+<p>Agnostic transformation algorithm
+:param globalDensity: float (0..2) the desired global density ,i.e 0 is an empty pattern, 1 matches the origin pattern, 2 is a pattern with all events
+:param individualDensities: dict[tag]=density :  a per Tag density, densities should be in the same range as globalDensity
+:param mode: [&#8216;random&#8217;,&#8217;syncopation&#8217;] :  algorithm used</p>
 <dl class="method">
 <dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure">
 <code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure" title="Permalink to this definition">¶</a></dt>
@@ -146,6 +149,11 @@
 <dl class="method">
 <dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">
 <code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em>, <em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">
+<code class="descname">buildDensityMap</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity.buildDensityMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

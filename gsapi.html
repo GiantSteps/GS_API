@@ -351,6 +351,20 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </dd></dl>
 
 <dl class="method">
+<dt id="gsapi.GSPattern.GSPatternEvent.getEndTime">
+<code class="descname">getEndTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.getEndTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.getEndTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the time when this events ends</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the time when this event ends</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.copy">
 <code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.copy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Copy an event</p>
@@ -373,6 +387,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stepSize</strong> &#8211; the desired size of each produced events</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a list of events of length <cite>stepSize</cite></td>
 </tr>
 </tbody>
 </table>
@@ -420,8 +436,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.reorderEvents">
 <code class="descname">reorderEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.reorderEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.reorderEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>ensure than our events are time sorted</p>
-<p>can be useful for some algorithm</p>
+<dd><p>ensure than our internal event list <cite>events</cite> is time sorted</p>
+<p>can be useful for time sensitive events iteration</p>
 </dd></dl>
 
 <dl class="method">
@@ -456,7 +472,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dt id="gsapi.GSPattern.GSPattern.quantize">
 <code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em>, <em>postMultiplier=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantize events</p>
-<p>:param float beatDivision : the fraction of beat that we want to quantize to</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>beatDivision</strong> &#8211; the fraction of beat that we want to quantize to</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -510,8 +533,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getACopyWithoutEvents">
 <code class="descname">getACopyWithoutEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getACopyWithoutEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getACopyWithoutEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>copy all fields but events
-useful for creating patterns from patterns</p>
+<dd><p>copy all fields but events</p>
+<p>useful for creating patterns from patterns</p>
 </dd></dl>
 
 <dl class="method">
@@ -523,6 +546,28 @@ useful for creating patterns from patterns</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of string composed of all possible tags</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.getPatternWithTags">
+<code class="descname">getPatternWithTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sub-pattern with the given tags</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tags</strong> &#8211; string list : tags to be checked for</li>
+<li><strong>exactSearch</strong> &#8211; bool : if True the tags have to be exactly the same, else they can be included in events Tags</li>
+<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that tags corresponds to given tags</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -557,13 +602,18 @@ useful for creating patterns from patterns</p>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
-<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill empty (i.e no event active) spaces with silence event</p>
+<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill empty (i.e no event ) spaces with silence event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>silenceTag</strong> &#8211; tag that will be used when inserting the silence event</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>desiredLength</strong> &#8211; float :  the total desired length (allow to put trailing silences if needed)</li>
+<li><strong>perTag</strong> &#8211; fill silence for each Tag</li>
+<li><strong>silenceTag</strong> &#8211; tag that will be used when inserting the silence event</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -580,6 +630,7 @@ useful for creating patterns from patterns</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>startTime</strong> &#8211; start time for time slice</li>
 <li><strong>length</strong> &#8211; length of time slice</li>
+<li><strong>trimEnd</strong> &#8211; cut any events that ends after startTime + length</li>
 </ul>
 </td>
 </tr>

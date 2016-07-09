@@ -119,14 +119,6 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 
-<span class="c1"># inject local gsapi if debugging</span>
-
-
-<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-	<span class="kn">import</span> <span class="nn">sys</span>
-	<span class="n">pathToAdd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">__file__</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pardir</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pardir</span><span class="p">))</span>
-	<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">pathToAdd</span><span class="p">)</span>
-	
 <span class="kn">import</span> <span class="nn">gsapi</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="o">*</span>
@@ -293,26 +285,6 @@
 
 
 
-<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
-	<span class="n">crawledFolder</span> <span class="o">=</span> <span class="s2">&quot;../test/midi/*.mid&quot;</span>
-	<span class="n">customNoteMapping</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Kick&quot;</span><span class="p">:</span><span class="mi">36</span><span class="p">,</span><span class="s2">&quot;Rimshot&quot;</span><span class="p">:</span><span class="mi">37</span><span class="p">,</span><span class="s2">&quot;Snare&quot;</span><span class="p">:</span><span class="mi">38</span><span class="p">,</span><span class="s2">&quot;Clap&quot;</span><span class="p">:</span><span class="mi">39</span><span class="p">,</span><span class="s2">&quot;Clave&quot;</span><span class="p">:</span><span class="mi">40</span><span class="p">,</span><span class="s2">&quot;LowTom&quot;</span><span class="p">:</span><span class="mi">41</span><span class="p">,</span><span class="s2">&quot;ClosedHH&quot;</span><span class="p">:</span><span class="mi">42</span><span class="p">,</span><span class="s2">&quot;MidTom&quot;</span><span class="p">:</span><span class="mi">43</span><span class="p">,</span><span class="s2">&quot;Shake&quot;</span><span class="p">:</span><span class="mi">44</span><span class="p">,</span><span class="s2">&quot;HiTom&quot;</span><span class="p">:</span><span class="mi">45</span><span class="p">,</span><span class="s2">&quot;OpenHH&quot;</span><span class="p">:</span><span class="mi">46</span><span class="p">,</span><span class="s2">&quot;LowConga&quot;</span><span class="p">:</span><span class="mi">47</span><span class="p">,</span><span class="s2">&quot;HiConga&quot;</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span><span class="s2">&quot;Cymbal&quot;</span><span class="p">:</span><span class="mi">49</span><span class="p">,</span><span class="s2">&quot;Conga&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span><span class="s2">&quot;CowBell&quot;</span><span class="p">:</span><span class="mi">51</span><span class="p">}</span>
-
-
-
-	<span class="n">profile</span> <span class="o">=</span><span class="bp">True</span>
-	<span class="k">if</span> <span class="n">profile</span><span class="p">:</span>
-		<span class="kn">import</span> <span class="nn">cProfile</span>
-		<span class="kn">import</span> <span class="nn">re</span>
-		<span class="n">cProfile</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)&#39;</span><span class="p">,</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;profiled&#39;</span><span class="p">)</span>
-		<span class="n">patterns</span> <span class="o">=</span> <span class="n">fromMidiCollection</span><span class="p">(</span><span class="n">crawledFolder</span><span class="p">,</span><span class="n">customNoteMapping</span><span class="p">,</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">desiredLength</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-		<span class="k">print</span> <span class="n">patterns</span>
-		<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
-			<span class="n">p</span><span class="o">.</span><span class="n">printEvents</span><span class="p">()</span>
-	<span class="k">else</span><span class="p">:</span>
-		<span class="kn">import</span> <span class="nn">pstats</span>
-		<span class="n">p</span> <span class="o">=</span> <span class="n">pstats</span><span class="o">.</span><span class="n">Stats</span><span class="p">(</span><span class="s1">&#39;profiled&#39;</span><span class="p">)</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">strip_dirs</span><span class="p">()</span><span class="o">.</span><span class="n">sort_stats</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">print_stats</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="PatternFromJSONFile"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSIO.PatternFromJSONFile">[docs]</a><span class="k">def</span> <span class="nf">PatternFromJSONFile</span><span class="p">(</span><span class="n">filePath</span><span class="p">):</span>
@@ -326,7 +298,7 @@
 
 <div class="viewcode-block" id="PatternToJSONFile"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSIO.PatternToJSONFile">[docs]</a><span class="k">def</span> <span class="nf">PatternToJSONFile</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot; save a pattern to internal JSON Format</span>
-<span class="sd">	</span>
+
 <span class="sd">	Args:</span>
 <span class="sd">		filePath:filePath where to save it</span>
 <span class="sd">	&quot;&quot;&quot;</span>

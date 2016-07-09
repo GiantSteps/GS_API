@@ -120,16 +120,34 @@
 <div class="viewcode-block" id="AgnosticDensity"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity">[docs]</a><span class="k">class</span> <span class="nc">AgnosticDensity</span><span class="p">(</span><span class="n">GSPatternTransformer</span><span class="p">):</span>
 
 	<span class="sd">&quot;&quot;&quot; Agnostic transformation algorithm</span>
+<span class="sd">	Args:</span>
+<span class="sd">		globalDensity: float (0..2) the desired global density ,i.e 0 is an empty pattern, 1 matches the origin pattern, 2 is a pattern with all events</span>
+<span class="sd">		individualDensities: dict[tag]=density :  a per Tag density, densities should be in the same range as globalDensity</span>
+<span class="sd">		mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used </span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">globalDensity</span><span class="o">=</span><span class="mi">1</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">individualdensities</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="bp">None</span>
 
 <div class="viewcode-block" id="AgnosticDensity.configure"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure">[docs]</a>	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
-		<span class="k">pass</span></div>
+		<span class="k">if</span> <span class="s1">&#39;originPattern&#39;</span> <span class="ow">in</span> <span class="n">paramDict</span><span class="p">:</span>
+			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">paramDict</span><span class="p">[</span><span class="s1">&#39;originPattern&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AgnosticDensity.TransformPattern"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">[docs]</a>	<span class="k">def</span> <span class="nf">TransformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">paramDict</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div></div>
+		<span class="k">if</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">None</span> <span class="ow">and</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">:</span>
+			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
+			<span class="k">print</span> <span class="p">(</span><span class="s2">&quot;no pattern given for agnosticDensity transformation&quot;</span><span class="p">)</span>
+
+		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AgnosticDensity.buildDensityMap"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">[docs]</a>	<span class="k">def</span> <span class="nf">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="p">;</span></div></div>
+		<span class="c1"># if mode == &#39;random&#39;:</span>
+			
+
 </pre></div>
 
     </div>

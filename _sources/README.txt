@@ -59,6 +59,7 @@ Note to tag mapping is reppresented by a dictionnary where key represent a tag a
 
 ```python
 from gsapi import *
+midiGlobPath = '/path/to/midi/*.mid'
 NoteToTagsMap = {"Kick":30,"Snare":(32,4),"ClosedHihat":[(33,'*'),45]}
 listOfGSPatterns = GSIO.fromMidiCollection(midiGlobPath,NoteToTagsMap)
 ```
