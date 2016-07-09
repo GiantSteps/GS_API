@@ -7,6 +7,6 @@ dist/
 *.log
 *.so
 *.dll
-**/doc/html/
-**/doc/latex/
+**/doc/_build/
+**/doc/gh-pages/
 test/

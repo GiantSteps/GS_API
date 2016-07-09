@@ -1,7 +1,7 @@
 from gsapi import GSStyle,GSPattern,GSPatternEvent
 import random
 import numpy as np
-from numpy.random import random_sample
+
 import copy
 
 class GSMarkovStyle(GSStyle):

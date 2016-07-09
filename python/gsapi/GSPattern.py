@@ -1,8 +1,7 @@
 
 import copy
 
-"""@package docstring
-Documentation for GSPattern module.
+"""Documentation for GSPattern module.
 
 GSPattern
 """
@@ -10,6 +9,7 @@ class GSPatternEvent(object):
 	"""Represent an event of a GSPattern
 
 	an event is made of start and length , origin pitch , velocity and associated tags
+	
 	Args:
 		start: startTime of event
 		duration: duration of event
@@ -113,12 +113,13 @@ class GSPatternEvent(object):
 class GSPattern(object):
 	""" Class representing a pattern made of GSPatternEvent
 
-	hold a list of GSEvents and provide basic manipulation function
+	holds a list of GSEvents and provide basic manipulation function
+
 	Args:
-	duration: length of pattern usually in beat, but time scale is up to the user (can be useful if working on 32th note steps)
-	events: list of GSPatternEvent for this pattern
-	bpm:origin BPM for this pattern (default: 120)
-	timeSignature: list of integer representing time signature ; i.e [numerator,denominator]
+		duration: length of pattern usually in beat, but time scale is up to the user (can be useful if working on 32th note steps)
+		events: list of GSPatternEvent for this pattern
+		bpm:origin BPM for this pattern (default: 120)
+		timeSignature: list of integer representing time signature ; i.e [numerator,denominator]
 	"""
 	defaultTimeSignature =[4,4];
 	defaultBPM = 120
@@ -165,7 +166,7 @@ class GSPattern(object):
 	def addEvent(self,GSPatternEvent ):
 		"""Add an event increasing duration if needed
 
-		Parameter:
+		Args:
 			GSPatternEvent : the event to be added
 		"""
 		self.events+=[GSPatternEvent]
@@ -174,8 +175,8 @@ class GSPattern(object):
 	def quantize(self,beatDivision,postMultiplier=1.0):
 		""" Quantize events
 
-		Parameter:
-			beatDivision : the fraction of beat that we want to quantize to
+		
+		:param float beatDivision : the fraction of beat that we want to quantize to
 		"""
 		for e in self.events:
 			e.startTime = int(e.startTime*beatDivision)*1.0*postMultiplier/beatDivision

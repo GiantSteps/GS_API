@@ -1,7 +1,10 @@
-from gsapi import GSPatternTransformer,GSPattern,GSPatternEvent
-
+from gsapi import GSPattern,GSPatternEvent
+from gsapi.GSPatternTransformer import GSPatternTransformer
 class AgnosticDensity(GSPatternTransformer):
-	def __init__():
+
+	""" Agnostic transformation algorithm
+	"""
+	def __init__(self):
 		self.globalDensity=1
 		self.individualdensities = {}
 

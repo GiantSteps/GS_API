@@ -1,7 +1,10 @@
-import glob 
+import glob
 import os
 
+
 # inject local gsapi if debugging
+
+
 if __name__=='__main__':
 	import sys
 	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir))
@@ -16,15 +19,16 @@ from gsapi import *
 
 def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 	""" loads a midi file as a pattern
+
 	Args:
 		midiPath: midi filePath
 		NoteToTagsMap: dictionary converting pitches to tags 
 			noteMapping maps classes to a list of possible Mappings, a mapping can be:
 			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
 			an integer if only pitch matters
-
 			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
 			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
+
 		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi contained named tracks
 	"""
 
@@ -146,15 +150,10 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 
 def fromMidiCollection(midiGlobPath,NoteToTagsMap,TagsFromTrackNameEvents=False,desiredLength = 0):
 	""" loads a midi collection
-	Args:
-		midiGlobPath: midi filePath in glob naming convention (e.g '/folderToCrawl/*.mid')
-		NoteToTagsMap: dictionary converting pitches to tags 
-			noteMapping maps classes to a list of possible Mappings, a mapping can be:
-			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
-			an integer if only pitch matters
 
-			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
-			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
+	Args:
+		midiGlobPath: midi filePath in glob naming convention (e.g '/folder/To/Crawl/*.mid')
+		NoteToTagsMap: dictionary converting pitches to tags  (see :py:func:`gsapi.GSIO.fromMidi` function)
 		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi contained named tracks
 		desiredLength: optionally cut patterns in equal length
 	Returns:
@@ -201,6 +200,7 @@ if __name__=='__main__':
 
 def PatternFromJSONFile(filePath):
 	""" load a pattern to internal JSON Format
+
 	Args:
 		filePath:filePath where to load it
 	"""
@@ -209,6 +209,7 @@ def PatternFromJSONFile(filePath):
 
 def PatternToJSONFile(pattern,filePath):
 	""" save a pattern to internal JSON Format
+	
 	Args:
 		filePath:filePath where to save it
 	"""

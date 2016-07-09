@@ -16,7 +16,8 @@ The GS_API provides Python/C++ classes and interface for dealing with musical da
 
 Using the Library
 -----
-###Python
+
+**Python**
 
 The python code resides in the **python** folder:
 
@@ -48,7 +49,7 @@ will fill *GSPattern* p with :
 
 API Philosophies
 ------
-###JSON and MIDI
+**JSON and MIDI**
 
 we encourage use of JSON to be able to work with consistent and reusable datasets, as midi files tends to have different MIDI mapping , structures, or even suspicious file format implementations.
 Thus we provide flexible MIDI input module *GSIO* for tagging events with respect to their pitch/channel/trackName
