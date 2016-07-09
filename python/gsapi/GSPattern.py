@@ -10,12 +10,6 @@ class GSPatternEvent(object):
 
 	an event is made of start and length , origin pitch , velocity and associated tags
 
-	Args:
-		start: startTime of event
-		duration: duration of event
-		pitch : pitch of event
-		velocity: velocity of event
-		tags: list of tags representing the event
 
 	Attributes:
 		startTime: startTime of event
@@ -26,11 +20,11 @@ class GSPatternEvent(object):
 	"""
 
 
-	def __init__(self,start,duration,pitch,velocity=127,tags=[]):
+	def __init__(self,startTime,duration,pitch,velocity=127,tags=[]):
 		self.duration = duration
 		if not isinstance(tags,list):tags = [tags]
 		self.tags=tags
-		self.startTime = start;
+		self.startTime = startTime;
 		self.pitch = pitch;
 		self.velocity = velocity;
 		self.tags = tags;
@@ -143,13 +137,16 @@ class GSPattern(object):
 		self.name=""
 
 
-	def checkDuration(self):
-		""" Verify that duration member is consistent 
+	def setDurationFromLastEvent(self,onlyIfBigger=True):
+		""" sets duration to last event NoteOff
+
+		Args:
+			onlyIfBigger: update duration only if last Note off is bigger
 
 		if inner events have a bigger time span than self.duration, increase duration to fit
 		"""
 		total = self.getLastNoteOff();
-		if (total and (total > self.duration)):
+		if (total and (total > self.duration or not onlyIfBigger)):
 			# print "resizing : "+str(total) +'old : '+ str(self.duration)
 			self.duration = total
 
@@ -180,9 +177,9 @@ class GSPattern(object):
 			GSPatternEvent : the event to be added
 		"""
 		self.events+=[GSPatternEvent]
-		self.checkDuration()
+		self.setDurationFromLastEvent()
 
-	def quantize(self,beatDivision,postMultiplier=1.0):
+	def quantize(self,beatDivision):
 		""" Quantize events
 
 		
@@ -190,8 +187,20 @@ class GSPattern(object):
 			beatDivision : the fraction of beat that we want to quantize to
 		"""
 		for e in self.events:
-			e.startTime = int(e.startTime*beatDivision)*1.0*postMultiplier/beatDivision
+			e.startTime = int(e.startTime*beatDivision)*1.0/beatDivision
 		
+	def timeStretch(self,ratio):
+		"""time  stretch a pattern
+
+		Args:
+			ratio : the ratio used for time stretching
+		"""
+		for e in self.events:
+			e.startTime*=ratio
+			e.duration*=ratio
+		self.duration *=ratio 
+
+
 
 	def getStartingEventsAtTime(self,time,tolerance = 0):
 		""" Get all events activating at a givent time
@@ -228,6 +237,7 @@ class GSPattern(object):
 		""" Deepcopy a pattern
 		"""
 		return copy.deepcopy(self)
+
 	def getACopyWithoutEvents(self):
 		""" copy all fields but events
 
@@ -269,15 +279,24 @@ class GSPattern(object):
 			if exactSearch: found = e.tags==tags;
 			else: found = tags in e.tags
 			if found:
-				if copy : newEv = e.copy()
-				else :  newEv = e;
+				newEv = e if not copy else e.copy()
 				res.events+=[newEv]
 		return res
 
 
-	def discretize(self,stepSize,repeatibleTags = ['silence']):
-		""" Discretize a pattern
+	def alignOnGrid(self,stepSize,repeatibleTags = ['silence']):
+		""" align this pattern on a temporal grid
+		
+		very useful to deal with step-sequenced pattern : 
+			- all events durations are shortened to stepsize
+			- all events startTimes are quantified to stepsize
 
+		repeatibleTags allow to deal with `silences type` of events :
+			- if a silence spread over more than one stepsize, we generate an event for each stepSize
+
+		thus each step is ensured to be filled with one distinct event at least
+		Args:
+			stepSize: temporal definition of the grid
 		"""
 		
 		newEvents = []
@@ -292,6 +311,25 @@ class GSPattern(object):
 				newEvents+=[ea]
 		self.events = newEvents
 
+	def removeOverlapped(self):
+		"""remove overlapped elements
+
+		"""
+		self.reorderEvents();
+		newList = []; idx = 0;
+		for e in self.events:
+			found = False
+			for i in range(idx+1,len(self.events)):
+				ee = self.events[i]
+				if ee.tags==e.tags:
+					found |= (ee.startTime>=e.startTime) and (ee.startTime < e.startTime+e.duration)
+				if ee.startTime>(e.startTime+e.duration):
+					break
+			if not found :
+				newList+=[e]
+			idx+=1
+		self.events = newList
+
 
 	def getAllIdenticalEvents(self,event,allTagsMustBeEquals = True):
 		""" Get a list of event with same tags
@@ -305,19 +343,18 @@ class GSPattern(object):
 		res = []
 		for e in self.events:
 			equals = False;
-			if (allTagsMustBeEquals) : equals = event.allTagsAreEqualWith(e)
-			else  : equals = event.hasOneCommonTagWith(e)
+			equals = event.allTagsAreEqualWith(e) if allTagsMustBeEquals else event.hasOneCommonTagWith(e)
 
 			if equals:
 				res+=[e]
 
 			
 
-	def fillWithSilences(self,desiredLength,perTag=False,silenceTag = 'silence'):
+	def fillWithSilences(self,maxSilenceTime = 0,perTag=False,silenceTag = 'silence'):
 		""" Fill empty (i.e no event ) spaces with silence event
 
 		Args:
-			desiredLength: float :  the total desired length (allow to put trailing silences if needed)
+			maxSilenceTime : if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime
 			perTag: fill silence for each Tag
 			silenceTag: tag that will be used when inserting the silence event 
 
@@ -327,26 +364,35 @@ class GSPattern(object):
 		self.reorderEvents();
 		
 
-		def _fillListWithSilence(list):
+		def _fillListWithSilence(list,silenceTag):
 			lastOff = 0
 			newEvents = []
 			for e in self.events:
 				if e.startTime>lastOff:
-					silence = GSPatternEvent(lastOff,e.startTime-lastOff,0,0,[silenceTag])
-					newEvents+= [silence]
+					if maxSilenceTime>0:
+						while e.startTime-lastOff>maxSilenceTime:
+							newEvents+=[GSPatternEvent(lastOff,maxSilenceTime,0,0,[silenceTag])]
+							lastOff+=maxSilenceTime 
+					newEvents+= [GSPatternEvent(lastOff,e.startTime-lastOff,0,0,[silenceTag])]
 				newEvents+=[e]
 				lastOff = max(lastOff,e.startTime+e.duration)
-			if lastOff<desiredLength:
-				newEvents += [GSPatternEvent(lastOff,desiredLength-lastOff,0,0,[silenceTag])]
+
+			if lastOff<self.duration:
+				if maxSilenceTime>0:
+					while lastOff<self.duration-maxSilenceTime:
+						newEvents+=[GSPatternEvent(lastOff,maxSilenceTime,0,0,[silenceTag])]
+						lastOff+=maxSilenceTime 
+				newEvents+= [GSPatternEvent(lastOff,self.duration-lastOff,0,0,[silenceTag])]
+
 			return newEvents
 
 
 		if not perTag:
-			self.events = _fillListWithSilence(self.events);
+			self.events = _fillListWithSilence(self.events,silenceTag);
 		else:
 			allEvents = []
 			for t in self.getAllTags():
-				allEvents+=[_fillListWithSilence(self.getPatternWithTags(tags=[t],exactSearch=False,copy = False))]
+				allEvents+=_fillListWithSilence(self.getPatternWithTags(tags=[t],exactSearch=False,copy = False),silenceTag)
 			self.events = allEvents
 
 
@@ -378,16 +424,18 @@ class GSPattern(object):
 
 
 	def printEvents(self):
-		""" Nicely print out an event
+		""" Nicely print out the list of events
+
+		each line represents an event formatted as  : tags pitch startTime duration
 		"""
 		for e in self.events:
-			print e.tags , e.startTime , e.duration,e.pitch
+			print e.tags,'\t', e.pitch,'\t', e.startTime,'\t', e.duration
 
 	def toJSONDict(self):
 		""" gives a standard dict for json output
 		"""
 		res = {}
-		self.checkDuration()
+		self.setDurationFromLastEvent()
 		allTags =self.getAllTags()
 		res['eventTags'] = allTags
 		res['timeInfo'] = {'duration':self.duration,'BPM':self.bpm}
@@ -410,7 +458,7 @@ class GSPattern(object):
 		self.bpm = json['timeInfo']['BPM']
 		for e in json['eventList']:
 			self.events+=[GSPatternEvent(e['on'],e['duration'],e['pitch'],e['velocity'],[tags[f] for f in e['tagsIdx']])]
-		self.checkDuration()
+		self.setDurationFromLastEvent()
 		return self
 
 	def splitInEqualLengthPatterns(self,desiredLength,copy=True):
@@ -432,10 +480,7 @@ class GSPattern(object):
 				patterns[numPattern] = self.getACopyWithoutEvents()
 				patterns[numPattern].duration = desiredLength;
 				patterns[numPattern].name = self.name + "_"+numPattern;
-			if copy:
-				newEv = e.copy();
-			else:
-				newEv = e;
+			newEv = e if not copy else e.copy();
 			newEv.startTime-=p*desiredLength;
 			patterns[numPattern].events+=[newEv];
 		
@@ -443,7 +488,7 @@ class GSPattern(object):
 		
 		res = []
 		for p in patterns:
-			patterns[p].checkDuration();
+			patterns[p].setDurationFromLastEvent();
 			res+=[patterns[p]]
 
 		return res;

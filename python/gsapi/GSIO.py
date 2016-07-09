@@ -9,7 +9,7 @@ from gsapi import *
 
 
 
-def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
+def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
 	""" loads a midi file as a pattern
 
 	Args:
@@ -21,8 +21,15 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
 			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
 
-		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi contained named tracks
+		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks
+		filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
+		tracksToGet: if not empty, specifies tracks wanted either by name or index
 	"""
+	def formatNoteToTags(NoteToTags):
+		for n in NoteToTags:
+			if not isinstance(NoteToTags[n],list): NoteToTags[n] = [NoteToTags[n]]
+			for i in range(len(NoteToTags[n])):
+				if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
 
 	def findTimeInfoFromMidi(pattern,midiFile):
 		
@@ -55,15 +62,8 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 	def findTagsFromPitchAndChannel(pitch,channel,noteMapping):
 		res = [];
 		for l in noteMapping:
-			cMap = noteMapping[l] ; listToCheck  = []
-
-			if isinstance(cMap,int) or isinstance(cMap,tuple): listToCheck = [cMap]
-			elif isinstance(cMap,list): listToCheck = cMap;
-			else: print "wrongMapping : "+str(cMap)
-			
-			for le in listToCheck:
-				if isinstance(le, int) and ( le == pitch): res+=[l]; continue;
-				elif isinstance(le, tuple) and le[0] in {'*',pitch} and le[1] in {'*',channel}: res+=[l]; continue;
+			for le in noteMapping[l]:
+				if (le[0] in {'*',pitch}) and (le[1] in {'*',channel}): res+=[l]; 
 			
 		return res
 
@@ -74,6 +74,7 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 	pattern = GSPattern();
 	pattern.name = os.path.splitext(os.path.basename(midiPath))[0];
 
+	formatNoteToTags(NoteToTagsMap)
 
 	# first get signature
 	findTimeInfoFromMidi(pattern,globalMidi);
@@ -82,53 +83,74 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 
 	pattern.events=[]
 	lastNoteOff = 0;
-
+	lastPitch = -1;
+	lastTick = -1;
 	notFoundTags = []
+	trackIdx = 0;
 	for tracks in globalMidi:
+		shouldSkipTrack = False;
 		for e in tracks:
+			if(shouldSkipTrack):continue
+			
 			noteTags = []
 			
 			if midi.MetaEvent.is_event(e.statusmsg):
 				if e.metacommand==midi.TrackNameEvent.metacommand:
-					noteTags = findTagsFromName(e.text,NoteToTagsMap)
+					if tracksToGet!=[] and not((e.text in tracksToGet) or (trackIdx in tracksToGet)): 
+						print 'skipping track :',trackIdx,e.text;
+						shouldSkipTrack = True;
+						continue ;
+					else: 
+						print 'getting track :',trackIdx,e.text
 
-			if(midi.NoteOnEvent.is_event(e.statusmsg) or midi.NoteOffEvent.is_event(e.statusmsg) ):
+					if TagsFromTrackNameEvents : noteTags = findTagsFromName(e.text,NoteToTagsMap)
+
+			isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
+			isNoteOff =midi.NoteOffEvent.is_event(e.statusmsg);
+			if(isNoteOn or isNoteOff  ):
+				pitch = e.pitch # optimize pitch property access
+				tick = e.tick
 				if noteTags == []:
-					if TagsFromTrackNameEvents:
-						continue
-					noteTags = findTagsFromPitchAndChannel(e.pitch,e.channel,NoteToTagsMap)
-				if noteTags ==[] and ([e.channel,e.pitch] not in notFoundTags):
-					print "no tags found for "+str(e.channel) +" "+str(e.pitch)
-					notFoundTags+=[[e.channel,e.pitch]]
-					continue;
+					if TagsFromTrackNameEvents:continue
+					noteTags = findTagsFromPitchAndChannel(pitch,e.channel,NoteToTagsMap)
 
+				if noteTags ==[] :
+					if ([e.channel,pitch] not in notFoundTags):
+						print "no tags found for pitch %d on channel %d"%(pitch,e.channel)
+						notFoundTags+=[[e.channel,pitch]]
+					if filterOutNotMapped:
+						continue;
+
+
+
+				if isNoteOn:
+					# ignore duplicated events (can't have 2 simultaneous NoteOn for the same pitch)
+					if  pitch == lastPitch and tick == lastTick:
+						# print 'skip duplicated event :', pitch,tick
+						continue;
+					lastPitch = pitch
+					lastTick = tick
+					pattern.events+=[GSPatternEvent(tick*tick2quarterNote,-1,pitch,e.velocity,noteTags)]
+
+					
+					
 				
-				if midi.NoteOnEvent.is_event(e.statusmsg):
-					pattern.events+=[GSPatternEvent(e.tick*tick2quarterNote,-1,e.pitch,e.velocity,noteTags)]
-					
-					
-				# we forbid overlapping of two consecutive note of the same pitch
-				if midi.NoteOnEvent.is_event(e.statusmsg) or midi.NoteOffEvent.is_event(e.statusmsg):
+				if isNoteOn or isNoteOff:
 					foundNoteOn = False
-					
 					for i in reversed(pattern.events):
 						
-						if (i.pitch == e.pitch) and (i.tags==noteTags) and e.tick*tick2quarterNote > i.startTime and i.duration<0:
+						if (i.pitch == pitch) and (i.tags==noteTags) and tick*tick2quarterNote >= i.startTime and i.duration<0:
 							foundNoteOn = True
-							i.duration = e.tick*tick2quarterNote - i.startTime
+							i.duration = max(0.001,tick*tick2quarterNote - i.startTime)
 							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
 							break;
 					# if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
 						# print "not found note on "+str(e)+str(pattern.events[-1])
 						# exit()
-					
+		trackIdx+=1
 
 
 
-	for e in pattern.events:
-		if e.startTime<0:
-			print 'midi file not valid'
-			exit();
 	elementSize = 4.0/pattern.timeSignature[1]
 	barSize = pattern.timeSignature[0]*elementSize;
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
@@ -140,14 +162,13 @@ def fromMidi(midiPath,NoteToTagsMap,TagsFromTrackNameEvents=False):
 
 
 
-def fromMidiCollection(midiGlobPath,NoteToTagsMap,TagsFromTrackNameEvents=False,desiredLength = 0):
+def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped = True,desiredLength = 0):
 	""" loads a midi collection
 
 	Args:
 		midiGlobPath: midi filePath in glob naming convention (e.g '/folder/To/Crawl/*.mid')
-		NoteToTagsMap: dictionary converting pitches to tags  (see :py:func:`gsapi.GSIO.fromMidi` function)
-		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi contained named tracks
 		desiredLength: optionally cut patterns in equal length
+		otherArguments: are defined in :py:func:`fromMidi`
 	Returns:
 		a list of GSPattern build from Midi folder
 	"""
@@ -158,7 +179,7 @@ def fromMidiCollection(midiGlobPath,NoteToTagsMap,TagsFromTrackNameEvents=False,
 	for f in glob.glob(midiGlobPath):
 		name =  os.path.splitext(os.path.basename(f))[0]
 		print "getting "+name
-		p = fromMidi(f,NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents);
+		p = fromMidi(f,NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
 		
 		if desiredLength>0:
 			res+= p.splitInEqualLengthPatterns(desiredLength,copy=False);

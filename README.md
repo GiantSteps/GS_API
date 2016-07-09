@@ -40,7 +40,7 @@ python setup.py install
 ```python
 from gsapi import *
 p = GSPattern()
-p.addEvent(GSPatternEvent(start=0,duration=1,pitch=64,velocity=127,tags=["Kick"]))
+p.addEvent(GSPatternEvent(startTime=0,duration=1,pitch=64,velocity=127,tags=["Kick"]))
 p.addEvent(GSPatternEvent(1,3,62,51,["Snare"]))
 ```
 will fill *GSPattern* p with :

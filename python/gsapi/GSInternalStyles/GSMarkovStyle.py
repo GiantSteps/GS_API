@@ -206,12 +206,11 @@ class GSMarkovStyle(GSStyle):
 		return out
 
 	def formatPattern(self,p):
-		p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);
-		p.discretize(1)
-		p.fillWithSilences(self.numSteps);
-		p.discretize(1)
-		p.checkDuration()
-		
+		# p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);
+		p.timeStretch(self.numSteps*1.0/self.loopDuration)
+		p.alignOnGrid(1)
+		p.removeOverlapped()
+		p.fillWithSilences(maxSilenceTime = 1);
 
 
 
