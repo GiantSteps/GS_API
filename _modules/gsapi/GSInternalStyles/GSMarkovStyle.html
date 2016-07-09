@@ -323,12 +323,11 @@
 		<span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="GSMarkovStyle.formatPattern"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.formatPattern">[docs]</a>	<span class="k">def</span> <span class="nf">formatPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">quantize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="p">);</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="p">);</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">discretize</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">checkDuration</span><span class="p">()</span></div>
-		
+		<span class="c1"># p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="p">)</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">alignOnGrid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">removeOverlapped</span><span class="p">()</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="n">maxSilenceTime</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span></div>
 
 
 

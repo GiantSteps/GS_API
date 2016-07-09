@@ -127,12 +127,6 @@
 
 <span class="sd">	an event is made of start and length , origin pitch , velocity and associated tags</span>
 
-<span class="sd">	Args:</span>
-<span class="sd">		start: startTime of event</span>
-<span class="sd">		duration: duration of event</span>
-<span class="sd">		pitch : pitch of event</span>
-<span class="sd">		velocity: velocity of event</span>
-<span class="sd">		tags: list of tags representing the event</span>
 
 <span class="sd">	Attributes:</span>
 <span class="sd">		startTime: startTime of event</span>
@@ -143,11 +137,11 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 
 
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">duration</span><span class="p">,</span><span class="n">pitch</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">startTime</span><span class="p">,</span><span class="n">duration</span><span class="p">,</span><span class="n">pitch</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[]):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">duration</span>
 		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tags</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span><span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">tags</span><span class="p">]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="o">=</span><span class="n">tags</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">start</span><span class="p">;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">startTime</span><span class="p">;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">=</span> <span class="n">pitch</span><span class="p">;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">velocity</span><span class="p">;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span><span class="p">;</span>
@@ -260,13 +254,16 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
 
 
-<div class="viewcode-block" id="GSPattern.checkDuration"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.checkDuration">[docs]</a>	<span class="k">def</span> <span class="nf">checkDuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot; Verify that duration member is consistent </span>
+<div class="viewcode-block" id="GSPattern.setDurationFromLastEvent"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.setDurationFromLastEvent">[docs]</a>	<span class="k">def</span> <span class="nf">setDurationFromLastEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">onlyIfBigger</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; sets duration to last event NoteOff</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			onlyIfBigger: update duration only if last Note off is bigger</span>
 
 <span class="sd">		if inner events have a bigger time span than self.duration, increase duration to fit</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">total</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getLastNoteOff</span><span class="p">();</span>
-		<span class="k">if</span> <span class="p">(</span><span class="n">total</span> <span class="ow">and</span> <span class="p">(</span><span class="n">total</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">)):</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">total</span> <span class="ow">and</span> <span class="p">(</span><span class="n">total</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">onlyIfBigger</span><span class="p">)):</span>
 			<span class="c1"># print &quot;resizing : &quot;+str(total) +&#39;old : &#39;+ str(self.duration)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">total</span></div>
 
@@ -297,9 +294,9 @@
 <span class="sd">			GSPatternEvent : the event to be added</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">checkDuration</span><span class="p">()</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GSPattern.quantize"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.quantize">[docs]</a>	<span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">beatDivision</span><span class="p">,</span><span class="n">postMultiplier</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.quantize"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.quantize">[docs]</a>	<span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">beatDivision</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Quantize events</span>
 
 <span class="sd">		</span>
@@ -307,8 +304,20 @@
 <span class="sd">			beatDivision : the fraction of beat that we want to quantize to</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-			<span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">*</span><span class="n">beatDivision</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span><span class="o">*</span><span class="n">postMultiplier</span><span class="o">/</span><span class="n">beatDivision</span></div>
+			<span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">*</span><span class="n">beatDivision</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">beatDivision</span></div>
 		
+<div class="viewcode-block" id="GSPattern.timeStretch"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.timeStretch">[docs]</a>	<span class="k">def</span> <span class="nf">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ratio</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;time  stretch a pattern</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			ratio : the ratio used for time stretching</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+			<span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">*=</span><span class="n">ratio</span>
+			<span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="o">*=</span><span class="n">ratio</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">*=</span><span class="n">ratio</span> </div>
+
+
 
 <div class="viewcode-block" id="GSPattern.getStartingEventsAtTime"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getStartingEventsAtTime">[docs]</a>	<span class="k">def</span> <span class="nf">getStartingEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">tolerance</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Get all events activating at a givent time</span>
@@ -345,6 +354,7 @@
 		<span class="sd">&quot;&quot;&quot; Deepcopy a pattern</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
 <div class="viewcode-block" id="GSPattern.getACopyWithoutEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getACopyWithoutEvents">[docs]</a>	<span class="k">def</span> <span class="nf">getACopyWithoutEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; copy all fields but events</span>
 
@@ -386,15 +396,24 @@
 			<span class="k">if</span> <span class="n">exactSearch</span><span class="p">:</span> <span class="n">found</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">tags</span><span class="p">;</span>
 			<span class="k">else</span><span class="p">:</span> <span class="n">found</span> <span class="o">=</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span>
 			<span class="k">if</span> <span class="n">found</span><span class="p">:</span>
-				<span class="k">if</span> <span class="n">copy</span> <span class="p">:</span> <span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-				<span class="k">else</span> <span class="p">:</span>  <span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 				<span class="n">res</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
 		<span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="GSPattern.discretize"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.discretize">[docs]</a>	<span class="k">def</span> <span class="nf">discretize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">stepSize</span><span class="p">,</span><span class="n">repeatibleTags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;silence&#39;</span><span class="p">]):</span>
-		<span class="sd">&quot;&quot;&quot; Discretize a pattern</span>
+<div class="viewcode-block" id="GSPattern.alignOnGrid"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.alignOnGrid">[docs]</a>	<span class="k">def</span> <span class="nf">alignOnGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">stepSize</span><span class="p">,</span><span class="n">repeatibleTags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;silence&#39;</span><span class="p">]):</span>
+		<span class="sd">&quot;&quot;&quot; align this pattern on a temporal grid</span>
+<span class="sd">		</span>
+<span class="sd">		very useful to deal with step-sequenced pattern : </span>
+<span class="sd">			- all events durations are shortened to stepsize</span>
+<span class="sd">			- all events startTimes are quantified to stepsize</span>
 
+<span class="sd">		repeatibleTags allow to deal with `silences type` of events :</span>
+<span class="sd">			- if a silence spread over more than one stepsize, we generate an event for each stepSize</span>
+
+<span class="sd">		thus each step is ensured to be filled with one distinct event at least</span>
+<span class="sd">		Args:</span>
+<span class="sd">			stepSize: temporal definition of the grid</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		
 		<span class="n">newEvents</span> <span class="o">=</span> <span class="p">[]</span>
@@ -409,6 +428,25 @@
 				<span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">ea</span><span class="p">]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newEvents</span></div>
 
+<div class="viewcode-block" id="GSPattern.removeOverlapped"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.removeOverlapped">[docs]</a>	<span class="k">def</span> <span class="nf">removeOverlapped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;remove overlapped elements</span>
+
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">reorderEvents</span><span class="p">();</span>
+		<span class="n">newList</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+			<span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)):</span>
+				<span class="n">ee</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+				<span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
+					<span class="n">found</span> <span class="o">|=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;=</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">):</span>
+					<span class="k">break</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">found</span> <span class="p">:</span>
+				<span class="n">newList</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+			<span class="n">idx</span><span class="o">+=</span><span class="mi">1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newList</span></div>
+
 
 <div class="viewcode-block" id="GSPattern.getAllIdenticalEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getAllIdenticalEvents">[docs]</a>	<span class="k">def</span> <span class="nf">getAllIdenticalEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">allTagsMustBeEquals</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Get a list of event with same tags</span>
@@ -422,19 +460,18 @@
 		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
 			<span class="n">equals</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span>
-			<span class="k">if</span> <span class="p">(</span><span class="n">allTagsMustBeEquals</span><span class="p">)</span> <span class="p">:</span> <span class="n">equals</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">allTagsAreEqualWith</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-			<span class="k">else</span>  <span class="p">:</span> <span class="n">equals</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">hasOneCommonTagWith</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+			<span class="n">equals</span> <span class="o">=</span> <span class="n">event</span><span class="o">.</span><span class="n">allTagsAreEqualWith</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="k">if</span> <span class="n">allTagsMustBeEquals</span> <span class="k">else</span> <span class="n">event</span><span class="o">.</span><span class="n">hasOneCommonTagWith</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
 
 			<span class="k">if</span> <span class="n">equals</span><span class="p">:</span>
 				<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span></div>
 
 			
 
-<div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>	<span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">desiredLength</span><span class="p">,</span><span class="n">perTag</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">silenceTag</span> <span class="o">=</span> <span class="s1">&#39;silence&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>	<span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">maxSilenceTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">perTag</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">silenceTag</span> <span class="o">=</span> <span class="s1">&#39;silence&#39;</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Fill empty (i.e no event ) spaces with silence event</span>
 
 <span class="sd">		Args:</span>
-<span class="sd">			desiredLength: float :  the total desired length (allow to put trailing silences if needed)</span>
+<span class="sd">			maxSilenceTime : if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime</span>
 <span class="sd">			perTag: fill silence for each Tag</span>
 <span class="sd">			silenceTag: tag that will be used when inserting the silence event </span>
 
@@ -444,26 +481,35 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">reorderEvents</span><span class="p">();</span>
 		
 
-		<span class="k">def</span> <span class="nf">_fillListWithSilence</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+		<span class="k">def</span> <span class="nf">_fillListWithSilence</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="n">silenceTag</span><span class="p">):</span>
 			<span class="n">lastOff</span> <span class="o">=</span> <span class="mi">0</span>
 			<span class="n">newEvents</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="n">lastOff</span><span class="p">:</span>
-					<span class="n">silence</span> <span class="o">=</span> <span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">-</span><span class="n">lastOff</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])</span>
-					<span class="n">newEvents</span><span class="o">+=</span> <span class="p">[</span><span class="n">silence</span><span class="p">]</span>
+					<span class="k">if</span> <span class="n">maxSilenceTime</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+						<span class="k">while</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">-</span><span class="n">lastOff</span><span class="o">&gt;</span><span class="n">maxSilenceTime</span><span class="p">:</span>
+							<span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">maxSilenceTime</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])]</span>
+							<span class="n">lastOff</span><span class="o">+=</span><span class="n">maxSilenceTime</span> 
+					<span class="n">newEvents</span><span class="o">+=</span> <span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">-</span><span class="n">lastOff</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])]</span>
 				<span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
 				<span class="n">lastOff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
-			<span class="k">if</span> <span class="n">lastOff</span><span class="o">&lt;</span><span class="n">desiredLength</span><span class="p">:</span>
-				<span class="n">newEvents</span> <span class="o">+=</span> <span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">desiredLength</span><span class="o">-</span><span class="n">lastOff</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])]</span>
+
+			<span class="k">if</span> <span class="n">lastOff</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">maxSilenceTime</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+					<span class="k">while</span> <span class="n">lastOff</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="o">-</span><span class="n">maxSilenceTime</span><span class="p">:</span>
+						<span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="n">maxSilenceTime</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])]</span>
+						<span class="n">lastOff</span><span class="o">+=</span><span class="n">maxSilenceTime</span> 
+				<span class="n">newEvents</span><span class="o">+=</span> <span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">lastOff</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="o">-</span><span class="n">lastOff</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="n">silenceTag</span><span class="p">])]</span>
+
 			<span class="k">return</span> <span class="n">newEvents</span>
 
 
 		<span class="k">if</span> <span class="ow">not</span> <span class="n">perTag</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">_fillListWithSilence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">);</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">_fillListWithSilence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">,</span><span class="n">silenceTag</span><span class="p">);</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">allEvents</span> <span class="o">=</span> <span class="p">[]</span>
 			<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getAllTags</span><span class="p">():</span>
-				<span class="n">allEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">_fillListWithSilence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">t</span><span class="p">],</span><span class="n">exactSearch</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">copy</span> <span class="o">=</span> <span class="bp">False</span><span class="p">))]</span>
+				<span class="n">allEvents</span><span class="o">+=</span><span class="n">_fillListWithSilence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">t</span><span class="p">],</span><span class="n">exactSearch</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">copy</span> <span class="o">=</span> <span class="bp">False</span><span class="p">),</span><span class="n">silenceTag</span><span class="p">)</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">allEvents</span></div>
 
 
@@ -495,16 +541,18 @@
 
 
 <div class="viewcode-block" id="GSPattern.printEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.printEvents">[docs]</a>	<span class="k">def</span> <span class="nf">printEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot; Nicely print out an event</span>
+		<span class="sd">&quot;&quot;&quot; Nicely print out the list of events</span>
+
+<span class="sd">		each line represents an event formatted as  : tags pitch startTime duration</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-			<span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span> <span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">pitch</span></div>
+			<span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">duration</span></div>
 
 <div class="viewcode-block" id="GSPattern.toJSONDict"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.toJSONDict">[docs]</a>	<span class="k">def</span> <span class="nf">toJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; gives a standard dict for json output</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">checkDuration</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span>
 		<span class="n">allTags</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">getAllTags</span><span class="p">()</span>
 		<span class="n">res</span><span class="p">[</span><span class="s1">&#39;eventTags&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">allTags</span>
 		<span class="n">res</span><span class="p">[</span><span class="s1">&#39;timeInfo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;duration&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">,</span><span class="s1">&#39;BPM&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">bpm</span><span class="p">}</span>
@@ -527,7 +575,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;timeInfo&#39;</span><span class="p">][</span><span class="s1">&#39;BPM&#39;</span><span class="p">]</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;eventList&#39;</span><span class="p">]:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;on&#39;</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;duration&#39;</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;pitch&#39;</span><span class="p">],</span><span class="n">e</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">],[</span><span class="n">tags</span><span class="p">[</span><span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">e</span><span class="p">[</span><span class="s1">&#39;tagsIdx&#39;</span><span class="p">]])]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">checkDuration</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span>
 		<span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="GSPattern.splitInEqualLengthPatterns"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">[docs]</a>	<span class="k">def</span> <span class="nf">splitInEqualLengthPatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">desiredLength</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
@@ -549,10 +597,7 @@
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getACopyWithoutEvents</span><span class="p">()</span>
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">desiredLength</span><span class="p">;</span>
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">numPattern</span><span class="p">;</span>
-			<span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
-				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span><span class="p">;</span>
+			<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span>
 			<span class="n">newEv</span><span class="o">.</span><span class="n">startTime</span><span class="o">-=</span><span class="n">p</span><span class="o">*</span><span class="n">desiredLength</span><span class="p">;</span>
 			<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">];</span>
 		
@@ -560,7 +605,7 @@
 		
 		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
-			<span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">checkDuration</span><span class="p">();</span>
+			<span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">();</span>
 			<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]]</span>
 
 		<span class="k">return</span> <span class="n">res</span><span class="p">;</span></div></div>

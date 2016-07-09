@@ -159,7 +159,7 @@
 <span id="gsapi-gsio-module"></span><h2>gsapi.GSIO module<a class="headerlink" href="#module-gsapi.GSIO" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="gsapi.GSIO.fromMidi">
-<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath</em>, <em>NoteToTagsMap</em>, <em>TagsFromTrackNameEvents=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
 <dd><p>loads a midi file as a pattern</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -173,7 +173,9 @@ a tuple of (note, channel) if one of those doesnt matter it canbe replaced by &#
 an integer if only pitch matters
 for simplicity one can pass only one integer (i.e not a list) for one to one mappings
 if midi track contain the name of one element of mapping, it&#8217;ll be choosed without anyother consideration</li>
-<li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping, useful for midi contained named tracks</li>
+<li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping, useful for midi containing named tracks</li>
+<li><strong>filterOutNotMapped</strong> &#8211; if set to true, don&#8217;t add event not represented by <cite>NoteToTagsMap</cite></li>
+<li><strong>tracksToGet</strong> &#8211; if not empty, specifies tracks wanted either by name or index</li>
 </ul>
 </td>
 </tr>
@@ -183,7 +185,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="function">
 <dt id="gsapi.GSIO.fromMidiCollection">
-<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidiCollection</code><span class="sig-paren">(</span><em>midiGlobPath</em>, <em>NoteToTagsMap</em>, <em>TagsFromTrackNameEvents=False</em>, <em>desiredLength=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidiCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidiCollection" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidiCollection</code><span class="sig-paren">(</span><em>midiGlobPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em>, <em>desiredLength=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidiCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidiCollection" title="Permalink to this definition">¶</a></dt>
 <dd><p>loads a midi collection</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -191,9 +193,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>midiGlobPath</strong> &#8211; midi filePath in glob naming convention (e.g &#8216;/folder/To/Crawl/<a href="#id1"><span class="problematic" id="id2">*</span></a>.mid&#8217;)</li>
-<li><strong>NoteToTagsMap</strong> &#8211; dictionary converting pitches to tags  (see <a class="reference internal" href="#gsapi.GSIO.fromMidi" title="gsapi.GSIO.fromMidi"><code class="xref py py-func docutils literal"><span class="pre">gsapi.GSIO.fromMidi()</span></code></a> function)</li>
-<li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping, useful for midi contained named tracks</li>
 <li><strong>desiredLength</strong> &#8211; optionally cut patterns in equal length</li>
+<li><strong>otherArguments</strong> &#8211; are defined in <a class="reference internal" href="#gsapi.GSIO.fromMidi" title="gsapi.GSIO.fromMidi"><code class="xref py py-func docutils literal"><span class="pre">fromMidi()</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -237,25 +238,10 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <span id="gsapi-gspattern-module"></span><h2>gsapi.GSPattern module<a class="headerlink" href="#module-gsapi.GSPattern" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gsapi.GSPattern.GSPatternEvent">
-<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>start</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Represent an event of a GSPattern</p>
 <p>an event is made of start and length , origin pitch , velocity and associated tags</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>start</strong> &#8211; startTime of event</li>
-<li><strong>duration</strong> &#8211; duration of event</li>
-<li><strong>pitch</strong> &#8211; pitch of event</li>
-<li><strong>velocity</strong> &#8211; velocity of event</li>
-<li><strong>tags</strong> &#8211; list of tags representing the event</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
 <dl class="attribute">
 <dt id="gsapi.GSPattern.GSPatternEvent.startTime">
 <code class="descname">startTime</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.startTime" title="Permalink to this definition">¶</a></dt>
@@ -427,9 +413,17 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSPattern.GSPattern.checkDuration">
-<code class="descname">checkDuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.checkDuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.checkDuration" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verify that duration member is consistent</p>
+<dt id="gsapi.GSPattern.GSPattern.setDurationFromLastEvent">
+<code class="descname">setDurationFromLastEvent</code><span class="sig-paren">(</span><em>onlyIfBigger=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.setDurationFromLastEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.setDurationFromLastEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>sets duration to last event NoteOff</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>onlyIfBigger</strong> &#8211; update duration only if last Note off is bigger</td>
+</tr>
+</tbody>
+</table>
 <p>if inner events have a bigger time span than self.duration, increase duration to fit</p>
 </dd></dl>
 
@@ -470,13 +464,27 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.quantize">
-<code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em>, <em>postMultiplier=1.0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantize events</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>beatDivision</strong> &#8211; the fraction of beat that we want to quantize to</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.timeStretch">
+<code class="descname">timeStretch</code><span class="sig-paren">(</span><em>ratio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.timeStretch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.timeStretch" title="Permalink to this definition">¶</a></dt>
+<dd><p>time  stretch a pattern</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ratio</strong> &#8211; the ratio used for time stretching</td>
 </tr>
 </tbody>
 </table>
@@ -574,9 +582,30 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSPattern.GSPattern.discretize">
-<code class="descname">discretize</code><span class="sig-paren">(</span><em>stepSize, repeatibleTags=['silence']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.discretize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.discretize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Discretize a pattern</p>
+<dt id="gsapi.GSPattern.GSPattern.alignOnGrid">
+<code class="descname">alignOnGrid</code><span class="sig-paren">(</span><em>stepSize, repeatibleTags=['silence']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.alignOnGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.alignOnGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>align this pattern on a temporal grid</p>
+<dl class="docutils">
+<dt>very useful to deal with step-sequenced pattern :</dt>
+<dd><ul class="first last simple">
+<li>all events durations are shortened to stepsize</li>
+<li>all events startTimes are quantified to stepsize</li>
+</ul>
+</dd>
+<dt>repeatibleTags allow to deal with <cite>silences type</cite> of events :</dt>
+<dd><ul class="first last simple">
+<li>if a silence spread over more than one stepsize, we generate an event for each stepSize</li>
+</ul>
+</dd>
+</dl>
+<p>thus each step is ensured to be filled with one distinct event at least
+:param stepSize: temporal definition of the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.removeOverlapped">
+<code class="descname">removeOverlapped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeOverlapped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeOverlapped" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove overlapped elements</p>
 </dd></dl>
 
 <dl class="method">
@@ -602,14 +631,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
-<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill empty (i.e no event ) spaces with silence event</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>desiredLength</strong> &#8211; float :  the total desired length (allow to put trailing silences if needed)</li>
+<li><strong>maxSilenceTime</strong> &#8211; if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime</li>
 <li><strong>perTag</strong> &#8211; fill silence for each Tag</li>
 <li><strong>silenceTag</strong> &#8211; tag that will be used when inserting the silence event</li>
 </ul>
@@ -644,7 +673,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.printEvents">
 <code class="descname">printEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.printEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.printEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nicely print out an event</p>
+<dd><p>Nicely print out the list of events</p>
+<p>each line represents an event formatted as  : tags pitch startTime duration</p>
 </dd></dl>
 
 <dl class="method">
