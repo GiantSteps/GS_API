@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>GS_API’s documentation &mdash; GS_API 0.1 documentation</title>
+    <title>gsapi.GSInternalTransformers package &mdash; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,8 +29,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="GS_API 0.1 documentation" href="#" />
-    <link rel="next" title="GS_API" href="README.html" />
+    <link rel="top" title="GS_API 0.1 documentation" href="index.html" />
+    <link rel="up" title="gsapi package" href="gsapi.html" />
+    <link rel="prev" title="gsapi.GSInternalStyles package" href="gsapi.GSInternalStyles.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -48,7 +49,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="index.html">
           GS_API</a>
         <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
       </div>
@@ -62,12 +63,12 @@
      id="dLabelGlobalToc"
      data-toggle="dropdown"
      data-target="#"
-     href="#">Site <b class="caret"></b></a>
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
       role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul>
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
 </ul>
 </ul>
 </li>
@@ -81,8 +82,10 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">GS_API&#8217;s documentation</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">gsapi.GSInternalTransformers package</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSInternalTransformers.AgnosticDensity">gsapi.GSInternalTransformers.AgnosticDensity module</a></li>
+</ul>
+</li>
 </ul>
 </ul>
 </li>
@@ -92,7 +95,7 @@
               
                 
   <li>
-    <a href="README.html" title="Next Chapter: GS_API"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">GS_API &raquo;</span>
+    <a href="gsapi.GSInternalStyles.html" title="Previous Chapter: gsapi.GSInternalStyles package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi.GSInter...</span>
     </a>
   </li>
               
@@ -102,7 +105,7 @@
             
               <li class="hidden-sm">
 <div id="sourcelink">
-  <a href="_sources/index.txt"
+  <a href="_sources/gsapi.GSInternalTransformers.txt"
      rel="nofollow">Source</a>
 </div></li>
             
@@ -126,35 +129,28 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="gs-api-s-documentation">
-<h1>GS_API&#8217;s documentation<a class="headerlink" href="#gs-api-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="README.html#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="README.html#using-the-library">Using the Library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="README.html#api-philosophies">API Philosophies</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="gsapi.html">gsapi package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gsapi.html#subpackages">Subpackages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gsapi.html#module-gsapi.GSIO">gsapi.GSIO module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gsapi.html#module-gsapi.GSPattern">gsapi.GSPattern module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gsapi.html#module-gsapi.GSPatternTransformer">gsapi.GSPatternTransformer module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gsapi.html#module-gsapi.GSStyle">gsapi.GSStyle module</a></li>
-</ul>
-</li>
-</ul>
+  <div class="section" id="module-gsapi.GSInternalTransformers">
+<span id="gsapi-gsinternaltransformers-package"></span><h1>gsapi.GSInternalTransformers package<a class="headerlink" href="#module-gsapi.GSInternalTransformers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gsapi.GSInternalTransformers.AgnosticDensity">
+<span id="gsapi-gsinternaltransformers-agnosticdensity-module"></span><h2>gsapi.GSInternalTransformers.AgnosticDensity module<a class="headerlink" href="#module-gsapi.GSInternalTransformers.AgnosticDensity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity">
+<em class="property">class </em><code class="descclassname">gsapi.GSInternalTransformers.AgnosticDensity.</code><code class="descname">AgnosticDensity</code><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="gsapi.html#gsapi.GSPatternTransformer.GSPatternTransformer" title="gsapi.GSPatternTransformer.GSPatternTransformer"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSPatternTransformer.GSPatternTransformer</span></code></a></p>
+<p>Agnostic transformation algorithm</p>
+<dl class="method">
+<dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">
+<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em>, <em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalTransformers/AgnosticDensity.html#AgnosticDensity.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
-</ul>
 </div>
 
 

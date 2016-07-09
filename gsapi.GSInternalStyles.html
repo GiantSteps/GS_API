@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gsapi.GSInternalStyles package &mdash; GS_API 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="GS_API 0.1 documentation" href="index.html" />
+    <link rel="up" title="gsapi package" href="gsapi.html" />
+    <link rel="next" title="gsapi.GSInternalTransformers package" href="gsapi.GSInternalTransformers.html" />
+    <link rel="prev" title="gsapi package" href="gsapi.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          GS_API</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">gsapi.GSInternalStyles package</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSInternalStyles.GSDBStyle">gsapi.GSInternalStyles.GSDBStyle module</a></li>
+<li><a class="reference internal" href="#module-gsapi.GSInternalStyles.GSMarkovStyle">gsapi.GSInternalStyles.GSMarkovStyle module</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="gsapi.html" title="Previous Chapter: gsapi package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi package</span>
+    </a>
+  </li>
+  <li>
+    <a href="gsapi.GSInternalTransformers.html" title="Next Chapter: gsapi.GSInternalTransformers package"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">gsapi.GSInter... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/gsapi.GSInternalStyles.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="module-gsapi.GSInternalStyles">
+<span id="gsapi-gsinternalstyles-package"></span><h1>gsapi.GSInternalStyles package<a class="headerlink" href="#module-gsapi.GSInternalStyles" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gsapi.GSInternalStyles.GSDBStyle">
+<span id="gsapi-gsinternalstyles-gsdbstyle-module"></span><h2>gsapi.GSInternalStyles.GSDBStyle module<a class="headerlink" href="#module-gsapi.GSInternalStyles.GSDBStyle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle">
+<em class="property">class </em><code class="descclassname">gsapi.GSInternalStyles.GSDBStyle.</code><code class="descname">GSDBStyle</code><span class="sig-paren">(</span><em>generatePatternOrdering='indexed'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="gsapi.html#gsapi.GSStyle.GSStyle" title="gsapi.GSStyle.GSStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSStyle.GSStyle</span></code></a></p>
+<p>A database based style
+simply generatePatterns from existing patterns</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>generatePatternOrdering</strong> &#8211; can be &#8216;indexed&#8217;,&#8217;increasing&#8217;,&#8217;random&#8217; , defining the generatePattern behaviour</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generateStyle">
+<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.generateStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generatePattern">
+<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.generatePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getDistanceFromStyle">
+<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.getDistanceFromStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getClosestPattern">
+<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.getClosestPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getInterpolated">
+<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.getInterpolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getInternalState">
+<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.getInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.setInternalState">
+<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>internalStateDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.setInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.isBuilt">
+<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSDBStyle.html#GSDBStyle.isBuilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-gsapi.GSInternalStyles.GSMarkovStyle">
+<span id="gsapi-gsinternalstyles-gsmarkovstyle-module"></span><h2>gsapi.GSInternalStyles.GSMarkovStyle module<a class="headerlink" href="#module-gsapi.GSInternalStyles.GSMarkovStyle" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle">
+<em class="property">class </em><code class="descclassname">gsapi.GSInternalStyles.GSMarkovStyle.</code><code class="descname">GSMarkovStyle</code><span class="sig-paren">(</span><em>order</em>, <em>numSteps</em>, <em>loopDuration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="gsapi.html#gsapi.GSStyle.GSStyle" title="gsapi.GSStyle.GSStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSStyle.GSStyle</span></code></a></p>
+<p>compute sa style based on markov chains</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>order</strong> &#8211; order used for markov computation</li>
+<li><strong>numSteps</strong> &#8211; number of steps to consider (binarization of pattern)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.order">
+<code class="descname">order</code><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.order" title="Permalink to this definition">¶</a></dt>
+<dd><p>order used for markov computation</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.numSteps">
+<code class="descname">numSteps</code><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.numSteps" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of steps to consider (binarization of pattern)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.generateStyle">
+<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.generateStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate style based on list of GSPattern
+:param PatternClasses: list of GSPatterns</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.buildStyle">
+<code class="descname">buildStyle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.buildStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.buildStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>builds transisiont table for the previously given list of GSPattern</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.generatePattern">
+<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.generatePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate a new pattern
+:param seed: seed used for random initialisation of pattern (value of None generates a new one)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilences">
+<code class="descname">checkSilences</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.checkSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilences" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilenceInList">
+<code class="descname">checkSilenceInList</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.checkSilenceInList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilenceInList" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.formatPattern">
+<code class="descname">formatPattern</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.formatPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.formatPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getLastEvents">
+<code class="descname">getLastEvents</code><span class="sig-paren">(</span><em>pattern</em>, <em>step</em>, <em>num</em>, <em>stepSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.getLastEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getLastEvents" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getDistanceFromStyle">
+<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.getDistanceFromStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getClosestPattern">
+<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.getClosestPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getInterpolated">
+<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.getInterpolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getInternalState">
+<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.getInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.setInternalState">
+<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>state</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.setInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.isBuilt">
+<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSInternalStyles/GSMarkovStyle.html#GSMarkovStyle.isBuilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, MTG/GiantSteps.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
