@@ -9,4 +9,3 @@ dist/
 *.dll
 **/doc/_build/
 **/doc/gh-pages/
-test/

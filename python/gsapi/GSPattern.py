@@ -9,7 +9,7 @@ class GSPatternEvent(object):
 	"""Represent an event of a GSPattern
 
 	an event is made of start and length , origin pitch , velocity and associated tags
-	
+
 	Args:
 		start: startTime of event
 		duration: duration of event
@@ -81,6 +81,14 @@ class GSPatternEvent(object):
 		"""
 		self.tagsAre(event.tags)
 
+	def getEndTime(self):
+		""" returns the time when this events ends
+
+		Returns:
+			the time when this event ends
+		"""
+		return self.startTime + self.duration
+
 
 	def copy(self):
 		""" Copy an event
@@ -96,6 +104,8 @@ class GSPatternEvent(object):
 
 		Args:
 			stepSize: the desired size of each produced events
+		Returns:
+			a list of events of length `stepSize`
 		"""
 		res = []
 		# if smaller still take it
@@ -144,9 +154,9 @@ class GSPattern(object):
 			self.duration = total
 
 	def reorderEvents(self):
-		""" ensure than our events are time sorted 
+		""" ensure than our internal event list `events` is time sorted 
 			
-			can be useful for some algorithm
+			can be useful for time sensitive events iteration
 		"""
 		self.events.sort(key=lambda x: x.startTime, reverse=False)
 
@@ -176,7 +186,8 @@ class GSPattern(object):
 		""" Quantize events
 
 		
-		:param float beatDivision : the fraction of beat that we want to quantize to
+		Args:
+			beatDivision : the fraction of beat that we want to quantize to
 		"""
 		for e in self.events:
 			e.startTime = int(e.startTime*beatDivision)*1.0*postMultiplier/beatDivision
@@ -219,6 +230,7 @@ class GSPattern(object):
 		return copy.deepcopy(self)
 	def getACopyWithoutEvents(self):
 		""" copy all fields but events
+
 			useful for creating patterns from patterns
 		"""
 		p = GSPattern();
@@ -241,6 +253,27 @@ class GSPattern(object):
 				if not t in tags:
 					tags+=[t];
 		return tags
+
+	def getPatternWithTags(self,tags,exactSearch=True,copy=True):
+		"""Returns a sub-pattern with the given tags
+
+		Args:
+			tags: string list : tags to be checked for
+			exactSearch: bool : if True the tags have to be exactly the same, else they can be included in events Tags
+			copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+		Returns:
+			a GSPattern with only events that tags corresponds to given tags
+		"""
+		res = self.getACopyWithoutEvents();
+		for e in self.events:
+			if exactSearch: found = e.tags==tags;
+			else: found = tags in e.tags
+			if found:
+				if copy : newEv = e.copy()
+				else :  newEv = e;
+				res.events+=[newEv]
+		return res
+
 
 	def discretize(self,stepSize,repeatibleTags = ['silence']):
 		""" Discretize a pattern
@@ -280,24 +313,43 @@ class GSPattern(object):
 
 			
 
-	def fillWithSilences(self,desiredLength,silenceTag = 'silence'):
-		""" Fill empty (i.e no event active) spaces with silence event
+	def fillWithSilences(self,desiredLength,perTag=False,silenceTag = 'silence'):
+		""" Fill empty (i.e no event ) spaces with silence event
 
 		Args:
+			desiredLength: float :  the total desired length (allow to put trailing silences if needed)
+			perTag: fill silence for each Tag
 			silenceTag: tag that will be used when inserting the silence event 
 
 		"""
-		newEvents = []
-		lastOff = 0;
-		for e in self.events:
-			if e.startTime>lastOff:
-				silence = GSPatternEvent(lastOff,e.startTime-lastOff,0,0,[silenceTag])
-				newEvents+= [silence]
-			newEvents+=[e]
-			lastOff = max(lastOff,e.startTime+e.duration)
-		if lastOff<desiredLength:
-			newEvents += [GSPatternEvent(lastOff,desiredLength-lastOff,0,0,[silenceTag])]
-		self.events = newEvents;
+		
+		
+		self.reorderEvents();
+		
+
+		def _fillListWithSilence(list):
+			lastOff = 0
+			newEvents = []
+			for e in self.events:
+				if e.startTime>lastOff:
+					silence = GSPatternEvent(lastOff,e.startTime-lastOff,0,0,[silenceTag])
+					newEvents+= [silence]
+				newEvents+=[e]
+				lastOff = max(lastOff,e.startTime+e.duration)
+			if lastOff<desiredLength:
+				newEvents += [GSPatternEvent(lastOff,desiredLength-lastOff,0,0,[silenceTag])]
+			return newEvents
+
+
+		if not perTag:
+			self.events = _fillListWithSilence(self.events);
+		else:
+			allEvents = []
+			for t in self.getAllTags():
+				allEvents+=[_fillListWithSilence(self.getPatternWithTags(tags=[t],exactSearch=False,copy = False))]
+			self.events = allEvents
+
+
 
 	def getPatternForTimeSlice(self,startTime,length,trimEnd = True):
 		""" Returns a pattern within given timeslice
@@ -305,12 +357,12 @@ class GSPattern(object):
 		Args:
 			startTime: start time for time slice
 			length: length of time slice
+			trimEnd: cut any events that ends after startTime + length
 		Returns:
 			a new GSpattern within time slice
 		"""
-		p = self.copy()
+		p = self.getACopyWithoutEvents()
 		p.duration = length;
-		p.events = []
 		for e in self.events:
 			if e.startTime - startTime>=0 and e.startTime-startTime<length:
 				newEv = e.copy()
@@ -318,7 +370,7 @@ class GSPattern(object):
 				p.events +=[newEv]
 		if trimEnd:
 			for e in p.events:
-				toCrop = e.startTime+e.duration - startTime+length
+				toCrop = e.startTime+e.duration - length
 				if toCrop>0:
 					e.duration-=toCrop;
 		return p

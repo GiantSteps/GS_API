@@ -2,14 +2,6 @@ import glob
 import os
 
 
-# inject local gsapi if debugging
-
-
-if __name__=='__main__':
-	import sys
-	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir))
-	sys.path.insert(1,pathToAdd)
-	
 import gsapi
 import math
 from gsapi import *
@@ -176,26 +168,6 @@ def fromMidiCollection(midiGlobPath,NoteToTagsMap,TagsFromTrackNameEvents=False,
 
 
 
-if __name__=='__main__':
-
-	crawledFolder = "../test/midi/*.mid"
-	customNoteMapping = {"Kick":36,"Rimshot":37,"Snare":38,"Clap":39,"Clave":40,"LowTom":41,"ClosedHH":42,"MidTom":43,"Shake":44,"HiTom":45,"OpenHH":46,"LowConga":47,"HiConga":48,"Cymbal":49,"Conga":50,"CowBell":51}
-
-
-
-	profile =True
-	if profile:
-		import cProfile
-		import re
-		cProfile.run('patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)',filename='profiled')
-		patterns = fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False,desiredLength=4)
-		print patterns
-		for p in patterns:
-			p.printEvents()
-	else:
-		import pstats
-		p = pstats.Stats('profiled')
-		p.strip_dirs().sort_stats(1).print_stats()
 
 
 def PatternFromJSONFile(filePath):
@@ -209,7 +181,7 @@ def PatternFromJSONFile(filePath):
 
 def PatternToJSONFile(pattern,filePath):
 	""" save a pattern to internal JSON Format
-	
+
 	Args:
 		filePath:filePath where to save it
 	"""
