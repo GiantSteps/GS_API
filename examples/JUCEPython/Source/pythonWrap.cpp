@@ -14,8 +14,12 @@
 #include <stdio.h>
 
 
-
-
+#ifndef PYTHON_ROOT
+#error
+#endif
+#ifndef PYTHON_BIN
+#error
+#endif
 
 void PythonWrap::init(){
   if(!Py_IsInitialized())
@@ -40,6 +44,7 @@ void PythonWrap::init(){
 
 void PythonWrap::setFolderPath(const string & s){
 	curentFolderPath = s;
+  DBG("currentFolderPath : " << s)
 	addSearchPath(s);
 	
 }
@@ -65,7 +70,7 @@ bool PythonWrap::load(const string & name){
   // Import the module "plugin" (from the file "plugin.py")
   PyObject* moduleName = PyFromString(name.c_str());
   //    Py_XDECREF(pluginModule);
-	
+
   if (isFileLoaded()) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
@@ -84,6 +89,7 @@ bool PythonWrap::load(const string & name){
     //        PyRun_SimpleString(reloadS.c_str());
   }
   else{
+    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
     pluginModule = PyImport_Import(moduleName);
 		
   }
