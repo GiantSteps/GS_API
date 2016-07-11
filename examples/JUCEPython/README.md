@@ -14,6 +14,10 @@ the file is in the VST bundle, under Resources/python
 you need to install python gsapi first see GS_API readme
 
 
+### Dependencies
+
+Cython, numpy,python-midi
+
 
 
 Known Bugs
