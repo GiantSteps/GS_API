@@ -146,10 +146,10 @@ else{
 	timeListeners.call(&TimeListener::setTime,playHead);
     player.updatePlayHead(playHead);
     for(auto & n:player.getCurrentNoteOn()){
-        midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);
+        if(n.pitch>=0)midiMessages.addEvent(MidiMessage::noteOn(1,n.pitch,(uint8)n.velocity),0);
     }
     for(auto & n:player.getCurrentNoteOff()){
-        midiMessages.addEvent(MidiMessage::noteOff(1,n.pitch,(uint8)n.velocity),0);
+        if(n.pitch>=0)midiMessages.addEvent(MidiMessage::noteOff(1,n.pitch,(uint8)n.velocity),0);
     }
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't

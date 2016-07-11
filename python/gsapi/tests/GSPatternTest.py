@@ -84,7 +84,6 @@ class GSPatternTest(unittest.TestCase):
 		p.alignOnGrid(1)
 		p.removeOverlapped()
 		p.fillWithSilences(maxSilenceTime = 1);
-		p.printEvents()
 		p.setDurationFromLastEvent(False)
 
 		self.assertTrue(p.events[-1].startTime == 31)
@@ -106,4 +105,5 @@ if __name__=='__main__':
 		p.strip_dirs().sort_stats(1).print_stats()
 	if not pStat and not profile:
 		unittest.main()
+
 

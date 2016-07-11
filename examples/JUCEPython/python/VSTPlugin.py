@@ -96,20 +96,23 @@ def onGenerateNew():
 def mapMidi(pattern):
 	for e in pattern.events:
 		if len(e.tags) > 0 and (e.tags[0] in midiMap):
-			e.pitch = midiMap[e.tags[0]]
+			e.pitch = midiMap[e.tags[0]][0][0]
 
 
 def generateStyleIfNeeded():
 	global needStyleUpdate
 	global midiMap
 	global style
+	global styleSavingPath
 
 	if not style.isBuilt():
 		hasStyleSaved = os.path.isfile(styleSavingPath)
 		if(not hasStyleSaved  or needStyleUpdate ):
 			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
 			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = 4)
+			
 			style.generateStyle(patterns)
+
 			style.saveToJSON(styleSavingPath)
 			needStyleUpdate =False
 		else:
@@ -131,8 +134,7 @@ if __name__ =='__main__':
 	needStyleUpdate=True
 	patt = onGenerateNew();
 	params =  getAllParameters()
-	print dir(params[0])
-	for property, value in vars(params[0]).iteritems():
-		print property, ": ", value
+	patt.printEvents()
+	
 	
 	# patt.printEvents()

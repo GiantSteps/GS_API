@@ -41,14 +41,14 @@ class GSMarkovStyle(GSStyle):
 	def buildStyle(self):
 		""" builds transisiont table for the previously given list of GSPattern
 		"""
-		self.transitionTable = [{} for f in range(self.numSteps)]
+		self.transitionTable = [{} for f in range(int(self.numSteps))]
 
 		self.binarizedPatterns = copy.deepcopy(self.originPatterns)
 		for p in self.binarizedPatterns:
 			self.formatPattern(p)
 			self.checkSilences(p)
 			
-			for step in range(p.duration):
+			for step in range(int(p.duration)):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
 				curEvent = self._buildNameForEvents(l);
@@ -56,18 +56,14 @@ class GSMarkovStyle(GSStyle):
 
 				curDic = self.transitionTable[int(step)]
 				
-
-				
 				if combinationName not in curDic:
-					
 					curDic[combinationName] = {}
 				
 				if curEvent not in curDic[combinationName]:
-					
 					curDic[combinationName][curEvent] = 1
 				else:
 					curDic[combinationName][curEvent] += 1
-				# print e.tags , [ x.tags  for t in lastEvents for x in t]
+				
 
 		
 		def _normalize():
@@ -122,10 +118,6 @@ class GSMarkovStyle(GSStyle):
 			return d.keys()[chosenIdx]
 
 
-			
-			
-
-
 		
 		cIdx = self.order
 		startHypothesis =[]
@@ -175,7 +167,7 @@ class GSMarkovStyle(GSStyle):
 		return pattern
 
 	def checkSilences(self,p):
-		for i in range(p.duration):
+		for i in range(int(p.duration)):
 			c = p.getStartingEventsAtTime(i)
 			if len(c)>1 and( 'silence' in c):
 				print "wrong silence"
@@ -258,20 +250,7 @@ if __name__ == '__main__':
 
 	import glob,json
 	
-	searchPath = "../../test/slicedMidi/*.json"
-	s = GSMarkovStyle(2,32,4)
-	patterns = []
-	for f in glob.glob(searchPath):
-		with open(f) as j:
-			d = json.load(j)
-			p = GSPattern();
-			p.fromJSONDict(d);
-			loopLength = 4;
-			for i in range(int(p.duration/loopLength)):
-				p = p.getPatternForTimeSlice(i*loopLength,loopLength); # the current dataset can be splitted in loops of 4
-				
-				patterns+=[p]
-
+	patterns= GSIO.fromMidiCollection()
 	s.generateStyle(patterns)
 	print s.transitionTable
 	p = s.generatePattern()
