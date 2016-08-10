@@ -12,24 +12,34 @@
 
 #include "PyJUCEParameter.h"
 void PythonCanvas::newParamsLoaded( OwnedArray<PyJUCEParameter> *params){
-	pyWidgets.clear();
-	originParams = params;
-	for (auto & p:*originParams){
-		Component * c = p->buildComponent();
-		pyWidgets.add(c);
-		addAndMakeVisible(c);
-	}
-	
+  originParams = params;
+  postCommandMessage(REBUILD_PARAMS);
 
-	resized();
 };
+void PythonCanvas::handleCommandMessage(int cID){
+  switch (cID) {
+    case REBUILD_PARAMS:
+      pyWidgets.clear();
+      for (auto & p:*originParams){
+        Component * c = p->buildComponent();
+        pyWidgets.add(c);
+        addAndMakeVisible(c);
+      }
+      resized();
+      break;
+
+    default:
+      break;
+  }
+}
 
 Rectangle<int> scaleRect(Rectangle<float> r,Rectangle<int> b){
 	return (r.translated(b.getX(), b.getY())*Point<float>(b.getWidth()/100.0,b.getHeight()/100.0)).toNearestInt();
 }
 
 void PythonCanvas::resized(){
-	if (!originParams) {return;}
+	if (!originParams || pyWidgets.size()==0) {return;}
+
 	int i = 0;
 	
 	for(auto & p:*originParams){

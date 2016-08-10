@@ -41,7 +41,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   autoWatchB.setColour(TextButton::buttonOnColourId, Colours::orange);
   showB.addListener(this);
   useInternalTransportB.addListener(this);
-  useInternalTransportB.setClickingTogglesState(true);
+  useInternalTransportB.setClickingTogglesState(false);
   useInternalTransportB.setColour(TextButton::buttonOnColourId, Colours::orange);
   useInternalTransportB.setToggleState(owner->useInternalTransport, dontSendNotification);
 	

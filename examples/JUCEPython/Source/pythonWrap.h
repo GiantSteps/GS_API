@@ -22,25 +22,25 @@ using namespace std;
 class PythonWrap{
     public :
 
-    PythonWrap():pluginModule(nullptr){}
-    string test(const string& s);
+    PythonWrap(){}
+    string test(const string& s,PyObject * module);
     string getVSTPath();
     void printPyState();
   void init();
 	void setFolderPath(const string & s);
-    bool load(const string & name);
+    PyObject* loadModule(const string & name,PyObject * oldModule=nullptr);
     void initSearchPath();
     void addSearchPath(const string &);
-    bool isFileLoaded();
-	PyObject * callFunction(const string & func,PyObject * args=nullptr);
-	PyObject * callFunction(PyObject * func,PyObject * args);
+    
+	PyObject * callFunction(const string & func,PyObject * module,PyObject * args=nullptr);
+	PyObject * callFunction(PyObject * func,PyObject * module,PyObject * args);
 
     
 private:
     void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
 	string curentFolderPath;
-    PyObject* pluginModule;
+
 
 };
 

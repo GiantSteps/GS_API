@@ -29,6 +29,12 @@ void PythonWrap::init(){
 		//	  if(!handle){
 		//		  DBG("error loading .so" <<dlerror());
 		//	  }
+//    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
+//    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
+//    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
+//    dlopen("/System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW|RTLD_LOCAL);
+//    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
+
 	  Py_SetPythonHome(_toxstr(PYTHON_ROOT));
 	  Py_SetProgramName(_toxstr(PYTHON_BIN));
 	  
@@ -36,8 +42,16 @@ void PythonWrap::init(){
 	  if(c){ DBG("home : "<<c);}
 	  char* cc =  Py_GetProgramName();
 	  if(cc){ DBG("prog : " <<cc);}
-		
+    printPyState();
+    Py_NoSiteFlag =0;
+    Py_VerboseFlag = 0;
+    Py_DebugFlag = 0;
     Py_InitializeEx(0);
+    PyRun_SimpleString("import _locale;");
+    char * err = dlerror();
+    if(err){DBG(err);}
+    PyErr_Print();
+
   }
 }
 
@@ -66,18 +80,18 @@ void PythonWrap::addSearchPath(const string & p){
 }
 
 
-bool PythonWrap::load(const string & name){
+PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   // Import the module "plugin" (from the file "plugin.py")
   PyObject* moduleName = PyFromString(name.c_str());
-  //    Py_XDECREF(pluginModule);
 
-  if (isFileLoaded()) {
+  PyObject * newModule = nullptr;
+  if (oldModule) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
 		setFolderPath(curentFolderPath);
-    PyObject * newPluginModule = PyImport_ReloadModule(pluginModule);
-		if(newPluginModule){
-			Py_DECREF(pluginModule);pluginModule = newPluginModule;
+    newModule= PyImport_ReloadModule(oldModule);
+		if(newModule){
+			Py_DECREF(oldModule);
 		}
 		else{
 			cout << "failed reload: " << name << endl;
@@ -90,10 +104,11 @@ bool PythonWrap::load(const string & name){
   }
   else{
     dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
-    pluginModule = PyImport_Import(moduleName);
+    newModule = PyImport_Import(moduleName);
 		
   }
-  if(!pluginModule){
+  if(!newModule){
+    cout << "failed to load: " << name << endl;
 		// spitout errors if importing fails
 		PyErr_Print();
     
@@ -101,18 +116,18 @@ bool PythonWrap::load(const string & name){
 	
 	
   Py_DECREF(moduleName);
-  return pluginModule!=nullptr;
+  return newModule;
 }
 
 
 
-bool PythonWrap::isFileLoaded(){return pluginModule!=nullptr;}
 
-PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
-  if(isFileLoaded()){
-    PyObject* pyFunc = PyObject_GetAttrString(pluginModule, func.c_str());
+
+PyObject *  PythonWrap::callFunction(const string & func,PyObject * module,PyObject * args){
+  if(module){
+    PyObject* pyFunc = PyObject_GetAttrString(module, func.c_str());
 		if(pyFunc ==nullptr){cout << "function not found " << func<< endl;return nullptr;}
-		return callFunction(pyFunc,args);
+		return callFunction(pyFunc,module,args);
 
   }
 	
@@ -121,7 +136,7 @@ PyObject *  PythonWrap::callFunction(const string & func,PyObject * args){
 	
 	
 }
-PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * args){
+PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObject * args){
 	if(pyFunc ==nullptr){return nullptr;}
 	PyObject * targs = nullptr;
 	if(args) targs =PyTuple_Pack(1,args);
@@ -144,11 +159,11 @@ string PythonWrap::getVSTPath(){
 //////////////////////////////
 // debug utils
 
-string PythonWrap::test(const string& s){
+string PythonWrap::test(const string& s,PyObject * module){
 	
-  if(pluginModule){
+  if(module){
     // Retrieve the "transform()" function from the module.
-    PyObject* transformFunc = PyObject_GetAttrString(pluginModule, "test");
+    PyObject* transformFunc = PyObject_GetAttrString(module, "test");
     // Build an argument tuple containing the string.
     PyObject* argsTuple = Py_BuildValue("(s)", s.c_str());
     // Invoke the function, passing the argument tuple.
@@ -180,6 +195,8 @@ void PythonWrap::printPyState(){
   if(Py_GetPythonHome())
     cout <<"home : "<< Py_GetPythonHome() << endl;
   cout <<"full : " <<  Py_GetProgramFullPath() << endl;
+
+  printEnv("LD_LIBRARY_PATH");
 	
 	
 	

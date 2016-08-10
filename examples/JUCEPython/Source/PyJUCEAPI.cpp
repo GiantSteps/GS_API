@@ -1,127 +1,148 @@
 /*
  ==============================================================================
- 
+
  PyJUCEAPI.cpp
  Created: 13 Jun 2016 5:00:10pm
  Author:  Martin Hermant
- 
+
  ==============================================================================
  */
 
 #include "PyJUCEAPI.h"
 //#include "PyGSPattern.h"
 
+#include "PluginProcessor.h"
+#include "PyJUCEPython.h"
 
-GSPattern * PyJUCEAPI::callTimeChanged(double time){
-	PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
-	PyObject * o = py.callFunction("onTimeChanged",timePyObj);
-	GSPattern * p=nullptr;
-	if(o){
-		if(o!=Py_None){
-			p = GSPatternWrap.GenerateFromObj(o);
-			if(p){p->checkDurationValid();}
-			else{DBG("no valid pattern returned when calling get TimeChanged");}
-		}
-		Py_DECREF(o);
-  }
-	
-	if(p)listeners.call(&Listener::newPatternLoaded,p);
-	Py_DECREF(timePyObj);
-	return p;
-	
+
+
+PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
+owner(o),
+isInitialized(false),
+TimeListener(1),
+pluginModule(nullptr),
+interfaceModule(nullptr){
+  timePyObj = PyDict_New();
+  timeKey=PyFromString("time");
 }
-GSPattern *  PyJUCEAPI::getNewPattern(){
-  PyObject * o = nullptr;
-	GSPattern*  p =nullptr;
-  if((o=py.callFunction("onGenerateNew",nullptr))){
-    p = nullptr;
-    p = GSPatternWrap.GenerateFromObj(o);
-		
-    if(p){
-      p->checkDurationValid();
-      DBG( p->duration );
+
+
+void PyJUCEAPI::callTimeChanged(double time){
+  PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
+  py.callFunction("onTimeChanged",pluginModule,timePyObj);
+
+  Py_DECREF(timePyObj);
+
+}
+
+
+
+bool PyJUCEAPI::setNewPattern(PyObject * o){
+
+  GSPattern * p=nullptr;
+  bool found = false;
+		if(o!=Py_None){
+      p = GSPatternWrap.GenerateFromObj(o);
+      if(p){p->checkDurationValid();found = true;}
+      else{DBG("pattern not valid");}
+
     }
 		Py_DECREF(o);
+
+  if(p)listeners.call(&Listener::newPatternLoaded,p);
+  return found;
+}
+void  PyJUCEAPI::getNewPattern(){
+  PyObject * o = nullptr;
+
+  if((o=py.callFunction("onGenerateNew",pluginModule,nullptr))){
+    if(!setNewPattern(o)){
+      DBG("no pattern found when calling get NewPattern");
+    }
   }
-	
-	if(p==nullptr){DBG("no pattern found when calling get NewPattern");}
-	listeners.call(&Listener::newPatternLoaded,p);
-  return p;
+
 }
 
 void PyJUCEAPI::callSetupFunction(){
-	PyObject * o=nullptr;
-	
-	if((o = py.callFunction("setup"))){
-		
-		if(PyString_Check(o)){
-			DBG("setup returned " << PyToString(o));
-			
-			
-		}
-		else if (o!=Py_None){
-			
-			DBG("unhandeled return type : "<< o->ob_type->tp_name);
-		}
-		Py_DECREF(o);
-		
-		
-	}
-	else {
-		DBG("no setup function found or file not loaded");
-	}
+  PyObject * o=nullptr;
+
+  if((o = py.callFunction("setup",pluginModule))){
+
+    if(PyString_Check(o)){
+      DBG("setup returned " << PyToString(o));
+
+
+    }
+    else if (o!=Py_None){
+
+      DBG("unhandeled return type : "<< o->ob_type->tp_name);
+    }
+    Py_DECREF(o);
+
+
+  }
+  else {
+    DBG("no setup function found or file not loaded");
+  }
 }
 //
 
 
 void PyJUCEAPI::init(){
-  py.init();
-  pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
-  py.initSearchPath();
-  py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+  if(!isInitialized){
+    py.init();
+    initJUCEAPI(this);
+    pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+    py.initSearchPath();
+    py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+  }
+  isInitialized = true;
+
 }
 
 
 void PyJUCEAPI::load(){
-  bool hasLoaded = py.load(pythonFile.getFileNameWithoutExtension().toStdString());
+  pluginModule =  py.loadModule(pythonFile.getFileNameWithoutExtension().toStdString(),pluginModule);
   lastPythonFileMod = pythonFile.getLastModificationTime();
-	
-	if (hasLoaded){
-		callSetupFunction();
-		buildParamsFromScript();
-	}
+
+  if (pluginModule){
+    callSetupFunction();
+    buildParamsFromScript();
+  }
   listeners.call(&Listener::newFileLoaded,pythonFile);
-	
+
 }
 
 void PyJUCEAPI::buildParamsFromScript(){
-	params.clear();
-	listeners.call(&Listener::newParamsLoaded,&params);
-	
-	PyObject * o = py.callFunction("getAllParameters");
-	if (o){
-		
-		if(PyList_Check(o)) {
-			int s = PyList_GET_SIZE(o);
-			for (int i = 0 ; i < s; i++){
-				PyObject * it = PyList_GET_ITEM(o, i);
-				PyJUCEParameter * p = PyJUCEParameterBuilder::buildParamFromObject(it);
-				if(p){
-					p->linkToPyWrap(&py);
-				}
-				params.add(p);
-			}
-		}
-    Py_DECREF(o);
-	}
-	
-	listeners.call(&Listener::newParamsLoaded,&params);
+  params.clear();
+  listeners.call(&Listener::newParamsLoaded,&params);
+  if((interfaceModule = py.loadModule("interface",interfaceModule))){
+
+    PyObject * o = py.callFunction("getAllParameters",interfaceModule);
+    if (o){
+
+      if(PyList_Check(o)) {
+        int s = PyList_GET_SIZE(o);
+        for (int i = 0 ; i < s; i++){
+          PyObject * it = PyList_GET_ITEM(o, i);
+          PyJUCEParameter * p = PyJUCEParameterBuilder::buildParamFromObject(it);
+          if(p){
+            p->linkToJuceApi(this);
+            params.add(p);
+          }
+        }
+      }
+      Py_DECREF(o);
+    }
+    listeners.call(&Listener::newParamsLoaded,&params);
+  }
+  else{
+    DBG("cant load interface or none provided");
+  }
+
 }
 
 void PyJUCEAPI::timeChanged(double time) {callTimeChanged(time);};
-
-
-
 
 void PyJUCEAPI::setWatching(bool w){
   if(w){startTimer(200);}
@@ -134,5 +155,5 @@ void PyJUCEAPI::timerCallback(){
   };
 }
 bool PyJUCEAPI::isLoaded(){
-  return py.isFileLoaded();
+  return pluginModule!=nullptr;
 }

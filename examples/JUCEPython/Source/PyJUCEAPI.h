@@ -21,9 +21,11 @@
 
 #include "PyJUCEParameter.h"
 
+class JucepythonAudioProcessor;
+
 class PyJUCEAPI : public Timer,public TimeListener{
 public:
-  PyJUCEAPI():TimeListener(1){timePyObj = PyDict_New();timeKey=PyFromString("time");}
+  PyJUCEAPI(JucepythonAudioProcessor * o);
 	~PyJUCEAPI(){Py_DECREF(timePyObj);Py_DECREF(timeKey);}
 	
   void load();
@@ -32,16 +34,21 @@ public:
   void setWatching(bool);
 	
 	// function callers
-  GSPattern *  getNewPattern();
+ void  getNewPattern();
   void callSetupFunction();
-	GSPattern * callTimeChanged(double time);
+	void callTimeChanged(double time);
 	void buildParamsFromScript();
+
+  bool setNewPattern(PyObject * o);
 	
 	// python wrapper object
   PythonWrap  py ;
-	
-	
   File pythonFile;
+
+  JucepythonAudioProcessor * owner;
+  bool isInitialized;
+
+
   class Listener{
   public:
     virtual ~Listener(){};
@@ -55,7 +62,10 @@ public:
 	void timeChanged(double time) override;
 	
 	OwnedArray<PyJUCEParameter> params;
-	
+
+
+  PyObject * pluginModule;
+  PyObject* interfaceModule;
 protected:
 	
   void timerCallback()override;
@@ -63,8 +73,10 @@ protected:
 	
 	PyObject * timePyObj ;
 	PyObject *timeKey;
+
+GSPatternPyWrap GSPatternWrap;
 	
-  GSPatternPyWrap GSPatternWrap;
+  
 	
 	
 	

@@ -12,16 +12,16 @@
 #define PYJUCEPARAMETER_H_INCLUDED
 #include "JuceHeader.h"
 #include "PythonUtils.h"
-class PythonWrap;
+class PyJUCEAPI;
 
 class PyJUCEParameter{
 public:
 	
-	PyJUCEParameter(){}
+  PyJUCEParameter(const String & _name):name(_name){}
 
 	virtual ~PyJUCEParameter(){}
 	
-	void linkToPyWrap(PythonWrap * );
+	void linkToJuceApi(PyJUCEAPI * );
 	String name;
 	var value;
 	
@@ -31,7 +31,7 @@ public:
 	
 	virtual void setValue(var v);
 	virtual var getValue();
-	Component * buildComponent();
+	Component * buildComponent(bool unique=false);
 	
 	void setPythonCallback(PyObject *);
 
@@ -43,16 +43,18 @@ protected:
 	
 	
 	PyObject* cbFunc;
-	PythonWrap * py;
+	PyJUCEAPI * pyJuceApi;
+  ScopedPointer<Component> component;
+
 	
 };
 
 class PyJUCEParameterBuilder{
 public:
-	PyJUCEParameterBuilder(PythonWrap* _py):py(_py){}
+	PyJUCEParameterBuilder(PyJUCEAPI* _py):pyAPI(_py){}
 	static PyJUCEParameter * buildParamFromObject( PyObject* );
 
-	PythonWrap * py;
+	PyJUCEAPI * pyAPI;
 };
 
 class PyFloatParameter;

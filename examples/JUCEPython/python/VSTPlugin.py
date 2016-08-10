@@ -11,7 +11,14 @@ import json
 import glob
 import random
 import os
-from UIParameter import UIParameter
+
+
+
+import JUCEAPI
+#print JUCEAPI.__file__
+
+
+print dir(JUCEAPI)
 
 
 """ this example generates random notes to demonstrate passing GSPattern to C++ plugin
@@ -40,11 +47,15 @@ localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
 # searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
 # searchPath = os.path.join(localDirectory,"midi","motown.mid");
-# searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+
+
+# searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
 
 styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
-
-style = GSMarkovStyle(order=2,numSteps=32,loopDuration=4)
+numSteps = 32
+loopDuration = 4
+style = GSMarkovStyle(order=numSteps/(loopDuration+1),numSteps=numSteps,loopDuration=loopDuration)
 # style = GSDBStyle(generatePatternOrdering = "increasing");
 needStyleUpdate = True;
 
@@ -59,22 +70,13 @@ def onTimeChanged(time):
 	Returns:
  		the new GSpattern to be played if needed
 	"""
+
+
+	JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
+	
+
 	
 	return None
-
-def updateTest():
-	print "pyrcv"
-
-def getAllParameters():
-	""" should return a list of params to be displayed in VST GUI
-	"""
-	res = []
-	test = UIParameter(10,0,0,50,100)
-	test.onChange = updateTest
-	test.value = 10
-	res+=[test]
-	return res;
-
 
 
 def onGenerateNew():
@@ -97,6 +99,7 @@ def mapMidi(pattern):
 	for e in pattern.events:
 		if len(e.tags) > 0 and (e.tags[0] in midiMap):
 			e.pitch = midiMap[e.tags[0]][0][0]
+	return pattern
 
 
 def generateStyleIfNeeded():
@@ -109,7 +112,7 @@ def generateStyleIfNeeded():
 		hasStyleSaved = os.path.isfile(styleSavingPath)
 		if(not hasStyleSaved  or needStyleUpdate ):
 			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = 4)
+			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = loopDuration)
 			
 			style.generateStyle(patterns)
 

@@ -23,8 +23,12 @@ PatternComponent::PatternComponent():TimeListener(1){
 
 void PatternComponent::newPatternLoaded(GSPattern * p) {
 	blockContainer.currentPattern = p;
-	blockContainer.build();
-	blockContainer.repaint();
+  postCommandMessage(0);
+}
+
+void PatternComponent::handleCommandMessage(int cid){
+  blockContainer.build();
+  blockContainer.repaint();
 }
 
 void PatternComponent::paint(Graphics & g){
@@ -86,6 +90,10 @@ void BlockContainer::paint(Graphics & g){
 			int xpos = area.getX()+i*timeScale/gridBeatSubDiv;
 			g.drawLine(xpos,area.getY(), xpos, area.getBottom());
 		}
+    for(int i = 0;i <= currentPattern->events.size() ; i++){
+      int ypos = area.getY()+i*step;
+      g.drawLine(area.getX(),ypos, area.getRight(),ypos);
+    }
 		for(auto & e:currentPattern->events){
 			if(displayPitchInsteadOfTags){
 				Rectangle<int> currect(e.start*timeScale+area.getX(), area.getY()+std::distance(  allEventsTags.begin(),allEventsTags.find(String(e.pitch)))*step, jmax(2.0,e.duration*timeScale), jmax(2,step));

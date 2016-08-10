@@ -19,10 +19,15 @@ public:
 	void newParamsLoaded( OwnedArray<PyJUCEParameter> *) override;
 
 	void resized() override;
+  void handleCommandMessage(int cID)override ;
 	OwnedArray<PyJUCEParameter> * originParams;
 	
 	OwnedArray<Component> pyWidgets;
-	
+
+
+  typedef enum{
+    REBUILD_PARAMS
+  }AsyncCommandID;
 };
 
 

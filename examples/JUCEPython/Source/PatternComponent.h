@@ -16,6 +16,8 @@
 
 #include <set>
 
+
+
 class BlockContainer:public Component{
 	
 	public :
@@ -42,8 +44,10 @@ public:
 	void timeChanged(double time)override;
 	void paint(Graphics & g) override;
 	void resized() override;
+  void handleCommandMessage(int cid)override;
 	TextButton displayTagToggle;
 	BlockContainer blockContainer;
+
 	
 	
 	void buttonClicked (Button*) override;

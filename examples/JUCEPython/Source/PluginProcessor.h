@@ -34,6 +34,7 @@ public:
 	bool useInternalTransport;
 	
   void newFileLoaded(const File & f)override;
+  void newPatternLoaded( GSPattern * p)override;
   void updatePattern();
 	
 	//==============================================================================
@@ -71,13 +72,15 @@ public:
 	ListenerList<TimeListener> timeListeners;
 	void addTimeListener(TimeListener * l){timeListeners.add(l);}
 	void removeTimeListener(TimeListener * l){timeListeners.remove(l);}
-	
+  
 
 private:
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JucepythonAudioProcessor)
 
 };
+
+
 
 
 #endif  // PLUGINPROCESSOR_H_INCLUDED
