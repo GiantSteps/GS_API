@@ -14,8 +14,9 @@ class UIParameter(Rectangle):
 	derived class can pass widget specific information thru UIparams dictionary
 
 	"""
+	autoName = True
 	allParams = set()
-	def __init__(self,name,value,x=0,y=0,width=10,height=10):
+	def __init__(self,name='',value=0,x=0,y=0,width=10,height=10):
 		self.hasChanged = False;
 		self.allParams.add(self);
 		self.__value = value
@@ -23,6 +24,19 @@ class UIParameter(Rectangle):
 
 		# relative coordinates
 		self.setBounds(x,y,width,height)
+
+		# getting variable name if no name specified
+		if(self.name == '' and UIParameter.autoName):
+			import inspect,re
+			className = str(type(self).__name__)
+			regx =re.compile('.*\=.*'+className+'.*\(')
+			frames = inspect.getouterframes(inspect.currentframe())
+			found = False
+			for f in frames:
+				codeLine = f[4][0]
+				if(regx.match(codeLine)):
+					self.name = codeLine.split('=')[0].lstrip().rstrip()
+					break;
 
 	def getAttributeDict(self):
 		members = {attr:getattr(self,attr) for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")}
@@ -36,6 +50,7 @@ class UIParameter(Rectangle):
 	def setCallBackFunction(self , f):
 		self.onChange = f
 		return self
+
 
 	def onChange(self,param):
 		print "base change"
@@ -62,7 +77,7 @@ class UIParameter(Rectangle):
 
 class NumParameter(UIParameter):
 
-	def __init__(self,name,value=0,style='rotary',x=0,y=0,width=10,height=10):
+	def __init__(self,name='',value=0,style='rotary',x=0,y=0,width=10,height=10):
 		if(type(value) not in [int,float]):
 			value = float(value)
 			print ( "wrong parameter type for NumParameter, assigning to float")
@@ -82,19 +97,19 @@ class NumParameter(UIParameter):
 
 
 class BoolParameter(UIParameter):
-	def __init__(self,name,value=False,x=0,y=0,width=10,height=10):
+	def __init__(self,name='',value=False,x=0,y=0,width=10,height=10):
 		self.pyType = bool
 		UIParameter.__init__(self,name=name,value=self.pyType(value),x=x,y=y,width=width,height=height)
 
 
 class EventParameter(UIParameter):
-	def __init__(self,name,x=0,y=0,width=10,height=10):
+	def __init__(self,name='',x=0,y=0,width=10,height=10):
 		self.pyType = None
 		UIParameter.__init__(self,name=name,value=None,x=x,y=y,width=width,height=height)
 
 
 class EnumParameter(UIParameter):
-	def __init__(self,name,choicesList = [],value=0,x=0,y=0,width=10,height=10):
+	def __init__(self,name='',choicesList = [],value=0,x=0,y=0,width=10,height=10):
 		self.pyType = None
 		self.choicesList = choicesList
 		UIParameter.__init__(self,name=name,value=value,x=x,y=y,width=width,height=height)
@@ -150,7 +165,7 @@ if __name__== "__main__":
 		
 	s3 = NumParameter("lala",value=3,style="rotary").setBounds(1,2,16,16).setMinMax(0,1);
 	s2 = EnumParameter(name="lala",choicesList = {"zala":"lala","lolo":["lili","lolou"]},value = 1).setBounds(1,2,16,16).setCallBackFunction(testCB);
-	test2 = BoolParameter("tog").setBounds(50,0,50,100)
+	test2 = BoolParameter().setBounds(50,0,50,100)
 	
 	s2.value = ["lolo"]
 	for x in UIParameter.allParams:

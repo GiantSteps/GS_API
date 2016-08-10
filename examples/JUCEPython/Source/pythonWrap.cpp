@@ -47,10 +47,10 @@ void PythonWrap::init(){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
-    PyRun_SimpleString("import _locale;");
-    char * err = dlerror();
-    if(err){DBG(err);}
-    PyErr_Print();
+//    PyRun_SimpleString("import _locale;");
+//    char * err = dlerror();
+//    if(err){DBG(err);}
+//    PyErr_Print();
 
   }
 }
@@ -103,7 +103,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
     //        PyRun_SimpleString(reloadS.c_str());
   }
   else{
-    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
+//    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
     newModule = PyImport_Import(moduleName);
 		
   }

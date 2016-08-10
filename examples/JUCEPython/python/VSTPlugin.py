@@ -15,6 +15,10 @@ import os
 
 
 import JUCEAPI
+
+from UIParameter import *
+
+
 #print JUCEAPI.__file__
 
 
@@ -59,6 +63,12 @@ style = GSMarkovStyle(order=numSteps/(loopDuration+1),numSteps=numSteps,loopDura
 # style = GSDBStyle(generatePatternOrdering = "increasing");
 needStyleUpdate = True;
 
+
+
+#  parameters enable simple UI bindings
+eachBarIsNew = BoolParameter()
+
+
 def setup():
 	print "settingThingsUp"
 	
@@ -71,8 +81,8 @@ def onTimeChanged(time):
  		the new GSpattern to be played if needed
 	"""
 
-
-	JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
+	if eachBarIsNew.value :
+		JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
 	
 
 	

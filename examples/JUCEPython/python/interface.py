@@ -3,11 +3,15 @@ import JUCEAPI
 from UIParameter import *
 
 
+
 class Dummy(object):
 	def __init__(self,value):
 		self.value = value
 	def fun(self):
 		print self.value
+
+
+
 
 def getAllParameters():
 	""" gets caled when parameters are built in VST host
@@ -18,9 +22,8 @@ def getAllParameters():
 	test.onChange = updateTest
 	test.value = 11
 	res+=[test]
-	test2 = BoolParameter("tog").setBounds(20,0,20,100)
-	test2.onChange = updateTog
-	res+=[test2]
+	VSTPlugin.eachBarIsNew.setBounds(20,0,20,100)
+	res+=[VSTPlugin.eachBarIsNew]
 	test3 = EventParameter("ev").setBounds(40,0,20,100)
 	test3.onChange = updateTog
 	res+=[test3]

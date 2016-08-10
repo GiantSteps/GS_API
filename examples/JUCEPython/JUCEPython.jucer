@@ -1,96 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="p6kwk3" name="JUCEPython" projectType="audioplug" version="1.0.0"
-              bundleIdentifier="com.GiantSteps.JUCEPython" includeBinaryInAppConfig="1"
-              buildVST="1" buildVST3="0" buildAU="1" buildAUv3="0" buildRTAS="0"
-              buildAAX="0" pluginName="JUCEPython" pluginDesc="JUCEPython"
-              pluginManufacturer="yourcompany" pluginManufacturerCode="GiSt"
-              pluginCode="P6kw" pluginChannelConfigs="" pluginIsSynth="0" pluginWantsMidiIn="1"
-              pluginProducesMidiOut="1" pluginIsMidiEffectPlugin="1" pluginEditorRequiresKeys="0"
-              pluginAUExportPrefix="JUCEPythonAU" pluginRTASCategory="" aaxIdentifier="com.yourcompany.JUCEPython"
-              pluginAAXCategory="AAX_ePlugInCategory_Dynamics" jucerVersion="4.2.3"
-              pluginSilenceInIsSilenceOut="0">
+<JUCERPROJECT aaxIdentifier="com.yourcompany.JUCEPython" buildAAX="0" buildAU="1"
+              buildAUv3="0" buildRTAS="0" buildVST="1" buildVST3="0" bundleIdentifier="com.GiantSteps.JUCEPython"
+              id="p6kwk3" includeBinaryInAppConfig="1" jucerVersion="4.2.3"
+              name="JUCEPython" pluginAAXCategory="AAX_ePlugInCategory_Dynamics"
+              pluginAUExportPrefix="JUCEPythonAU" pluginChannelConfigs="" pluginCode="P6kw"
+              pluginDesc="JUCEPython" pluginEditorRequiresKeys="0" pluginIsMidiEffectPlugin="1"
+              pluginIsSynth="0" pluginManufacturer="yourcompany" pluginManufacturerCode="GiSt"
+              pluginName="JUCEPython" pluginProducesMidiOut="1" pluginRTASCategory=""
+              pluginSilenceInIsSilenceOut="0" pluginWantsMidiIn="1" projectType="audioplug"
+              version="1.0.0">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
-      <FILE id="TNOcDr" name="PyJUCEPython.cpp" compile="1" resource="0"
-            file="Source/PyJUCEPython.cpp"/>
-      <FILE id="RSQwre" name="PyJUCEPython.h" compile="0" resource="0" file="Source/PyJUCEPython.h"/>
+      <FILE compile="1" file="Source/PyJUCEPython.cpp" id="TNOcDr" name="PyJUCEPython.cpp"
+            resource="0"/>
+      <FILE compile="0" file="Source/PyJUCEPython.h" id="RSQwre" name="PyJUCEPython.h"
+            resource="0"/>
       <GROUP id="{4D0B4318-A514-6A3F-FD2E-A4871C68B511}" name="UI">
-        <FILE id="ywgcqP" name="PythonCanvas.cpp" compile="1" resource="0"
-              file="Source/PythonCanvas.cpp"/>
-        <FILE id="tJYf4n" name="PythonCanvas.h" compile="0" resource="0" file="Source/PythonCanvas.h"/>
-        <FILE id="drpP5U" name="PatternComponent.h" compile="0" resource="0"
-              file="Source/PatternComponent.h"/>
-        <FILE id="ksScxZ" name="PatternComponent.cpp" compile="1" resource="0"
-              file="Source/PatternComponent.cpp"/>
-        <FILE id="dJDdys" name="PluginEditor.cpp" compile="1" resource="0"
-              file="Source/PluginEditor.cpp"/>
-        <FILE id="exFAzb" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+        <FILE compile="1" file="Source/PythonCanvas.cpp" id="ywgcqP" name="PythonCanvas.cpp"
+              resource="0"/>
+        <FILE compile="0" file="Source/PythonCanvas.h" id="tJYf4n" name="PythonCanvas.h"
+              resource="0"/>
+        <FILE compile="0" file="Source/PatternComponent.h" id="drpP5U" name="PatternComponent.h"
+              resource="0"/>
+        <FILE compile="1" file="Source/PatternComponent.cpp" id="ksScxZ" name="PatternComponent.cpp"
+              resource="0"/>
+        <FILE compile="1" file="Source/PluginEditor.cpp" id="dJDdys" name="PluginEditor.cpp"
+              resource="0"/>
+        <FILE compile="0" file="Source/PluginEditor.h" id="exFAzb" name="PluginEditor.h"
+              resource="0"/>
       </GROUP>
-      <FILE id="qvtP6d" name="PyJUCEParameter.cpp" compile="1" resource="0"
-            file="Source/PyJUCEParameter.cpp"/>
-      <FILE id="sFdDuz" name="PyJUCEParameter.h" compile="0" resource="0"
-            file="Source/PyJUCEParameter.h"/>
-      <FILE id="LG9RSl" name="TimeListener.h" compile="0" resource="0" file="Source/TimeListener.h"/>
-      <FILE id="ba77Pr" name="PyJUCEAPI.cpp" compile="1" resource="0" file="Source/PyJUCEAPI.cpp"/>
-      <FILE id="jnIpwV" name="PyJUCEAPI.h" compile="0" resource="0" file="Source/PyJUCEAPI.h"/>
-      <FILE id="GrDvMf" name="pythonWrap.cpp" compile="1" resource="0" file="Source/pythonWrap.cpp"/>
-      <FILE id="a8P8mA" name="pythonWrap.h" compile="0" resource="0" file="Source/pythonWrap.h"/>
-      <FILE id="K8JZrl" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="K0hucz" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
+      <FILE compile="1" file="Source/PyJUCEParameter.cpp" id="qvtP6d" name="PyJUCEParameter.cpp"
+            resource="0"/>
+      <FILE compile="0" file="Source/PyJUCEParameter.h" id="sFdDuz" name="PyJUCEParameter.h"
+            resource="0"/>
+      <FILE compile="0" file="Source/TimeListener.h" id="LG9RSl" name="TimeListener.h"
+            resource="0"/>
+      <FILE compile="1" file="Source/PyJUCEAPI.cpp" id="ba77Pr" name="PyJUCEAPI.cpp"
+            resource="0"/>
+      <FILE compile="0" file="Source/PyJUCEAPI.h" id="jnIpwV" name="PyJUCEAPI.h"
+            resource="0"/>
+      <FILE compile="1" file="Source/pythonWrap.cpp" id="GrDvMf" name="pythonWrap.cpp"
+            resource="0"/>
+      <FILE compile="0" file="Source/pythonWrap.h" id="a8P8mA" name="pythonWrap.h"
+            resource="0"/>
+      <FILE compile="1" file="Source/PluginProcessor.cpp" id="K8JZrl" name="PluginProcessor.cpp"
+            resource="0"/>
+      <FILE compile="0" file="Source/PluginProcessor.h" id="K0hucz" name="PluginProcessor.h"
+            resource="0"/>
     </GROUP>
     <GROUP id="{28874B65-F313-7096-819C-A589B9634659}" name="GSAPI">
       <GROUP id="{6583CFA6-26D6-6DBD-8F91-6218A9CF8C7C}" name="python">
-        <FILE id="WcF8Ox" name="GSPatternEventPyWrap.cpp" compile="1" resource="0"
-              file="../../src/python/GSPatternEventPyWrap.cpp"/>
-        <FILE id="wdOP5E" name="GSPatternEventPyWrap.h" compile="0" resource="0"
-              file="../../src/python/GSPatternEventPyWrap.h"/>
-        <FILE id="rSi6PQ" name="GSPatternPyWrap.cpp" compile="1" resource="0"
-              file="../../src/python/GSPatternPyWrap.cpp"/>
-        <FILE id="k4V85u" name="GSPatternPyWrap.h" compile="0" resource="0"
-              file="../../src/python/GSPatternPyWrap.h"/>
-        <FILE id="RYVnNo" name="PythonUtils.h" compile="0" resource="0" file="../../src/python/PythonUtils.h"/>
+        <FILE compile="1" file="../../src/python/GSPatternEventPyWrap.cpp"
+              id="WcF8Ox" name="GSPatternEventPyWrap.cpp" resource="0"/>
+        <FILE compile="0" file="../../src/python/GSPatternEventPyWrap.h" id="wdOP5E"
+              name="GSPatternEventPyWrap.h" resource="0"/>
+        <FILE compile="1" file="../../src/python/GSPatternPyWrap.cpp" id="rSi6PQ"
+              name="GSPatternPyWrap.cpp" resource="0"/>
+        <FILE compile="0" file="../../src/python/GSPatternPyWrap.h" id="k4V85u"
+              name="GSPatternPyWrap.h" resource="0"/>
+        <FILE compile="0" file="../../src/python/PythonUtils.h" id="RYVnNo"
+              name="PythonUtils.h" resource="0"/>
       </GROUP>
       <GROUP id="{7B524538-94DF-1F8F-3E17-1D2151D2EC91}" name="3rdParty">
         <GROUP id="{0FB31AE9-DD46-8925-8CF1-C3713D78E6D9}" name="json">
-          <FILE id="aUouTX" name="json.hpp" compile="0" resource="0" file="../../src/3rdParty/json/json.hpp"/>
+          <FILE compile="0" file="../../src/3rdParty/json/json.hpp" id="aUouTX"
+                name="json.hpp" resource="0"/>
         </GROUP>
       </GROUP>
       <GROUP id="{6B741C0D-29EE-EC5C-BEA5-155079E49D8F}" name="Utils">
-        <FILE id="tTpIxY" name="GSPatternPlayer.cpp" compile="1" resource="0"
-              file="../../src/Utils/GSPatternPlayer.cpp"/>
-        <FILE id="lv3Qsx" name="GSPatternPlayer.h" compile="0" resource="0"
-              file="../../src/Utils/GSPatternPlayer.h"/>
+        <FILE compile="1" file="../../src/Utils/GSPatternPlayer.cpp" id="tTpIxY"
+              name="GSPatternPlayer.cpp" resource="0"/>
+        <FILE compile="0" file="../../src/Utils/GSPatternPlayer.h" id="lv3Qsx"
+              name="GSPatternPlayer.h" resource="0"/>
       </GROUP>
-      <FILE id="ExHtrI" name="GS_API.h" compile="0" resource="0" file="../../src/GS_API.h"/>
-      <FILE id="nspHIL" name="GSPattern.cpp" compile="1" resource="0" file="../../src/GSPattern.cpp"/>
-      <FILE id="WTmCa5" name="GSPattern.h" compile="0" resource="0" file="../../src/GSPattern.h"/>
-      <FILE id="XUJ1e1" name="GSPatternEvent.cpp" compile="1" resource="0"
-            file="../../src/GSPatternEvent.cpp"/>
-      <FILE id="PUGQCN" name="GSPatternEvent.h" compile="0" resource="0"
-            file="../../src/GSPatternEvent.h"/>
-      <FILE id="ouLIJw" name="GSStyle.cpp" compile="1" resource="0" file="../../src/GSStyle.cpp"/>
-      <FILE id="YJJ2nI" name="GSStyle.h" compile="0" resource="0" file="../../src/GSStyle.h"/>
-      <FILE id="EizpRw" name="JSONSerializable.cpp" compile="1" resource="0"
-            file="../../src/JSONSerializable.cpp"/>
-      <FILE id="DBpLz0" name="JSONSerializable.h" compile="0" resource="0"
-            file="../../src/JSONSerializable.h"/>
+      <FILE compile="0" file="../../src/GS_API.h" id="ExHtrI" name="GS_API.h"
+            resource="0"/>
+      <FILE compile="1" file="../../src/GSPattern.cpp" id="nspHIL" name="GSPattern.cpp"
+            resource="0"/>
+      <FILE compile="0" file="../../src/GSPattern.h" id="WTmCa5" name="GSPattern.h"
+            resource="0"/>
+      <FILE compile="1" file="../../src/GSPatternEvent.cpp" id="XUJ1e1" name="GSPatternEvent.cpp"
+            resource="0"/>
+      <FILE compile="0" file="../../src/GSPatternEvent.h" id="PUGQCN" name="GSPatternEvent.h"
+            resource="0"/>
+      <FILE compile="1" file="../../src/GSStyle.cpp" id="ouLIJw" name="GSStyle.cpp"
+            resource="0"/>
+      <FILE compile="0" file="../../src/GSStyle.h" id="YJJ2nI" name="GSStyle.h"
+            resource="0"/>
+      <FILE compile="1" file="../../src/JSONSerializable.cpp" id="EizpRw"
+            name="JSONSerializable.cpp" resource="0"/>
+      <FILE compile="0" file="../../src/JSONSerializable.h" id="DBpLz0" name="JSONSerializable.h"
+            resource="0"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <XCODE_MAC targetFolder="Builds/MacOSX" vstFolder="" extraCompilerFlags=""
-               extraLinkerFlags="-F$(PYTHONFWPATH)&#10;" extraDefs="PYTHON_FWPATH=$(PYTHONFWPATH)&#10;PYTHON_HEADER=$(PYTHONFWPATH)/Python.framework/Versions/Current/Headers/Python.h&#10;PYTHON_ROOT=$(PYTHONFWPATH)/Python.framework/Versions/Current/&#10;PYTHON_BIN=$(PYTHONFWPATH)/Python.framework/Versions/Current/bin/python"
-               externalLibraries="" customXcodeResourceFolders="python" extraFrameworks="Python"
-               prebuildCommand="touch $SRCROOT/../../python" postbuildCommand="">
+    <XCODE_MAC customXcodeResourceFolders="python&#10;pythonEnv" externalLibraries=""
+               extraCompilerFlags="$(PYCFLAGS)" extraDefs="PYTHON_HEADER=$(PYENVPATH)/include/python2.7/Python.h&#10;PYTHON_ROOT=$(PYENVPATH)&#10;PYTHON_BIN=$(PYENVPATH)/bin/python2.7"
+               extraFrameworks="" extraLinkerFlags="$(PYLDFLAGS)" postbuildCommand=""
+               prebuildCommand="touch $SRCROOT/../../python&#10;source $SRCROOT/../../pythonEnv/flags"
+               targetFolder="Builds/MacOSX" vstFolder="">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" isDebug="1" optimisation="1" targetName="JUCEPython"
-                       defines="" osxArchitecture="64BitUniversal" customXcodeFlags="ONLY_ACTIVE_ARCH=YES,PYTHONFWPATH=/System/Library/Frameworks"
-                       osxSDK="default" osxCompatibility="10.8 SDK" cppLanguageStandard="c++11"
-                       cppLibType="libc++" headerPath="$(PYTHONFWPATH)/Python.framework/Versions/Current/Headers/"/>
-        <CONFIGURATION name="Release" isDebug="0" optimisation="3" targetName="JUCEPython"
-                       osxSDK="default" osxCompatibility="default" osxArchitecture="default"/>
+        <CONFIGURATION cppLanguageStandard="c++11" cppLibType="libc++" customXcodeFlags="PYCFLAGS=&quot;-I/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,ONLY_ACTIVE_ARCH=YES,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -ldl -framework CoreFoundation&quot;"
+                       defines="" headerPath="" isDebug="1" name="Debug" optimisation="1"
+                       osxArchitecture="64BitUniversal" osxCompatibility="10.8 SDK"
+                       osxSDK="default" targetName="JUCEPython"/>
+        <CONFIGURATION customXcodeFlags="PYCFLAGS=&quot;-I/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/include/python2.7 -I/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/include/python2.7 -fno-strict-aliasing -fno-common -dynamic -arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -ldl -framework CoreFoundation&quot;"
+                       isDebug="0" name="Release" optimisation="3" osxArchitecture="default"
+                       osxCompatibility="default" osxSDK="default" targetName="JUCEPython"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>
@@ -104,14 +121,15 @@
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
       </MODULEPATHS>
     </XCODE_MAC>
-    <LINUX_MAKE targetFolder="Builds/LinuxMakefile" vstFolder="" extraCompilerFlags="-I ../../../../src&#10;-I ../../../../src/3rdParty/json&#10;-I ../../../../src/python&#10;-I ../../../../src/Utils&#10;-I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7  -fno-strict-aliasing -D_FORTIFY_SOURCE=2&#10; -g -fstack-protector&#10; --param=ssp-buffer-size=4 &#10;-Wformat -Werror=format-security  &#10;-DNDEBUG -g -fwrapv -O2 -Wall "
+    <LINUX_MAKE cppLanguageStandard="-std=c++11" externalLibraries="python2.7"
+                extraCompilerFlags="-I ../../../../src&#10;-I ../../../../src/3rdParty/json&#10;-I ../../../../src/python&#10;-I ../../../../src/Utils&#10;-I/usr/include/python2.7 -I/usr/include/x86_64-linux-gnu/python2.7  -fno-strict-aliasing -D_FORTIFY_SOURCE=2&#10; -g -fstack-protector&#10; --param=ssp-buffer-size=4 &#10;-Wformat -Werror=format-security  &#10;-DNDEBUG -g -fwrapv -O2 -Wall "
                 extraDefs="PYTHON_HEADER=/usr/include/python2.7/Python.h&#10;PYTHON_ROOT=/usr&#10;PYTHON_BIN=/usr/bin/python2.7&#10;CXX=/usr/bin/g++-4.9"
-                cppLanguageStandard="-std=c++11" externalLibraries="python2.7"
-                extraLinkerFlags="-L/usr/lib/python2.7/config-x86_64-linux-gnu -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions">
+                extraLinkerFlags="-L/usr/lib/python2.7/config-x86_64-linux-gnu -L/usr/lib -lpthread -ldl  -lutil -lm  -lpython2.7 -Xlinker -export-dynamic -Wl,-O1 -Wl,-Bsymbolic-functions"
+                targetFolder="Builds/LinuxMakefile" vstFolder="">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" libraryPath="/usr/X11R6/lib/" isDebug="1" optimisation="1"
+        <CONFIGURATION isDebug="1" libraryPath="/usr/X11R6/lib/" name="Debug" optimisation="1"
                        targetName="JUCEPython"/>
-        <CONFIGURATION name="Release" libraryPath="/usr/X11R6/lib/" isDebug="0" optimisation="3"
+        <CONFIGURATION isDebug="0" libraryPath="/usr/X11R6/lib/" name="Release" optimisation="3"
                        targetName="JUCEPython"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
@@ -139,4 +157,7 @@
     <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS JUCE_QUICKTIME="disabled"/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>
