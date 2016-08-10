@@ -23,7 +23,7 @@ void GSPatternPlayer::updatePlayHead(double pH){
 		return;
 	}
 	
-	
+
 	
 	vector<MIDIMapEntry> newNotes;
 	

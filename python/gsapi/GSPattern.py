@@ -217,7 +217,7 @@ class GSPattern(object):
 				res+=[e]
 		return res
 
-	def getActiveEventAtTime(self,time):
+	def getActiveEventsAtTime(self,time):
 		""" Get all events currently active at a givent time
 
 		Args:
@@ -306,7 +306,7 @@ class GSPattern(object):
 			else:
 				evToAdd = [e]
 			for ea in evToAdd:
-				ea.startTime = int(ea.startTime/stepSize)*stepSize
+				ea.startTime = int(ea.startTime/stepSize+0.5)*stepSize
 				ea.duration = stepSize
 				newEvents+=[ea]
 		self.events = newEvents

@@ -133,10 +133,11 @@ def transformPattern(patt):
 
 
 if __name__ =='__main__':
+	import interface
 	print "runMain"
 	needStyleUpdate=True
 	patt = onGenerateNew();
-	params =  getAllParameters()
+	params =  interface.getAllParameters()
 	patt.printEvents()
 	
 	

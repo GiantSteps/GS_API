@@ -9,3 +9,4 @@ dist/
 *.dll
 **/doc/_build/*
 **/doc/gh-pages/*
+DBStyle.json

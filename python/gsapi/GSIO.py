@@ -83,16 +83,16 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 
 	pattern.events=[]
 	lastNoteOff = 0;
-	lastPitch = -1;
-	lastTick = -1;
 	notFoundTags = []
 	trackIdx = 0;
 	for tracks in globalMidi:
 		shouldSkipTrack = False;
+		lastPitch = -1;
+		lastTick = -1;
 		for e in tracks:
 			if(shouldSkipTrack):continue
 			
-			noteTags = []
+			if not TagsFromTrackNameEvents : noteTags = []
 			
 			if midi.MetaEvent.is_event(e.statusmsg):
 				if e.metacommand==midi.TrackNameEvent.metacommand:
@@ -103,11 +103,14 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 					else: 
 						print 'getting track :',trackIdx,e.text
 
-					if TagsFromTrackNameEvents : noteTags = findTagsFromName(e.text,NoteToTagsMap)
+					if TagsFromTrackNameEvents :
+						noteTags = findTagsFromName(e.text,NoteToTagsMap)
+
 
 			isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
 			isNoteOff =midi.NoteOffEvent.is_event(e.statusmsg);
 			if(isNoteOn or isNoteOff  ):
+
 				pitch = e.pitch # optimize pitch property access
 				tick = e.tick
 				if noteTags == []:
@@ -126,11 +129,12 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 				if isNoteOn:
 					# ignore duplicated events (can't have 2 simultaneous NoteOn for the same pitch)
 					if  pitch == lastPitch and tick == lastTick:
-						# print 'skip duplicated event :', pitch,tick
+						print 'skip duplicated event :', pitch,tick
 						continue;
 					lastPitch = pitch
 					lastTick = tick
 					pattern.events+=[GSPatternEvent(tick*tick2quarterNote,-1,pitch,e.velocity,noteTags)]
+
 
 					
 					

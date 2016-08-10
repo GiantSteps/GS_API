@@ -1,7 +1,7 @@
 
 from setuptools import setup, find_packages
 from distutils.extension import Extension
-from Cython.Distutils import build_ext
+# from Cython.Distutils import build_ext
 
 import glob
 
@@ -59,7 +59,7 @@ setup(name='gsapi',
       # package_data={'gsapi': package_data},
       exclude_package_data={'': ['tests', 'docs']},
       # scripts=scripts,
-      cmdclass={'build_ext': build_ext},
+      # cmdclass={'build_ext': build_ext},
       test_suite='nose.collector',
       # classifiers=classifiers
       )
