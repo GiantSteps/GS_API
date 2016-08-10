@@ -200,16 +200,16 @@
 
 	<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">=</span><span class="p">[]</span>
 	<span class="n">lastNoteOff</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="n">lastPitch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-	<span class="n">lastTick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 	<span class="n">notFoundTags</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">trackIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 	<span class="k">for</span> <span class="n">tracks</span> <span class="ow">in</span> <span class="n">globalMidi</span><span class="p">:</span>
 		<span class="n">shouldSkipTrack</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span>
+		<span class="n">lastPitch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+		<span class="n">lastTick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tracks</span><span class="p">:</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">shouldSkipTrack</span><span class="p">):</span><span class="k">continue</span>
 			
-			<span class="n">noteTags</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span> <span class="n">noteTags</span> <span class="o">=</span> <span class="p">[]</span>
 			
 			<span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">MetaEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
 				<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span><span class="o">==</span><span class="n">midi</span><span class="o">.</span><span class="n">TrackNameEvent</span><span class="o">.</span><span class="n">metacommand</span><span class="p">:</span>
@@ -220,11 +220,14 @@
 					<span class="k">else</span><span class="p">:</span> 
 						<span class="k">print</span> <span class="s1">&#39;getting track :&#39;</span><span class="p">,</span><span class="n">trackIdx</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">text</span>
 
-					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span> <span class="n">noteTags</span> <span class="o">=</span> <span class="n">findTagsFromName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
+					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span>
+						<span class="n">noteTags</span> <span class="o">=</span> <span class="n">findTagsFromName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
+
 
 			<span class="n">isNoteOn</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">NoteOnEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">)</span>
 			<span class="n">isNoteOff</span> <span class="o">=</span><span class="n">midi</span><span class="o">.</span><span class="n">NoteOffEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">);</span>
 			<span class="k">if</span><span class="p">(</span><span class="n">isNoteOn</span> <span class="ow">or</span> <span class="n">isNoteOff</span>  <span class="p">):</span>
+
 				<span class="n">pitch</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="c1"># optimize pitch property access</span>
 				<span class="n">tick</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">tick</span>
 				<span class="k">if</span> <span class="n">noteTags</span> <span class="o">==</span> <span class="p">[]:</span>
@@ -243,11 +246,12 @@
 				<span class="k">if</span> <span class="n">isNoteOn</span><span class="p">:</span>
 					<span class="c1"># ignore duplicated events (can&#39;t have 2 simultaneous NoteOn for the same pitch)</span>
 					<span class="k">if</span>  <span class="n">pitch</span> <span class="o">==</span> <span class="n">lastPitch</span> <span class="ow">and</span> <span class="n">tick</span> <span class="o">==</span> <span class="n">lastTick</span><span class="p">:</span>
-						<span class="c1"># print &#39;skip duplicated event :&#39;, pitch,tick</span>
+						<span class="k">print</span> <span class="s1">&#39;skip duplicated event :&#39;</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span><span class="n">tick</span>
 						<span class="k">continue</span><span class="p">;</span>
 					<span class="n">lastPitch</span> <span class="o">=</span> <span class="n">pitch</span>
 					<span class="n">lastTick</span> <span class="o">=</span> <span class="n">tick</span>
 					<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">tick</span><span class="o">*</span><span class="n">tick2quarterNote</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="n">noteTags</span><span class="p">)]</span>
+
 
 					
 					
