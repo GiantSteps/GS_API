@@ -1,6 +1,6 @@
 from gsapi import GSStyle,GSPattern,GSPatternEvent
 import random
-import numpy as np
+
 
 import copy
 
@@ -102,12 +102,17 @@ class GSMarkovStyle(GSStyle):
 
 		def _generateEventAtStep(step,previousTags):
 			
-			if not previousTags in self.transitionTable[step] :  print "zero state for "+str(previousTags);return None
+			if not previousTags in self.transitionTable[step] :  print "wrong transition table, zero state for "+str(previousTags);return None
 			d = self.transitionTable[step][previousTags]
 
 			chosenIdx = 0
 			if len(d)>1:
-				bins = np.cumsum([d[x] for x in d])
+				tSum = 0
+				bins = []
+				for x in d.itervalues():
+					tSum+=x
+					bins+=[tSum]
+				
 				r = random.random()
 				for i in range(1,len(bins)):
 					if bins[i-1]<=r and bins[i]>r:
@@ -202,7 +207,7 @@ class GSMarkovStyle(GSStyle):
 		p.timeStretch(self.numSteps*1.0/self.loopDuration)
 		p.alignOnGrid(1)
 		p.removeOverlapped()
-		p.fillWithSilences(maxSilenceTime = 1);
+		p.fillWithSilences(maxSilenceTime = 1);	
 
 
 
