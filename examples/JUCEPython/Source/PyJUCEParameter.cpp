@@ -100,6 +100,9 @@ public :
 
 }
 
+PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),pyRef(o){
+  Py_IncRef(pyRef);
+}
 
 
 void PyJUCEParameter::setValue(var v){
@@ -137,7 +140,7 @@ void PyJUCEParameter::setPythonCallback(PyObject * cb){
 
 class PyFloatParameter:public PyJUCEParameter,public SliderListener{
 public:
-  PyFloatParameter(const String & n):PyJUCEParameter(n){}
+  PyFloatParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
   
 	
 	void sliderValueChanged (Slider* slider) override{setValue(slider->getValue());}
@@ -173,7 +176,7 @@ public:
 
 class PyBoolParameter:public PyJUCEParameter,ButtonListener{
   public:
-  PyBoolParameter(const String & n):PyJUCEParameter(n){}
+  PyBoolParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
   void buttonClicked(Button *b)override{setValue(b->getToggleStateValue());}
   Component *  createComponent(var v,const NamedValueSet & properties) override{
     TextButton * tb =  new TextButton(name);
@@ -190,7 +193,7 @@ class PyBoolParameter:public PyJUCEParameter,ButtonListener{
 
 class PyEventParameter:public PyJUCEParameter,ButtonListener{
     public:
-    PyEventParameter(const String & n):PyJUCEParameter(n){}
+    PyEventParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
     void buttonClicked(Button *b)override{setValue(var::undefined());}
     Component *  createComponent(var v,const NamedValueSet & properties) override{
       TextButton * tb =  new TextButton(name);
@@ -206,7 +209,7 @@ class PyEventParameter:public PyJUCEParameter,ButtonListener{
 
 class PyEnumParameter:public PyJUCEParameter,ButtonListener{
 public:
-  PyEnumParameter(const String & n):PyJUCEParameter(n){
+  PyEnumParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){
 
   }
   void buttonClicked(Button *b)override{
@@ -290,7 +293,7 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
         DBG("parsing "+String(PyString_AsString(key)));
         var v = pyToVar(value);
         if(!v.isUndefined())properties.set(PyString_AsString(key), v);
-        else{DBG("cant find type for param property :" << PyString_AsString(key));}
+        else{DBG("cant find type for param property :" << PyString_AsString(key) << " of type : " << value->ob_type->tp_name);}
       }
 		}
 	}
@@ -304,16 +307,16 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
   String paramName = properties.getWithDefault("name", className+"_defaultName");
 	if(!value){DBG("ui element not valid");jassertfalse;return nullptr;}
   if ((PyLong_CheckExact(value)|| PyInt_CheckExact(value)) && properties.contains("choicesList")){
-    res = new PyEnumParameter(paramName);
+    res = new PyEnumParameter(value,paramName);
   }
 	else if( PyLong_CheckExact(value)|| PyInt_CheckExact(value)||PyFloat_CheckExact(value) || PyInt_CheckExact(value))
-    {res = new PyFloatParameter(paramName);
+    {res = new PyFloatParameter(value,paramName);
       if((PyLong_CheckExact(value) || PyInt_CheckExact(value)) && !properties.contains("step")){properties.set("step", 1);}
     }
 	else if(PyBool_Check(value))
-    {res = new PyBoolParameter(paramName);}
+    {res = new PyBoolParameter(value,paramName);}
   else if(value == Py_None)
-    {res = new PyEventParameter(paramName);}
+    {res = new PyEventParameter(value,paramName);}
 
 	else {
 		DBG("ui element not supported : " <<className);

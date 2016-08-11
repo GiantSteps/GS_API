@@ -17,9 +17,9 @@ class PyJUCEAPI;
 class PyJUCEParameter{
 public:
 	
-  PyJUCEParameter(const String & _name):name(_name){}
+  PyJUCEParameter(PyObject * o,const String & _name);
 
-	virtual ~PyJUCEParameter(){}
+	virtual ~PyJUCEParameter(){Py_DecRef(pyRef);}
 	
 	void linkToJuceApi(PyJUCEAPI * );
 	String name;
@@ -43,6 +43,7 @@ protected:
 	
 	
 	PyObject* cbFunc;
+  PyObject* pyRef;
 	PyJUCEAPI * pyJuceApi;
   ScopedPointer<Component> component;
 

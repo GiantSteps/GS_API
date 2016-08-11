@@ -14,7 +14,7 @@
 
 class TimeListener:public AsyncUpdater{
 	public:
-	TimeListener(double _beatInterval):beatInterval(_beatInterval),lastSendTime(0){ }
+	TimeListener(double _beatInterval):lastSendTime(0),beatInterval(_beatInterval){ }
   virtual ~TimeListener(){cancelPendingUpdate();}
 	void handleAsyncUpdate() override{timeChanged(getQuantized(lastSendTime));};
 	void setTime(double t){

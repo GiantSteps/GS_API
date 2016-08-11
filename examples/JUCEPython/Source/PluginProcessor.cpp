@@ -13,7 +13,7 @@
 
 
 //==============================================================================
-JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),pyAPI(this),useInternalTransport(false),playHead(0)
+JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),pyAPI(this),playHead(0),useInternalTransport(false)
 {
   pyAPI.addListener(this);
 	addTimeListener(&pyAPI);

@@ -21,7 +21,7 @@
 #error
 #endif
 
-void PythonWrap::init(){
+void PythonWrap::init( string root, string  bin){
   if(!Py_IsInitialized())
   {
 		//	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
@@ -35,9 +35,12 @@ void PythonWrap::init(){
 //    dlopen("/System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW|RTLD_LOCAL);
 //    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
 
-	  Py_SetPythonHome(_toxstr(PYTHON_ROOT));
-	  Py_SetProgramName(_toxstr(PYTHON_BIN));
-	  
+    if(root!=""){rootPath = root;}
+    else{rootPath = _toxstr(PYTHON_ROOT);}
+    Py_SetPythonHome(&rootPath[0]);
+    if(bin!=""){Py_SetProgramName(&bin[0]);}
+    else{Py_SetProgramName(_toxstr(PYTHON_BIN));}
+
 	  char* c =  Py_GetPythonHome();
 	  if(c){ DBG("home : "<<c);}
 	  char* cc =  Py_GetProgramName();
@@ -65,8 +68,8 @@ void PythonWrap::setFolderPath(const string & s){
 
 void PythonWrap::initSearchPath(){
   //  default brew python on OSX
-  PyRun_SimpleString("import sys;import site;site.addsitedir('/usr/local/lib/python2.7/site-packages');");
-  //    addSearchPath("/usr/local/lib/python2.7/site-packages");
+  PyRun_SimpleString("import sys;import site;");
+  
   PyRun_SimpleString("print sys.path;");
 	
 }

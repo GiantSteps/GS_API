@@ -1,9 +1,9 @@
 # inject develop version of gsapi if debugging
-if __name__=='__main__':
-	import sys,os
-	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
-	sys.path.insert(1,pathToAdd)
-	print sys.path
+# if __name__=='__main__':
+# 	import sys,os
+# 	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
+# 	sys.path.insert(1,pathToAdd)
+	
 
 from gsapi import *
 from gsapi.GSInternalStyles import *
@@ -19,13 +19,8 @@ import JUCEAPI
 from UIParameter import *
 
 
-#print JUCEAPI.__file__
 
-
-print dir(JUCEAPI)
-
-
-""" this example generates random notes to demonstrate passing GSPattern to C++ plugin
+""" this example generates stylistic markovian pattern to demonstrate passing GSPattern to C++ plugin
 """
 midiMap = {
 		"Kick":36,
@@ -50,18 +45,22 @@ localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 
 searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
 # searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
-# searchPath = os.path.join(localDirectory,"midi","motown.mid");
-searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
-
+searchPath = os.path.join(localDirectory,"midi","motown.mid");
+# searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+# searchPath = os.path.join(localDirectory,"midi","*.mid");
 
 # searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
 
 styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
-numSteps = 32
-loopDuration = 4
-style = GSMarkovStyle(order=numSteps/(loopDuration+1),numSteps=numSteps,loopDuration=loopDuration)
+numSteps = NumParameter(32).setCallbackFunction(lambda :generateStyleIfNeeded(True))
+loopDuration = NumParameter(4).setCallbackFunction(lambda :generateStyleIfNeeded(True))
+def generatePattern():
+	generateStyleIfNeeded();
+	JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
+generateNew = EventParameter().setCallbackFunction(generatePattern)
+style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=numSteps.value,loopDuration=loopDuration.value)
 # style = GSDBStyle(generatePatternOrdering = "increasing");
-needStyleUpdate = True;
+needStyleUpdate = False;
 
 
 
@@ -82,11 +81,10 @@ def onTimeChanged(time):
 	"""
 
 	if eachBarIsNew.value :
-		JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
+		generatePattern()
 	
 
-	
-	return None
+
 
 
 def onGenerateNew():
@@ -108,24 +106,23 @@ def onGenerateNew():
 def mapMidi(pattern):
 	for e in pattern.events:
 		if len(e.tags) > 0 and (e.tags[0] in midiMap):
-			e.pitch = midiMap[e.tags[0]][0][0]
+			e.pitch = midiMap[e.tags[0]]
 	return pattern
 
 
-def generateStyleIfNeeded():
+def generateStyleIfNeeded(force = False):
+	
 	global needStyleUpdate
 	global midiMap
 	global style
 	global styleSavingPath
 
-	if not style.isBuilt():
+	if force or not style.isBuilt():
 		hasStyleSaved = os.path.isfile(styleSavingPath)
-		if(not hasStyleSaved  or needStyleUpdate ):
+		if(force or (not hasStyleSaved)  or needStyleUpdate ):
 			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = loopDuration)
-			
+			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = loopDuration.value)
 			style.generateStyle(patterns)
-
 			style.saveToJSON(styleSavingPath)
 			needStyleUpdate =False
 		else:
@@ -145,10 +142,11 @@ def transformPattern(patt):
 if __name__ =='__main__':
 	import interface
 	print "runMain"
-	needStyleUpdate=True
-	patt = onGenerateNew();
+	onGenerateNew()
+	needStyleUpdate=False
+	numSteps.value = 32
 	params =  interface.getAllParameters()
-	patt.printEvents()
+	
 	
 	
 	# patt.printEvents()

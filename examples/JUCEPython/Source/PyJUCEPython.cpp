@@ -18,7 +18,8 @@
 
 static PyObject *SpamError;
 
-#define GETOWNER() ((PyJUCEAPIRef*)PyDict_GetItem(self->tp_dict, PyString_FromString("owner")))->owner
+#define GETOWNER() dynamic_cast<PyJUCEAPI*>((PyJUCEAPI*)PyCapsule_Import("JUCEAPI.vstOwner",0))
+//#define GETOWNER() ((PyJUCEAPIRef*)PyDict_GetItem(self->tp_dict, PyString_FromString("owner")))->owner
 typedef struct {
   PyObject_HEAD
   /* Type-specific fields go here. */
@@ -69,13 +70,33 @@ setPattern(PyTypeObject *self, PyObject *args)
 
   if(!PyArg_ParseTuple(args, "O",&pat))
     return NULL;
-  bool added = GETOWNER()->setNewPattern(pat);
+  PyJUCEAPI * owner = GETOWNER();
+  bool added = false;
+  if(owner){
+     added= owner->setNewPattern(pat);
+  }
   if(added)Py_RETURN_TRUE;
   else Py_RETURN_FALSE;
 
 }
 
-static PyMemberDef PyJUCEAPIObject_Members[] = {{NULL}  /* Sentinel */};
+//static PyObject *
+//updateParam(PyTypeObject *self, PyObject *args)
+//{
+//  PyObject * param = nullptr;
+//
+//  if(!PyArg_ParseTuple(args, "O",&param))
+//    return NULL;
+//  bool added = GETOWNER()->setParam(param);
+//  if(added)Py_RETURN_TRUE;
+//  else Py_RETURN_FALSE;
+//
+//}
+
+static PyMemberDef PyJUCEAPIObject_Members[] = {
+//  {"parameters",T_OBJECT,0,0,NULL},
+  {NULL}  /* Sentinel */
+};
 static PyMethodDef PyJUCEAPIObject_Methods[] = {
   {"setPattern",  (PyCFunction)setPattern, METH_CLASS | METH_VARARGS,"set current pattern."},
   {NULL, NULL, 0, NULL}        /* Sentinel */
@@ -114,6 +135,12 @@ struct PyJUCEAPIType: PyTypeObject  {
 };
 
 
+
+PyObject * addParameter(const char *name){
+
+}
+
+
 PyMODINIT_FUNC
 initJUCEAPI(PyJUCEAPI * owner)
 {
@@ -128,8 +155,11 @@ initJUCEAPI(PyJUCEAPI * owner)
 
   PyModule_AddObject(m, "vst", (PyObject *)typ);
   PyObject *obj = PyObject_CallObject((PyObject *) typ, NULL);
-  PyModule_AddObject(m, "API", (PyObject *)obj);
 
+  PyModule_AddObject(m, "API", (PyObject *)obj);
+  
+  PyObject * ownerCapsule =  PyCapsule_New(owner, "JUCEAPI.vstOwner", NULL);
+  PyModule_AddObject(m, "vstOwner", ownerCapsule);
   SpamError = PyErr_NewException("PyJuceAPI.error", NULL, NULL);
   Py_INCREF(SpamError);
   PyModule_AddObject(m, "error", SpamError);

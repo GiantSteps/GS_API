@@ -18,8 +18,8 @@
 
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
 owner(o),
-isInitialized(false),
 TimeListener(1),
+isInitialized(false),
 pluginModule(nullptr),
 interfaceModule(nullptr){
   timePyObj = PyDict_New();
@@ -90,7 +90,8 @@ void PyJUCEAPI::callSetupFunction(){
 
 void PyJUCEAPI::init(){
   if(!isInitialized){
-    py.init();
+    string root(py.getVSTPath()+"/../../Resources/pythonEnv");
+    py.init(File(root).getFullPathName().toStdString(),File(root+"/bin/python2.7").getFullPathName().toStdString());
     initJUCEAPI(this);
     pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
     py.initSearchPath();

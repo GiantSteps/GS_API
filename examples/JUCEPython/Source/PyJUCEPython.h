@@ -17,6 +17,8 @@ class PyJUCEAPI;
 
 PyMODINIT_FUNC initJUCEAPI(PyJUCEAPI * owner);
 
+PyObject * addParameter(const char *name);
+
 
 
 #endif  // PYJUCEPYTHON_H_INCLUDED

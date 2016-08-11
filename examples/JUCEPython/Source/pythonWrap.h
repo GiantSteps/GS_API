@@ -26,7 +26,7 @@ class PythonWrap{
     string test(const string& s,PyObject * module);
     string getVSTPath();
     void printPyState();
-  void init();
+  void init( string root="", string  bin="");
 	void setFolderPath(const string & s);
     PyObject* loadModule(const string & name,PyObject * oldModule=nullptr);
     void initSearchPath();
@@ -40,6 +40,7 @@ private:
     void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
 	string curentFolderPath;
+  string rootPath;
 
 
 };

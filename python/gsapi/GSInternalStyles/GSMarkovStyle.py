@@ -146,7 +146,7 @@ class GSMarkovStyle(GSStyle):
 			
 			
 			newEv =  _generateEventAtStep(i,','.join(newPast))
-			print i , ','.join(newPast),"\t==>", newEv
+			
 			if newEv:
 				# print i,newEv
 				events+=[newEv]

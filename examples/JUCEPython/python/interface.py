@@ -18,17 +18,17 @@ def getAllParameters():
 	should return a list of UIParams
 	"""
 	res = []
-	test = NumParameter("slider",value = 10,style = "Rotary").setBounds(0,0,20,100).setMinMax(0,10)
-	test.onChange = updateTest
-	test.value = 11
-	res+=[test]
-	VSTPlugin.eachBarIsNew.setBounds(20,0,20,100)
-	res+=[VSTPlugin.eachBarIsNew]
-	test3 = EventParameter("ev").setBounds(40,0,20,100)
-	test3.onChange = updateTog
-	res+=[test3]
+	# add existing 
+	area = Rectangle(0,0,100,100)
+	firstStack = area.removeFromLeft(30)
+	res+=[VSTPlugin.loopDuration.setBoundsRect(firstStack.removeFromTop(50)).setMinMax(32,64)]
+	res+=[VSTPlugin.numSteps.setBoundsRect(firstStack).setMinMax(1,8)]
+	res+=[VSTPlugin.eachBarIsNew.setBoundsRect(area.removeFromLeft(20))]
+	res+=[VSTPlugin.generateNew.setBoundsRect(area.removeFromLeft(20))]
+
+# add others ..
 	dummy = Dummy(8)
-	test4 = EnumParameter(name="list",choicesList={"lala":dummy.fun,"lolo":{"fesse":["loulou"]}}).setBounds(60,0,20,100)
+	test4 = EnumParameter(choicesList={"lala":dummy.fun,"lolo":{"fesse":["loulou"]}},name="list").setBoundsRect(area)
 	test4.onChange = updateList
 	res+=[test4]
 
@@ -56,8 +56,11 @@ def updateList(param):
 
 
 if __name__ == '__main__':
+	import sys
+	print sys.executable
 	dummy = Dummy(8)
-	f = EnumParameter("tst",choicesList={"lala":dummy.fun,"lolo":"lulu"})
+	f = EnumParameter({"lala":dummy.fun,"lolo":"lulu"})
+	VSTPlugin.numSteps.value = 32
 	f.onChange = updateList
 	print getAllParameters()
 	f.value = ["lala"]
