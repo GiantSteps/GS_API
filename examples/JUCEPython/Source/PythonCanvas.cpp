@@ -13,6 +13,7 @@
 #include "PyJUCEParameter.h"
 void PythonCanvas::newParamsLoaded( OwnedArray<PyJUCEParameter> *params){
   originParams = params;
+  DBG("post rebuild");
   postCommandMessage(REBUILD_PARAMS);
 
 };

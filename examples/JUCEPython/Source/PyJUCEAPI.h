@@ -34,15 +34,17 @@ public:
   void setWatching(bool);
 	
 	// function callers
- void  getNewPattern();
+ 
   void callSetupFunction();
 	void callTimeChanged(double time);
 	void buildParamsFromScript();
+   bool setParam(PyObject*);
 
   bool setNewPattern(PyObject * o);
 	
 	// python wrapper object
   PythonWrap  py ;
+  PyObject * apiModuleObject;
   File pythonFile;
 
   JucepythonAudioProcessor * owner;

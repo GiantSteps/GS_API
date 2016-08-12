@@ -1,6 +1,9 @@
 class Rectangle(object):
 		def __init__(self,x=0,y=0,width=10,height=10):
-			self.setBounds(x=x,y=y,width=width,height=height);
+			self.x = x;
+			self.y = y;
+			self.width = width;
+			self.height = height;
 		def setBounds(self,x=0,y=0,width=10,height=10):
 			self.x = x;
 			self.y = y;
@@ -46,13 +49,14 @@ class UIParameter(Rectangle):
 	allParams = set()
 	
 	def __init__(self,value=0,name='',x=0,y=0,width=10,height=10):
-		self.hasChanged = False;
+		Rectangle.__init__(self,x,y,width,height)
 		self.allParams.add(self);
 		self.__value = value
 		self.name = name;
 		self.listeners = {}
 		self.__notifyingListeners = {}
-		self.setCallbackFunction(self.onChange)
+		self.__listenerArgs = {}
+		
 		# relative coordinates
 		self.setBounds(x,y,width,height)
 
@@ -68,18 +72,22 @@ class UIParameter(Rectangle):
 				if(regx.match(codeLine)):
 					self.name = codeLine.split('=')[0].lstrip().rstrip()
 					break;
+			self.setCallbackFunction(self.onChange,self)
 
 	def getAttributeDict(self):
 		members = {attr:getattr(self,attr) for attr in dir(self) if not callable(getattr(self,attr)) and not attr.startswith("__")}
 		return members
 
+	def __repr__(self):
+		return self.__class__.__name__+' : '+self.name+' : '+str(self.__value)+ ' at : '+Rectangle.__repr__(self)
 
 	def __del__(self):
 		print "del"
 		self.allParams.remove(self);
 
-	def setCallbackFunction(self,callback):
-		self.addListener('main',callback);
+	def setCallbackFunction(self,callback,*args,**kwargs):
+		
+		self.addListener('main',callback,*args,**kwargs);
 		return self
 
 
@@ -87,15 +95,19 @@ class UIParameter(Rectangle):
 		print "base change"
 		pass
 
-	def addListener(self,name,callback):
-		def getValidCbFunction(f):
-			import inspect
-			if (len(inspect.getargspec(f)[0])==0):
-				return lambda param:f()
-			else :
-				return f
-		self.listeners[name]=getValidCbFunction(callback);
+	def addListener(self,name,callback,*args,**kwargs):
+		print 'adding listener ' + str(name) +'/'+ str(callback)
+		self.listeners[name]=callback;
 		self.__notifyingListeners[name] = False;
+		# remove nested empty tuples ... weird
+		emptyArgs = False;
+		checked = args
+		while type(checked) == tuple:
+			if len(checked)==0 : emptyArgs = True;break;
+			checked = checked[0]
+
+		if emptyArgs : args = ()
+		self.__listenerArgs[name] = (args,kwargs);
 		return self
 
 	def removeListener(self,name):
@@ -108,7 +120,12 @@ class UIParameter(Rectangle):
 	def getValue(self):
 		return self.__value
 
-
+	def setValueFrom(self ,notifierName,v):
+		
+		self.__notifyingListeners[notifierName] = True
+		self.setValue(v);
+		self.__notifyingListeners[notifierName] = False
+		
 	def setValue(self, v):
 		if(self.pyType):
 			self.__value = self.pyType(v)
@@ -116,13 +133,23 @@ class UIParameter(Rectangle):
 		else:
 			self.__value = v;
 			print "set abstract parameter "+self.name + " : "+str(v)
+
 		print self.listeners
-		for k , cb in self.listeners.iteritems():
+		for k,cb in self.listeners.iteritems():
 			if not self.__notifyingListeners[k]:
 				self.__notifyingListeners[k] = True
-				cb(param=self)
+				
+				args = self.__listenerArgs[k][0]
+				kwargs = self.__listenerArgs[k][1]
+
+				if(len(args)>0 and len(kwargs)>0): 	cb(*args,**kwargs)
+				elif(len(args)>0 and len(kwargs)==0):		cb(*args)
+				elif(len(kwargs)>0):		cb(**kwargs)
+				else: 	cb()
+				
 				self.__notifyingListeners[k] = False
-		self.hasChanged = True;
+
+
 
 	value=property(getValue,setValue)
 
@@ -212,13 +239,17 @@ class EnumParameter(UIParameter):
 	value=property(UIParameter.getValue,setValue)
 
 if __name__== "__main__":
-	
+	print 'running main'
 	def testCB():
 		print "testCB"
 		
 	s3 = NumParameter(3,"lala",style="rotary").setBounds(1,2,16,16).setMinMax(0,1);
 	lala = EnumParameter(choicesList = {"zala":"lala","lolo":["lili","lolou"]},value = 1).setBounds(1,2,16,16).setCallbackFunction(testCB);
-	test2 = BoolParameter(False).setBounds(50,0,50,100)
+	test2 = EventParameter().setBounds(50,0,50,100)
+	def dumMet(v):
+		print 'dumMet'+str(v)
+	test2.addListener('vst',dumMet,None)
+	test2.value = 1
 	def dum():
 		print 'dum'
 	lala.addListener("L",dum)

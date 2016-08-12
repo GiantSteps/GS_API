@@ -33,9 +33,9 @@ public:
 	double playHead;
 	bool useInternalTransport;
 	
-  void newFileLoaded(const File & f)override;
+  
   void newPatternLoaded( GSPattern * p)override;
-  void updatePattern();
+  
 	
 	//==============================================================================
 	void prepareToPlay (double sampleRate, int samplesPerBlock) override;

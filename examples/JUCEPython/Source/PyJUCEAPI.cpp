@@ -21,7 +21,8 @@ owner(o),
 TimeListener(1),
 isInitialized(false),
 pluginModule(nullptr),
-interfaceModule(nullptr){
+interfaceModule(nullptr),
+apiModuleObject(nullptr){
   timePyObj = PyDict_New();
   timeKey=PyFromString("time");
 }
@@ -47,21 +48,12 @@ bool PyJUCEAPI::setNewPattern(PyObject * o){
       else{DBG("pattern not valid");}
 
     }
-		Py_DECREF(o);
+//		Py_DECREF(o);
 
   if(p)listeners.call(&Listener::newPatternLoaded,p);
   return found;
 }
-void  PyJUCEAPI::getNewPattern(){
-  PyObject * o = nullptr;
 
-  if((o=py.callFunction("onGenerateNew",pluginModule,nullptr))){
-    if(!setNewPattern(o)){
-      DBG("no pattern found when calling get NewPattern");
-    }
-  }
-
-}
 
 void PyJUCEAPI::callSetupFunction(){
   PyObject * o=nullptr;
@@ -92,13 +84,22 @@ void PyJUCEAPI::init(){
   if(!isInitialized){
     string root(py.getVSTPath()+"/../../Resources/pythonEnv");
     py.init(File(root).getFullPathName().toStdString(),File(root+"/bin/python2.7").getFullPathName().toStdString());
-    initJUCEAPI(this);
+    initJUCEAPI(this,&apiModuleObject);
     pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
     py.initSearchPath();
     py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
   }
   isInitialized = true;
 
+}
+
+bool PyJUCEAPI::setParam(PyObject* o){
+  for(auto & p:params){
+    if(p->pyRef==o){
+      DBG("found param to update");
+    }
+  }
+  return false;
 }
 
 

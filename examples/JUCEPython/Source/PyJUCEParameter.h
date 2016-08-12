@@ -41,9 +41,13 @@ protected:
 	virtual Component * createComponent(var v,const NamedValueSet & properties)=0;
 	virtual PyObject* getPythonObject()=0;
 	
-	
+  friend class PyJUCEAPI;
 	PyObject* cbFunc;
   PyObject* pyRef;
+  PyObject * pyVal;
+
+
+  static PyObject* listenerName;
 	PyJUCEAPI * pyJuceApi;
   ScopedPointer<Component> component;
 

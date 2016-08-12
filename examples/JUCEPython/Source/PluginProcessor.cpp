@@ -21,18 +21,11 @@ JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),pyAPI(this)
 
 JucepythonAudioProcessor::~JucepythonAudioProcessor()
 {
+  pyAPI.removeListener(this);
 	removeTimeListener(&pyAPI);
 }
 
 
-void JucepythonAudioProcessor::updatePattern(){
-  pyAPI.getNewPattern();
-
-}
-
-void JucepythonAudioProcessor::newFileLoaded(const juce::File &f){
-  updatePattern();
-}
 
 void JucepythonAudioProcessor::newPatternLoaded( GSPattern * p){
 if(p)

@@ -15,9 +15,9 @@
 
 class PyJUCEAPI;
 
-PyMODINIT_FUNC initJUCEAPI(PyJUCEAPI * owner);
+PyMODINIT_FUNC initJUCEAPI(PyJUCEAPI * owner,PyObject ** apiModule);
 
-PyObject * addParameter(const char *name);
+
 
 
 

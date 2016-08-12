@@ -9,28 +9,23 @@ from gsapi import *
 
 
 
-def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
-	""" loads a midi file as a pattern
 
-	Args:
-		midiPath: midi filePath
-		NoteToTagsMap: dictionary converting pitches to tags 
-			noteMapping maps classes to a list of possible Mappings, a mapping can be:
-			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
-			an integer if only pitch matters
-			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
-			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
 
-		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks
-		filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
-		tracksToGet: if not empty, specifies tracks wanted either by name or index
+def __formatNoteToTags(_NoteToTags):
+	""" internal conversion for consistent NoteTagMap Structure
+
 	"""
-	def formatNoteToTags(NoteToTags):
-		for n in NoteToTags:
-			if not isinstance(NoteToTags[n],list): NoteToTags[n] = [NoteToTags[n]]
-			for i in range(len(NoteToTags[n])):
-				if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
+	import copy
+	NoteToTags = copy.copy(_NoteToTags) 
+	for n in NoteToTags:
+		if not isinstance(NoteToTags[n],list): NoteToTags[n] = [NoteToTags[n]]
+		for i in range(len(NoteToTags[n])):
+			if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
+	return NoteToTags
 
+def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
+	""" internal function that accept only Consistent NoteTagMap structure as created by __formatNoteToTags
+	"""
 	def findTimeInfoFromMidi(pattern,midiFile):
 		
 		foundTimeSignatureEvent = False
@@ -74,7 +69,7 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 	pattern = GSPattern();
 	pattern.name = os.path.splitext(os.path.basename(midiPath))[0];
 
-	formatNoteToTags(NoteToTagsMap)
+	
 
 	# first get signature
 	findTimeInfoFromMidi(pattern,globalMidi);
@@ -165,6 +160,26 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 
 
 
+def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
+	""" loads a midi file as a pattern
+
+	Args:
+		midiPath: midi filePath
+		NoteToTagsMap: dictionary converting pitches to tags 
+			noteMapping maps classes to a list of possible Mappings, a mapping can be:
+			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
+			an integer if only pitch matters
+			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
+			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
+
+		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks
+		filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
+		tracksToGet: if not empty, specifies tracks wanted either by name or index
+	"""
+	_NoteToTagsMap=__formatNoteToTags(NoteToTagsMap)
+	return __fromMidiFormatted(midiPath=midiPath,NoteToTagsMap=_NoteToTagsMap,tracksToGet = tracksToGet,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped=filterOutNotMapped)
+
+
 
 def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped = True,desiredLength = 0):
 	""" loads a midi collection
@@ -179,11 +194,12 @@ def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrack
 
 
 	res = []
+	_NoteToTagsMap = __formatNoteToTags(NoteToTagsMap)
 	print glob.glob(midiGlobPath)
 	for f in glob.glob(midiGlobPath):
 		name =  os.path.splitext(os.path.basename(f))[0]
 		print "getting "+name
-		p = fromMidi(f,NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
+		p = fromMidi(f,_NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
 		
 		if desiredLength>0:
 			res+= p.splitInEqualLengthPatterns(desiredLength,copy=False);

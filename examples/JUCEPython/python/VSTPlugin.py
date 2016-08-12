@@ -1,8 +1,8 @@
 # inject develop version of gsapi if debugging
-# if __name__=='__main__':
-# 	import sys,os
-# 	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
-# 	sys.path.insert(1,pathToAdd)
+if __name__=='__main__':
+	import sys,os
+	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
+	sys.path.insert(1,pathToAdd)
 	
 
 from gsapi import *
@@ -46,29 +46,26 @@ localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
 # searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
 searchPath = os.path.join(localDirectory,"midi","motown.mid");
-# searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
 # searchPath = os.path.join(localDirectory,"midi","*.mid");
 
 # searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
 
 styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
-numSteps = NumParameter(32).setCallbackFunction(lambda :generateStyleIfNeeded(True))
-loopDuration = NumParameter(4).setCallbackFunction(lambda :generateStyleIfNeeded(True))
-def generatePattern():
-	generateStyleIfNeeded();
-	JUCEAPI.vst.setPattern(mapMidi(style.generatePattern()))
-generateNew = EventParameter().setCallbackFunction(generatePattern)
-style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=numSteps.value,loopDuration=loopDuration.value)
+numSteps = NumParameter(32)
+loopDuration = NumParameter(4)
+generateNewP = EventParameter()
+style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
+patterns = None
 # style = GSDBStyle(generatePatternOrdering = "increasing");
-needStyleUpdate = False;
-
-
 
 #  parameters enable simple UI bindings
 eachBarIsNew = BoolParameter()
 
 
 def setup():
+	generateStyleIfNeeded(forceRebuild = True,forceParamUpdate = False,loadFromJSON = True)
+	generatePattern()
 	print "settingThingsUp"
 	
 
@@ -79,7 +76,6 @@ def onTimeChanged(time):
 	Returns:
  		the new GSpattern to be played if needed
 	"""
-
 	if eachBarIsNew.value :
 		generatePattern()
 	
@@ -87,47 +83,46 @@ def onTimeChanged(time):
 
 
 
-def onGenerateNew():
-	""" called when user press generate new
-	Returns:
-	 the new GSpattern to be played
-	"""
-	global style
-	generateStyleIfNeeded();
-	print "start generating pattern"
-	pattern = style.generatePattern();
-	print "mapMidi"
-	mapMidi(pattern)
 
-
-	print "ended"
-	return pattern
-
-def mapMidi(pattern):
+def mapMidi(pattern,midiMap):
 	for e in pattern.events:
 		if len(e.tags) > 0 and (e.tags[0] in midiMap):
 			e.pitch = midiMap[e.tags[0]]
+		else:
+			print "no map possible"
 	return pattern
 
 
-def generateStyleIfNeeded(force = False):
+def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFromJSON = False):
 	
-	global needStyleUpdate
 	global midiMap
 	global style
 	global styleSavingPath
+	global patterns
 
-	if force or not style.isBuilt():
-		hasStyleSaved = os.path.isfile(styleSavingPath)
-		if(force or (not hasStyleSaved)  or needStyleUpdate ):
-			print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-			patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = loopDuration.value)
-			style.generateStyle(patterns)
-			style.saveToJSON(styleSavingPath)
-			needStyleUpdate =False
-		else:
+	hasStyleSaved = os.path.isfile(styleSavingPath)
+
+	if loadFromJSON:
+		if hasStyleSaved :
 			style.loadFromJSON(styleSavingPath)
-	
+			numSteps.value = style.numSteps
+			loopDuration.value = style.loopDuration
+		else:
+			forceParamUpdate=True 
+			forceRebuild=True
+			
+	if forceRebuild:
+		print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
+		patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = int(loopDuration.value))
+
+	if forceRebuild or forceParamUpdate :
+		style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
+		style.generateStyle(patterns)
+		
+		
+
+def saveStyle():
+	style.saveToJSON(styleSavingPath)
 
 
 def transformPattern(patt):
@@ -139,11 +134,18 @@ def transformPattern(patt):
 	return patt
 
 
+def generatePattern():
+
+	generateStyleIfNeeded();
+	newPattern = style.generatePattern()
+	newPattern = mapMidi(newPattern,midiMap)
+	JUCEAPI.vst.setPattern(newPattern)	
+	print 'newPattern set'
+
 if __name__ =='__main__':
 	import interface
 	print "runMain"
-	onGenerateNew()
-	needStyleUpdate=False
+	setup()
 	numSteps.value = 32
 	params =  interface.getAllParameters()
 	

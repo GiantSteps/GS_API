@@ -1,10 +1,10 @@
 /*
  ==============================================================================
- 
+
  pythonWrap.cpp
  Created: 9 Jun 2016 10:52:18am
  Author:  Martin Hermant
- 
+
  ==============================================================================
  */
 
@@ -24,16 +24,16 @@
 void PythonWrap::init( string root, string  bin){
   if(!Py_IsInitialized())
   {
-		//	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
-		//			 RTLD_NOW|RTLD_GLOBAL);
-		//	  if(!handle){
-		//		  DBG("error loading .so" <<dlerror());
-		//	  }
-//    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
-//    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
-//    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
-//    dlopen("/System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW|RTLD_LOCAL);
-//    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
+    //	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
+    //			 RTLD_NOW|RTLD_GLOBAL);
+    //	  if(!handle){
+    //		  DBG("error loading .so" <<dlerror());
+    //	  }
+    //    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
+    //    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
+    //    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
+    //    dlopen("/System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW|RTLD_LOCAL);
+    //    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
 
     if(root!=""){rootPath = root;}
     else{rootPath = _toxstr(PYTHON_ROOT);}
@@ -41,37 +41,37 @@ void PythonWrap::init( string root, string  bin){
     if(bin!=""){Py_SetProgramName(&bin[0]);}
     else{Py_SetProgramName(_toxstr(PYTHON_BIN));}
 
-	  char* c =  Py_GetPythonHome();
-	  if(c){ DBG("home : "<<c);}
-	  char* cc =  Py_GetProgramName();
-	  if(cc){ DBG("prog : " <<cc);}
+    char* c =  Py_GetPythonHome();
+    if(c){ DBG("home : "<<c);}
+    char* cc =  Py_GetProgramName();
+    if(cc){ DBG("prog : " <<cc);}
     printPyState();
     Py_NoSiteFlag =0;
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
-//    PyRun_SimpleString("import _locale;");
-//    char * err = dlerror();
-//    if(err){DBG(err);}
-//    PyErr_Print();
+    //    PyRun_SimpleString("import _locale;");
+    //    char * err = dlerror();
+    //    if(err){DBG(err);}
+    //    PyErr_Print();
 
   }
 }
 
 
 void PythonWrap::setFolderPath(const string & s){
-	curentFolderPath = s;
+  curentFolderPath = s;
   DBG("currentFolderPath : " << s)
-	addSearchPath(s);
-	
+  addSearchPath(s);
+
 }
 
 void PythonWrap::initSearchPath(){
-  //  default brew python on OSX
+  //  site will add site-package depending on pythonhome
+  // this function is useful if python is started without
   PyRun_SimpleString("import sys;import site;");
-  
   PyRun_SimpleString("print sys.path;");
-	
+
 }
 
 
@@ -79,7 +79,7 @@ void PythonWrap::initSearchPath(){
 void PythonWrap::addSearchPath(const string & p){
   string pathToAppend = "sys.path.append(\""+p+"\");";
   PyRun_SimpleString(pathToAppend.c_str());
-	
+
 }
 
 
@@ -91,33 +91,33 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   if (oldModule) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
-		setFolderPath(curentFolderPath);
+    setFolderPath(curentFolderPath);
     newModule= PyImport_ReloadModule(oldModule);
-		if(newModule){
-			Py_DECREF(oldModule);
-		}
-		else{
-			cout << "failed reload: " << name << endl;
-			printPyState();
-			PyErr_Print();
-			
-		}
-		
+    if(newModule){
+      Py_DECREF(oldModule);
+    }
+    else{
+      cout << "failed reload: " << name << endl;
+      printPyState();
+      PyErr_Print();
+
+    }
+
     //        PyRun_SimpleString(reloadS.c_str());
   }
   else{
-//    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
+    //    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
     newModule = PyImport_Import(moduleName);
-		
+
   }
   if(!newModule){
     cout << "failed to load: " << name << endl;
-		// spitout errors if importing fails
-		PyErr_Print();
-    
+    // spitout errors if importing fails
+    PyErr_Print();
+
   }
-	
-	
+
+
   Py_DECREF(moduleName);
   return newModule;
 }
@@ -129,23 +129,29 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
 PyObject *  PythonWrap::callFunction(const string & func,PyObject * module,PyObject * args){
   if(module){
     PyObject* pyFunc = PyObject_GetAttrString(module, func.c_str());
-		if(pyFunc ==nullptr){cout << "function not found " << func<< endl;return nullptr;}
-		return callFunction(pyFunc,module,args);
+    if(pyFunc ==nullptr){cout << "function not found " << func<< endl;return nullptr;}
+    return callFunction(pyFunc,module,args);
 
   }
-	
-	return nullptr;
-  
-	
-	
+
+  return nullptr;
+
+
+
 }
 PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObject * args){
-	if(pyFunc ==nullptr){return nullptr;}
-	PyObject * targs = nullptr;
-	if(args) targs =PyTuple_Pack(1,args);
-	PyObject *res= PyObject_CallObject(pyFunc,targs);
-	PyErr_Print();
-	return res;
+  if(pyFunc ==nullptr){return nullptr;}
+  PyObject * targs = nullptr;
+  if(args){
+    if(!PyTuple_CheckExact(args)) targs =PyTuple_Pack(1,args);
+    else targs = args;
+    Py_IncRef(targs);
+  }
+
+  PyObject *res= PyObject_CallObject(pyFunc,targs);
+  if(targs)Py_DecRef(targs);
+  PyErr_Print();
+  return res;
 }
 
 void* dummyFunc(){return nullptr;};
@@ -163,7 +169,7 @@ string PythonWrap::getVSTPath(){
 // debug utils
 
 string PythonWrap::test(const string& s,PyObject * module){
-	
+
   if(module){
     // Retrieve the "transform()" function from the module.
     PyObject* transformFunc = PyObject_GetAttrString(module, "test");
@@ -179,13 +185,13 @@ string PythonWrap::test(const string& s,PyObject * module){
     return resultStr;
   }
   return "";
-	
-	
+
+
 }
 
 void PythonWrap::printPyState(){
-	
-	
+
+
   cout << "pre : " << Py_GetPrefix() <<endl;
   cout <<"execpre : "<<Py_GetExecPrefix() << endl;
   cout << "pypath : " << Py_GetPath() << endl;
@@ -200,9 +206,9 @@ void PythonWrap::printPyState(){
   cout <<"full : " <<  Py_GetProgramFullPath() << endl;
 
   printEnv("LD_LIBRARY_PATH");
-	
-	
-	
+
+
+
 }
 
 
@@ -211,7 +217,7 @@ void PythonWrap::printEnv(const string & p){
   cout<<p<<" : " ;
   if(c){cout<<c << endl;}
   else{cout<< "isempty" << endl;}
-	
+
 }
 
 

@@ -23,8 +23,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 
   addAndMakeVisible(reloadB);
   reloadB.setButtonText("load");
-  addAndMakeVisible(generateB);
-  generateB.setButtonText("generate New");
+  
   addAndMakeVisible(autoWatchB);
   autoWatchB.setButtonText("autoWatch");
   addAndMakeVisible(showB);
@@ -35,7 +34,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	addAndMakeVisible(useInternalTransportB);
 
   reloadB.addListener(this);
-  generateB.addListener(this);
+
   autoWatchB.setClickingTogglesState(true);
   autoWatchB.addListener(this);
   autoWatchB.setColour(TextButton::buttonOnColourId, Colours::orange);
@@ -54,7 +53,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	
 	owner->pyAPI.addListener(&pyCnv);
 	addAndMakeVisible(pyCnv);
-	pyCnv.newParamsLoaded(&owner->pyAPI.params);
+//	pyCnv.newParamsLoaded(&owner->pyAPI.params);
 	setSize(500,400);
 }
 
@@ -82,9 +81,8 @@ void JucepythonAudioProcessorEditor::resized()
   // subcomponents in your editor..
   Rectangle<int> area = getLocalBounds();
   Rectangle<int> header = area.removeFromTop(30);
-  const int bSize= header.getWidth()/4;
+  const int bSize= header.getWidth()/3;
   reloadB.setBounds(header.removeFromLeft(bSize));
-  generateB.setBounds(header.removeFromLeft(bSize));
   showB.setBounds(header.removeFromLeft(bSize));
   autoWatchB.setBounds(header.removeFromLeft(bSize));
   useInternalTransportB.setBounds(area.removeFromTop(30));
@@ -111,9 +109,6 @@ void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
     owner->pyAPI.load();
 		updateButtonColor();
 	}
-  else if(b==&generateB){
-    owner->updatePattern();
-  }
   else if(b==&autoWatchB){
     owner->pyAPI.setWatching(autoWatchB.getToggleState());
   }

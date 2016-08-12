@@ -11,6 +11,9 @@
 #include "PyJUCEParameter.h"
 #include "PyJUCEAPI.h"
 
+
+PyObject* PyJUCEParameter::listenerName(nullptr);
+
 class PyVar : public ReferenceCountedObject{
 public :
 
@@ -64,6 +67,8 @@ public :
   return res;
 }
 
+
+static 
  PyObject * varToPy(var v){
   if(v.isInt()){return PyInt_FromLong((int)v);}
   else if(v.isBool()){return PyBool_FromLong((int)v);}
@@ -100,14 +105,23 @@ public :
 
 }
 
-PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),pyRef(o){
+PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),pyRef(o),pyJuceApi(nullptr){
   Py_IncRef(pyRef);
+
+  if(!listenerName){
+    listenerName = PyString_FromString("vstListener");
+    Py_IncRef(listenerName);
+  }
+  pyVal = PyObject_GetAttrString(pyRef, "_UIParameter__value");
+  value = pyToVar(pyVal);
+
+
 }
 
 
 void PyJUCEParameter::setValue(var v){
 	value=v;
-	pyJuceApi->py.callFunction(cbFunc,pyJuceApi->interfaceModule,getPythonObject());;
+	pyJuceApi->py.callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
 }
 
 var PyJUCEParameter::getValue(){return value;}
@@ -132,7 +146,22 @@ Component * PyJUCEParameter::buildComponent(bool unique ){
 	
 }
 
-void PyJUCEParameter::linkToJuceApi(PyJUCEAPI * p){pyJuceApi=p;};
+void PyJUCEParameter::linkToJuceApi(PyJUCEAPI * p){
+  pyJuceApi=p;
+  PyObject * addListenerFunc = PyObject_GetAttrString(pyRef, "addListener");
+  if(!pyJuceApi->apiModuleObject){DBG("api not initialized");return;}
+//  DBG(PyString_AsString(PyObject_Dir(pyJuceApi->apiModuleObject)));
+  PyObject * vstAPI = PyObject_GetAttrString(pyJuceApi->apiModuleObject, "API");
+  
+  PyObject * cbFunc = PyObject_GetAttrString(vstAPI,"updateParam");
+
+
+  PyObject * argList = Py_BuildValue("(O,O,O)",listenerName,cbFunc,pyRef);
+  PyObject * c = PyObject_CallObject(addListenerFunc,argList );
+  if(!c){
+    PyErr_Print();
+    DBG("failed to add CallBack");
+  }};
 
 void PyJUCEParameter::setPythonCallback(PyObject * cb){
 	cbFunc = cb;
@@ -140,12 +169,18 @@ void PyJUCEParameter::setPythonCallback(PyObject * cb){
 
 class PyFloatParameter:public PyJUCEParameter,public SliderListener{
 public:
-  PyFloatParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
-  
+  PyFloatParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){value = (float)value;}
+  ~PyFloatParameter(){
+    for(auto s : linkedSliders){
+      if(s.get()){((Slider*)s.get())->removeListener(this);DBG("old compeonent still linked");}
+    }
+  }
 	
-	void sliderValueChanged (Slider* slider) override{setValue(slider->getValue());}
+	void sliderValueChanged (Slider* slider) override{
+    setValue(slider->getValue());
+  }
 #define ASSIGN_STYLE(x) if(styleName==_toxstr(x)){style = Slider::SliderStyle::x;}
-
+  Array<WeakReference<Component> > linkedSliders;
 	Component *  createComponent(var v,const NamedValueSet & properties) override{
     Slider::SliderStyle style;
 
@@ -164,8 +199,11 @@ public:
 		Slider * s = new Slider(style, juce::Slider::TextEntryBoxPosition::TextBoxBelow);
     
     s->setName(name);
+    s->setValue((double)value,NotificationType::sendNotification);
     s->setRange(properties.getWithDefault("min",0),properties.getWithDefault("max",1),properties.getWithDefault("step", 0));
 
+    DBG("initSlider " << name << value.toString());
+    linkedSliders.add(s);
 		s->addListener(this);
 		return s;
 	}
@@ -174,12 +212,30 @@ public:
 };
 
 
-class PyBoolParameter:public PyJUCEParameter,ButtonListener{
+class PyStringParameter : public PyJUCEParameter,Label::Listener{
+public:
+  PyStringParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){value = value.toString();}
+  void labelTextChanged (Label* labelThatHasChanged)override{setValue(labelThatHasChanged->getTextValue()); };
+  Component *  createComponent(var v,const NamedValueSet & properties) override{
+    Label * tb =  new Label(name,name);
+    tb->setEditable(properties.getWithDefault("editable",false));
+    tb->addListener(this);
+
+    return tb;
+
+  }
+
+  PyObject* getPythonObject()override{return PyString_FromString(&(value.toString().toStdString())[0]);}
+};
+
+
+class PyBoolParameter:public PyJUCEParameter,Button::Listener{
   public:
   PyBoolParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
   void buttonClicked(Button *b)override{setValue(b->getToggleStateValue());}
   Component *  createComponent(var v,const NamedValueSet & properties) override{
     TextButton * tb =  new TextButton(name);
+    tb->setToggleState((bool)value, NotificationType::dontSendNotification);
     tb->setClickingTogglesState(true);
     tb->addListener(this);
 
@@ -194,7 +250,9 @@ class PyBoolParameter:public PyJUCEParameter,ButtonListener{
 class PyEventParameter:public PyJUCEParameter,ButtonListener{
     public:
     PyEventParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
-    void buttonClicked(Button *b)override{setValue(var::undefined());}
+    void buttonClicked(Button *b)override{
+      setValue(var::undefined());
+    }
     Component *  createComponent(var v,const NamedValueSet & properties) override{
       TextButton * tb =  new TextButton(name);
       tb->setClickingTogglesState(false);
@@ -204,12 +262,13 @@ class PyEventParameter:public PyJUCEParameter,ButtonListener{
 
     }
 
-    PyObject * getPythonObject() override{return Py_None;}
+    PyObject * getPythonObject() override{Py_RETURN_NONE;}
 };
 
 class PyEnumParameter:public PyJUCEParameter,ButtonListener{
 public:
   PyEnumParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){
+
 
   }
   void buttonClicked(Button *b)override{
@@ -307,22 +366,25 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
   String paramName = properties.getWithDefault("name", className+"_defaultName");
 	if(!value){DBG("ui element not valid");jassertfalse;return nullptr;}
   if ((PyLong_CheckExact(value)|| PyInt_CheckExact(value)) && properties.contains("choicesList")){
-    res = new PyEnumParameter(value,paramName);
+    res = new PyEnumParameter(o,paramName);
   }
 	else if( PyLong_CheckExact(value)|| PyInt_CheckExact(value)||PyFloat_CheckExact(value) || PyInt_CheckExact(value))
-    {res = new PyFloatParameter(value,paramName);
+    {res = new PyFloatParameter(o,paramName);
       if((PyLong_CheckExact(value) || PyInt_CheckExact(value)) && !properties.contains("step")){properties.set("step", 1);}
     }
 	else if(PyBool_Check(value))
-    {res = new PyBoolParameter(value,paramName);}
+    {res = new PyBoolParameter(o,paramName);}
+  else if(PyString_CheckExact(value)){
+    res = new PyStringParameter(o,paramName);
+  }
   else if(value == Py_None)
-    {res = new PyEventParameter(value,paramName);}
+    {res = new PyEventParameter(o,paramName);}
 
 	else {
 		DBG("ui element not supported : " <<className);
 	}
 	if(res){
-		res->setPythonCallback(PyObject_GetAttrString(o, "setValue"));
+		res->setPythonCallback(PyObject_GetAttrString(o, "setValueFrom"));
 		res->properties = properties;
 	}
 	return res;

@@ -29,7 +29,7 @@ public:
     //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
-    TextButton reloadB,generateB,showB,autoWatchB,useInternalTransportB;
+    TextButton reloadB,showB,autoWatchB,useInternalTransportB;
 
 
 	void newFileLoaded(const File & f)override;
