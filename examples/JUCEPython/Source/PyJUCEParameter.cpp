@@ -12,7 +12,7 @@
 #include "PyJUCEAPI.h"
 
 
-PyObject* PyJUCEParameter::listenerName(nullptr);
+
 
 class PyVar : public ReferenceCountedObject{
 public :
@@ -108,27 +108,56 @@ static
 PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),pyRef(o),pyJuceApi(nullptr){
   Py_IncRef(pyRef);
 
-  if(!listenerName){
-    listenerName = PyString_FromString("vstListener");
-    Py_IncRef(listenerName);
-  }
-  pyVal = PyObject_GetAttrString(pyRef, "_UIParameter__value");
-  value = pyToVar(pyVal);
+
+  listenerName = PyString_FromString(String("vstListener_"+name).toStdString().c_str());
+  Py_IncRef(listenerName);
+
+
+  updateFromPython();
 
 
 }
 
+PyJUCEParameter::~PyJUCEParameter(){
+  for(auto s : linkedComponents){
+    if(s.get()){removeListener(s);
+      DBG("old compeonent still linked");
+    }
+  }
+  Py_DecRef(pyRef);Py_DecRef(listenerName);
+}
+
+void PyJUCEParameter::deleteOldComponents(){
+  Array<WeakReference<Component> *> old;
+  for (auto & c:linkedComponents){
+    if(!c.get())old.add(&c);
+  }
+  for (auto & c:old){
+    linkedComponents.remove(c);
+  }
+}
 
 void PyJUCEParameter::setValue(var v){
 	value=v;
 	pyJuceApi->py.callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
 }
 
+void PyJUCEParameter::updateFromPython(){
+  pyVal = PyObject_GetAttrString(pyRef, "_UIParameter__value");
+  value = pyToVar(pyVal);
+  for(auto & c : linkedComponents){
+    if(c.get())updateComponentState(c);
+  }
+}
+
 var PyJUCEParameter::getValue(){return value;}
 
-Component * PyJUCEParameter::buildComponent(bool unique ){
+Component * PyJUCEParameter::buildComponent(){
 	Component * res = createComponent( value,properties);
+
 	if (res) {
+    linkedComponents.add(res);
+    registerListener(res);
 		var * x,*y,*w,*h;
     if((x=properties.getVarPointer("x")) &&
 				(y=properties.getVarPointer("y")) &&
@@ -140,8 +169,6 @@ Component * PyJUCEParameter::buildComponent(bool unique ){
 		else{DBG("no size given");}
 	}
 
-  if(unique)
-    component = res;
 	return res;
 	
 }
@@ -154,8 +181,6 @@ void PyJUCEParameter::linkToJuceApi(PyJUCEAPI * p){
   PyObject * vstAPI = PyObject_GetAttrString(pyJuceApi->apiModuleObject, "API");
   
   PyObject * cbFunc = PyObject_GetAttrString(vstAPI,"updateParam");
-
-
   PyObject * argList = Py_BuildValue("(O,O,O)",listenerName,cbFunc,pyRef);
   PyObject * c = PyObject_CallObject(addListenerFunc,argList );
   if(!c){
@@ -171,19 +196,27 @@ class PyFloatParameter:public PyJUCEParameter,public SliderListener{
 public:
   PyFloatParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){value = (float)value;}
   ~PyFloatParameter(){
-    for(auto s : linkedSliders){
-      if(s.get()){((Slider*)s.get())->removeListener(this);DBG("old compeonent still linked");}
-    }
   }
-	
+
+  void registerListener(Component *c) override{
+    ((Slider*)c)->addListener(this);
+  }
+  void removeListener(Component *c) override{
+    ((Slider*)c)->removeListener(this);
+  }
 	void sliderValueChanged (Slider* slider) override{
     setValue(slider->getValue());
   }
+
+  void updateComponentState(Component *c) override{
+    ((Slider*)c)->setValue(value,NotificationType::dontSendNotification);
+  }
+
+
 #define ASSIGN_STYLE(x) if(styleName==_toxstr(x)){style = Slider::SliderStyle::x;}
-  Array<WeakReference<Component> > linkedSliders;
+  
 	Component *  createComponent(var v,const NamedValueSet & properties) override{
     Slider::SliderStyle style;
-
     String styleName = properties.getWithDefault("style", "LinearVertical");
     ASSIGN_STYLE(LinearHorizontal)
     ASSIGN_STYLE(LinearVertical)
@@ -197,14 +230,10 @@ public:
 
 
 		Slider * s = new Slider(style, juce::Slider::TextEntryBoxPosition::TextBoxBelow);
-    
+
     s->setName(name);
     s->setValue((double)value,NotificationType::sendNotification);
     s->setRange(properties.getWithDefault("min",0),properties.getWithDefault("max",1),properties.getWithDefault("step", 0));
-
-    DBG("initSlider " << name << value.toString());
-    linkedSliders.add(s);
-		s->addListener(this);
 		return s;
 	}
 	
@@ -215,11 +244,17 @@ public:
 class PyStringParameter : public PyJUCEParameter,Label::Listener{
 public:
   PyStringParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){value = value.toString();}
+  void registerListener(Component *c) override{((Label*)c)->addListener(this);}
+  void removeListener(Component *c)override{((Label*)c)->removeListener(this);}
+
   void labelTextChanged (Label* labelThatHasChanged)override{setValue(labelThatHasChanged->getTextValue()); };
+  void updateComponentState(Component * c) override{
+      ((Label*)c)->setText(value,NotificationType::dontSendNotification);
+  }
   Component *  createComponent(var v,const NamedValueSet & properties) override{
     Label * tb =  new Label(name,name);
     tb->setEditable(properties.getWithDefault("editable",false));
-    tb->addListener(this);
+
 
     return tb;
 
@@ -232,12 +267,17 @@ public:
 class PyBoolParameter:public PyJUCEParameter,Button::Listener{
   public:
   PyBoolParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
+  void registerListener(Component *c) override{((TextButton*)c)->addListener(this);}
+  void removeListener(Component *c)override{((TextButton*)c)->removeListener(this);}
   void buttonClicked(Button *b)override{setValue(b->getToggleStateValue());}
+  void updateComponentState(Component * c) override{
+    ((Button*)c)->setToggleState((bool)value,NotificationType::dontSendNotification);
+  }
   Component *  createComponent(var v,const NamedValueSet & properties) override{
     TextButton * tb =  new TextButton(name);
     tb->setToggleState((bool)value, NotificationType::dontSendNotification);
     tb->setClickingTogglesState(true);
-    tb->addListener(this);
+
 
     return tb;
 
@@ -253,11 +293,11 @@ class PyEventParameter:public PyJUCEParameter,ButtonListener{
     void buttonClicked(Button *b)override{
       setValue(var::undefined());
     }
+    void registerListener(Component *c) override{((TextButton*)c)->addListener(this);}
+    void removeListener(Component *c)override{((TextButton*)c)->removeListener(this);}
     Component *  createComponent(var v,const NamedValueSet & properties) override{
       TextButton * tb =  new TextButton(name);
       tb->setClickingTogglesState(false);
-      tb->addListener(this);
-
       return tb;
 
     }
@@ -267,10 +307,11 @@ class PyEventParameter:public PyJUCEParameter,ButtonListener{
 
 class PyEnumParameter:public PyJUCEParameter,ButtonListener{
 public:
-  PyEnumParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){
+  PyEnumParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
 
+  void registerListener(Component *c) override{((TextButton*)c)->addListener(this);}
+  void removeListener(Component *c)override{((TextButton*)c)->removeListener(this);}
 
-  }
   void buttonClicked(Button *b)override{
     if(!b->getToggleState()) return;
     int index(1);
@@ -278,9 +319,7 @@ public:
     PopupMenu m = buildFromVarList(list,index,flatArray);
     int res = m.showAt(b);
 
-    if(res>0){
-      setValue(flatArray.getArray()->getUnchecked(res-1));
-    }
+    if(res>0){setValue(flatArray.getArray()->getUnchecked(res-1));}
     b->setToggleState(false, NotificationType::dontSendNotification);
   }
 
@@ -323,8 +362,6 @@ public:
     }
     TextButton * tb =  new TextButton(name);
     tb->setClickingTogglesState(true);
-    tb->addListener(this);
-
     return tb;
 
   }

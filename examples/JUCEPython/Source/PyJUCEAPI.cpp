@@ -96,7 +96,9 @@ void PyJUCEAPI::init(){
 bool PyJUCEAPI::setParam(PyObject* o){
   for(auto & p:params){
     if(p->pyRef==o){
+      p->updateFromPython();
       DBG("found param to update");
+      return true;
     }
   }
   return false;

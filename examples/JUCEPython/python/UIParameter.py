@@ -87,7 +87,7 @@ class UIParameter(Rectangle):
 
 	def setCallbackFunction(self,callback,*args,**kwargs):
 		
-		self.addListener('main',callback,*args,**kwargs);
+		self.addListener('main_'+self.name,callback,*args,**kwargs);
 		return self
 
 
@@ -111,7 +111,11 @@ class UIParameter(Rectangle):
 		return self
 
 	def removeListener(self,name):
-		if name in self.listeners:
+		nameToRemove = []
+		for n in self.listeners:
+			if n.split('_')[0]==name:
+				nameToRemove+=[n]
+		for name in nameToRemove:
 			del self.listeners[name]
 			del self.__notifyingListeners[name]
 
@@ -138,7 +142,7 @@ class UIParameter(Rectangle):
 		for k,cb in self.listeners.iteritems():
 			if not self.__notifyingListeners[k]:
 				self.__notifyingListeners[k] = True
-				
+
 				args = self.__listenerArgs[k][0]
 				kwargs = self.__listenerArgs[k][1]
 

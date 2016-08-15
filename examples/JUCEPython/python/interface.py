@@ -15,6 +15,14 @@ dummy = Dummy(8)
 test4 = EnumParameter(choicesList={"lala":dummy.fun,"lolo":{"fesse":["loulou"]}},name="list")
 
 
+def updateSlaveSlider(self,sliderToUpdate):
+	sliderToUpdate.value = self.value *10
+
+slaveSlider = NumParameter(0).setMinMax(0,100)
+masterSlider = NumParameter(0).setMinMax(0,10)
+masterSlider.setCallbackFunction(updateSlaveSlider,masterSlider,slaveSlider)
+
+
 
 def createLayout():
 	area = Rectangle(0,0,100,100)
@@ -22,8 +30,13 @@ def createLayout():
 	VSTPlugin.loopDuration.setBoundsRect(firstStack.removeFromTop(50))
 	VSTPlugin.numSteps.setBoundsRect(firstStack)
 
+	secondStack = area.removeFromLeft(10)
+	masterSlider.setBoundsRect(secondStack.removeFromTop(50))
+	slaveSlider.setBoundsRect(secondStack)
+
 	VSTPlugin.eachBarIsNew.setBoundsRect(area.removeFromLeft(20))
 	VSTPlugin.generateNewP.setBoundsRect(area.removeFromLeft(20))
+
 
 	test4.setBoundsRect(area)
 
@@ -48,6 +61,9 @@ def getAllParameters():
 	res+=[VSTPlugin.numSteps]
 	res+=[VSTPlugin.eachBarIsNew]
 	res+=[VSTPlugin.generateNewP]
+
+	res+=[masterSlider]
+	res+=[slaveSlider]
 	res+=[test4]
 
 	return res
@@ -77,6 +93,7 @@ if __name__ == '__main__':
 	print 'running main'
 	import sys
 	print sys.executable
+	VSTPlugin.setup()
 	print getAllParameters()
 
 	VSTPlugin.generateNewP.addListener('tst',dummy.fun)

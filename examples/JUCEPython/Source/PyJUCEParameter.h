@@ -18,38 +18,50 @@ class PyJUCEParameter{
 public:
 	
   PyJUCEParameter(PyObject * o,const String & _name);
+  virtual ~PyJUCEParameter();
 
-	virtual ~PyJUCEParameter(){Py_DecRef(pyRef);}
-	
-	void linkToJuceApi(PyJUCEAPI * );
-	String name;
-	var value;
-	
-	Rectangle<float> relativeArea;
 
-	NamedValueSet  properties;
-	
-	virtual void setValue(var v);
-	virtual var getValue();
-	Component * buildComponent(bool unique=false);
-	
-	void setPythonCallback(PyObject *);
+  String name;
+  var value;
+  Rectangle<float> relativeArea;
+  NamedValueSet  properties;
+
+  virtual void setValue(var v);
+  virtual var getValue();
+
+
+
+  Component * buildComponent();
 
 	
 protected:
 	// need to be overriden
 	virtual Component * createComponent(var v,const NamedValueSet & properties)=0;
 	virtual PyObject* getPythonObject()=0;
+  virtual void updateComponentState(Component * c){};
+  virtual   void registerListener(Component *c){};
+  virtual void removeListener(Component *c){};
+
+  void updateFromPython();
+
 	
   friend class PyJUCEAPI;
+  friend class PyJUCEParameterBuilder;
 	PyObject* cbFunc;
   PyObject* pyRef;
   PyObject * pyVal;
 
 
-  static PyObject* listenerName;
+  PyObject* listenerName;
 	PyJUCEAPI * pyJuceApi;
-  ScopedPointer<Component> component;
+
+
+  void deleteOldComponents();
+  Array<WeakReference<Component> > linkedComponents;
+
+private:
+  void linkToJuceApi(PyJUCEAPI * );
+  void setPythonCallback(PyObject *);
 
 	
 };
