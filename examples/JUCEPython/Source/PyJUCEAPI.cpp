@@ -119,7 +119,7 @@ void PyJUCEAPI::load(){
 
 void PyJUCEAPI::buildParamsFromScript(){
   params.clear();
-  listeners.call(&Listener::newParamsLoaded,&params);
+  
   if((interfaceModule = py.loadModule("interface",interfaceModule))){
 
     PyObject * o = py.callFunction("getAllParameters",interfaceModule);

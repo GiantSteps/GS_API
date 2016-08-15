@@ -16,10 +16,10 @@ test4 = EnumParameter(choicesList={"lala":dummy.fun,"lolo":{"fesse":["loulou"]}}
 
 
 def updateSlaveSlider(self,sliderToUpdate):
-	sliderToUpdate.value = self.value *10
+	sliderToUpdate.value = self.value *8.2
 
-slaveSlider = NumParameter(0).setMinMax(0,100)
-masterSlider = NumParameter(0).setMinMax(0,10)
+slaveSlider = NumParameter(0.0).setMinMax(0,100)
+masterSlider = NumParameter(0.0).setMinMax(0,10)
 masterSlider.setCallbackFunction(updateSlaveSlider,masterSlider,slaveSlider)
 
 

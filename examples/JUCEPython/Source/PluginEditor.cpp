@@ -40,7 +40,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   autoWatchB.setColour(TextButton::buttonOnColourId, Colours::orange);
   showB.addListener(this);
   useInternalTransportB.addListener(this);
-  useInternalTransportB.setClickingTogglesState(false);
+  useInternalTransportB.setClickingTogglesState(true);
   useInternalTransportB.setColour(TextButton::buttonOnColourId, Colours::orange);
   useInternalTransportB.setToggleState(owner->useInternalTransport, dontSendNotification);
 	
@@ -53,7 +53,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	
 	owner->pyAPI.addListener(&pyCnv);
 	addAndMakeVisible(pyCnv);
-//	pyCnv.newParamsLoaded(&owner->pyAPI.params);
+	pyCnv.newParamsLoaded(&owner->pyAPI.params);
 	setSize(500,400);
 }
 

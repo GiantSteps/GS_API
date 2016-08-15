@@ -18,8 +18,8 @@
 
 static PyObject *SpamError;
 
-//#define GETOWNER() dynamic_cast<PyJUCEAPI*>((PyJUCEAPI*)PyCapsule_Import("JUCEAPI.vstOwner",0))
-#define GETOWNER() ((PyJUCEAPIRef*)PyDict_GetItem(self->tp_dict, PyString_FromString("owner")))->owner
+#define GETOWNER() dynamic_cast<PyJUCEAPI*>((PyJUCEAPI*)PyCapsule_Import("JUCEAPI.vstOwner",0))
+//#define GETOWNER() ((PyJUCEAPIRef*)PyDict_GetItem(self->tp_dict, PyString_FromString("owner")))->owner
 typedef struct {
   PyObject_HEAD
   /* Type-specific fields go here. */

@@ -26,7 +26,7 @@ class JucepythonAudioProcessor;
 class PyJUCEAPI : public Timer,public TimeListener{
 public:
   PyJUCEAPI(JucepythonAudioProcessor * o);
-	~PyJUCEAPI(){Py_DECREF(timePyObj);Py_DECREF(timeKey);}
+  ~PyJUCEAPI(){isInitialized = false;Py_DECREF(timePyObj);Py_DECREF(timeKey);}
 	
   void load();
   void init();
