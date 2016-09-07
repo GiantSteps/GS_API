@@ -11,10 +11,11 @@
 #ifndef PLUGINPROCESSOR_H_INCLUDED
 #define PLUGINPROCESSOR_H_INCLUDED
 
+#include "PyJUCEAPI.h"
 #include "JuceHeader.h"
 #include "GS_API.h"
 #include "GSPatternPlayer.h"
-#include "PyJUCEAPI.h"
+
 
 
 //==============================================================================

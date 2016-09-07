@@ -12,23 +12,12 @@
 
 
 
-#ifndef PYTHON_ROOT
-#error
-#endif
-#ifndef PYTHON_BIN
-#error
-#endif
-
-void PythonWrap::init( string root, string  bin){
-  if(!Py_IsInitialized())
+void PythonWrap::init(  string  bin){
+	
+	if(!Py_IsInitialized())
   {
 
-    if(root!=""){rootPath = root;}
-//    else{rootPath = _toxstr(PYTHON_ROOT);}
-//    Py_SetPythonHome(&rootPath[0]);
     if(bin!=""){Py_SetProgramName(&bin[0]);}
-    else{Py_SetProgramName(_toxstr(PYTHON_BIN));}
-
     char* c =  Py_GetPythonHome();
     if(c){ DBG("home : "<<c);}
     char* cc =  Py_GetProgramName();
@@ -204,12 +193,12 @@ void PythonWrap::printEnv(const string & p){
 
 
 
-void PythonWrap::prependEnvPath(const string &env,const string& newpath){
-  const char* env_p = getenv(env.c_str());
-  std::string mergedPath ;
-  if(env_p){mergedPath+=newpath+":"+env_p;}
-  else{mergedPath = newpath;}
-  setenv(env.c_str(),mergedPath.c_str(),1);
-  std::cout << "Your"<<env << " is: " << getenv(env.c_str()) << '\n';
-}
+//void PythonWrap::prependEnvPath(const string &env,const string& newpath){
+//  const char* env_p = getenv(env.c_str());
+//  std::string mergedPath ;
+//  if(env_p){mergedPath+=newpath+":"+env_p;}
+//  else{mergedPath = newpath;}
+//  setenv(env.c_str(),mergedPath.c_str(),1);
+//  std::cout << "Your"<<env << " is: " << getenv(env.c_str()) << '\n';
+//}
 

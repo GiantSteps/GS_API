@@ -10,13 +10,14 @@
 
 #ifndef PYJUCEAPI_H_INCLUDED
 #define PYJUCEAPI_H_INCLUDED
+#include "pythonWrap.h"
 
 #include "JuceHeader.h"
 
 #include "GS_API.h"
 #include "GSPatternPyWrap.h"
 
-#include "pythonWrap.h"
+
 #include "TimeListener.h"
 
 #include "PyJUCEParameter.h"
@@ -54,8 +55,8 @@ public:
   class Listener{
   public:
     virtual ~Listener(){};
-    virtual void newFileLoaded(const File & f){};
-		virtual void newPatternLoaded( GSPattern * p){};
+    virtual void newFileLoaded(const File & ){};
+		virtual void newPatternLoaded( GSPattern * ){};
 		virtual void newParamsLoaded( OwnedArray<PyJUCEParameter> *){};
   };
   ListenerList<Listener> listeners;

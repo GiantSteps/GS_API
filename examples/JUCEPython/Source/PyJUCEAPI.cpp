@@ -84,11 +84,11 @@ void PyJUCEAPI::callSetupFunction(){
 
 void PyJUCEAPI::init(){
   if(!isInitialized){
-		String root = getVSTProperties().getValue("pythonRootDirectory");
+		String bin = getVSTProperties().getValue("pythonBin");
 
-    if (root=="") {root = getVSTPath()+"/../../Resources/pythonEnv";}
-		else{		DBG("using custom python : " << root);}
-    py.init(File(root).getFullPathName().toStdString(),File(root+"/bin/python2.7").getFullPathName().toStdString());
+    if (bin=="") {bin = getVSTPath()+"/../../Resources/pythonEnv/bin/python2.7";}
+		else{		DBG("using custom python : " << bin);}
+    py.init(File(bin).getFullPathName().toStdString());
     initJUCEAPI(this,&apiModuleObject);
     pythonFile = File (getVSTPath()+"/../../Resources/python/VSTPlugin.py");
     py.initSearchPath();

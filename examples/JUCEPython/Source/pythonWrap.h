@@ -11,8 +11,8 @@
 #ifndef PYTHONWRAP_H_INCLUDED
 #define PYTHONWRAP_H_INCLUDED
 
-#include "PythonUtils.h"
 
+#include "PythonUtils.h"
 
 #include <string>
 #include <iostream>
@@ -27,7 +27,7 @@ class PythonWrap{
     string test(const string& s,PyObject * module);
   
     void printPyState();
-  void init( string root="", string  bin="");
+  void init(  string  bin="");
 	void setFolderPath(const string & s);
     PyObject* loadModule(const string & name,PyObject * oldModule=nullptr);
     void initSearchPath();
@@ -38,10 +38,10 @@ class PythonWrap{
 		void deinit();
     
 private:
-    void prependEnvPath(const string &env,const string& newpath);
+//    void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
 	string curentFolderPath;
-  string rootPath;
+
 
 
 

@@ -10,8 +10,9 @@
 
 #ifndef PYJUCEPARAMETER_H_INCLUDED
 #define PYJUCEPARAMETER_H_INCLUDED
-#include "JuceHeader.h"
 #include "PythonUtils.h"
+#include "JuceHeader.h"
+
 class PyJUCEAPI;
 
 class PyJUCEParameter{
@@ -38,9 +39,9 @@ protected:
 	// need to be overriden
 	virtual Component * createComponent(var v,const NamedValueSet & properties)=0;
 	virtual PyObject* getPythonObject()=0;
-  virtual void updateComponentState(Component * c){};
-  virtual   void registerListener(Component *c){};
-  virtual void removeListener(Component *c){};
+  virtual void updateComponentState(Component * ){};
+  virtual   void registerListener(Component *){};
+  virtual void removeListener(Component *){};
 
   void updateFromPython();
 

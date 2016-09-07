@@ -11,8 +11,9 @@
 #ifndef PYTHONCANVAS_H_INCLUDED
 #define PYTHONCANVAS_H_INCLUDED
 
-#include "JuceHeader.h"
 #include "PyJUCEAPI.h"
+#include "JuceHeader.h"
+
 class PythonCanvas: public Component,public PyJUCEAPI::Listener{
 public:
 	PythonCanvas():originParams(nullptr){}

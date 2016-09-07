@@ -11,9 +11,9 @@
 #ifndef PATTERNCOMPONENT_H_INCLUDED
 #define PATTERNCOMPONENT_H_INCLUDED
 
-#include "JuceHeader.h"
-#include "PyJUCEAPI.h"
 
+#include "PyJUCEAPI.h"
+#include "JuceHeader.h"
 #include <set>
 
 
