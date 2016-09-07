@@ -10,8 +10,6 @@
 
 #include "pythonWrap.h"
 
-#include <dlfcn.h>
-#include <stdio.h>
 
 
 #ifndef PYTHON_ROOT
@@ -24,20 +22,10 @@
 void PythonWrap::init( string root, string  bin){
   if(!Py_IsInitialized())
   {
-    //	  void * handle = dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/lib-dynload/_locale.so",
-    //			 RTLD_NOW|RTLD_GLOBAL);
-    //	  if(!handle){
-    //		  DBG("error loading .so" <<dlerror());
-    //	  }
-    //    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
-    //    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
-    //    dlopen("/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/Current/lib/libpython2.7.dylib",RTLD_NOW|RTLD_GLOBAL);
-    //    dlopen("/System/Library/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib", RTLD_NOW|RTLD_LOCAL);
-    //    dlopen(NULL,RTLD_NOW|RTLD_GLOBAL);
 
     if(root!=""){rootPath = root;}
-    else{rootPath = _toxstr(PYTHON_ROOT);}
-    Py_SetPythonHome(&rootPath[0]);
+//    else{rootPath = _toxstr(PYTHON_ROOT);}
+//    Py_SetPythonHome(&rootPath[0]);
     if(bin!=""){Py_SetProgramName(&bin[0]);}
     else{Py_SetProgramName(_toxstr(PYTHON_BIN));}
 
@@ -50,12 +38,13 @@ void PythonWrap::init( string root, string  bin){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
-    //    PyRun_SimpleString("import _locale;");
-    //    char * err = dlerror();
-    //    if(err){DBG(err);}
-    //    PyErr_Print();
+
 
   }
+}
+
+void PythonWrap::deinit(){
+	Py_Finalize();
 }
 
 
@@ -154,14 +143,7 @@ PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObjec
   return res;
 }
 
-void* dummyFunc(){return nullptr;};
-string PythonWrap::getVSTPath(){
-  Dl_info dl_info;
-  dladdr((void *)dummyFunc, &dl_info);
-  string currentVSTPath =dl_info.dli_fname;
-  fprintf(stderr, "vstPath : %s \n", currentVSTPath.c_str());
-  return currentVSTPath;
-}
+
 
 
 
@@ -192,7 +174,7 @@ string PythonWrap::test(const string& s,PyObject * module){
 void PythonWrap::printPyState(){
 
 
-  cout << "pre : " << Py_GetPrefix() <<endl;
+  cout << "prefix : " << Py_GetPrefix() <<endl;
   cout <<"execpre : "<<Py_GetExecPrefix() << endl;
   cout << "pypath : " << Py_GetPath() << endl;
   cout << "version : " << Py_GetVersion() << endl;

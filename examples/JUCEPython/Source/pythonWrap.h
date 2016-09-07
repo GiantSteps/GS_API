@@ -23,8 +23,9 @@ class PythonWrap{
     public :
 
     PythonWrap(){}
+	~PythonWrap(){deinit();}
     string test(const string& s,PyObject * module);
-    string getVSTPath();
+  
     void printPyState();
   void init( string root="", string  bin="");
 	void setFolderPath(const string & s);
@@ -34,13 +35,14 @@ class PythonWrap{
     
 	PyObject * callFunction(const string & func,PyObject * module,PyObject * args=nullptr);
 	PyObject * callFunction(PyObject * func,PyObject * module,PyObject * args);
-
+		void deinit();
     
 private:
     void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
 	string curentFolderPath;
   string rootPath;
+
 
 
 };

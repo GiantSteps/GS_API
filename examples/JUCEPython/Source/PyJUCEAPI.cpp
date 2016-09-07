@@ -13,6 +13,7 @@
 
 #include "PluginProcessor.h"
 #include "PyJUCEPython.h"
+#include "Utils.h"
 
 
 
@@ -29,6 +30,7 @@ apiModuleObject(nullptr){
 
 
 void PyJUCEAPI::callTimeChanged(double time){
+	// TODO bug multiple load
   PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
   py.callFunction("onTimeChanged",pluginModule,timePyObj);
 
@@ -82,10 +84,13 @@ void PyJUCEAPI::callSetupFunction(){
 
 void PyJUCEAPI::init(){
   if(!isInitialized){
-    string root(py.getVSTPath()+"/../../Resources/pythonEnv");
+		String root = getVSTProperties().getValue("pythonRootDirectory");
+
+    if (root=="") {root = getVSTPath()+"/../../Resources/pythonEnv";}
+		else{		DBG("using custom python : " << root);}
     py.init(File(root).getFullPathName().toStdString(),File(root+"/bin/python2.7").getFullPathName().toStdString());
     initJUCEAPI(this,&apiModuleObject);
-    pythonFile = File (py.getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+    pythonFile = File (getVSTPath()+"/../../Resources/python/VSTPlugin.py");
     py.initSearchPath();
     py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
   }
