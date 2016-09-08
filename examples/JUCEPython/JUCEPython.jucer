@@ -18,6 +18,8 @@
       <FILE compile="0" file="Source/PyJUCEPython.h" id="RSQwre" name="PyJUCEPython.h"
             resource="0"/>
       <GROUP id="{4D0B4318-A514-6A3F-FD2E-A4871C68B511}" name="UI">
+        <FILE id="gtwyl3" name="PyLogger.cpp" compile="1" resource="0" file="Source/PyLogger.cpp"/>
+        <FILE id="c5CS2c" name="PyLogger.h" compile="0" resource="0" file="Source/PyLogger.h"/>
         <FILE compile="1" file="Source/PythonCanvas.cpp" id="ywgcqP" name="PythonCanvas.cpp"
               resource="0"/>
         <FILE compile="0" file="Source/PythonCanvas.h" id="tJYf4n" name="PythonCanvas.h"

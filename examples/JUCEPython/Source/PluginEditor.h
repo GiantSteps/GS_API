@@ -16,11 +16,12 @@
 #include "PatternComponent.h"
 #include "TimeListener.h"
 #include "PythonCanvas.h"
+#include "PyLogger.h"
 
 //==============================================================================
 /**
 */
-class JucepythonAudioProcessorEditor  : public AudioProcessorEditor,public ButtonListener,public PyJUCEAPI::Listener
+class JucepythonAudioProcessorEditor  : public AudioProcessorEditor,public ButtonListener,public PyJUCEAPI::Listener,public KeyListener
 {
 public:
     JucepythonAudioProcessorEditor (JucepythonAudioProcessor&);
@@ -37,8 +38,13 @@ public:
 	
 	PatternComponent patternComponent;
 	PythonCanvas pyCnv;
+	PyLogger *  logger;
+	void showLogger(bool );
+	
+	 bool keyPressed (const KeyPress& key,
+										Component* originatingComponent)override;
 
-
+	SharedResourcePointer<TooltipWindow> tooltipWindow;
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.

@@ -90,11 +90,31 @@ void PyJUCEAPI::init(){
 		else{		DBG("using custom python : " << bin);}
     py.init(File(bin).getFullPathName().toStdString());
     initJUCEAPI(this,&apiModuleObject);
-    pythonFile = File (getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
+		bool loadCustom = pythonFolder=="custom";
+		bool loadDefault = pythonFolder=="default";
+		if (!loadCustom) {
+		if (loadDefault  ) {
+			pythonFile = File (getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+		}
+		else{
+			pythonFile = File(pythonFolder).getChildFile("VSTPlugin.py");
+		}
+		}
+		if(loadCustom  || !pythonFile.exists()){
+			juce::FileChooser fc("select Folder containing VSTPlugin.py");
+			if(fc.browseForDirectory()){
+				pythonFile = fc.getResult().getChildFile("VSTPlugin.py");
+				getVSTProperties().setValue("VSTPythonFolderPath",fc.getResult().getFullPathName());
+			}
+			
+		}
+		if(pythonFile.exists()){
     py.initSearchPath();
     py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+		}
   }
-  isInitialized = true;
+  isInitialized = pythonFile.exists();
 
 }
 

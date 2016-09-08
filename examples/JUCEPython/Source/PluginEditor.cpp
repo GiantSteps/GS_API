@@ -14,7 +14,7 @@
 
 //==============================================================================
 JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p)
+: AudioProcessorEditor (&p), processor (p),logger(nullptr)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
@@ -51,10 +51,12 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	patternComponent.newPatternLoaded(&owner->player.currentPattern);
 	
 	
+	
 	owner->pyAPI.addListener(&pyCnv);
 	addAndMakeVisible(pyCnv);
 	pyCnv.newParamsLoaded(&owner->pyAPI.params);
 	setSize(500,400);
+	addKeyListener(this);
 }
 
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
@@ -63,6 +65,8 @@ JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 	owner->pyAPI.removeListener(this);
 	owner->removeTimeListener(&patternComponent);
 	owner->pyAPI.removeListener(&pyCnv);
+	removeKeyListener(this);
+	logger = nullptr;
 }
 
 //==============================================================================
@@ -74,12 +78,35 @@ void JucepythonAudioProcessorEditor::paint (Graphics& g)
   g.setFont (15.0f);
   g.drawFittedText ("Python canvas", getLocalBounds(), Justification::centred, 1);
 }
+	static int defaultLoggerWidth = 400;
+void JucepythonAudioProcessorEditor::showLogger(bool show){
 
+	if(show && !logger){
+		logger = new PyLogger();
+		addAndMakeVisible(logger);
+		setSize(getLocalBounds().getWidth() + defaultLoggerWidth, getLocalBounds().getHeight());
+	}
+	if(!show && logger){
+		int logWidth = logger->getWidth();
+		removeChildComponent(logger);
+		delete logger ;
+		logger = nullptr;
+		setSize(getLocalBounds().getWidth() - logWidth, getLocalBounds().getHeight());
+	}
+	
+	
+	
+}
 void JucepythonAudioProcessorEditor::resized()
 {
   // This is generally where you'll want to lay out the positions of any
   // subcomponents in your editor..
   Rectangle<int> area = getLocalBounds();
+	if(logger){
+		Rectangle <int> logArea = area.removeFromLeft(defaultLoggerWidth);
+		logger->setBounds(logArea);
+		
+	}
   Rectangle<int> header = area.removeFromTop(30);
   const int bSize= header.getWidth()/3;
   reloadB.setBounds(header.removeFromLeft(bSize));
@@ -119,4 +146,17 @@ void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
     owner->useInternalTransport = useInternalTransportB.getToggleState();
   }
 
+}
+
+bool JucepythonAudioProcessorEditor::keyPressed (const KeyPress& key,
+												 Component* originatingComponent){
+#ifdef JUCE_MAC
+	static KeyPress showLoggerKeyPress =KeyPress ('R', ModifierKeys::commandModifier,0);
+#else
+	static KeyPress showLoggerKeyPress =KeyPress ('r', ModifierKeys::ctrlModifier,0);
+#endif
+	
+	if (key ==showLoggerKeyPress ) {
+    showLogger(logger==nullptr);
+	}
 }

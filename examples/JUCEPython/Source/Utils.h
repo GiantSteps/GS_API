@@ -36,7 +36,7 @@ static String getVSTPath(){
 }
 #endif
 
-static const PropertiesFile & getVSTProperties(){
+static PropertiesFile & getVSTProperties(){
 	static File f(getVSTPath());
 	static File propertiesFile = f.getChildFile("../../properties.xml");
 
@@ -44,6 +44,7 @@ static const PropertiesFile & getVSTProperties(){
 	static     PropertiesFile p(propertiesFile,o);
 	if(!propertiesFile.exists()){
 		p.setValue("pythonBin", "");
+		p.setValue("VSTPythonFolderPath", "default");
 		p.save();
 	}
 	return p;

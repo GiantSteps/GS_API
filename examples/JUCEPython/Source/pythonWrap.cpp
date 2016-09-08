@@ -11,6 +11,63 @@
 #include "pythonWrap.h"
 
 
+ PythonWrap::PipeIntercepter PythonWrap::errIntercept;
+
+
+
+ PyObject *
+PythonWrap::PyErrCB(PyObject *self, PyObject *args)
+{
+	const char *what;
+	if (!PyArg_ParseTuple(args, "s", &what))
+		return NULL;
+	{
+		lock_guard<mutex> lk(errIntercept.mut);
+		errIntercept.entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::error));
+	}
+	errIntercept.sendChangeMessage();
+	return Py_BuildValue("");
+}
+
+
+ PyObject *
+PythonWrap::PyOutCB(PyObject *self, PyObject *args)
+{
+	const char *what;
+	if (!PyArg_ParseTuple(args, "s", &what))
+		return NULL;
+
+	{
+		lock_guard<mutex> lk(errIntercept.mut);
+		errIntercept.entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::warning));
+	}
+	errIntercept.sendChangeMessage();
+	return Py_BuildValue("");
+}
+static PyMethodDef PyErr_methods[] = {
+	{"write", PythonWrap::PyErrCB, METH_VARARGS, "PyErr Callback"},
+	{NULL, NULL, 0, NULL}
+};
+
+static PyMethodDef PyOut_methods[] = {
+	{"write", PythonWrap::PyOutCB, METH_VARARGS, "PyOut Callback"},
+	{NULL, NULL, 0, NULL}
+};
+
+
+
+PyMODINIT_FUNC
+initaview(void)
+{
+	PyObject *merr = Py_InitModule("PyErrCB", PyErr_methods);
+	if (merr == NULL) return;
+	PySys_SetObject("stderr", merr);
+	
+	PyObject *m = Py_InitModule("PyOutCB", PyOut_methods);
+	if (m == NULL) return;
+	PySys_SetObject("stdout", m);
+	
+}
 
 void PythonWrap::init(  string  bin){
 	
@@ -27,6 +84,7 @@ void PythonWrap::init(  string  bin){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
+		initaview();
 
 
   }
@@ -39,7 +97,7 @@ void PythonWrap::deinit(){
 
 void PythonWrap::setFolderPath(const string & s){
   curentFolderPath = s;
-  DBG("currentFolderPath : " << s)
+  DBG("currentFolderPath : " << s);
   addSearchPath(s);
 
 }
@@ -79,6 +137,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
       printPyState();
       PyErr_Print();
 
+
     }
 
     //        PyRun_SimpleString(reloadS.c_str());
@@ -94,6 +153,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
     PyErr_Print();
 
   }
+	errIntercept.flush();
 
 
   Py_DECREF(moduleName);
@@ -129,6 +189,8 @@ PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObjec
   PyObject *res= PyObject_CallObject(pyFunc,targs);
   if(targs)Py_DecRef(targs);
   PyErr_Print();
+	errIntercept.flush();
+
   return res;
 }
 
@@ -190,6 +252,7 @@ void PythonWrap::printEnv(const string & p){
   else{cout<< "isempty" << endl;}
 
 }
+
 
 
 
