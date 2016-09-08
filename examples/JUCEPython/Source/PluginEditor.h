@@ -21,7 +21,7 @@
 //==============================================================================
 /**
 */
-class JucepythonAudioProcessorEditor  : public AudioProcessorEditor,public ButtonListener,public PyJUCEAPI::Listener,public KeyListener
+class JucepythonAudioProcessorEditor  : public AudioProcessorEditor,public ButtonListener,public PyJUCEAPI::Listener,public KeyListener,PatternComponent::Listener
 {
 public:
     JucepythonAudioProcessorEditor (JucepythonAudioProcessor&);
@@ -37,6 +37,7 @@ public:
 	void newPatternLoaded( GSPattern * p)override;
 	
 	PatternComponent patternComponent;
+	void patternChanged(PatternComponent * )override;
 	PythonCanvas pyCnv;
 	PyLogger *  logger;
 	void showLogger(bool );

@@ -18,6 +18,7 @@
 
 class VoicesContainer;
 class VoiceComponent;
+class PatternComponent;
 
 
 class BlockComponent:public Component{
@@ -51,10 +52,11 @@ public:
 class VoicesContainer:public Component{
 	
 	public :
-	VoicesContainer();
+	VoicesContainer(PatternComponent * owner);
 	bool displayPitchInsteadOfTags;
 	void resized() override;
 	void paint(Graphics &) override;
+	void paintOverChildren(Graphics & g)override;
 	void build();
 	void setPattern(GSPattern *);
 	int gridBeatSubDiv;
@@ -82,17 +84,17 @@ class VoicesContainer:public Component{
 		void endDraggingBlock();
 	
 private:
-		VoiceComponent * targetVoice ;
+		VoiceComponent * targetVoice ,*lastVoice,*originVoice;
 	VoicesContainer * owner;
 		ComponentDragger dragger;
 		BlockComponent * originComponent;
+		int64 lastPatternUpdateTime;
 		
-
 
 };
 	BlockDragger blockDragger;
 	
-
+	PatternComponent * owner;
 };
 
 

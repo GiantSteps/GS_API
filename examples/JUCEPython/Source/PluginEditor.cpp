@@ -49,7 +49,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 	owner->pyAPI.addListener(this);
 	owner->addTimeListener(&patternComponent);
 	patternComponent.newPatternLoaded(&owner->player.currentPattern);
-	
+	patternComponent.addPatternListener(this);
 	
 	
 	owner->pyAPI.addListener(&pyCnv);
@@ -67,6 +67,7 @@ JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 	owner->pyAPI.removeListener(&pyCnv);
 	removeKeyListener(this);
 	logger = nullptr;
+		patternComponent.removePatternListener(this);
 }
 
 //==============================================================================
@@ -146,6 +147,12 @@ void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
     owner->useInternalTransport = useInternalTransportB.getToggleState();
   }
 
+}
+
+void JucepythonAudioProcessorEditor::patternChanged(PatternComponent * c){
+	if(c==&patternComponent){
+		owner->newPatternLoaded(patternComponent.getPattern());
+	}
 }
 
 bool JucepythonAudioProcessorEditor::keyPressed (const KeyPress& key,
