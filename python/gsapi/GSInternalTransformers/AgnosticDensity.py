@@ -1,5 +1,10 @@
 from gsapi import GSPattern,GSPatternEvent
 from gsapi.GSPatternTransformer import GSPatternTransformer
+
+
+################
+## WIP
+
 class AgnosticDensity(GSPatternTransformer):
 
 	""" Agnostic transformation algorithm

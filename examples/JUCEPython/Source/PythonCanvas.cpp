@@ -45,6 +45,7 @@ void PythonCanvas::resized(){
 	
 	for(auto & p:*originParams){
 		Component * c = pyWidgets.getUnchecked(i);
+		if(p->relativeArea.getWidth()>0 && p->relativeArea.getHeight()>0)
 		c->setBounds(scaleRect(p->relativeArea,getLocalBounds()));
 		i++;
 	}

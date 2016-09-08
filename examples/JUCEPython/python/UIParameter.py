@@ -1,3 +1,5 @@
+from gsapi import *
+
 class Rectangle(object):
 		def __init__(self,x=0,y=0,width=10,height=10):
 			self.x = x;
@@ -242,7 +244,16 @@ class EnumParameter(UIParameter):
 
 	value=property(UIParameter.getValue,setValue)
 
+
+class PatternParameter(UIParameter):
+	
+	def __init__(self,name='',value=GSPattern(),x=0,y=0,width=10,height=10):
+		self.pyType = GSPattern
+		UIParameter.__init__(self,name=name,value=value,x=x,y=y,width=width,height=height)
+
 if __name__== "__main__":
+	
+	print dir(gsapi)
 	print 'running main'
 	def testCB():
 		print "testCB"
@@ -250,6 +261,8 @@ if __name__== "__main__":
 	s3 = NumParameter(3,"lala",style="rotary").setBounds(1,2,16,16).setMinMax(0,1);
 	lala = EnumParameter(choicesList = {"zala":"lala","lolo":["lili","lolou"]},value = 1).setBounds(1,2,16,16).setCallbackFunction(testCB);
 	test2 = EventParameter().setBounds(50,0,50,100)
+	pattern  = GSPattern()
+	pianoRoll = PatternParameter(pattern = pattern)
 	def dumMet(v):
 		print 'dumMet'+str(v)
 	test2.addListener('vst',dumMet,None)

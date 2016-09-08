@@ -69,6 +69,8 @@ public:
 
   PyObject * pluginModule;
   PyObject* interfaceModule;
+	static GSPatternPyWrap GSPatternWrap;
+
 protected:
 	
   void timerCallback()override;
@@ -77,7 +79,6 @@ protected:
 	PyObject * timePyObj ;
 	PyObject *timeKey;
 
-GSPatternPyWrap GSPatternWrap;
 	
   
 	

@@ -37,6 +37,9 @@ public:
     void checkDurationValid();
     double getLastNoteOff();
     GSPatternEvent & getLastEvent();
+	vector<GSPatternEvent*> getEventsWithTag(string tag);
+	vector<GSPatternEvent*> getEventsWithPitch(int pitch);
+	GSPattern getCopyWithoutEvents();
 private:
 	
 	

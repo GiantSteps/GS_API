@@ -56,18 +56,7 @@ static PyMethodDef PyOut_methods[] = {
 
 
 
-PyMODINIT_FUNC
-initaview(void)
-{
-	PyObject *merr = Py_InitModule("PyErrCB", PyErr_methods);
-	if (merr == NULL) return;
-	PySys_SetObject("stderr", merr);
-	
-	PyObject *m = Py_InitModule("PyOutCB", PyOut_methods);
-	if (m == NULL) return;
-	PySys_SetObject("stdout", m);
-	
-}
+
 
 void PythonWrap::init(  string  bin){
 	
@@ -84,7 +73,14 @@ void PythonWrap::init(  string  bin){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
-		initaview();
+		
+		PyObject *merr = Py_InitModule("PyErrCB", PyErr_methods);
+		if (merr == NULL) return;
+		PySys_SetObject("stderr", merr);
+		
+		PyObject *m = Py_InitModule("PyOutCB", PyOut_methods);
+		if (m == NULL) return;
+		PySys_SetObject("stdout", m);
 
 
   }
@@ -121,6 +117,7 @@ void PythonWrap::addSearchPath(const string & p){
 
 PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   // Import the module "plugin" (from the file "plugin.py")
+
   PyObject* moduleName = PyFromString(name.c_str());
 
   PyObject * newModule = nullptr;

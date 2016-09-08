@@ -64,7 +64,7 @@ def getAllParameters():
 
 	res+=[masterSlider]
 	res+=[slaveSlider]
-	res+=[test4]
+	res+=[VSTPlugin.patternParameter]
 
 	return res
 

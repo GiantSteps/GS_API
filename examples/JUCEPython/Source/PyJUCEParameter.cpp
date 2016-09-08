@@ -10,7 +10,7 @@
 
 #include "PyJUCEParameter.h"
 #include "PyJUCEAPI.h"
-
+#include "PatternComponent.h"
 
 
 
@@ -351,6 +351,26 @@ public:
   PyObject * getPythonObject() override{return varToPy(value);}
 };
 
+class PyPatternParameter :public PyJUCEParameter, PatternComponent::Listener{
+public:
+  PyPatternParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
+	
+  void registerListener(Component *c) override{((PatternComponent*)c)->addPatternListener(this);}
+  void removeListener(Component *c)override{((PatternComponent*)c)->removePatternListener(this);}
+	void patternChanged(PatternComponent * )override{
+		
+	}
+	
+	
+  Component *  createComponent(var v,const NamedValueSet & properties) override{
+		return nullptr;
+		
+  }
+	
+  
+  PyObject * getPythonObject() override{return varToPy(value);}
+};
+
 
 
 
@@ -379,7 +399,10 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
   String className (o->ob_type->tp_name);
   String paramName = properties.getWithDefault("name", className+"_defaultName");
 	if(!value){DBG("ui element not valid");jassertfalse;return nullptr;}
-  if ((PyLong_CheckExact(value)|| PyInt_CheckExact(value)) && properties.contains("choicesList")){
+	if(value->ob_type == PyJUCEAPI::GSPatternWrap.gsPatternType){
+		res = new PyPatternParameter(o,paramName);
+	}
+  else if ((PyLong_CheckExact(value)|| PyInt_CheckExact(value)) && properties.contains("choicesList")){
     res = new PyEnumParameter(o,paramName);
   }
 	else if( PyLong_CheckExact(value)|| PyInt_CheckExact(value)||PyFloat_CheckExact(value) || PyInt_CheckExact(value)){

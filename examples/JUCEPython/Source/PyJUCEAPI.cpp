@@ -15,7 +15,7 @@
 #include "PyJUCEPython.h"
 #include "Utils.h"
 
-
+ GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
 
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
 owner(o),
@@ -90,6 +90,7 @@ void PyJUCEAPI::init(){
 		else{		DBG("using custom python : " << bin);}
     py.init(File(bin).getFullPathName().toStdString());
     initJUCEAPI(this,&apiModuleObject);
+		GSPatternWrap.init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
 		bool loadCustom = pythonFolder=="custom";
 		bool loadDefault = pythonFolder=="default";

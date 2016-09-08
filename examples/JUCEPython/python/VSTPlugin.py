@@ -63,6 +63,8 @@ patterns = None
 eachBarIsNew = BoolParameter()
 
 
+patternParameter = PatternParameter()
+
 def setup():
 	generateStyleIfNeeded(forceRebuild = True,forceParamUpdate = False,loadFromJSON = True)
 	generatePattern()

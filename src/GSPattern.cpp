@@ -57,7 +57,39 @@ double GSPattern::getLastNoteOff(){
     GSPatternEvent lastEv = getLastEvent();
     return (lastEv.isValid())?lastEv.start+ lastEv.duration : 0;
 }
+vector<GSPatternEvent*> GSPattern::getEventsWithTag(string tag){
+	vector<GSPatternEvent*> res;
+	for(auto & e:events){
+		for(auto & t:e.eventTags){
+			if(t==tag){
+				res.push_back(&e);
+				break;
+			}
+		}
+	}
+	return res;
+}
 
+vector<GSPatternEvent*> GSPattern::getEventsWithPitch(int pitch){
+	vector<GSPatternEvent*> res;
+	for(auto & e:events){
+			if(e.pitch==pitch){
+				res.push_back(&e);
+			
+		}
+	}
+	return res;
+}
+GSPattern GSPattern::getCopyWithoutEvents(){
+	GSPattern p;
+	p.name = name;
+	p.duration = duration;
+	p.timeSigDenominator = timeSigDenominator;
+	p.timeSigNumerator = timeSigNumerator;
+	p.originBPM = originBPM;
+	return p;
+	
+}
 GSPatternEvent & GSPattern::getLastEvent(){
     return (events.size()>0) ? events[events.size()-1] : GSPatternEvent::empty;
 }
