@@ -66,6 +66,7 @@ JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 	owner->removeTimeListener(&patternComponent);
 	owner->pyAPI.removeListener(&pyCnv);
 	removeKeyListener(this);
+  if(logger)delete logger ;
 	logger = nullptr;
 		patternComponent.removePatternListener(this);
 }

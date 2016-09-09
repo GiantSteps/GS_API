@@ -32,7 +32,7 @@ apiModuleObject(nullptr){
 void PyJUCEAPI::callTimeChanged(double time){
 	// TODO bug multiple load
   PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
-  py.callFunction("onTimeChanged",pluginModule,timePyObj);
+  PythonWrap::i()->callFunction("onTimeChanged",pluginModule,timePyObj);
 
   Py_DECREF(timePyObj);
 
@@ -60,7 +60,7 @@ bool PyJUCEAPI::setNewPattern(PyObject * o){
 void PyJUCEAPI::callSetupFunction(){
   PyObject * o=nullptr;
 
-  if((o = py.callFunction("setup",pluginModule))){
+  if((o = PythonWrap::i()->callFunction("setup",pluginModule))){
 
     if(PyString_Check(o)){
       DBG("setup returned " << PyToString(o));
@@ -85,10 +85,11 @@ void PyJUCEAPI::callSetupFunction(){
 void PyJUCEAPI::init(){
   if(!isInitialized){
 		String bin = getVSTProperties().getValue("pythonBin");
-
-    if (bin=="") {bin = getVSTPath()+"/../../Resources/pythonEnv/bin/python2.7";}
+    String pyHome = getVSTProperties().getValue("pythonHome");
+    if(pyHome==""){pyHome = getVSTPath()+"/../../Resources/pythonEnv";}
+    if (bin=="") {bin = pyHome+"/bin/python2.7";}
 		else{		DBG("using custom python : " << bin);}
-    py.init(File(bin).getFullPathName().toStdString());
+    PythonWrap::i()->init(File(pyHome).getFullPathName().toStdString(),File(bin).getFullPathName().toStdString());
     initJUCEAPI(this,&apiModuleObject);
 		GSPatternWrap.init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
@@ -111,8 +112,8 @@ void PyJUCEAPI::init(){
 			
 		}
 		if(pythonFile.exists()){
-    py.initSearchPath();
-    py.setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+    PythonWrap::i()->initSearchPath();
+    PythonWrap::i()->setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
 		}
   }
   isInitialized = pythonFile.exists();
@@ -132,7 +133,7 @@ bool PyJUCEAPI::setParam(PyObject* o){
 
 
 void PyJUCEAPI::load(){
-  pluginModule =  py.loadModule(pythonFile.getFileNameWithoutExtension().toStdString(),pluginModule);
+  pluginModule =  PythonWrap::i()->loadModule(pythonFile.getFileNameWithoutExtension().toStdString(),pluginModule);
   lastPythonFileMod = pythonFile.getLastModificationTime();
 
   if (pluginModule){
@@ -146,9 +147,9 @@ void PyJUCEAPI::load(){
 void PyJUCEAPI::buildParamsFromScript(){
   params.clear();
   
-  if((interfaceModule = py.loadModule("interface",interfaceModule))){
+  if((interfaceModule = PythonWrap::i()->loadModule("interface",interfaceModule))){
 
-    PyObject * o = py.callFunction("getAllParameters",interfaceModule);
+    PyObject * o = PythonWrap::i()->callFunction("getAllParameters",interfaceModule);
     if (o){
 
       if(PyList_Check(o)) {

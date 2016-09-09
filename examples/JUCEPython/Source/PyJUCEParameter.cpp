@@ -139,7 +139,7 @@ void PyJUCEParameter::deleteOldComponents(){
 
 void PyJUCEParameter::setValue(var v){
 	value=v;
-	pyJuceApi->py.callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
+  PythonWrap::i()->callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
 }
 
 void PyJUCEParameter::updateFromPython(){

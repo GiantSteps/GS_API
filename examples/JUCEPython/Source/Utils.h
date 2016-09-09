@@ -44,6 +44,7 @@ static PropertiesFile & getVSTProperties(){
 	static     PropertiesFile p(propertiesFile,o);
 	if(!propertiesFile.exists()){
 		p.setValue("pythonBin", "");
+    p.setValue("pythonHome", "");
 		p.setValue("VSTPythonFolderPath", "default");
 		p.save();
 	}

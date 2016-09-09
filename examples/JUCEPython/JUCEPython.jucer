@@ -12,14 +12,17 @@
               version="1.0.0">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
-      <FILE id="aXthu1" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE compile="0" file="Source/Utils.h" id="aXthu1" name="Utils.h"
+            resource="0"/>
       <FILE compile="1" file="Source/PyJUCEPython.cpp" id="TNOcDr" name="PyJUCEPython.cpp"
             resource="0"/>
       <FILE compile="0" file="Source/PyJUCEPython.h" id="RSQwre" name="PyJUCEPython.h"
             resource="0"/>
       <GROUP id="{4D0B4318-A514-6A3F-FD2E-A4871C68B511}" name="UI">
-        <FILE id="gtwyl3" name="PyLogger.cpp" compile="1" resource="0" file="Source/PyLogger.cpp"/>
-        <FILE id="c5CS2c" name="PyLogger.h" compile="0" resource="0" file="Source/PyLogger.h"/>
+        <FILE compile="1" file="Source/PyLogger.cpp" id="gtwyl3" name="PyLogger.cpp"
+              resource="0"/>
+        <FILE compile="0" file="Source/PyLogger.h" id="c5CS2c" name="PyLogger.h"
+              resource="0"/>
         <FILE compile="1" file="Source/PythonCanvas.cpp" id="ywgcqP" name="PythonCanvas.cpp"
               resource="0"/>
         <FILE compile="0" file="Source/PythonCanvas.h" id="tJYf4n" name="PythonCanvas.h"
@@ -104,11 +107,11 @@
                prebuildCommand="touch $SRCROOT/../../python&#10;" targetFolder="Builds/MacOSX"
                vstFolder="">
       <CONFIGURATIONS>
-        <CONFIGURATION cppLanguageStandard="c++11" cppLibType="libc++" customXcodeFlags="PYCFLAGS=&quot;-I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7&quot;,PYENVPATH=/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
+        <CONFIGURATION cppLanguageStandard="c++11" cppLibType="libc++" customXcodeFlags="PYCFLAGS=&quot;-I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
                        defines="" headerPath="" isDebug="1" name="Debug" optimisation="1"
                        osxArchitecture="64BitUniversal" osxCompatibility="10.8 SDK"
                        osxSDK="default" targetName="JUCEPython"/>
-        <CONFIGURATION customXcodeFlags="PYCFLAGS=&quot;-I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7&quot;,PYENVPATH=/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
+        <CONFIGURATION customXcodeFlags="PYCFLAGS=&quot;-I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
                        isDebug="0" name="Release" optimisation="3" osxArchitecture="default"
                        osxCompatibility="default" osxSDK="default" targetName="JUCEPython"/>
       </CONFIGURATIONS>
@@ -147,15 +150,14 @@
         <MODULEPATH id="juce_audio_basics" path="../../../JUCE/modules"/>
       </MODULEPATHS>
     </LINUX_MAKE>
-    <VS2015 targetFolder="Builds/VisualStudio2015" vstFolder="C:\SDKs\VST3 SDK"
-            extraDefs="PYTHON_HEADER=C:\Python27\include\Python.h&#10;" externalLibraries="python27.lib"
-            extraLinkerFlags="">
+    <VS2015 externalLibraries="python27.lib" extraDefs="PYTHON_HEADER=C:\Python27\include\Python.h&#10;"
+            extraLinkerFlags="" targetFolder="Builds/VisualStudio2015" vstFolder="C:\SDKs\VST3 SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="JUCEPython" headerPath="..\..\..\..\src&#10;..\..\..\..\src\3rdParty\json&#10;..\..\..\..\src\Utils&#10;..\..\..\..\src\python&#10;C:\Python27\include\"
-                       libraryPath="C:\Python27\libs"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="JUCEPython"/>
+        <CONFIGURATION generateManifest="1" headerPath="..\..\..\..\src&#10;..\..\..\..\src\3rdParty\json&#10;..\..\..\..\src\Utils&#10;..\..\..\..\src\python&#10;C:\Python27\include\"
+                       isDebug="1" libraryPath="C:\Python27\libs" name="Debug" optimisation="1"
+                       targetName="JUCEPython" winArchitecture="32-bit" winWarningLevel="4"/>
+        <CONFIGURATION generateManifest="1" isDebug="0" name="Release" optimisation="3"
+                       targetName="JUCEPython" winArchitecture="32-bit" winWarningLevel="4"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_gui_extra" path="../../../JUCE/modules"/>

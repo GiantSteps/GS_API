@@ -22,12 +22,12 @@ using namespace std;
 class PythonWrap{
     public :
 
-    PythonWrap(){}
+  PythonWrap():errIntercept(this){}
 	~PythonWrap(){deinit();}
     string test(const string& s,PyObject * module);
   
     void printPyState();
-  void init(  string  bin="");
+  void init( string home, string  bin="");
 	void setFolderPath(const string & s);
     PyObject* loadModule(const string & name,PyObject * oldModule=nullptr);
     void initSearchPath();
@@ -39,7 +39,7 @@ class PythonWrap{
 	class PipeIntercepter : public ChangeBroadcaster,AsyncUpdater{
 	public:
 
-		PipeIntercepter(){
+    PipeIntercepter(PythonWrap * o):owner(o){
 			listenerNum = 0;
 		}
 		~PipeIntercepter(){
@@ -66,7 +66,9 @@ class PythonWrap{
 		int listenerNum;
 		
 		void addLogListener (ChangeListener* listener){
+
 			listenerNum ++;
+      if(listenerNum==1){owner->redirectStd(true);}
 			addChangeListener(listener);
 			sendChangeMessage();
 		}
@@ -74,6 +76,7 @@ class PythonWrap{
 
 			removeChangeListener(listener);
 			listenerNum --;
+      if(listenerNum==0){owner->redirectStd(false);}
 			jassert(listenerNum>=0);
 		}
 		
@@ -94,13 +97,23 @@ class PythonWrap{
 			}
 
 		}
+    PythonWrap *owner;
 	};
-	static PipeIntercepter errIntercept;
 
+  
+  static PipeIntercepter * getIntercepter();
 	static PyObject * PyErrCB(PyObject *self, PyObject *args);
 	static PyObject * PyOutCB(PyObject *self, PyObject *args);
+  PyObject * originStdErr,* originStdOut;
+  PyObject * customStdErr,* customStdOut;
+   void redirectStd(bool t);
+  static PythonWrap *  i();
+
+
 
 private:
+  
+   PipeIntercepter   errIntercept;
 //    void prependEnvPath(const string &env,const string& newpath);
     void printEnv(const string & p);
 	string curentFolderPath;

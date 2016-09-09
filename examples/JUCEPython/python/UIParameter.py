@@ -262,7 +262,7 @@ if __name__== "__main__":
 	lala = EnumParameter(choicesList = {"zala":"lala","lolo":["lili","lolou"]},value = 1).setBounds(1,2,16,16).setCallbackFunction(testCB);
 	test2 = EventParameter().setBounds(50,0,50,100)
 	pattern  = GSPattern()
-	pianoRoll = PatternParameter(pattern = pattern)
+	pianoRoll = PatternParameter(value = pattern)
 	def dumMet(v):
 		print 'dumMet'+str(v)
 	test2.addListener('vst',dumMet,None)

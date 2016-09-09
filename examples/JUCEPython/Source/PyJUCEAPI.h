@@ -44,7 +44,7 @@ public:
   bool setNewPattern(PyObject * o);
 	
 	// python wrapper object
-  PythonWrap  py ;
+  
   PyObject * apiModuleObject;
   File pythonFile;
 

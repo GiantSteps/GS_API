@@ -11,21 +11,25 @@
 #include "pythonWrap.h"
 
 
- PythonWrap::PipeIntercepter PythonWrap::errIntercept;
+PythonWrap * PythonWrap::i(){
+  static PythonWrap * instance = new PythonWrap();
+  return instance;
+}
 
-
+PythonWrap::PipeIntercepter * PythonWrap::getIntercepter(){return &PythonWrap::i()->errIntercept;}
 
  PyObject *
 PythonWrap::PyErrCB(PyObject *self, PyObject *args)
 {
 	const char *what;
+  PipeIntercepter * errIntercept = PythonWrap::getIntercepter();
 	if (!PyArg_ParseTuple(args, "s", &what))
 		return NULL;
 	{
-		lock_guard<mutex> lk(errIntercept.mut);
-		errIntercept.entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::error));
+		lock_guard<mutex> lk(errIntercept->mut);
+		errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::error));
 	}
-	errIntercept.sendChangeMessage();
+	errIntercept->sendChangeMessage();
 	return Py_BuildValue("");
 }
 
@@ -34,14 +38,15 @@ PythonWrap::PyErrCB(PyObject *self, PyObject *args)
 PythonWrap::PyOutCB(PyObject *self, PyObject *args)
 {
 	const char *what;
+  PipeIntercepter * errIntercept = PythonWrap::getIntercepter();
 	if (!PyArg_ParseTuple(args, "s", &what))
 		return NULL;
 
 	{
-		lock_guard<mutex> lk(errIntercept.mut);
-		errIntercept.entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::warning));
+		lock_guard<mutex> lk(errIntercept->mut);
+		errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::warning));
 	}
-	errIntercept.sendChangeMessage();
+	errIntercept->sendChangeMessage();
 	return Py_BuildValue("");
 }
 static PyMethodDef PyErr_methods[] = {
@@ -58,11 +63,11 @@ static PyMethodDef PyOut_methods[] = {
 
 
 
-void PythonWrap::init(  string  bin){
+void PythonWrap::init(  string home, string  bin){
 	
 	if(!Py_IsInitialized())
   {
-
+    Py_SetPythonHome(&home[0]);
     if(bin!=""){Py_SetProgramName(&bin[0]);}
     char* c =  Py_GetPythonHome();
     if(c){ DBG("home : "<<c);}
@@ -73,19 +78,32 @@ void PythonWrap::init(  string  bin){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
     Py_InitializeEx(0);
-		
-		PyObject *merr = Py_InitModule("PyErrCB", PyErr_methods);
-		if (merr == NULL) return;
-		PySys_SetObject("stderr", merr);
-		
-		PyObject *m = Py_InitModule("PyOutCB", PyOut_methods);
-		if (m == NULL) return;
-		PySys_SetObject("stdout", m);
+
+    originStdErr  = PySys_GetObject("stderr");
+    originStdOut  = PySys_GetObject("stdout");
+
+    customStdErr = Py_InitModule("PyErrCB", PyErr_methods);
+    customStdOut = Py_InitModule("PyOutCB", PyOut_methods);
+
 
 
   }
 }
 
+
+void PythonWrap::redirectStd(bool t){
+
+
+  if(t){
+		PySys_SetObject("stderr", customStdErr);
+		PySys_SetObject("stdout", customStdOut);
+  }
+  else{
+    PySys_SetObject("stderr", originStdErr);
+    PySys_SetObject("stdout", originStdOut);
+  }
+
+}
 void PythonWrap::deinit(){
 	Py_Finalize();
 }
@@ -233,7 +251,7 @@ void PythonWrap::printPyState(){
   //        }
   if(Py_GetPythonHome())
     cout <<"home : "<< Py_GetPythonHome() << endl;
-  cout <<"full : " <<  Py_GetProgramFullPath() << endl;
+  cout <<"fullPath : " <<  Py_GetProgramFullPath() << endl;
 
   printEnv("LD_LIBRARY_PATH");
 
