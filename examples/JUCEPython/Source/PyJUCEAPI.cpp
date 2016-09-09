@@ -18,12 +18,13 @@
  GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
 
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
-owner(o),
+
 TimeListener(1),
+owner(o),
 isInitialized(false),
 pluginModule(nullptr),
-interfaceModule(nullptr),
-apiModuleObject(nullptr){
+apiModuleObject(nullptr),
+interfaceModule(nullptr){
   timePyObj = PyDict_New();
   timeKey=PyFromString("time");
 }

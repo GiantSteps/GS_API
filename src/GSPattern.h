@@ -27,16 +27,18 @@ public:
 	double duration;
 	
 
-	vector<GSPatternEvent> events;
+	vector<GSPatternEvent*> events;
 	
 	// for dynamicly adding event
 	// void addEvent(const vector<string> & tags,GSPatternEvent && );
-	void addEvent(GSPatternEvent & );
+	void addEvent(GSPatternEvent * );
+
 	
 	
     void checkDurationValid();
     double getLastNoteOff();
-    GSPatternEvent & getLastEvent();
+    GSPatternEvent * getLastEvent();
+  bool removeEvent(GSPatternEvent *);
 	vector<GSPatternEvent*> getEventsWithTag(string tag);
 	vector<GSPatternEvent*> getEventsWithPitch(int pitch);
 	GSPattern getCopyWithoutEvents();

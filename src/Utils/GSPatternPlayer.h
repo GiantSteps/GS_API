@@ -30,7 +30,7 @@ class GSPatternMidiMapper{
 public:
 	virtual ~GSPatternMidiMapper(){};
 	
-	virtual vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) =0;
+	virtual vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent * e) =0;
 	
 };
 
@@ -38,10 +38,10 @@ public:
 class GSDummyMapper:public GSPatternMidiMapper{
 public:
 	int baseNote = 0;
-	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
+	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent * e) override{
 		vector<MIDIMapEntry> res;
 //		for(auto & ev:e.eventTags){
-			res.push_back(MIDIMapEntry(1,e.pitch+baseNote,e.velocity));
+			res.push_back(MIDIMapEntry(1,e->pitch+baseNote,e->velocity));
 //		}
 		return res;
 	}
@@ -60,13 +60,13 @@ public:
 		{"Rimshot",37},
 		{"LowConga",43},
 		{"HiConga",47}};
-	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent & e) override{
+	vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent * e) override{
 		vector<MIDIMapEntry> res;
-		vector<string> tags = e.getTagNames();
+		vector<string> tags = e->getTagNames();
 		for(auto & t:tags){
 			auto it = tagToLiveMidi.find(t);
 			if(it!=tagToLiveMidi.end())
-				res.push_back(MIDIMapEntry(1,it->second,e.velocity));
+				res.push_back(MIDIMapEntry(1,it->second,e->velocity));
 		}
 		return res;
 	}

@@ -14,10 +14,11 @@
 
 //==============================================================================
 JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p),logger(nullptr)
+: AudioProcessorEditor (&p), logger(nullptr),processor (p)
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
+  setResizable(true,true);
   owner = dynamic_cast<JucepythonAudioProcessor*>(&p);
   setSize (400, 300);
 
@@ -166,5 +167,7 @@ bool JucepythonAudioProcessorEditor::keyPressed (const KeyPress& key,
 	
 	if (key ==showLoggerKeyPress ) {
     showLogger(logger==nullptr);
+    return true;
 	}
+  return false;
 }

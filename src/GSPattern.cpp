@@ -19,8 +19,8 @@ GSPattern::~GSPattern(){};
 
 
 
-void GSPattern::addEvent(GSPatternEvent & event){
-    events.emplace_back(event);
+void GSPattern::addEvent(GSPatternEvent * event){
+    events.push_back(event);
 }
 
 bool GSPattern::fillJSONData(json & j) {
@@ -54,15 +54,15 @@ void GSPattern::checkDurationValid(){
 }
 
 double GSPattern::getLastNoteOff(){
-    GSPatternEvent lastEv = getLastEvent();
-    return (lastEv.isValid())?lastEv.start+ lastEv.duration : 0;
+    GSPatternEvent  *lastEv = getLastEvent();
+    return (lastEv && lastEv->isValid())?lastEv->start+ lastEv->duration : 0;
 }
 vector<GSPatternEvent*> GSPattern::getEventsWithTag(string tag){
 	vector<GSPatternEvent*> res;
 	for(auto & e:events){
-		for(auto & t:e.eventTags){
+		for(auto & t:e->eventTags){
 			if(t==tag){
-				res.push_back(&e);
+				res.push_back(e);
 				break;
 			}
 		}
@@ -73,8 +73,8 @@ vector<GSPatternEvent*> GSPattern::getEventsWithTag(string tag){
 vector<GSPatternEvent*> GSPattern::getEventsWithPitch(int pitch){
 	vector<GSPatternEvent*> res;
 	for(auto & e:events){
-			if(e.pitch==pitch){
-				res.push_back(&e);
+			if(e->pitch==pitch){
+				res.push_back(e);
 			
 		}
 	}
@@ -90,9 +90,17 @@ GSPattern GSPattern::getCopyWithoutEvents(){
 	return p;
 	
 }
-GSPatternEvent & GSPattern::getLastEvent(){
-    return (events.size()>0) ? events[events.size()-1] : GSPatternEvent::empty;
+GSPatternEvent * GSPattern::getLastEvent(){
+    return (events.size()>0) ? events[events.size()-1] : nullptr;
 }
+bool GSPattern::removeEvent(GSPatternEvent * ev){
+  auto it = find(events.begin(),events.end(),ev);
+  bool found = it!=events.end();
+  if(found){events.erase(it);}
+  delete ev;
+  return found;
+}
+
 
 
 bool GSPattern::getJSONData(const json & j) {
@@ -104,7 +112,7 @@ bool GSPattern::getJSONData(const json & j) {
     // allTags.initialize(j["eventTags"]);
 
     for(auto & e:j["eventList"]){
-        events.emplace_back(e["on"],e["duration"],e["pitch"],e["velocity"],e["tagsIdx"]);
+        events.push_back(new GSPatternEvent(e["on"],e["duration"],e["pitch"],e["velocity"],e["tagsIdx"]));
     }
     
     return true;

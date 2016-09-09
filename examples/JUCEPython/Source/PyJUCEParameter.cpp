@@ -363,7 +363,7 @@ public:
 	
 	
   Component *  createComponent(var v,const NamedValueSet & properties) override{
-		return nullptr;
+		return new PatternComponent();
 		
   }
 	

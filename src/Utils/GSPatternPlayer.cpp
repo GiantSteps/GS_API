@@ -28,10 +28,10 @@ void GSPatternPlayer::updatePlayHead(double pH){
 	vector<MIDIMapEntry> newNotes;
 	
 	for(auto & n:currentPattern.events){
-		if (playHead>=n.start && playHead<n.getEndTime()) {
+		if (playHead>=n->start && playHead<n->getEndTime()) {
 			vector<MIDIMapEntry> nNotes=ownedMapper->getMIDINoteForEvent(n);
 			for (auto & nn:nNotes){
-				nn.endTime = n.getEndTime();
+				nn.endTime = n->getEndTime();
 			}
 			if(nNotes.size()>0)
 				newNotes.insert(newNotes.end(), nNotes.begin(),nNotes.end());

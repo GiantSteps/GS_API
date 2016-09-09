@@ -30,6 +30,12 @@ public:
 	void mouseDown (const MouseEvent& e)override;
 	void mouseDrag (const MouseEvent& e)override;
 	void mouseUp(const MouseEvent & e)override;
+  void mouseEnter(const MouseEvent&) override;
+  void mouseExit(const MouseEvent&) override;
+  
+  void resized() override;
+  bool isDragging;
+  ScopedPointer<ResizableEdgeComponent> leftResize,rightResize;
 	
 };
 
@@ -41,6 +47,14 @@ public:
 	vector<GSPatternEvent *> getVoiceEvents();
 	void update();
 	void paint(Graphics &) override;
+  void paintOverChildren(Graphics & g)override;
+  void mouseDoubleClick (const MouseEvent& event) override;
+  double getQuantizedTimeForX(int x);
+  double getQuantizedForTime(double t);
+  double getQuantization();
+  double quantization;
+  BlockComponent * getNextBlock(BlockComponent * );
+  BlockComponent * getLastBlock(BlockComponent * );
 	OwnedArray<BlockComponent> blocks;
 	VoicesContainer * owner;
 	String tag;
@@ -58,6 +72,7 @@ class VoicesContainer:public Component{
 	void paint(Graphics &) override;
 	void paintOverChildren(Graphics & g)override;
 	void build();
+
 	void setPattern(GSPattern *);
 	int gridBeatSubDiv;
 	GSPattern  pattern;
@@ -78,11 +93,13 @@ class VoicesContainer:public Component{
                               bool isStretchingLeft,
                               bool isStretchingBottom,
                               bool isStretchingRight)override;
-		
+    bool isDragging;
+    bool isResizingLeft;
+		void updatePattern();
 		void startDraggingBlock(BlockComponent * ,const MouseEvent & );
 		void draggingBlock(BlockComponent * ,const MouseEvent &);
 		void endDraggingBlock();
-	
+    void setOriginComponent(BlockComponent *);
 private:
 		VoiceComponent * targetVoice ,*lastVoice,*originVoice;
 	VoicesContainer * owner;
@@ -108,6 +125,7 @@ public:
 	void timeChanged(double time)override;
 	void paint(Graphics & g) override;
 	void resized() override;
+
   void handleCommandMessage(int cid)override;
 	TextButton displayTagToggle;
 	VoicesContainer voicesContainer;

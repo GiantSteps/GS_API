@@ -22,6 +22,7 @@ using namespace std;
 class PythonWrap{
     public :
 
+
   PythonWrap():errIntercept(this){}
 	~PythonWrap(){deinit();}
     string test(const string& s,PyObject * module);

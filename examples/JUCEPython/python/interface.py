@@ -26,6 +26,8 @@ masterSlider.setCallbackFunction(updateSlaveSlider,masterSlider,slaveSlider)
 
 def createLayout():
 	area = Rectangle(0,0,100,100)
+	header = area.removeFromTop(40);
+	VSTPlugin.patternParameter.setBoundsRect(header);
 	firstStack = area.removeFromLeft(30)
 	VSTPlugin.loopDuration.setBoundsRect(firstStack.removeFromTop(50))
 	VSTPlugin.numSteps.setBoundsRect(firstStack)

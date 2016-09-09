@@ -87,7 +87,7 @@ public:
           p->events.resize(size);
           for(int i = 0 ; i < size ; i++){
             GSPatternEvent * e = eventWrap.GenerateFromObj(PyList_GET_ITEM(n, i));
-            if(e){p->events[i] = *e;}
+            if(e){p->events[i] = e;}
             else{DBG("wrong event added");}
           }
         }

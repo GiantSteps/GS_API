@@ -23,6 +23,9 @@ JucepythonAudioProcessor::~JucepythonAudioProcessor()
 {
   pyAPI.removeListener(this);
 	removeTimeListener(&pyAPI);
+  if( PythonWrap * i = PythonWrap::i()){
+    delete i;
+  }
 }
 
 
