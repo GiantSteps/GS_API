@@ -62,7 +62,8 @@ patterns = None
 #  parameters enable simple UI bindings
 eachBarIsNew = BoolParameter()
 
-
+# this is the main pattern (that will be played)
+# changing its value will automagically change the current pattern played in VST (c.f generatePattern())
 patternParameter = PatternParameter()
 
 def setup():
@@ -141,7 +142,8 @@ def generatePattern():
 	generateStyleIfNeeded();
 	newPattern = style.generatePattern()
 	newPattern = mapMidi(newPattern,midiMap)
-	JUCEAPI.vst.setPattern(newPattern)	
+	patternParameter.value = newPattern
+	
 	print 'newPattern set'
 
 if __name__ =='__main__':
@@ -149,6 +151,7 @@ if __name__ =='__main__':
 	print "runMain"
 	setup()
 	numSteps.value = 32
+	generatePattern()
 	params =  interface.getAllParameters()
 	
 	

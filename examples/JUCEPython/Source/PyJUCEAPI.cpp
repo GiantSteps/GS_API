@@ -24,7 +24,9 @@ owner(o),
 isInitialized(false),
 pluginModule(nullptr),
 apiModuleObject(nullptr),
-interfaceModule(nullptr){
+interfaceModule(nullptr),
+paramBuilder(this)
+{
   timePyObj = PyDict_New();
   timeKey=PyFromString("time");
 }
@@ -45,15 +47,18 @@ bool PyJUCEAPI::setNewPattern(PyObject * o){
 
   GSPattern * p=nullptr;
   bool found = false;
-		if(o!=Py_None){
-      p = GSPatternWrap.GenerateFromObj(o);
-      if(p){p->checkDurationValid();found = true;}
-      else{DBG("pattern not valid");}
+  // Legacy
 
-    }
-//		Py_DECREF(o);
-
-  if(p)listeners.call(&Listener::newPatternLoaded,p);
+  
+//		if(o!=Py_None){
+//      p = GSPatternWrap.GenerateFromObj(o);
+//      if(p){p->checkDurationValid();found = true;}
+//      else{DBG("pattern not valid");}
+//
+//    }
+////		Py_DECREF(o);
+//
+//  if(p)listeners.call(&Listener::newPatternLoaded,p);
   return found;
 }
 
@@ -157,9 +162,8 @@ void PyJUCEAPI::buildParamsFromScript(){
         int s = PyList_GET_SIZE(o);
         for (int i = 0 ; i < s; i++){
           PyObject * it = PyList_GET_ITEM(o, i);
-          PyJUCEParameter * p = PyJUCEParameterBuilder::buildParamFromObject(it);
+          PyJUCEParameter * p = paramBuilder.buildParamFromObject(it);
           if(p){
-            p->linkToJuceApi(this);
             params.add(p);
           }
         }
@@ -174,6 +178,10 @@ void PyJUCEAPI::buildParamsFromScript(){
 
 }
 
+
+ PyPatternParameter * PyJUCEAPI::getMainPatternParameter(){
+
+}
 void PyJUCEAPI::timeChanged(double time) {callTimeChanged(time);};
 
 void PyJUCEAPI::setWatching(bool w){

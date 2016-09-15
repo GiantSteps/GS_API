@@ -12,7 +12,7 @@
 #include "PyJUCEAPI.h"
 #include "PatternComponent.h"
 
-
+#include "PyPatternParameter.h"
 
 class PyVar : public ReferenceCountedObject{
 public :
@@ -140,6 +140,7 @@ void PyJUCEParameter::deleteOldComponents(){
 void PyJUCEParameter::setValue(var v){
 	value=v;
   PythonWrap::i()->callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
+  paramListeners.call(&ParameterListener::parameterChanged,this);
 }
 
 void PyJUCEParameter::updateFromPython(){
@@ -148,6 +149,7 @@ void PyJUCEParameter::updateFromPython(){
   for(auto & c : linkedComponents){
     if(c.get())updateComponentState(c);
   }
+  paramListeners.call(&ParameterListener::parameterChanged,this);
 }
 
 var PyJUCEParameter::getValue(){return value;}
@@ -351,25 +353,6 @@ public:
   PyObject * getPythonObject() override{return varToPy(value);}
 };
 
-class PyPatternParameter :public PyJUCEParameter, PatternComponent::Listener{
-public:
-  PyPatternParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){}
-	
-  void registerListener(Component *c) override{((PatternComponent*)c)->addPatternListener(this);}
-  void removeListener(Component *c)override{((PatternComponent*)c)->removePatternListener(this);}
-	void patternChanged(PatternComponent * )override{
-		
-	}
-	
-	
-  Component *  createComponent(var v,const NamedValueSet & properties) override{
-		return new PatternComponent();
-		
-  }
-	
-  
-  PyObject * getPythonObject() override{return varToPy(value);}
-};
 
 
 
@@ -417,6 +400,7 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
 	if(res){
 		res->setPythonCallback(PyObject_GetAttrString(o, "setValueFrom"));
 		res->properties = properties;
+    res->linkToJuceApi(pyAPI);
 	}
 	return res;
 }

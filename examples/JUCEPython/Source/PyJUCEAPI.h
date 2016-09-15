@@ -22,6 +22,7 @@
 
 #include "PyJUCEParameter.h"
 
+class PyPatternParameter;
 class JucepythonAudioProcessor;
 
 class PyJUCEAPI : public Timer,public TimeListener{
@@ -58,6 +59,7 @@ public:
     virtual void newFileLoaded(const File & ){};
 		virtual void newPatternLoaded( GSPattern * ){};
 		virtual void newParamsLoaded( OwnedArray<PyJUCEParameter> *){};
+    
   };
   ListenerList<Listener> listeners;
   void addListener(Listener * l){listeners.add(l);}
@@ -70,6 +72,7 @@ public:
   PyObject * pluginModule;
   PyObject* interfaceModule;
 	static GSPatternPyWrap GSPatternWrap;
+  PyPatternParameter * getMainPatternParameter();
 
 protected:
 	
@@ -79,6 +82,8 @@ protected:
 	PyObject * timePyObj ;
 	PyObject *timeKey;
 
+
+  PyJUCEParameterBuilder paramBuilder;
 	
   
 	

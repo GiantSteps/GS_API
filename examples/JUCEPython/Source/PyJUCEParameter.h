@@ -13,6 +13,7 @@
 #include "PythonUtils.h"
 #include "JuceHeader.h"
 
+
 class PyJUCEAPI;
 
 class PyJUCEParameter{
@@ -30,7 +31,15 @@ public:
   virtual void setValue(var v);
   virtual var getValue();
 
+  class ParameterListener{
+  public:
+    virtual ~ParameterListener(){};
+    virtual void parameterChanged(PyJUCEParameter * )=0;
+  };
 
+  ListenerList<ParameterListener> paramListeners;
+  void addParameterListener(ParameterListener * l){paramListeners.add(l);}
+  void removeParameterListener(ParameterListener * l){paramListeners.remove(l);}
 
   Component * buildComponent();
 
@@ -70,8 +79,7 @@ private:
 class PyJUCEParameterBuilder{
 public:
 	PyJUCEParameterBuilder(PyJUCEAPI* _py):pyAPI(_py){}
-	static PyJUCEParameter * buildParamFromObject( PyObject* );
-
+  PyJUCEParameter * buildParamFromObject( PyObject* );
 	PyJUCEAPI * pyAPI;
 };
 

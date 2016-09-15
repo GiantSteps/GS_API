@@ -12,6 +12,10 @@
               version="1.0.0">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
+      <FILE id="b0kXuY" name="PyPatternParameter.cpp" compile="1" resource="0"
+            file="Source/PyPatternParameter.cpp"/>
+      <FILE id="qRXE3m" name="PyPatternParameter.h" compile="0" resource="0"
+            file="Source/PyPatternParameter.h"/>
       <FILE compile="0" file="Source/Utils.h" id="aXthu1" name="Utils.h"
             resource="0"/>
       <FILE compile="1" file="Source/PyJUCEPython.cpp" id="TNOcDr" name="PyJUCEPython.cpp"

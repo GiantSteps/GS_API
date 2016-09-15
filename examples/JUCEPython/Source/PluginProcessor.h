@@ -15,6 +15,7 @@
 #include "JuceHeader.h"
 #include "GS_API.h"
 #include "GSPatternPlayer.h"
+#include "PyPatternParameter.h"
 
 
 
@@ -22,7 +23,7 @@
 //==============================================================================
 /**
  */
-class JucepythonAudioProcessor  : public AudioProcessor,PyJUCEAPI::Listener
+class JucepythonAudioProcessor  : public AudioProcessor,PyJUCEAPI::Listener,PyJUCEParameter::ParameterListener
 {
 public:
 	//==============================================================================
@@ -37,6 +38,10 @@ public:
 	
   
   void newPatternLoaded( GSPattern * p)override;
+  void newParamsLoaded(OwnedArray<PyJUCEParameter> *)override;
+  void parameterChanged(PyJUCEParameter *)override;
+
+  
   
 	
 	//==============================================================================
@@ -77,6 +82,8 @@ public:
   
 
 private:
+
+  PyPatternParameter * mainPattern;
 	//==============================================================================
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (JucepythonAudioProcessor)
 

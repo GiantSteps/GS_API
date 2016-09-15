@@ -10,6 +10,7 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "PyPatternParameter.h"
 
 
 //==============================================================================
@@ -17,6 +18,7 @@ JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),pyAPI(this)
 {
   pyAPI.addListener(this);
 	addTimeListener(&pyAPI);
+  mainPattern = nullptr;
 }
 
 JucepythonAudioProcessor::~JucepythonAudioProcessor()
@@ -34,6 +36,8 @@ void JucepythonAudioProcessor::newPatternLoaded( GSPattern * p){
 if(p)
   player.setPattern(*p);
 }
+
+
 //==============================================================================
 const String JucepythonAudioProcessor::getName() const
 {
@@ -168,6 +172,28 @@ else{
 //
 //        // ..do something to the data...
 //    }
+}
+
+void JucepythonAudioProcessor::newParamsLoaded(OwnedArray<PyJUCEParameter> * ps){
+  for (int i = 0 ; i  < ps->size() ; i++){
+    if(PyPatternParameter * patt = dynamic_cast<PyPatternParameter*>(ps->getUnchecked(i))){
+      if(patt->isMainPattern()){
+
+        if(mainPattern !=nullptr){
+          mainPattern->removeParameterListener(this);
+        }
+        newPatternLoaded(patt->pattern);
+        mainPattern = patt;
+        mainPattern->addParameterListener(this);
+        
+        break;
+      }
+    }
+  }
+};
+
+void JucepythonAudioProcessor::parameterChanged(PyJUCEParameter * p){
+  newPatternLoaded(mainPattern->pattern);
 }
 
 //==============================================================================

@@ -20,11 +20,15 @@ void PythonCanvas::newParamsLoaded( OwnedArray<PyJUCEParameter> *params){
 void PythonCanvas::handleCommandMessage(int cID){
   switch (cID) {
     case REBUILD_PARAMS:
+      for(auto & p:pyWidgets){
+        listeners.call(&Listener::widgetRemoved,p);
+      }
       pyWidgets.clear();
       for (auto & p:*originParams){
         Component * c = p->buildComponent();
         pyWidgets.add(c);
         addAndMakeVisible(c);
+        listeners.call(&Listener::widgetAdded,c);
       }
       resized();
       break;
@@ -34,7 +38,9 @@ void PythonCanvas::handleCommandMessage(int cID){
   }
 }
 
-Rectangle<int> scaleRect(Rectangle<float> r,Rectangle<int> b){
+
+
+inline Rectangle<int> scaleRect(Rectangle<float> r,Rectangle<int> b){
 	return (r.translated(b.getX(), b.getY())*Point<float>(b.getWidth()/100.0,b.getHeight()/100.0)).toNearestInt();
 }
 

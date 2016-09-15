@@ -132,9 +132,9 @@ class UIParameter(Rectangle):
 		self.setValue(v);
 		self.__notifyingListeners[notifierName] = False
 		
-	def setValue(self, v):
-		if(self.pyType):
-			self.__value = self.pyType(v)
+	def setValue(self, v,checkType = True):
+		if(self.pyType and checkType):
+			self.__value = self.pyType(v);
 			print "set parameter "+self.name+" : "+ str(v)
 		else:
 			self.__value = v;
@@ -147,6 +147,7 @@ class UIParameter(Rectangle):
 
 				args = self.__listenerArgs[k][0]
 				kwargs = self.__listenerArgs[k][1]
+
 
 				if(len(args)>0 and len(kwargs)>0): 	cb(*args,**kwargs)
 				elif(len(args)>0 and len(kwargs)==0):		cb(*args)
@@ -251,6 +252,11 @@ class PatternParameter(UIParameter):
 		self.pyType = GSPattern
 		UIParameter.__init__(self,name=name,value=value,x=x,y=y,width=width,height=height)
 
+	def setValue(self,val):
+		UIParameter.setValue(self,val,checkType=False);
+
+	value=property(UIParameter.getValue,setValue)
+
 if __name__== "__main__":
 	
 	print dir(gsapi)
@@ -271,6 +277,8 @@ if __name__== "__main__":
 		print 'dum'
 	lala.addListener("L",dum)
 	lala.value = ["zala"]
+	pattern = PatternParameter ();
+	pattern.value = GSPattern()
 	# s2.value = ["lolo"]
 	# for x in UIParameter.allParams:
 	# 	print type(x).__name__

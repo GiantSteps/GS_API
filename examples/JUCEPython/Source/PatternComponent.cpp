@@ -29,7 +29,6 @@ GSPattern * PatternComponent::getPattern(){
   return &voicesContainer.pattern;
 }
 void PatternComponent::handleCommandMessage(int cid){
-
   voicesContainer.setPattern(nextPatternToLoad);
   voicesContainer.repaint();
 }
@@ -138,8 +137,7 @@ void VoicesContainer::BlockDragger::checkBounds (Rectangle<int>& bounds,const Re
     targetVoice = originComponent->owner;
 
     if(isResizingLeft){
-      BlockComponent * last = targetVoice->getLastBlock(originComponent);
-      if (last){
+      if (BlockComponent * last = targetVoice->getLastBlock(originComponent)){
         if (bounds.getX()<last->getRight()+1){
           bounds.setX(last->getRight()+1);
           bounds.setWidth(previousBounds.getWidth());
@@ -149,8 +147,8 @@ void VoicesContainer::BlockDragger::checkBounds (Rectangle<int>& bounds,const Re
       }
     }
     else{
-      BlockComponent * next = targetVoice->getNextBlock(originComponent);
-      if(next){
+
+      if(BlockComponent * next = targetVoice->getNextBlock(originComponent)){
         if (bounds.getRight()>next->getX()-1 ){bounds.setWidth(next->getX()-1 - bounds.getX());}
       }
       else if (bounds.getRight()>targetVoice->getWidth()){bounds = previousBounds;}
@@ -173,7 +171,6 @@ void VoicesContainer::BlockDragger::startDraggingBlock(BlockComponent * bk,const
   int idx = originVoice->blocks.indexOf(bk);
   originComponent = originVoice->blocks.removeAndReturn(idx);
   owner->addAndMakeVisible(originComponent);
-
   dragger.startDraggingComponent(bk, e);
   lastVoice = nullptr;
   lastPatternUpdateTime = -1;

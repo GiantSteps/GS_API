@@ -64,23 +64,6 @@ static void PyJUCEAPI_dealloc(PyJUCEAPIObject* self){}
 
 
 static PyObject *
-setPattern(PyTypeObject *self, PyObject *args)
-{
-  PyObject * pat = nullptr;
-
-  if(!PyArg_ParseTuple(args, "O",&pat))
-    return NULL;
-  PyJUCEAPI * owner = GETOWNER();
-  bool added = false;
-  if(owner){
-     added= owner->setNewPattern(pat);
-  }
-  if(added)Py_RETURN_TRUE;
-  else Py_RETURN_FALSE;
-
-}
-
-static PyObject *
 updateParam(PyTypeObject *self, PyObject *args)
 {
   PyObject * param = nullptr;
@@ -99,7 +82,6 @@ static PyMemberDef PyJUCEAPIObject_Members[] = {
 };
 static PyMethodDef PyJUCEAPIObject_Methods[] = {
   {"updateParam", (PyCFunction)updateParam, METH_CLASS | METH_VARARGS,"update parameter value"},
-  {"setPattern",  (PyCFunction)setPattern, METH_CLASS | METH_VARARGS,"set current pattern."},
   {NULL, NULL, 0, NULL}        /* Sentinel */
 };
 
