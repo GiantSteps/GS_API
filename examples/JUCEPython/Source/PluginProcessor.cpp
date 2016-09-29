@@ -11,6 +11,7 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 #include "PyPatternParameter.h"
+PropertiesFile & getVSTProperties();
 
 
 //==============================================================================
@@ -25,9 +26,11 @@ JucepythonAudioProcessor::~JucepythonAudioProcessor()
 {
   pyAPI.removeListener(this);
 	removeTimeListener(&pyAPI);
-  if( PythonWrap * i = PythonWrap::i()){
-    delete i;
-  }
+	PythonWrap::deleteInstance();
+//  if( PythonWrap * i = PythonWrap::i()){
+//    delete i;
+//		i=nullptr;
+//  }
 }
 
 
@@ -41,7 +44,7 @@ if(p)
 //==============================================================================
 const String JucepythonAudioProcessor::getName() const
 {
-    return JucePlugin_Name;
+    return getVSTProperties().getValue("VSTName")+String("u");
 }
 
 bool JucepythonAudioProcessor::acceptsMidi() const

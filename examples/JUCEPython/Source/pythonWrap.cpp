@@ -10,10 +10,10 @@
 
 #include "pythonWrap.h"
 
+juce_ImplementSingleton(PythonWrap);
 
 PythonWrap * PythonWrap::i(){
-  static PythonWrap * instance = new PythonWrap();
-  return instance;
+  return getInstance();
 }
 
 PythonWrap::PipeIntercepter * PythonWrap::getIntercepter(){return &PythonWrap::i()->errIntercept;}
@@ -133,6 +133,8 @@ void PythonWrap::addSearchPath(const string & p){
 }
 
 
+
+
 PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   // Import the module "plugin" (from the file "plugin.py")
 
@@ -159,6 +161,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   }
   else{
     //    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
+//		PyImport_ExecCodeModuleEx
     newModule = PyImport_Import(moduleName);
 
   }
@@ -168,7 +171,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
     PyErr_Print();
 
   }
-	errIntercept.flush();
+	getIntercepter()->flush();
 
 
   Py_DECREF(moduleName);

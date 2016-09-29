@@ -22,8 +22,9 @@ using namespace std;
 class PythonWrap{
     public :
 
+	juce_DeclareSingleton(PythonWrap,false);
+  PythonWrap(){}
 
-  PythonWrap():errIntercept(this){}
 	~PythonWrap(){deinit();}
     string test(const string& s,PyObject * module);
   
@@ -40,7 +41,7 @@ class PythonWrap{
 	class PipeIntercepter : public ChangeBroadcaster,AsyncUpdater{
 	public:
 
-    PipeIntercepter(PythonWrap * o):owner(o){
+    PipeIntercepter():owner(nullptr){
 			listenerNum = 0;
 		}
 		~PipeIntercepter(){
@@ -67,7 +68,7 @@ class PythonWrap{
 		int listenerNum;
 		
 		void addLogListener (ChangeListener* listener){
-
+			if(!owner)owner=PythonWrap::i();
 			listenerNum ++;
       if(listenerNum==1){owner->redirectStd(true);}
 			addChangeListener(listener);

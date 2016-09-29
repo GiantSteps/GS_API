@@ -153,9 +153,12 @@ void PyJUCEParameter::updateFromPython(){
 }
 
 var PyJUCEParameter::getValue(){return value;}
-
+void PyJUCEParameter::componentBeingDeleted(Component & c){
+	removeListener(&c);
+}
 Component * PyJUCEParameter::buildComponent(){
 	Component * res = createComponent( value,properties);
+	res->addComponentListener(this);
 
 	if (res) {
     linkedComponents.add(res);
