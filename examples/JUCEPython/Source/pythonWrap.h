@@ -25,7 +25,9 @@ class PythonWrap{
 	juce_DeclareSingleton(PythonWrap,false);
   PythonWrap(){}
 
-	~PythonWrap(){deinit();}
+	~PythonWrap(){
+		deinit();
+	}
     string test(const string& s,PyObject * module);
   
     void printPyState();
