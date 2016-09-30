@@ -120,11 +120,13 @@ PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),
 
 PyJUCEParameter::~PyJUCEParameter(){
   for(auto s : linkedComponents){
-    if(s.get()){removeListener(s);
-      DBG("old compeonent still linked");
+    if(s.get()){
+			removeListener(s);
+      DBG("old component still linked");
     }
   }
-  Py_DecRef(pyRef);Py_DecRef(listenerName);
+  Py_DecRef(pyRef);
+	Py_DecRef(listenerName);
 }
 
 void PyJUCEParameter::deleteOldComponents(){

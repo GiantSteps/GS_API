@@ -59,6 +59,7 @@ public:
     virtual void newFileLoaded(const File & ){};
 		virtual void newPatternLoaded( GSPattern * ){};
 		virtual void newParamsLoaded( OwnedArray<PyJUCEParameter> *){};
+    virtual void paramsBeingCleared(){};
     
   };
   ListenerList<Listener> listeners;
@@ -67,8 +68,8 @@ public:
 	void timeChanged(double time) override;
 	
 	OwnedArray<PyJUCEParameter> params;
-
-
+	String 	VSTPluginName;
+	File VSTPluginFolder;
   PyObject * pluginModule;
   PyObject* interfaceModule;
 	static GSPatternPyWrap GSPatternWrap;

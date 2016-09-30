@@ -43,6 +43,7 @@ class VoiceComponent:public Component{
 public:
 	VoiceComponent(String _tag,VoicesContainer * container,bool _displayPitch);
 	
+	
 	GSPattern * getPattern();
 	vector<GSPatternEvent *> getVoiceEvents();
 	void update();

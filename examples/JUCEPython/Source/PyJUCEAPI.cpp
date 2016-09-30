@@ -1,10 +1,10 @@
 /*
  ==============================================================================
-
+ 
  PyJUCEAPI.cpp
  Created: 13 Jun 2016 5:00:10pm
  Author:  Martin Hermant
-
+ 
  ==============================================================================
  */
 
@@ -15,7 +15,7 @@
 #include "PyJUCEPython.h"
 #include "Utils.h"
 
- GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
+GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
 
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
 
@@ -36,50 +36,50 @@ void PyJUCEAPI::callTimeChanged(double time){
 	// TODO bug multiple load
   PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
   PythonWrap::i()->callFunction("onTimeChanged",pluginModule,timePyObj);
-
+	
   Py_DECREF(timePyObj);
-
+	
 }
 
 
 
 bool PyJUCEAPI::setNewPattern(PyObject * o){
-
+	
   GSPattern * p=nullptr;
   bool found = false;
   // Legacy
-
+	
   
-//		if(o!=Py_None){
-//      p = GSPatternWrap.GenerateFromObj(o);
-//      if(p){p->checkDurationValid();found = true;}
-//      else{DBG("pattern not valid");}
-//
-//    }
-////		Py_DECREF(o);
-//
-//  if(p)listeners.call(&Listener::newPatternLoaded,p);
+	//		if(o!=Py_None){
+	//      p = GSPatternWrap.GenerateFromObj(o);
+	//      if(p){p->checkDurationValid();found = true;}
+	//      else{DBG("pattern not valid");}
+	//
+	//    }
+	////		Py_DECREF(o);
+	//
+	//  if(p)listeners.call(&Listener::newPatternLoaded,p);
   return found;
 }
 
 
 void PyJUCEAPI::callSetupFunction(){
   PyObject * o=nullptr;
-
+	
   if((o = PythonWrap::i()->callFunction("setup",pluginModule))){
-
+		
     if(PyString_Check(o)){
       DBG("setup returned " << PyToString(o));
-
-
+			
+			
     }
     else if (o!=Py_None){
-
+			
       DBG("unhandeled return type : "<< o->ob_type->tp_name);
     }
     Py_DECREF(o);
-
-
+		
+		
   }
   else {
     DBG("no setup function found or file not loaded");
@@ -88,6 +88,13 @@ void PyJUCEAPI::callSetupFunction(){
 //
 
 
+String getVSTPluginPythonName(File & folder){
+	jassert(folder.isDirectory());
+	Array<File> res;
+	folder.findChildFiles (res,File::TypesOfFileToFind::findFiles,false,"VSTPlugi*.py");
+	if (res.size()) {return res[0].getFileNameWithoutExtension();}
+	return "";
+}
 void PyJUCEAPI::init(){
   if(!isInitialized){
 		String bin = getVSTProperties().getValue("pythonBin");
@@ -102,28 +109,38 @@ void PyJUCEAPI::init(){
 		bool loadCustom = pythonFolder=="custom";
 		bool loadDefault = pythonFolder=="default";
 		if (!loadCustom) {
-		if (loadDefault  ) {
-			pythonFile = File (getVSTPath()+"/../../Resources/python/VSTPlugin.py");
+			if (loadDefault  ) {
+				VSTPluginFolder = File (getVSTPath()+"/../../Resources/python/");
+				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
+			}
+			else{
+				VSTPluginFolder = pythonFolder;
+				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
+			}
 		}
-		else{
-			pythonFile = File(pythonFolder).getChildFile("VSTPlugin.py");
-		}
-		}
+		
+		pythonFile = File (VSTPluginFolder).getChildFile(VSTPluginName+".py");
+		
 		if(loadCustom  || !pythonFile.exists()){
 			juce::FileChooser fc("select Folder containing VSTPlugin.py");
 			if(fc.browseForDirectory()){
-				pythonFile = fc.getResult().getChildFile("VSTPlugin.py");
+				VSTPluginFolder = fc.getResult();
+				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
 				getVSTProperties().setValue("VSTPythonFolderPath",fc.getResult().getFullPathName());
 			}
 			
 		}
+
 		if(pythonFile.exists()){
-    PythonWrap::i()->initSearchPath();
-    PythonWrap::i()->setFolderPath(pythonFile.getParentDirectory().getFullPathName().toStdString());
+			PythonWrap::i()->initSearchPath();
+			PythonWrap::i()->setFolderPath(VSTPluginFolder.getFullPathName().toStdString());
+		}
+		else{
+			jassertfalse;
 		}
   }
   isInitialized = pythonFile.exists();
-
+	
 }
 
 bool PyJUCEAPI::setParam(PyObject* o){
@@ -139,25 +156,32 @@ bool PyJUCEAPI::setParam(PyObject* o){
 
 
 void PyJUCEAPI::load(){
-  pluginModule =  PythonWrap::i()->loadModule(pythonFile.getFileNameWithoutExtension().toStdString(),pluginModule);
+	// hack to load only the first time VST is called and for subsequent UI actions
+	if(MessageManager::getInstance()->isThisTheMessageThread()  || !pluginModule){
+  pluginModule =  PythonWrap::i()->loadModule(VSTPluginName.toStdString(),pluginModule);
   lastPythonFileMod = pythonFile.getLastModificationTime();
-
+	
   if (pluginModule){
-    callSetupFunction();
     buildParamsFromScript();
+		callSetupFunction();
   }
   listeners.call(&Listener::newFileLoaded,pythonFile);
-
+	}
+	else{
+		DBG("can't load python from other threads");
+	}
+	
 }
 
 void PyJUCEAPI::buildParamsFromScript(){
+	listeners.call(&Listener::paramsBeingCleared);
   params.clear();
   
-  if((interfaceModule = PythonWrap::i()->loadModule("interface",interfaceModule))){
-
+  if((interfaceModule = PythonWrap::i()->loadModule(VSTPluginName.toStdString()+"_interface",interfaceModule))){
+		
     PyObject * o = PythonWrap::i()->callFunction("getAllParameters",interfaceModule);
     if (o){
-
+			
       if(PyList_Check(o)) {
         int s = PyList_GET_SIZE(o);
         for (int i = 0 ; i < s; i++){
@@ -175,12 +199,12 @@ void PyJUCEAPI::buildParamsFromScript(){
   else{
     DBG("cant load interface or none provided");
   }
-
+	
 }
 
 
- PyPatternParameter * PyJUCEAPI::getMainPatternParameter(){
-
+PyPatternParameter * PyJUCEAPI::getMainPatternParameter(){
+	
 }
 void PyJUCEAPI::timeChanged(double time) {callTimeChanged(time);};
 

@@ -39,6 +39,12 @@ void PythonCanvas::handleCommandMessage(int cID){
 }
 
 
+void PythonCanvas::paramsBeingCleared(){
+	for(auto & p:pyWidgets){
+		listeners.call(&Listener::widgetRemoved,p);
+	}
+	pyWidgets.clear();
+}
 
 inline Rectangle<int> scaleRect(Rectangle<float> r,Rectangle<int> b){
 	return (r.translated(b.getX(), b.getY())*Point<float>(b.getWidth()/100.0,b.getHeight()/100.0)).toNearestInt();
