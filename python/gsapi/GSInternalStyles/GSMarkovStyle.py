@@ -1,4 +1,5 @@
-from gsapi import GSStyle,GSPattern,GSPatternEvent
+from gsapi import *
+from gsapi.MathUtils import PatternMarkov
 import random
 
 
@@ -89,17 +90,3 @@ class GSMarkovStyle(GSStyle):
 
 
 
-
-
-if __name__ == '__main__':
-
-	import glob,json
-	
-	import GSIO
-	
-	patterns= GSIO.fromMidiCollection()
-	s.generateStyle(patterns)
-	print s.transitionTable
-	p = s.generatePattern()
-
-	p.printEvents()

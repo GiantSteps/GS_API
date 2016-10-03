@@ -208,7 +208,8 @@ public:
 
   void registerListener(Component *c) override{((Slider*)c)->addListener(this);}
   void removeListener(Component *c) override{((Slider*)c)->removeListener(this);}
-	void sliderValueChanged (Slider* slider) override{setValue(slider->getValue());}
+  void sliderValueChanged (Slider* slider)override{}
+  void sliderDragEnded (Slider* slider)override{setValue(slider->getValue());}
   void updateComponentState(Component *c) override{((Slider*)c)->setValue(value,NotificationType::dontSendNotification);}
 
 

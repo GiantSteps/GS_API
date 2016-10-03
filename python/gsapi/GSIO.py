@@ -9,9 +9,8 @@ from gsapi import *
 
 
 
-defaultPitchNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B","B#"]
-
-
+defaultPitchNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+generalMidiMap = {"Acoustic Bass Drum":35,"Bass Drum 1":36,"Side Stick":37,"Acoustic Snare":38,"Hand Clap":39,"Electric Snare":40,"Low Floor Tom":41,"Closed Hi Hat":42,"High Floor Tom":43,"Pedal Hi-Hat":44,"Low Tom":45,"Open Hi-Hat":46,"Low-Mid Tom":47,"Hi-Mid Tom":48,"Crash Cymbal 1":49,"High Tom":50,"Ride Cymbal 1":51,"Chinese Cymbal":52,"Ride Bell":53,"Tambourine":54,"Splash Cymbal":55,"Cowbell":56,"Crash Cymbal 2":57,"Vibraslap":58,"Ride Cymbal 2":59,"Hi Bongo":60,"Low Bongo":61,"Mute Hi Conga":62,"Open Hi Conga":63,"Low Conga":64,"High Timbale":65,"Low Timbale":66,"High Agogo":67,"Low Agogo":68,"Cabasa":69,"Maracas":70,"Short Whistle":71,"Long Whistle":72,"Short Guiro":73,"Long Guiro":74,"Claves":75,"Hi Wood Block":76,"Low Wood Block":77,"Mute Cuica":78,"Open Cuica":79,"Mute Triangle":80,"Open Triangle":81}
 def __formatNoteToTags(_NoteToTags):
 	""" internal conversion for consistent NoteTagMap Structure
 
@@ -41,7 +40,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 			for e in tracks:
 				if midi.MetaEvent.is_event(e.statusmsg):
 					if e.metacommand == midi.TimeSignatureEvent.metacommand :
-						if foundTimeSignatureEvent: print "multiple time signature found, not supported" ; exit(-1)
+						if foundTimeSignatureEvent: print "multiple time signature found, not supported, result can be alterated" 
 						foundTimeSignatureEvent = True;
 						pattern.timeSignature = [e.numerator, e.denominator]
 						#  e.metronome = e.thirtyseconds ::  do we need that ???
@@ -64,7 +63,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 	def findTagsFromPitchAndChannel(pitch,channel,noteMapping):
 		def pitchToName(pitch,pitchNames):
 			octaveLength = len(pitchNames);
-			octave  = pitch/octaveLength;
+			octave  = (pitch/octaveLength) - 2; # 0 is C-2
 			note = pitch%octaveLength
 			return  pitchNames[note]+"_"+str(octave)
 
@@ -89,7 +88,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 	# first get signature
 	findTimeInfoFromMidi(pattern,globalMidi);
 
-	tick2quarterNote = 1.0/(globalMidi.resolution) ;
+	tickToQNote = 1.0/(globalMidi.resolution) ;
 
 	pattern.events=[]
 	lastNoteOff = 0;
@@ -123,6 +122,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 
 				pitch = e.pitch # optimize pitch property access
 				tick = e.tick
+				curBeat = tick*1.0*tickToQNote
 				if noteTags == []:
 					if TagsFromTrackNameEvents:continue
 					noteTags = findTagsFromPitchAndChannel(pitch,e.channel,NoteToTagsMap)
@@ -144,24 +144,28 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 						continue;
 					lastPitch = pitch
 					lastTick = tick
-					pattern.events+=[GSPatternEvent(tick*tick2quarterNote,-1,pitch,e.velocity,noteTags)]
+					# print "on"+str(pitch)+":"+str( tick*1.0*tickToQNote)
+					pattern.events+=[GSPatternEvent(startTime=curBeat,duration=-1,pitch=pitch,velocity=127,tags=noteTags)]
 
 
 					
 					
 				
 				if isNoteOn or isNoteOff:
+					# print "off"+str(pitch)+":"+str( tick*1.0*tickToQNote)
 					foundNoteOn = False
 					for i in reversed(pattern.events):
 						
-						if (i.pitch == pitch) and (i.tags==noteTags) and tick*tick2quarterNote >= i.startTime and i.duration<0:
+						if (i.pitch == pitch) and (i.tags==noteTags) and curBeat >= i.startTime and i.duration<=0.0001:
 							foundNoteOn = True
-							i.duration = max(0.001,tick*tick2quarterNote - i.startTime)
-							lastNoteOff = max(e.tick*tick2quarterNote,lastNoteOff);
+
+							i.duration = max(0.0001,curBeat - i.startTime)
+							lastNoteOff = max(curBeat,lastNoteOff);
+							# print "set duration "+str(i.duration) + "at start " + str(i.startTime)
 							break;
-					# if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-						# print "not found note on "+str(e)+str(pattern.events[-1])
-						# exit()
+					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
+						print "not found note on "+str(e)+str(pattern.events[-1])
+						
 		trackIdx+=1
 
 

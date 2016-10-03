@@ -43,8 +43,8 @@ def createLayout():
 	test4.setBoundsRect(area)
 
 def configureParams():
-	VSTPlugin.loopDuration.setMinMax(1,8).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
-	VSTPlugin.numSteps.setMinMax(32,64).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
+	VSTPlugin.loopDuration.setMinMax(1,16).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
+	VSTPlugin.numSteps.setMinMax(4,32).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
 	VSTPlugin.generateNewP.setCallbackFunction(VSTPlugin.generatePattern)
 	# add others ..
 	test4.onChange = updateList

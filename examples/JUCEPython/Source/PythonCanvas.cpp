@@ -17,13 +17,14 @@ void PythonCanvas::newParamsLoaded( OwnedArray<PyJUCEParameter> *params){
   postCommandMessage(REBUILD_PARAMS);
 
 };
+
+PythonCanvas::~PythonCanvas(){
+  paramsBeingCleared();
+}
 void PythonCanvas::handleCommandMessage(int cID){
   switch (cID) {
     case REBUILD_PARAMS:
-      for(auto & p:pyWidgets){
-        listeners.call(&Listener::widgetRemoved,p);
-      }
-      pyWidgets.clear();
+      paramsBeingCleared();
       for (auto & p:*originParams){
         Component * c = p->buildComponent();
         pyWidgets.add(c);

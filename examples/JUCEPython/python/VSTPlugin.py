@@ -22,38 +22,44 @@ from UIParameter import *
 
 """ this example generates stylistic markovian pattern to demonstrate passing GSPattern to C++ plugin
 """
+#generalMidiMap
 midiMap = {
-		"Kick":36,
-		"Rimshot":37,
-		"Snare":38,
-		"Clap":39,
-		"Clave":40,
-		"LowTom":41,
-		"ClosedHH":42,
-		"MidTom":43,
-		"Shake":44,
-		"HiTom":45,
-		"OpenHH":46,
-		"LowConga":47,
-		"HiConga":48,
-		"Cymbal":49,
-		"Conga":50,
-		"CowBell":51
-}
+			"Kick":36,
+			"Rimshot":37,
+			"Snare":38,
+			"Clap":39,
+			"Clave":40,
+			"LowTom":41,
+			"ClosedHH":42,
+			"MidTom":43,
+			"Shake":44,
+			"HiTom":45,
+			"OpenHH":46,
+			"LowConga":47,
+			"HiConga":48,
+			"Cymbal":49,
+			"Conga":50,
+			"CowBell":51
+	}
 
 localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 
-searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
-# searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
-searchPath = os.path.join(localDirectory,"midi","motown.mid");
+# searchPath = os.path.join(localDirectory,"midi","garagehouse1_snare.mid");
+# # searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
+# searchPath = os.path.join(localDirectory,"midi","motown.mid");
+# searchPath = "/Users/Tintamar/Dev/GS_API/test/midiDatasets/miniDaftPunk.mid";
 searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
+# searchPath = os.path.join(localDirectory,"midi/corpus-harmony","*.mid");
+searchPath = os.path.join(localDirectory,"*.mid");
+# midiMap = "pitchNames"
+dataSet = GSDataSet(midiGlob=searchPath,midiMap=midiMap)
 # searchPath = os.path.join(localDirectory,"midi","*.mid");
 
 # searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
 
 styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
 numSteps = NumParameter(32)
-loopDuration = NumParameter(4)
+loopDuration = NumParameter(8)
 generateNewP = EventParameter()
 style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
 patterns = None
@@ -67,7 +73,7 @@ eachBarIsNew = BoolParameter()
 patternParameter = PatternParameter()
 
 def setup():
-	generateStyleIfNeeded(forceRebuild = True,forceParamUpdate = False,loadFromJSON = True)
+	generateStyleIfNeeded(forceRebuild = True,forceParamUpdate = False,loadFromJSON = False)
 	generatePattern()
 	print "settingThingsUp"
 	
@@ -84,15 +90,24 @@ def onTimeChanged(time):
 	
 
 
+def tagToPitch(tag):
+	split = tag.split('_')
 
+	note = GSIO.defaultPitchNames.index(split[0])
+	octave = int(split[1])
+	return note+octave*12
 
 
 def mapMidi(pattern,midiMap):
-	for e in pattern.events:
-		if len(e.tags) > 0 and (e.tags[0] in midiMap):
-			e.pitch = midiMap[e.tags[0]]
-		else:
-			print "no map possible"
+	if midiMap=="pitchNames" : 
+		for e in pattern.events:
+			e.pitch = tagToPitch(e.tags[0])
+	else:
+		for e in pattern.events:
+			if len(e.tags) > 0 and (e.tags[0] in midiMap):
+				e.pitch = midiMap[e.tags[0]]
+			else:
+				print "no custom map possible"
 	return pattern
 
 
@@ -116,11 +131,17 @@ def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFrom
 			
 	if forceRebuild:
 		print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-		patterns = gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = int(loopDuration.value))
+		patterns = dataSet.patterns#gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = int(loopDuration.value))
+		
 
 	if forceRebuild or forceParamUpdate :
 		style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
+		patterns = []
+		for p in dataSet.patterns:
+			patterns += p.splitInEqualLengthPatterns(loopDuration.value);
 		style.generateStyle(patterns)
+
+
 		
 		
 
@@ -142,17 +163,18 @@ def generatePattern():
 	generateStyleIfNeeded();
 	newPattern = style.generatePattern()
 	newPattern = mapMidi(newPattern,midiMap)
+	print 'newPattern set'
 	patternParameter.value = newPattern
 	
-	print 'newPattern set'
+
 
 if __name__ =='__main__':
-	import interface
+	# import interface
 	print "runMain"
 	setup()
 	numSteps.value = 32
 	generatePattern()
-	params =  interface.getAllParameters()
+	# params =  interface.getAllParameters()
 	
 	
 	

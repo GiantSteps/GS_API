@@ -1,4 +1,4 @@
-
+import math
 import copy
 
 """Documentation for GSPattern module.
@@ -475,7 +475,7 @@ class GSPattern(object):
 		patterns = {}
 		
 		for e in self.events:
-			p = int(e.startTime/desiredLength);
+			p = math.floor(e.startTime*1.0/desiredLength);
 			numPattern = str(p)
 			if numPattern not in patterns:
 				patterns[numPattern] = self.getACopyWithoutEvents()

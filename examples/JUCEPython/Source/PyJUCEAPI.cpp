@@ -21,9 +21,9 @@ PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
 
 TimeListener(1),
 owner(o),
-isInitialized(false),
 pluginModule(nullptr),
 apiModuleObject(nullptr),
+isInitialized(false),
 interfaceModule(nullptr),
 paramBuilder(this)
 {
@@ -100,9 +100,14 @@ void PyJUCEAPI::init(){
 		String bin = getVSTProperties().getValue("pythonBin");
     String pyHome = getVSTProperties().getValue("pythonHome");
     if(pyHome==""){pyHome = getVSTPath()+"/../../Resources/pythonEnv";}
+    else if(pyHome=="system"){pyHome = "";}
     if (bin=="") {bin = pyHome+"/bin/python2.7";}
+    else if(bin=="system"){bin = "";}
 		else{		DBG("using custom python : " << bin);}
-    PythonWrap::i()->init(File(pyHome).getFullPathName().toStdString(),File(bin).getFullPathName().toStdString());
+    PythonWrap::i()->printPyState();
+    if (pyHome!="") bin=File(pyHome).getFullPathName();
+    if (bin!="") bin=File(bin).getFullPathName();
+    PythonWrap::i()->init(bin.toStdString(),pyHome.toStdString());
     initJUCEAPI(this,&apiModuleObject);
 		GSPatternWrap.init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
@@ -203,9 +208,7 @@ void PyJUCEAPI::buildParamsFromScript(){
 }
 
 
-PyPatternParameter * PyJUCEAPI::getMainPatternParameter(){
-	
-}
+
 void PyJUCEAPI::timeChanged(double time) {callTimeChanged(time);};
 
 void PyJUCEAPI::setWatching(bool w){

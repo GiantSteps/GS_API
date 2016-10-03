@@ -90,7 +90,7 @@ void VoicesContainer::paintOverChildren(Graphics & g){
     int numBeatPerBar = pattern.timeSigNumerator;
     int numBars = ceil(pattern.duration/numBeatPerBar);
     Rectangle<int> area = getLocalBounds();
-    int displayedTime = (numBars*numBeatPerBar);
+    int displayedTime = pattern.duration;
     float timeScale = area.getWidth()*1.0/displayedTime;
     g.setColour(Colours::chartreuse);
     double moduloPos = fmod(linePos,displayedTime);
@@ -399,7 +399,7 @@ void VoiceComponent::paint(Graphics & g) {
 
   int numBeatPerBar = owner->pattern.timeSigNumerator;
   int numBars = ceil(owner->pattern.duration/numBeatPerBar);
-  int displayedTime = (numBars*numBeatPerBar);
+  int displayedTime = owner->pattern.duration;//(numBars*numBeatPerBar);
   float timeScale = a.getWidth()*1.0/displayedTime;
   g.setColour(Colours::darkgrey.brighter());
   for(int i = 0;i < numBars*numBeatPerBar*owner->gridBeatSubDiv ; i++){
@@ -427,7 +427,7 @@ void VoiceComponent::resized(){
 ////////////////////////////
 // block Component
 
-BlockComponent::BlockComponent(GSPatternEvent* _evt,VoiceComponent * o):owner(o),evt(_evt){
+BlockComponent::BlockComponent(GSPatternEvent* _evt,VoiceComponent * o):evt(_evt),owner(o){
   leftResize = new ResizableEdgeComponent(this,&owner->owner->blockDragger,ResizableEdgeComponent::leftEdge);
   rightResize = new ResizableEdgeComponent(this,&owner->owner->blockDragger,ResizableEdgeComponent::rightEdge);
   addAndMakeVisible(leftResize);

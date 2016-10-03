@@ -60,7 +60,7 @@ class GSPatternTestUtils(unittest.TestCase):
 					self.assertFalse((e.startTime==ee.startTime) and 
 						(e.duration==ee.duration) and
 						(e.pitch==ee.pitch) and 
-						(e.tags == ee.tags),pattern.name+ " : " +msg + " doublons : "+ eToStr[i]+'/'+eToStr[ii])
+						(e.tags == ee.tags),pattern.name+ " : " + msg + " doublons : "+ eToStr[i]+'/'+eToStr[ii])
 				i+=1
 
 		if checkOverlap : self.checkNoTagsOverlaps(pattern,msg )

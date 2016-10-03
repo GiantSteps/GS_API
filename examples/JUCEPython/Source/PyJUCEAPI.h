@@ -28,7 +28,7 @@ class JucepythonAudioProcessor;
 class PyJUCEAPI : public Timer,public TimeListener{
 public:
   PyJUCEAPI(JucepythonAudioProcessor * o);
-  ~PyJUCEAPI(){isInitialized = false;Py_DECREF(timePyObj);Py_DECREF(timeKey);}
+  ~PyJUCEAPI(){cancelPendingUpdate();isInitialized = false;Py_DECREF(timePyObj);Py_DECREF(timeKey);}
 	
   void load();
   void init();
@@ -73,7 +73,7 @@ public:
   PyObject * pluginModule;
   PyObject* interfaceModule;
 	static GSPatternPyWrap GSPatternWrap;
-  PyPatternParameter * getMainPatternParameter();
+  
 
 protected:
 	

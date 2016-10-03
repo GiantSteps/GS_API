@@ -12,8 +12,7 @@ from GSPatternTestUtils import *
 class GSPatternTest(GSPatternTestUtils):
 
 	dataSet = GSDataSet(midiGlob="corpus-harmony/*.mid",midiMap="pitchNames")
-	# def __init__(self,*args):
-	# 	GSPatternTestUtils.__init__(self,*args)
+	
 
 
 	def test_Import(self):

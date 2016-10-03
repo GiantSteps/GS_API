@@ -37,7 +37,7 @@ try:
 
 	print 'installing to dist'
 	
-	Popen([pyEnvFolder+'/bin/pip2.7','install','--upgrade',GSAPIPythonFolder],shell = False).wait()
+	Popen([pyEnvFolder+'/bin/pip2.7','install','--upgrade','--force-reinstall',GSAPIPythonFolder],shell = False).wait()
 
 finally:
 	print "end configuring python"

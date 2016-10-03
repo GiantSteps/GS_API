@@ -17,6 +17,7 @@
 class PythonCanvas: public Component,public PyJUCEAPI::Listener{
 public:
 	PythonCanvas():originParams(nullptr){}
+  ~PythonCanvas();
 	void newParamsLoaded( OwnedArray<PyJUCEParameter> *) override;
 	void paramsBeingCleared() override;
 

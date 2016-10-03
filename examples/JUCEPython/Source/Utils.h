@@ -38,7 +38,7 @@ static String getVSTPath(){
 
 PropertiesFile & getVSTProperties(){
 	static File f(getVSTPath());
-	static File propertiesFile = f.getChildFile("../../properties.xml");
+	static File propertiesFile = f.getChildFile("../../Resources/properties.xml");
 
 	static PropertiesFile::Options o;
 	static     PropertiesFile p(propertiesFile,o);

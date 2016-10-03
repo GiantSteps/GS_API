@@ -62,6 +62,7 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
 JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 {
 
+  pyCnv.paramsBeingCleared();
   pyCnv.removeCanvasListener(this);
   
   owner->pyAPI.removeListener(this);

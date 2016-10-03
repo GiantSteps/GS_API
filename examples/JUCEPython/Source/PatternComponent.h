@@ -119,6 +119,7 @@ private:
 class PatternComponent : public Component,public PyJUCEAPI::Listener,public TimeListener,Button::Listener{
 public:
 	PatternComponent();
+  ~PatternComponent(){cancelPendingUpdate();}
 	
 	
 	void newPatternLoaded( GSPattern * p) override;

@@ -23,17 +23,22 @@ class PatternMarkov(object):
 		self.transitionTable = {}
 
 
-	def generateTransitionTableFromPatternList(self, PatternClasses):
+
+	def generateTransitionTableFromPatternList(self, patternClasses):
 		""" generate style based on list of GSPattern
 		Args:
 			PatternClasses :  list of GSPatterns
 		"""
-		if not isinstance(PatternClasses,list):
-			print "style need a list"
+		if not isinstance(patternClasses,list):
+			print "PatternMarkov need a list"
 			return False
 		else:
-			self.originPatterns = PatternClasses;
+			self.originPatterns = patternClasses;
 			self.buildTransitionTable();
+
+
+	def getMarkovConfig(self):
+		return "order(%i),loopLength(%f),numSteps(%i) "%(self.order,self.loopDuration,self.numSteps)
 
 
 	def buildTransitionTable(self):
@@ -46,7 +51,7 @@ class PatternMarkov(object):
 			self.formatPattern(p)
 			self.checkSilences(p)
 			if(self.numSteps != int(p.duration)):
-					print "quantization to numSteps failed, numSteps="+self.numSteps+" duration="+p.duration
+					print "PatternMarkov : quantization to numSteps failed, numSteps="+str(self.numSteps)+" duration="+str(p.duration) + " cfg : "+self.getMarkovConfig()
 			for step in range(self.numSteps):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
@@ -76,6 +81,11 @@ class PatternMarkov(object):
 		_normalize()
 		
 		
+	def __repr__(self):
+		res = "Markov Transition Table\n"
+		for s in self.transitionTable:
+			res+= str(s) + "\n"
+		return res
 
 	def generatePattern(self,seed = None):
 		""" generate a new pattern from current transitionTable
@@ -201,8 +211,9 @@ class PatternMarkov(object):
 		return out
 
 	def formatPattern(self,p):
-		# p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);
+		# p.quantize(self.numSteps*1.0/self.loopDuration);
 		p.timeStretch(self.numSteps*1.0/self.loopDuration)
+
 		p.alignOnGrid(1)
 		p.removeOverlapped()
 		p.fillWithSilences(maxSilenceTime = 1);	

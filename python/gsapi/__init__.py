@@ -3,6 +3,8 @@ from GSStyle import *
 from GSInternalStyles import *
 from GSIO import *
 from GSDataSet import *
+from GSDescriptor import *
+from GSDescriptors import *
 
 if __name__ == '__main__':
 	p = GSPattern()

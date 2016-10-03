@@ -151,7 +151,7 @@ if(!useInternalTransport){
 }
 else{
   // 120bpm
-    playHead+=  buffer.getNumSamples()*2.0/getSampleRate();
+    playHead+=  buffer.getNumSamples()*1.0/getSampleRate();
 }
 	timeListeners.call(&TimeListener::setTime,playHead);
     player.updatePlayHead(playHead);
