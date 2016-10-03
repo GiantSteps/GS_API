@@ -79,7 +79,7 @@ public:
 	ListenerList<TimeListener> timeListeners;
 	void addTimeListener(TimeListener * l){timeListeners.add(l);}
 	void removeTimeListener(TimeListener * l){timeListeners.remove(l);}
-  
+  static int instanceCount;
 
 private:
 

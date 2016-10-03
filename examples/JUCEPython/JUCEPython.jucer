@@ -12,10 +12,10 @@
               version="1.0.0">
   <MAINGROUP id="wIfrjA" name="JUCEPython">
     <GROUP id="{123C043F-4E4D-002D-48FC-077F5FB907EC}" name="Source">
-      <FILE id="b0kXuY" name="PyPatternParameter.cpp" compile="1" resource="0"
-            file="Source/PyPatternParameter.cpp"/>
-      <FILE id="qRXE3m" name="PyPatternParameter.h" compile="0" resource="0"
-            file="Source/PyPatternParameter.h"/>
+      <FILE compile="1" file="Source/PyPatternParameter.cpp" id="b0kXuY"
+            name="PyPatternParameter.cpp" resource="0"/>
+      <FILE compile="0" file="Source/PyPatternParameter.h" id="qRXE3m" name="PyPatternParameter.h"
+            resource="0"/>
       <FILE compile="0" file="Source/Utils.h" id="aXthu1" name="Utils.h"
             resource="0"/>
       <FILE compile="1" file="Source/PyJUCEPython.cpp" id="TNOcDr" name="PyJUCEPython.cpp"
@@ -111,11 +111,11 @@
                prebuildCommand="touch $SRCROOT/../../python&#10;" targetFolder="Builds/MacOSX"
                vstFolder="">
       <CONFIGURATIONS>
-        <CONFIGURATION cppLanguageStandard="c++11" cppLibType="libc++" customXcodeFlags="PYCFLAGS=&quot;-I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
+        <CONFIGURATION cppLanguageStandard="c++11" cppLibType="libc++" customXcodeFlags="PYCFLAGS=&quot;-I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7&quot;,PYENVPATH=/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
                        defines="" headerPath="" isDebug="1" name="Debug" optimisation="1"
                        osxArchitecture="64BitUniversal" osxCompatibility="10.8 SDK"
                        osxSDK="default" targetName="JUCEPython"/>
-        <CONFIGURATION customXcodeFlags="PYCFLAGS=&quot;-I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers&quot;,PYENVPATH=/Users/Tintamar/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
+        <CONFIGURATION customXcodeFlags="PYCFLAGS=&quot;-I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7 -I/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv/include/python2.7&quot;,PYENVPATH=/Users/mhermant/Documents/Work/Dev/GS_API/examples/JUCEPython/pythonEnv,PYLDFLAGS=&quot;-L/usr/local/Cellar/python/2.7.11/Frameworks/Python.framework/Versions/2.7/lib/python2.7/config -lpython2.7 -framework CoreFoundation&quot;"
                        isDebug="0" name="Release" optimisation="3" osxArchitecture="default"
                        osxCompatibility="default" osxSDK="default" targetName="JUCEPython"/>
       </CONFIGURATIONS>

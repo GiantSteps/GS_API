@@ -16,7 +16,7 @@
 
 class PyJUCEAPI;
 
-class PyJUCEParameter{
+class PyJUCEParameter:ComponentListener{
 public:
 	
   PyJUCEParameter(PyObject * o,const String & _name);
@@ -72,6 +72,8 @@ protected:
 private:
   void linkToJuceApi(PyJUCEAPI * );
   void setPythonCallback(PyObject *);
+	
+	void componentBeingDeleted(Component & c)override;
 
 	
 };

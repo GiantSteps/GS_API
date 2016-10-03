@@ -36,7 +36,7 @@ static String getVSTPath(){
 }
 #endif
 
-static PropertiesFile & getVSTProperties(){
+PropertiesFile & getVSTProperties(){
 	static File f(getVSTPath());
 	static File propertiesFile = f.getChildFile("../../properties.xml");
 
@@ -46,6 +46,7 @@ static PropertiesFile & getVSTProperties(){
 		p.setValue("pythonBin", "");
     p.setValue("pythonHome", "");
 		p.setValue("VSTPythonFolderPath", "default");
+		p.setValue("VSTName", "JPython");
 		p.save();
 	}
 	return p;

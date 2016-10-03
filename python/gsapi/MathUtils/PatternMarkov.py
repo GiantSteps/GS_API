@@ -45,8 +45,9 @@ class PatternMarkov(object):
 		for p in self.binarizedPatterns:
 			self.formatPattern(p)
 			self.checkSilences(p)
-			
-			for step in range(int(p.duration)):
+			if(self.numSteps != int(p.duration)):
+					print "quantization to numSteps failed, numSteps="+self.numSteps+" duration="+p.duration
+			for step in range(self.numSteps):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
 				curEvent = self._buildNameForEvents(l);

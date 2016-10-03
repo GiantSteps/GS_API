@@ -35,7 +35,6 @@ class GSMarkovStyle(GSStyle):
 		""" builds transisiont table for the previously given list of GSPattern
 		"""
 		self.markovChain.buildTransitionTable()
-				
 
 		
 		

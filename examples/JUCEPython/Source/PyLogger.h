@@ -23,6 +23,7 @@ public:
     setRowHeight(12);
   }
   ~PyLogger(){
+		
     PythonWrap::i()->getIntercepter()->removeLogListener(this);
 
   }
