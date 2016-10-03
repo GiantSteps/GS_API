@@ -9,6 +9,7 @@ from gsapi import *
 
 
 
+defaultPitchNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B","B#"]
 
 
 def __formatNoteToTags(_NoteToTags):
@@ -17,10 +18,16 @@ def __formatNoteToTags(_NoteToTags):
 	"""
 	import copy
 	NoteToTags = copy.copy(_NoteToTags) 
+	if(NoteToTags == "pitchNames"):
+		NoteToTags = {"pitchNames":""}
 	for n in NoteToTags:
-		if not isinstance(NoteToTags[n],list): NoteToTags[n] = [NoteToTags[n]]
-		for i in range(len(NoteToTags[n])):
-			if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
+		if n=="pitchNames":
+			if not NoteToTags["pitchNames"]:
+				NoteToTags["pitchNames"] = defaultPitchNames
+		else:	
+			if not isinstance(NoteToTags[n],list): NoteToTags[n] = [NoteToTags[n]]
+			for i in range(len(NoteToTags[n])):
+				if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
 	return NoteToTags
 
 def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
@@ -55,6 +62,14 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 		return res
 
 	def findTagsFromPitchAndChannel(pitch,channel,noteMapping):
+		def pitchToName(pitch,pitchNames):
+			octaveLength = len(pitchNames);
+			octave  = pitch/octaveLength;
+			note = pitch%octaveLength
+			return  pitchNames[note]+"_"+str(octave)
+
+		if "pitchNames" in noteMapping.keys():
+			return [pitchToName(pitch,noteMapping["pitchNames"])]
 		res = [];
 		for l in noteMapping:
 			for le in noteMapping[l]:
@@ -112,6 +127,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 					if TagsFromTrackNameEvents:continue
 					noteTags = findTagsFromPitchAndChannel(pitch,e.channel,NoteToTagsMap)
 
+
 				if noteTags ==[] :
 					if ([e.channel,pitch] not in notFoundTags):
 						print "no tags found for pitch %d on channel %d"%(pitch,e.channel)
@@ -154,6 +170,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 	barSize = pattern.timeSignature[0]*elementSize;
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
 	pattern.duration = lastBarPos
+	pattern.name = os.path.basename(midiPath)
 
 	return pattern
 
@@ -166,6 +183,7 @@ def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=Fal
 	Args:
 		midiPath: midi filePath
 		NoteToTagsMap: dictionary converting pitches to tags 
+			if only interssed by pitch, you can specify it to "pitchNames", and optionaly set the value to the list of string for pitches from C
 			noteMapping maps classes to a list of possible Mappings, a mapping can be:
 			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
 			an integer if only pitch matters

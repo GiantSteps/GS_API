@@ -135,6 +135,7 @@ class GSPattern(object):
 		self.timeSignature = GSPattern.defaultTimeSignature;
 		self.originFilePath=""
 		self.name=""
+		
 
 
 	def setDurationFromLastEvent(self,onlyIfBigger=True):
@@ -478,6 +479,7 @@ class GSPattern(object):
 			numPattern = str(p)
 			if numPattern not in patterns:
 				patterns[numPattern] = self.getACopyWithoutEvents()
+				patterns[numPattern].name+="_slice_"+numPattern
 				patterns[numPattern].duration = desiredLength;
 				patterns[numPattern].name = self.name + "_"+numPattern;
 			newEv = e if not copy else e.copy();
