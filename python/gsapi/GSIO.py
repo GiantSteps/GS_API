@@ -10,7 +10,88 @@ from gsapi import *
 
 
 defaultPitchNames = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+""" default pitch naemes for pitch class (MidiNote%12)
+"""
 generalMidiMap = {"Acoustic Bass Drum":35,"Bass Drum 1":36,"Side Stick":37,"Acoustic Snare":38,"Hand Clap":39,"Electric Snare":40,"Low Floor Tom":41,"Closed Hi Hat":42,"High Floor Tom":43,"Pedal Hi-Hat":44,"Low Tom":45,"Open Hi-Hat":46,"Low-Mid Tom":47,"Hi-Mid Tom":48,"Crash Cymbal 1":49,"High Tom":50,"Ride Cymbal 1":51,"Chinese Cymbal":52,"Ride Bell":53,"Tambourine":54,"Splash Cymbal":55,"Cowbell":56,"Crash Cymbal 2":57,"Vibraslap":58,"Ride Cymbal 2":59,"Hi Bongo":60,"Low Bongo":61,"Mute Hi Conga":62,"Open Hi Conga":63,"Low Conga":64,"High Timbale":65,"Low Timbale":66,"High Agogo":67,"Low Agogo":68,"Cabasa":69,"Maracas":70,"Short Whistle":71,"Long Whistle":72,"Short Guiro":73,"Long Guiro":74,"Claves":75,"Hi Wood Block":76,"Low Wood Block":77,"Mute Cuica":78,"Open Cuica":79,"Mute Triangle":80,"Open Triangle":81}
+""" generalMidi Map from Midi Specification
+"""
+
+
+
+def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True,checkForOverlapped=False):
+	""" loads a midi file as a pattern
+
+	Args:
+		midiPath: midi filePath
+		NoteToTagsMap: dictionary converting pitches to tags 
+			if only interssed by pitch, you can specify it to "pitchNames", and optionaly set the value to the list of string for pitches from C
+			noteMapping maps classes to a list of possible Mappings, a mapping can be:
+			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
+			an integer if only pitch matters
+			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
+			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
+
+		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks
+		filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
+		tracksToGet: if not empty, specifies tracks wanted either by name or index
+		checkForOverlapped : if true will check that two consecutiveEvents with exactly same MidiNote are not overlapping 
+	"""
+	_NoteToTagsMap=__formatNoteToTags(NoteToTagsMap)
+	return __fromMidiFormatted(midiPath=midiPath,NoteToTagsMap=_NoteToTagsMap,tracksToGet = tracksToGet,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped=filterOutNotMapped,checkForOverlapped=checkForOverlapped)
+
+
+
+def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped = True,desiredLength = 0):
+	""" loads a midi collection
+
+	Args:
+		midiGlobPath: midi filePath in glob naming convention (e.g '/folder/To/Crawl/*.mid')
+		desiredLength: optionally cut patterns in equal length
+		otherArguments: are defined in :py:func:`fromMidi`
+	Returns:
+		a list of GSPattern build from Midi folder
+	"""
+
+
+	res = []
+	_NoteToTagsMap = __formatNoteToTags(NoteToTagsMap)
+	print glob.glob(midiGlobPath)
+	for f in glob.glob(midiGlobPath):
+		name =  os.path.splitext(os.path.basename(f))[0]
+		print "getting "+name
+		p = fromMidi(f,_NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
+		
+		if desiredLength>0:
+			res+= p.splitInEqualLengthPatterns(desiredLength,copy=False);
+		else:
+			res+=[p];
+	return res;
+
+
+
+
+
+def PatternFromJSONFile(filePath):
+	""" load a pattern to internal JSON Format
+
+	Args:
+		filePath:filePath where to load it
+	"""
+	with open(filePath,'r') as f:
+		return GSPattern().fromJSONDict(json.load(f))
+
+def PatternToJSONFile(pattern,filePath):
+	""" save a pattern to internal JSON Format
+
+	Args:
+		filePath:filePath where to save it
+	"""
+	with open(filePath,'w') as f:
+		return json.dump(pattern.toJSONDict(),f)
+
+
+
+
 def __formatNoteToTags(_NoteToTags):
 	""" internal conversion for consistent NoteTagMap Structure
 
@@ -29,7 +110,7 @@ def __formatNoteToTags(_NoteToTags):
 				if isinstance(NoteToTags[n][i],int):NoteToTags[n][i] = (NoteToTags[n][i],'*')
 	return NoteToTags
 
-def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
+def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True,checkForOverlapped=False):
 	""" internal function that accept only Consistent NoteTagMap structure as created by __formatNoteToTags
 	"""
 	def findTimeInfoFromMidi(pattern,midiFile):
@@ -175,79 +256,13 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
 	pattern.duration = lastBarPos
 	pattern.name = os.path.basename(midiPath)
+	if(checkForOverlapped):
+		pattern.removeOverlapped(usePitchValues=True)
 
 	return pattern
 
 
 
 
-def fromMidi(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True):
-	""" loads a midi file as a pattern
 
-	Args:
-		midiPath: midi filePath
-		NoteToTagsMap: dictionary converting pitches to tags 
-			if only interssed by pitch, you can specify it to "pitchNames", and optionaly set the value to the list of string for pitches from C
-			noteMapping maps classes to a list of possible Mappings, a mapping can be:
-			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by '*' character
-			an integer if only pitch matters
-			for simplicity one can pass only one integer (i.e not a list) for one to one mappings
-			if midi track contain the name of one element of mapping, it'll be choosed without anyother consideration
-
-		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks
-		filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
-		tracksToGet: if not empty, specifies tracks wanted either by name or index
-	"""
-	_NoteToTagsMap=__formatNoteToTags(NoteToTagsMap)
-	return __fromMidiFormatted(midiPath=midiPath,NoteToTagsMap=_NoteToTagsMap,tracksToGet = tracksToGet,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped=filterOutNotMapped)
-
-
-
-def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped = True,desiredLength = 0):
-	""" loads a midi collection
-
-	Args:
-		midiGlobPath: midi filePath in glob naming convention (e.g '/folder/To/Crawl/*.mid')
-		desiredLength: optionally cut patterns in equal length
-		otherArguments: are defined in :py:func:`fromMidi`
-	Returns:
-		a list of GSPattern build from Midi folder
-	"""
-
-
-	res = []
-	_NoteToTagsMap = __formatNoteToTags(NoteToTagsMap)
-	print glob.glob(midiGlobPath)
-	for f in glob.glob(midiGlobPath):
-		name =  os.path.splitext(os.path.basename(f))[0]
-		print "getting "+name
-		p = fromMidi(f,_NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
-		
-		if desiredLength>0:
-			res+= p.splitInEqualLengthPatterns(desiredLength,copy=False);
-		else:
-			res+=[p];
-	return res;
-
-
-
-
-
-def PatternFromJSONFile(filePath):
-	""" load a pattern to internal JSON Format
-
-	Args:
-		filePath:filePath where to load it
-	"""
-	with open(filePath,'r') as f:
-		return GSPattern().fromJSONDict(json.load(f))
-
-def PatternToJSONFile(pattern,filePath):
-	""" save a pattern to internal JSON Format
-
-	Args:
-		filePath:filePath where to save it
-	"""
-	with open(filePath,'w') as f:
-		return json.dump(pattern.toJSONDict(),f)
 

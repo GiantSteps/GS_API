@@ -12,20 +12,23 @@ class GSDataSet(object):
 	defaultMidiFolder = os.path.abspath("../../../test/midiDatasets/")
 	defaultMidiGlob = "*/*.mid"
 
-	def __init__(self,midiFolder=defaultMidiFolder,midiGlob=defaultMidiGlob,midiMap = defaultDrumMidiMap):
+	def __init__(self,midiFolder=defaultMidiFolder,midiGlob=defaultMidiGlob,midiMap = defaultDrumMidiMap,checkForOverlapped=False):
 		self.midiFolder = midiFolder;
 		self.midiMap = midiMap
+		self.checkForOverlapped = checkForOverlapped
 		self.setMidiGlob (midiGlob);
 		self.importMIDI()
+		
 
 	def setMidiGlob(self,globPattern):
 		if '.mid' in globPattern: globPattern = globPattern[:-4]
 		self.midiGlob = globPattern+'.mid'
 		self.globPath = os.path.abspath(os.path.join(self.midiFolder,self.midiGlob))
 		self.files = glob.glob(self.globPath)
-		if not len(self.files):
+		if  len(self.files) ==0:
 			print "no files found for path "+self.globPath
-		self.idx = random.randint(0,len(self.files)-1)
+		else:
+			self.idx = random.randint(0,len(self.files)-1)
 
 
 
@@ -36,6 +39,6 @@ class GSDataSet(object):
 		self.patterns=[]
 		for p in self.files:
 			print 'using ' +p
-			p  = GSIO.fromMidi(p,self.midiMap,tracksToGet=[])
+			p  = GSIO.fromMidi(p,self.midiMap,tracksToGet=[],checkForOverlapped=self.checkForOverlapped)
 			self.patterns+=[p]
 		return self.patterns

@@ -7,14 +7,17 @@ from gsapi import GSDescriptor
 
 class GSDescriptorDensity(GSDescriptor):
 
-	def __init__(self):
+	def __init__(self,ignoredTags = ["silence"],includedTags=[]):
 		GSDescriptor.__init__(self)
+		self.ignoredTags = ignoredTags
+		self.includedTags = includedTags
 
 	def getDescriptorForPattern(self,pattern):
 		density = 0;
-		for e in pattern.events:
-			if not "silence" in e.tags:
+		_checkedPattern = pattern.getPatternWithoutTags(self.ignoredTags)
+		if(self.includedTags) : _checkedPattern = _checkedPattern.getPatternWithTags(self.includedTags,copy=False)
+		
+		for e in _checkedPattern.events:
 				density+=e.duration
 		return density
 
-	

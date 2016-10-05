@@ -22,7 +22,7 @@ class MarkovPatternTest(GSPatternTestUtils):
 		for p in self.dataSet.patterns:
 			self.patternList += p.splitInEqualLengthPatterns(loopDuration,False);
 		
-		for p in self.patternList :print p; p.printEvents()
+		for p in self.patternList :print p
 		self.markovChain = PatternMarkov(order=order,numSteps=numSteps,loopDuration=loopDuration);
 		self.markovChain.generateTransitionTableFromPatternList(self.patternList)
 		print self.markovChain

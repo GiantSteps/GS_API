@@ -110,6 +110,8 @@ class GSPatternEvent(object):
 			newE.duration = stepSize
 			res+=[newE]
 		return res
+	def __repr__(self):
+		return "%s %i %f %f"%(self.tags,self.pitch,self.startTime,self.duration)
 
 
 # ///////////////
@@ -284,6 +286,30 @@ class GSPattern(object):
 				res.events+=[newEv]
 		return res
 
+	def getPatternWithoutTags(self,tags,exactSearch=False,copy=True):
+		"""Returns a sub-pattern without the given tags
+
+		Args:
+			tags: string list : tags to be checked for
+			exactSearch: bool : if True the tags have to be exactly the same, else they can be included in events Tags
+			copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+		Returns:
+			a GSPattern with events without given tags
+		"""
+		res = self.getACopyWithoutEvents();
+		for e in self.events:
+			if  exactSearch and e.tags==tags: pass
+			elif tags in e.tags:
+				newEv = e if not copy else e.copy()
+				for tRm in newEv.tags:
+					newEv.tags.remove(tRm)
+				res.events+=[newEv]
+			else :
+				newEv = e if not copy else e.copy()
+				res.events+=[newEv]
+
+		return res
+
 
 	def alignOnGrid(self,stepSize,repeatibleTags = ['silence']):
 		""" align this pattern on a temporal grid
@@ -311,25 +337,40 @@ class GSPattern(object):
 				ea.duration = stepSize
 				newEvents+=[ea]
 		self.events = newEvents
+		return self
 
-	def removeOverlapped(self):
+	def removeOverlapped(self,usePitchValues = False):
 		"""remove overlapped elements
 
+			Args:
+				usePitchValues : use pitch to discriminate events
 		"""
 		self.reorderEvents();
 		newList = []; idx = 0;
 		for e in self.events:
 			found = False
+			overLappedEv =[]
 			for i in range(idx+1,len(self.events)):
 				ee = self.events[i]
-				if ee.tags==e.tags:
+				if usePitchValues : equals = ee.pitch == e.pitch
+				else : equals = ee.tags==e.tags
+				if equals:
 					found |= (ee.startTime>=e.startTime) and (ee.startTime < e.startTime+e.duration)
-				if ee.startTime>(e.startTime+e.duration):
+					if found:
+						e.duration = ee.startTime - e.startTime
+						newList+=[e]
+						overLappedEv+=[ee]
+						
+				if found or (ee.startTime>(e.startTime+e.duration)):
 					break
 			if not found :
 				newList+=[e]
+			else:
+				pass
+				# print "remove overlapping %s with %s"%(e,overLappedEv)
 			idx+=1
 		self.events = newList
+		return self
 
 
 	def getAllIdenticalEvents(self,event,allTagsMustBeEquals = True):
@@ -424,13 +465,15 @@ class GSPattern(object):
 
 
 
-	def printEvents(self):
+	def __repr__(self):
 		""" Nicely print out the list of events
 
 		each line represents an event formatted as  : tags pitch startTime duration
 		"""
+		s = "GSPattern %s\n"%(self.name)
 		for e in self.events:
-			print e.tags,'\t', e.pitch,'\t', e.startTime,'\t', e.duration
+			s+=str(e)+"\n"
+		return s
 
 	def toJSONDict(self):
 		""" gives a standard dict for json output
@@ -462,11 +505,12 @@ class GSPattern(object):
 		self.setDurationFromLastEvent()
 		return self
 
-	def splitInEqualLengthPatterns(self,desiredLength,copy=True):
+	def splitInEqualLengthPatterns(self,desiredLength,trimEnd = True,copy=True):
 		""" splits a pattern in consecutive equal length cuts
 
 		Args:
 			desiredLength: length desired for each pattern
+			trimEnd : trim the end to exact desiredLength
 			copy: retruns a distinc copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
 
 		Returns:
@@ -484,6 +528,8 @@ class GSPattern(object):
 				patterns[numPattern].name = self.name + "_"+numPattern;
 			newEv = e if not copy else e.copy();
 			newEv.startTime-=p*desiredLength;
+			if trimEnd and (newEv.startTime + newEv.duration > desiredLength) :
+				newEv.duration = desiredLength - newEv.startTime
 			patterns[numPattern].events+=[newEv];
 		
 		
