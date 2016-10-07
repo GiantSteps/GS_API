@@ -6,7 +6,7 @@ from gsapi import *
 
 defaultMidiFolder = "../../test/midiDatasets"
 
-GSDataset.log
+
 
 dataset = GSDataset(midiFolder=defaultMidiFolder,midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
 

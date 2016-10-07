@@ -1,7 +1,7 @@
 from GSLogging import gsapiLogger
 from GSPattern import GSPatternEvent,GSPattern
 from GSStyle import GSStyle
-import GSInternalStyles 
+from GSInternalStyles import *
 from GSIO import *
 from GSDataset import GSDataset
 from GSDescriptor import GSDescriptor

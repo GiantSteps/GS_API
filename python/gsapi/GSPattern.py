@@ -283,11 +283,16 @@ class GSPattern(object):
 			a GSPattern with only events that tags corresponds to given tags
 		"""
 
-		if isinstance(tags,list) :
+		if isinstance(tags,(list)) :
 			if exactSearch:
 				boolFunction = lambda inTags : inTags == tags
 			else:
-				boolFunction = lambda inTags : inTags in tags
+				boolFunction = lambda inTags : tags in inTags
+		elif isinstance(tags,(str)) :
+			if exactSearch:
+				boolFunction = lambda inTags : len(inTags)==1 and inTags[0] == tags
+			else:
+				boolFunction = lambda inTags : len(inTags)>0 and tags in inTags
 		elif callable(tags):
 			boolFunction = tags
 
