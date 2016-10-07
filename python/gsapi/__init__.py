@@ -1,4 +1,4 @@
-from Utils.GSLogging import gsapiLogger
+from GSLogging import gsapiLogger
 from GSPattern import GSPatternEvent,GSPattern
 from GSStyle import GSStyle
 import GSInternalStyles 
