@@ -23,7 +23,7 @@ class GSPatternTestUtils(unittest.TestCase):
 	helper function for test classes
 	"""
 	
-	# def __init__(self,GSDataSet):
+	# def __init__(self,GSDataset):
 	# 	unittest.TestCase.__init__(self,*args)
 		
 

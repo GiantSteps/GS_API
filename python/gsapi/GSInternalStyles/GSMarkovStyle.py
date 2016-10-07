@@ -4,6 +4,7 @@ import random
 
 
 import copy
+import logging
 markovLog = logging.getLogger('gsapi.GSStyle.GSMarkovStyle')
 
 class GSMarkovStyle(GSStyle):

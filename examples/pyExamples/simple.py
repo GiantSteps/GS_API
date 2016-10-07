@@ -1,23 +1,24 @@
 import os,sys
 if __name__=='__main__':
-	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
+	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir,"python")))
 
 from gsapi import *
 
+defaultMidiFolder = "../../test/midiDatasets"
 
+GSDataset.log
 
-defaultMidiFolder = "/Users/mhermant/Documents/Work/Dev/GS_API/test/midiDatasets"
-
-
-dataset = GSDataSet(midiFolder=defaultMidiFolder,midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
+dataset = GSDataset(midiFolder=defaultMidiFolder,midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
 
 
 allPatternsSliced = []
+
+sizeOfSlice = 16
 for midiPattern in dataset.patterns:
 	for sliced in midiPattern.splitInEqualLengthPatterns(4):
 		allPatternsSliced+=[sliced]
 
-markovStyle = GSMarkovStyle(order=3,numSteps=32,loopDuration=16);
+markovStyle = GSMarkovStyle(order=3,numSteps=32,loopDuration=sizeOfSlice);
 markovStyle.generateStyle(allPatternsSliced)
 newPattern = markovStyle.generatePattern()
 
@@ -31,8 +32,6 @@ for p in allPatternsSliced:
 		
 
 
-
-print totalDensity
 
 
 

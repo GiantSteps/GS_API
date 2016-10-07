@@ -271,20 +271,29 @@ class GSPattern(object):
 					tags+=[t];
 		return tags
 
+
 	def getPatternWithTags(self,tags,exactSearch=True,copy=True):
 		"""Returns a sub-pattern with the given tags
 
 		Args:
-			tags: string list : tags to be checked for
+			tags: string list or lambda  expression (return boolean based on tag list input): tags to be checked for
 			exactSearch: bool : if True the tags have to be exactly the same, else they can be included in events Tags
 			copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
 		Returns:
 			a GSPattern with only events that tags corresponds to given tags
 		"""
+
+		if isinstance(tags,list) :
+			if exactSearch:
+				boolFunction = lambda inTags : inTags == tags
+			else:
+				boolFunction = lambda inTags : inTags in tags
+		elif callable(tags):
+			boolFunction = tags
+
 		res = self.getACopyWithoutEvents();
 		for e in self.events:
-			if exactSearch: found = e.tags==tags;
-			else: found = tags in e.tags
+			found = boolFunction(e.tags);
 			if found:
 				newEv = e if not copy else e.copy()
 				res.events+=[newEv]
@@ -356,15 +365,16 @@ class GSPattern(object):
 			overLappedEv =[]
 			for i in range(idx+1,len(self.events)):
 				ee = self.events[i]
-				if usePitchValues : equals = ee.pitch == e.pitch
-				else : equals = ee.tags==e.tags
+				if usePitchValues : equals = (ee.pitch == e.pitch)
+				else : equals = (ee.tags==e.tags)
 				if equals:
-					found |= (ee.startTime>=e.startTime) and (ee.startTime < e.startTime+e.duration)
-					if found:
+					if (ee.startTime>=e.startTime) and (ee.startTime < e.startTime+e.duration):
+						found = True
 						if ee.startTime - e.startTime>0:
 							e.duration = ee.startTime - e.startTime
 							newList+=[e]
 							overLappedEv+=[ee]
+
 						else:
 							patternLog.warning("strict overlapping of start times %s with %s"%(e,ee))
 						

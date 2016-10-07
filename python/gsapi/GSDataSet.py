@@ -14,7 +14,7 @@ class GSDataset(object):
 	TODO documentation
 	"""
 	defaultDrumMidiMap = {"Kick":36,"Rimshot":37,"Snare":38,"Clap":39,"Clave":40,"LowTom":41,"ClosedHH":42,"MidTom":43,"Shake":44,"HiTom":45,"OpenHH":46,"LowConga":47,"HiConga":48,"Cymbal":49,"Conga":50,"CowBell":51}
-	defaultMidiFolder = os.path.abspath("../../../test/midiDatasets/")
+	defaultMidiFolder = os.path.abspath(__file__+"../../../../test/midiDatasets/")
 	defaultMidiGlob = "*/*.mid"
 
 	def __init__(self,midiFolder=defaultMidiFolder,midiGlob=defaultMidiGlob,midiMap = defaultDrumMidiMap,checkForOverlapped=True):

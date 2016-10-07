@@ -1,2 +1,3 @@
-from GSDescriptorDensity import *
-from GSDescriptorSyncopation import *
+from GSDescriptorDensity import GSDescriptorDensity
+from GSDescriptorSyncopation import GSDescriptorSyncopation
+from GSDescriptorNumberOfTags import GSDescriptorNumberOfTags

@@ -1,2 +1,2 @@
-from GSMarkovStyle import *
-from GSDBStyle import *
+from GSMarkovStyle import GSMarkovStyle
+from GSDBStyle import GSDBStyle

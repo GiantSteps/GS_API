@@ -1,16 +1,14 @@
-from GSPattern import *
-from GSStyle import *
-from GSInternalStyles import *
+from Utils.GSLogging import gsapiLogger
+from GSPattern import GSPatternEvent,GSPattern
+from GSStyle import GSStyle
+import GSInternalStyles 
 from GSIO import *
-from GSDataset import *
-from GSDescriptor import *
+from GSDataset import GSDataset
+from GSDescriptor import GSDescriptor
 from GSDescriptors import *
+from MidiMap import *
 
 
-import logging
-
-gsapiLogger = logging.getLogger("gsapi")
-logging.basicConfig(format="%(levelname)s:%(name)s : %(message)s")
 
 if __name__ == '__main__':
 	p = GSPattern()

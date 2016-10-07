@@ -55,7 +55,7 @@ class PatternMarkov(object):
 			self.formatPattern(p)
 			self.checkSilences(p)
 			if(self.numSteps != int(p.duration)):
-					patternMarkovLog.warnings( "PatternMarkov : quantization to numSteps failed, numSteps="+str(self.numSteps)+" duration="+str(p.duration) + " cfg : "+self.getMarkovConfig())
+					patternMarkovLog.warning( "PatternMarkov : quantization to numSteps failed, numSteps="+str(self.numSteps)+" duration="+str(p.duration) + " cfg : "+self.getMarkovConfig())
 			for step in range(self.numSteps):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
@@ -114,7 +114,7 @@ class PatternMarkov(object):
 
 		def _generateEventAtStep(step,previousTags):
 			
-			if not previousTags in self.transitionTable[step] :  print "wrong transition table, zero state for "+str(previousTags);return None
+			if not previousTags in self.transitionTable[step] :  patternMarkovLog.error("wrong transition table, zero state for "+str(previousTags));return None
 			d = self.transitionTable[step][previousTags]
 
 			chosenIdx = 0
@@ -166,7 +166,10 @@ class PatternMarkov(object):
 				i+=1
 			else:
 				maxTries-=1
-				print "not found combination", ','.join(newPast) ,self.transitionTable[i] ;
+				if maxTries==0:
+					patternMarkovLog.error("not found combination %s at step %i \n transitions\n %s"%(','.join(newPast) ,i,self.transitionTable[i] ));
+				else:
+					patternMarkovLog.warning("not found combination %s "%(','.join(newPast) ));
 		
 
 		pattern = GSPattern()

@@ -11,7 +11,7 @@ from GSPatternTestUtils import *
 
 class MarkovPatternTest(GSPatternTestUtils):
 
-	dataSet = GSDataSet(midiGlob="miniDaftPunk.mid",midiMap="pitchNames")
+	dataSet = GSDataset(midiGlob="miniDaftPunk.mid",midiMap="pitchNames")
 
 	# def __init__(self,*args):
 	# 	GSPatternTestUtils.__init__(self,*args)
