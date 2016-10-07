@@ -1,3 +1,4 @@
+import logging
 
 
 from gsapi import GSPattern

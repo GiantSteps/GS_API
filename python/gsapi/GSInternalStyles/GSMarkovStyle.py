@@ -4,6 +4,7 @@ import random
 
 
 import copy
+markovLog = logging.getLogger('gsapi.GSStyle.GSMarkovStyle')
 
 class GSMarkovStyle(GSStyle):
 	""" compute sa style based on markov chains

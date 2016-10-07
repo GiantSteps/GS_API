@@ -1,5 +1,7 @@
 import math
 import copy
+import logging
+patternLog = logging.getLogger("gsapi.GSPattern")
 
 """Documentation for GSPattern module.
 
@@ -110,6 +112,8 @@ class GSPatternEvent(object):
 			newE.duration = stepSize
 			res+=[newE]
 		return res
+
+		
 	def __repr__(self):
 		return "%s %i %f %f"%(self.tags,self.pitch,self.startTime,self.duration)
 
@@ -357,17 +361,19 @@ class GSPattern(object):
 				if equals:
 					found |= (ee.startTime>=e.startTime) and (ee.startTime < e.startTime+e.duration)
 					if found:
-						e.duration = ee.startTime - e.startTime
-						newList+=[e]
-						overLappedEv+=[ee]
+						if ee.startTime - e.startTime>0:
+							e.duration = ee.startTime - e.startTime
+							newList+=[e]
+							overLappedEv+=[ee]
+						else:
+							patternLog.warning("strict overlapping of start times %s with %s"%(e,ee))
 						
-				if found or (ee.startTime>(e.startTime+e.duration)):
+				if (ee.startTime>(e.startTime+e.duration)):
 					break
 			if not found :
 				newList+=[e]
 			else:
-				pass
-				# print "remove overlapping %s with %s"%(e,overLappedEv)
+				patternLog.info("remove overlapping %s with %s"%(e,overLappedEv))
 			idx+=1
 		self.events = newList
 		return self
@@ -390,7 +396,11 @@ class GSPattern(object):
 			if equals:
 				res+=[e]
 
-			
+		
+	def getFilledWithSilences(self,maxSilenceTime = 0,perTag=False,silenceTag = 'silence'):
+		pattern = self.copy()
+		pattern.fillWithSilences(maxSilenceTime=maxSilenceTime,perTag=perTag,silenceTag=silenceTag)
+		return pattern
 
 	def fillWithSilences(self,maxSilenceTime = 0,perTag=False,silenceTag = 'silence'):
 		""" Fill empty (i.e no event ) spaces with silence event

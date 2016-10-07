@@ -47,6 +47,36 @@ will fill *GSPattern* p with :
 * one event tagged Kick starting at 0 with a duration of 1 a Midi Note Number of 64 and a velocity of 127
 * one event tagged Snare starting at 1 with a duration of 3 a Midi Note Number of 62 and a velocity of 51
 
+
+* get All loops from a dataset
+```python
+from gsapi import *
+dataset = GSDataSet(midiFolder="The/Midi/Folder/To/Crawl",midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
+allPatternsSliced = []
+for midiPattern in dataset.patterns:
+	for sliced in midiPattern.splitInEqualLengthPatterns(16): # split in 16 beat slices
+		allPatternsSliced+=[sliced]
+print allPatternSliced
+```
+
+* descriptors analysis example 
+```python
+densityDescriptor = GSDescriptorDensity();
+for pattern in dataset.patterns:
+	kickPattern = pattern.getPatternWithTags(tags="kick")
+	densityOfKick = densityDescriptor.getDescriptorForPattern(kickPattern)
+```
+
+* style analysis example
+```python
+
+markovStyle = GSMarkovStyle(order=3,numSteps=32,loopDuration=16);
+markovStyle.generateStyle(allPatternsSliced)
+newPattern = markovStyle.generatePattern()
+```
+
+
+
 API Philosophies
 ------
 **JSON and MIDI**

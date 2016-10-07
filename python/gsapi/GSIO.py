@@ -1,6 +1,9 @@
 import glob
 import os
 
+import logging
+gsiolog = logging.getLogger("gsapi.GSIO")
+gsiolog.setLevel(level=logging.INFO)
 
 import gsapi
 import math
@@ -55,10 +58,9 @@ def fromMidiCollection(midiGlobPath,NoteToTagsMap,tracksToGet = [],TagsFromTrack
 
 	res = []
 	_NoteToTagsMap = __formatNoteToTags(NoteToTagsMap)
-	print glob.glob(midiGlobPath)
 	for f in glob.glob(midiGlobPath):
 		name =  os.path.splitext(os.path.basename(f))[0]
-		print "getting "+name
+		gsiolog.info( "getting "+name)
 		p = fromMidi(f,_NoteToTagsMap,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped =filterOutNotMapped);
 		
 		if desiredLength>0:
@@ -113,61 +115,20 @@ def __formatNoteToTags(_NoteToTags):
 def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNameEvents=False,filterOutNotMapped=True,checkForOverlapped=False):
 	""" internal function that accept only Consistent NoteTagMap structure as created by __formatNoteToTags
 	"""
-	def findTimeInfoFromMidi(pattern,midiFile):
-		
-		foundTimeSignatureEvent = False
-		foundTempo = False
-		for tracks in midiFile:
-			for e in tracks:
-				if midi.MetaEvent.is_event(e.statusmsg):
-					if e.metacommand == midi.TimeSignatureEvent.metacommand :
-						if foundTimeSignatureEvent: print "multiple time signature found, not supported, result can be alterated" 
-						foundTimeSignatureEvent = True;
-						pattern.timeSignature = [e.numerator, e.denominator]
-						#  e.metronome = e.thirtyseconds ::  do we need that ???
-					elif e.metacommand == midi.SetTempoEvent.metacommand :
-						if foundTempo: print "multiple bpm found, not supported"; exit(-1)
-						foundTempo = True;
-						pattern.bpm = e.bpm
-
-			if foundTimeSignatureEvent: break;
-		if not foundTimeSignatureEvent: print "no time event found"
-		
-
-
-	def findTagsFromName(name,noteMapping):
-		res =[]
-		for l in noteMapping:
-			if l in name: res+=[l];
-		return res
-
-	def findTagsFromPitchAndChannel(pitch,channel,noteMapping):
-		def pitchToName(pitch,pitchNames):
-			octaveLength = len(pitchNames);
-			octave  = (pitch/octaveLength) - 2; # 0 is C-2
-			note = pitch%octaveLength
-			return  pitchNames[note]+"_"+str(octave)
-
-		if "pitchNames" in noteMapping.keys():
-			return [pitchToName(pitch,noteMapping["pitchNames"])]
-		res = [];
-		for l in noteMapping:
-			for le in noteMapping[l]:
-				if (le[0] in {'*',pitch}) and (le[1] in {'*',channel}): res+=[l]; 
-			
-		return res
-
 	import midi
 	import os
+	
 	globalMidi = midi.read_midifile(midiPath)
 	globalMidi.make_ticks_abs();
 	pattern = GSPattern();
-	pattern.name = os.path.splitext(os.path.basename(midiPath))[0];
+	pattern.name = os.path.basename(midiPath)
+	
 
 	
 
 	# first get signature
-	findTimeInfoFromMidi(pattern,globalMidi);
+	gsiolog.info("start processing %s"%pattern.name)
+	__findTimeInfoFromMidi(pattern,globalMidi);
 
 	tickToQNote = 1.0/(globalMidi.resolution) ;
 
@@ -187,14 +148,14 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 			if midi.MetaEvent.is_event(e.statusmsg):
 				if e.metacommand==midi.TrackNameEvent.metacommand:
 					if tracksToGet!=[] and not((e.text in tracksToGet) or (trackIdx in tracksToGet)): 
-						print 'skipping track :',trackIdx,e.text;
+						gsiolog.info( 'skipping track : %i %s'%(trackIdx,e.text));
 						shouldSkipTrack = True;
 						continue ;
 					else: 
-						print 'getting track :',trackIdx,e.text
+						gsiolog.info(pattern.name+' : getting track : %i %s'%(trackIdx,e.text))
 
 					if TagsFromTrackNameEvents :
-						noteTags = findTagsFromName(e.text,NoteToTagsMap)
+						noteTags = __findTagsFromName(e.text,NoteToTagsMap)
 
 
 			isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
@@ -206,12 +167,12 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 				curBeat = tick*1.0*tickToQNote
 				if noteTags == []:
 					if TagsFromTrackNameEvents:continue
-					noteTags = findTagsFromPitchAndChannel(pitch,e.channel,NoteToTagsMap)
+					noteTags = __findTagsFromPitchAndChannel(pitch,e.channel,NoteToTagsMap)
 
 
 				if noteTags ==[] :
 					if ([e.channel,pitch] not in notFoundTags):
-						print "no tags found for pitch %d on channel %d"%(pitch,e.channel)
+						gsiolog.info(pattern.name+" : no tags found for pitch %d on channel %d"%(pitch,e.channel))
 						notFoundTags+=[[e.channel,pitch]]
 					if filterOutNotMapped:
 						continue;
@@ -221,7 +182,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 				if isNoteOn:
 					# ignore duplicated events (can't have 2 simultaneous NoteOn for the same pitch)
 					if  pitch == lastPitch and tick == lastTick:
-						print 'skip duplicated event :', pitch,tick
+						gsiolog.info(pattern.name+' : skip duplicated event : %i %f'%(pitch,curBeat))
 						continue;
 					lastPitch = pitch
 					lastTick = tick
@@ -245,7 +206,7 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 							# print "set duration "+str(i.duration) + "at start " + str(i.startTime)
 							break;
 					if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-						print "not found note on "+str(e)+str(pattern.events[-1])
+						gsiolog.warning(pattern.name+" : not found note on "+str(e)+str(pattern.events[-1]))
 						
 		trackIdx+=1
 
@@ -255,11 +216,58 @@ def __fromMidiFormatted(midiPath,NoteToTagsMap,tracksToGet = [],TagsFromTrackNam
 	barSize = pattern.timeSignature[0]*elementSize;
 	lastBarPos = math.ceil(lastNoteOff*1.0/barSize)*barSize;
 	pattern.duration = lastBarPos
-	pattern.name = os.path.basename(midiPath)
+	
 	if(checkForOverlapped):
 		pattern.removeOverlapped(usePitchValues=True)
 
 	return pattern
+
+
+def __findTimeInfoFromMidi(pattern,midiFile):
+	import midi
+	foundTimeSignatureEvent = False
+	foundTempo = False
+	pattern.timeSignature = [4,4]
+	pattern.bpm = 60
+	for tracks in midiFile:
+		for e in tracks:
+			if midi.MetaEvent.is_event(e.statusmsg):
+				if e.metacommand == midi.TimeSignatureEvent.metacommand :
+					if foundTimeSignatureEvent: gsiolog.error(pattern.name+" : multiple time signature found, not supported, result can be alterated") 
+					foundTimeSignatureEvent = True;
+					pattern.timeSignature = [e.numerator, e.denominator]
+					#  e.metronome = e.thirtyseconds ::  do we need that ???
+				elif e.metacommand == midi.SetTempoEvent.metacommand :
+					if foundTempo: gsiolog.error(pattern.name+" : multiple bpm found, not supported");
+					foundTempo = True;
+					pattern.bpm = e.bpm
+
+		if foundTimeSignatureEvent: break;
+	if not foundTimeSignatureEvent: gsiolog.warning(pattern.name+" : no time signature event found")
+	
+
+
+def __findTagsFromName(name,noteMapping):
+	res =[]
+	for l in noteMapping:
+		if l in name: res+=[l];
+	return res
+
+def __findTagsFromPitchAndChannel(pitch,channel,noteMapping):
+	def pitchToName(pitch,pitchNames):
+		octaveLength = len(pitchNames);
+		octave  = (pitch/octaveLength) - 2; # 0 is C-2
+		note = pitch%octaveLength
+		return  pitchNames[note]+"_"+str(octave)
+
+	if "pitchNames" in noteMapping.keys():
+		return [pitchToName(pitch,noteMapping["pitchNames"])]
+	res = [];
+	for l in noteMapping:
+		for le in noteMapping[l]:
+			if (le[0] in {'*',pitch}) and (le[1] in {'*',channel}): res+=[l]; 
+		
+	return res
 
 
 

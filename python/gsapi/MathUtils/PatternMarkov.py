@@ -1,7 +1,11 @@
-from gsapi import GSStyle,GSPattern,GSPatternEvent
+if __name__ == '__main__':
+	import sys,os;
+	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
+
+from gsapi import * #GSStyle,GSPattern,GSPatternEvent
 import random
-
-
+import logging
+patternMarkovLog = logging.getLogger('MathUtils.PatternMarkov')
 import copy
 
 class PatternMarkov(object):
@@ -30,7 +34,7 @@ class PatternMarkov(object):
 			PatternClasses :  list of GSPatterns
 		"""
 		if not isinstance(patternClasses,list):
-			print "PatternMarkov need a list"
+			patternMarkovLog.error( "PatternMarkov need a list")
 			return False
 		else:
 			self.originPatterns = patternClasses;
@@ -51,7 +55,7 @@ class PatternMarkov(object):
 			self.formatPattern(p)
 			self.checkSilences(p)
 			if(self.numSteps != int(p.duration)):
-					print "PatternMarkov : quantization to numSteps failed, numSteps="+str(self.numSteps)+" duration="+str(p.duration) + " cfg : "+self.getMarkovConfig()
+					patternMarkovLog.warnings( "PatternMarkov : quantization to numSteps failed, numSteps="+str(self.numSteps)+" duration="+str(p.duration) + " cfg : "+self.getMarkovConfig())
 			for step in range(self.numSteps):
 				l = [p.getStartingEventsAtTime(step)];
 				self.checkSilenceInList(l)
@@ -254,12 +258,14 @@ class PatternMarkov(object):
 
 
 if __name__ == '__main__':
-
 	import glob,json
 	
-	patterns= GSIO.fromMidiCollection()
-	s.generateStyle(patterns)
-	print s.transitionTable
-	p = s.generatePattern()
+	
+	dataset= GSDataset(midiGlob="*.mid")
+	pM = PatternMarkov(order=2,numSteps=32,loopDuration=8)
+	
+	pM.generateTransitionTableFromPatternList(dataset.getAllSliceOfDuration(8))
+	# print pM.transitionTable
+	p = pM.generatePattern()
 
-	p.printEvents()
+	print p

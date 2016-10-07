@@ -28,9 +28,6 @@ class GSPatternTestUtils(unittest.TestCase):
 		
 
 
-	def evToStr(self,e):
-		return (', '.join(['%s']*len(e.tags))+' %d %.2f %.2f')%(tuple(e.tags)+(e.pitch,e.startTime,e.duration))
-
 
 	def checkNoTagsOverlaps(self,pattern,msg=None):
 		tags = pattern.getAllTags();
@@ -38,18 +35,15 @@ class GSPatternTestUtils(unittest.TestCase):
 			lastTimeOff = 0
 			for e in pattern.events:
 				if t in e.tags:
-					self.assertTrue(e.startTime>=lastTimeOff,msg);
+					self.assertTrue(e.startTime>=lastTimeOff,"%s : (%f<%f) tag : %s"%(msg,e.startTime,lastTimeOff,t));
 					lastTimeOff = e.getEndTime()
 
 	def checkPatternValid(self,pattern,checkForDoublons =True,checkOverlap = True,msg=None):
 		self.assertTrue(len(pattern.events)>0,msg)
-		eToStr =[]
-		for e in pattern.events:
-			eToStr+= [self.evToStr(e)];
 		i=0
 		for e in pattern.events:
-			self.assertTrue(e.duration>0,msg + eToStr[i])
-			self.assertTrue(e.startTime>=0,msg + eToStr[i])
+			self.assertTrue(e.duration>0,msg + str(e))
+			self.assertTrue(e.startTime>=0,msg + str(e))
 			i+=1
 		
 		if(checkForDoublons):
@@ -60,7 +54,7 @@ class GSPatternTestUtils(unittest.TestCase):
 					self.assertFalse((e.startTime==ee.startTime) and 
 						(e.duration==ee.duration) and
 						(e.pitch==ee.pitch) and 
-						(e.tags == ee.tags),pattern.name+ " : " + msg + " doublons : "+ eToStr[i]+'/'+eToStr[ii])
+						(e.tags == ee.tags),"%s : %s doublons %s // %s"%(pattern.name, msg ,e,ee ))
 				i+=1
 
 		if checkOverlap : self.checkNoTagsOverlaps(pattern,msg )

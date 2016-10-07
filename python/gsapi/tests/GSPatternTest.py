@@ -10,17 +10,19 @@ import random,glob
 from GSPatternTestUtils import *
 
 class GSPatternTest(GSPatternTestUtils):
-
-	dataSet = GSDataSet(midiGlob="corpus-harmony/*.mid",midiMap="pitchNames")
+	
+	
 	
 
 
 	def test_Import(self):
-		for p in self.dataSet.patterns:
-			self.assertTrue(p!=None, 'cant import midi file')
-			self.assertTrue(p.duration>0, 'cant import midi file : no duration')
-			self.assertTrue(p.events!=[], 'cant import midi file : no events')
-			self.checkPatternValid(p,msg='import Pattern failed')
+		dataSet = GSDataset(midiGlob="*.mid",midiMap="pitchNames",checkForOverlapped=True)
+		for p in dataSet.patterns:
+			
+			self.assertTrue(p!=None, 'cant import midi file %s'%p.name)
+			self.assertTrue(p.duration>0, 'cant import midi file %s: no duration'%p.name)
+			self.assertTrue(p.events!=[], 'cant import midi file %s: no events'%p.name)
+			self.checkPatternValid(p,msg='import Pattern %s failed'%p.name)
 			p = p.getPatternForTimeSlice(0,4)
 			self.checkPatternValid(p,msg='slicing pattern failed')
 			ps = p.splitInEqualLengthPatterns(4,copy=False)
@@ -28,23 +30,25 @@ class GSPatternTest(GSPatternTestUtils):
 				self.checkPatternValid(p,msg='spit in equalLength failed')
 
 	def test_Silences(self):
-		for p in self.dataSet.patterns:
-			p.fillWithSilences(perTag=True)
-			self.checkPatternValid(p,checkForDoublons = False,checkOverlap = False,msg='fill with silence per tag failed')
-
+		dataSet = GSDataset(midiGlob="*.mid",midiMap="pitchNames",checkForOverlapped=True)
+		for p in dataSet.patterns:
+			pattern1 = p.getFilledWithSilences(perTag=True)
+			pattern2 = p.getFilledWithSilences(perTag=False)
+			self.checkPatternValid(pattern1,checkForDoublons = False,checkOverlap = False,msg='fill with silence per tag failed')
+			self.checkPatternValid(pattern2,checkForDoublons = False,checkOverlap = False,msg='fill with silence failed')
 	def test_stretch(self):
-		for p in self.dataSet.patterns:
-			
-			
+		dataSet = GSDataset(midiGlob="*.mid",midiMap="pitchNames",checkForOverlapped=True)
+		for p in dataSet.patterns:
+			originPattern = p.copy()
 			p = p.getPatternForTimeSlice(0,4)
 			p.timeStretch(32/4.0)
 			p.alignOnGrid(1)
-			p.removeOverlapped()
+			# p.removeOverlapped()
 			p.fillWithSilences(maxSilenceTime = 1);
 			p.setDurationFromLastEvent(False)
 
 			self.assertTrue(p.events[-1].startTime == 31)
-			self.checkPatternValid(p,msg='stretch failed')
+			self.checkPatternValid(p,msg='stretch failed \n\n%s \n\n%s'%(originPattern,p))
 			
 
 
@@ -52,6 +56,9 @@ class GSPatternTest(GSPatternTestUtils):
 
 
 if __name__=='__main__':
+
+	# gsapiLogger.setLevel(level=logging.INFO)
+
 	runTest(profile = True,getStat = False)
 
 
