@@ -1,7 +1,6 @@
 class GSPatternEvent(object):
 
 
-
 	def __init__(self):
 		self.tags={}
 		self.start = -1
