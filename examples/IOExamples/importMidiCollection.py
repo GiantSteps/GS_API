@@ -30,7 +30,7 @@ customNoteMapping = {
 
 desiredPatternLength = 4;
 
-patterns = GSIO.fromMidiCollection(crawledFolder,customNoteMapping,TagsFromTrackNameEvents=False)
+patterns = GSIO.fromMidiCollection(crawledFolder,MidiMap.generalMidiMap,TagsFromTrackNameEvents=False)
 
-
+print patterns[0]
 	
