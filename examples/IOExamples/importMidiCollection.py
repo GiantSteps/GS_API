@@ -30,7 +30,8 @@ customNoteMapping = {
 
 desiredPatternLength = 4;
 
-patterns = GSIO.fromMidiCollection(crawledFolder,MidiMap.generalMidiMap,TagsFromTrackNameEvents=False)
+patterns = GSIO.fromMidiCollection(crawledFolder,{"Kick":36},TagsFromTrackNameEvents=False)
 
 print patterns[0]
+print [x.startTime for x in patterns[0].events]
 	
