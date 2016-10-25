@@ -159,7 +159,7 @@
 <span id="gsapi-gsio-module"></span><h2>gsapi.GSIO module<a class="headerlink" href="#module-gsapi.GSIO" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="gsapi.GSIO.fromMidi">
-<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em>, <em>checkForOverlapped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
 <dd><p>loads a midi file as a pattern</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -168,6 +168,7 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>midiPath</strong> &#8211; midi filePath</li>
 <li><strong>NoteToTagsMap</strong> &#8211; dictionary converting pitches to tags
+if only interssed by pitch, you can specify it to &#8220;pitchNames&#8221;, and optionaly set the value to the list of string for pitches from C
 noteMapping maps classes to a list of possible Mappings, a mapping can be:
 a tuple of (note, channel) if one of those doesnt matter it canbe replaced by &#8216;*&#8217; character
 an integer if only pitch matters
@@ -176,6 +177,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping, useful for midi containing named tracks</li>
 <li><strong>filterOutNotMapped</strong> &#8211; if set to true, don&#8217;t add event not represented by <cite>NoteToTagsMap</cite></li>
 <li><strong>tracksToGet</strong> &#8211; if not empty, specifies tracks wanted either by name or index</li>
+<li><strong>checkForOverlapped</strong> &#8211; if true will check that two consecutiveEvents with exactly same MidiNote are not overlapping</li>
 </ul>
 </td>
 </tr>
@@ -236,6 +238,13 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </div>
 <div class="section" id="module-gsapi.GSPattern">
 <span id="gsapi-gspattern-module"></span><h2>gsapi.GSPattern module<a class="headerlink" href="#module-gsapi.GSPattern" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="gsapi.GSPattern.patternLog">
+<code class="descclassname">gsapi.GSPattern.</code><code class="descname">patternLog</code><em class="property"> = &lt;gsapi.GSLogging.ColoredLogger object&gt;</em><a class="headerlink" href="#gsapi.GSPattern.patternLog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation for GSPattern module.</p>
+<p>GSPattern</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="gsapi.GSPattern.GSPatternEvent">
 <em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
@@ -568,13 +577,35 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tags</strong> &#8211; string list : tags to be checked for</li>
+<li><strong>tags</strong> &#8211; string list or lambda  expression (return boolean based on tag list input): tags to be checked for</li>
 <li><strong>exactSearch</strong> &#8211; bool : if True the tags have to be exactly the same, else they can be included in events Tags</li>
 <li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that tags corresponds to given tags</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.getPatternWithoutTags">
+<code class="descname">getPatternWithoutTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=False</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithoutTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithoutTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sub-pattern without the given tags</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tags</strong> &#8211; string list : tags to be checked for</li>
+<li><strong>exactSearch</strong> &#8211; bool : if True the tags have to be exactly the same, else they can be included in events Tags</li>
+<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with events without given tags</p>
 </td>
 </tr>
 </tbody>
@@ -604,8 +635,16 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.removeOverlapped">
-<code class="descname">removeOverlapped</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeOverlapped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeOverlapped" title="Permalink to this definition">¶</a></dt>
+<code class="descname">removeOverlapped</code><span class="sig-paren">(</span><em>usePitchValues=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeOverlapped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeOverlapped" title="Permalink to this definition">¶</a></dt>
 <dd><p>remove overlapped elements</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>usePitchValues</strong> &#8211; use pitch to discriminate events</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -628,6 +667,11 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.getFilledWithSilences">
+<code class="descname">getFilledWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getFilledWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getFilledWithSilences" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
@@ -671,13 +715,6 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSPattern.GSPattern.printEvents">
-<code class="descname">printEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.printEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.printEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Nicely print out the list of events</p>
-<p>each line represents an event formatted as  : tags pitch startTime duration</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.toJSONDict">
 <code class="descname">toJSONDict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.toJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.toJSONDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>gives a standard dict for json output</p>
@@ -699,7 +736,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">
-<code class="descname">splitInEqualLengthPatterns</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.splitInEqualLengthPatterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns" title="Permalink to this definition">¶</a></dt>
+<code class="descname">splitInEqualLengthPatterns</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>trimEnd=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.splitInEqualLengthPatterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns" title="Permalink to this definition">¶</a></dt>
 <dd><p>splits a pattern in consecutive equal length cuts</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -707,6 +744,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>desiredLength</strong> &#8211; length desired for each pattern</li>
+<li><strong>trimEnd</strong> &#8211; trim the end to exact desiredLength</li>
 <li><strong>copy</strong> &#8211; retruns a distinc copy of original pattern events, if you don&#8217;t need original pattern anymore setting it to False will increase speed</li>
 </ul>
 </td>

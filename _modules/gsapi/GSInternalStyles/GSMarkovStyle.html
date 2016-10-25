@@ -115,11 +115,14 @@
     <div class="col-md-12 content">
       
   <h1>Source code for gsapi.GSInternalStyles.GSMarkovStyle</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="n">GSStyle</span><span class="p">,</span><span class="n">GSPattern</span><span class="p">,</span><span class="n">GSPatternEvent</span>
+<span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">gsapi.MathUtils</span> <span class="kn">import</span> <span class="n">PatternMarkov</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
 
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">markovLog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;gsapi.GSStyle.GSMarkovStyle&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GSMarkovStyle"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle">[docs]</a><span class="k">class</span> <span class="nc">GSMarkovStyle</span><span class="p">(</span><span class="n">GSStyle</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot; compute sa style based on markov chains</span>
@@ -136,10 +139,8 @@
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="n">numSteps</span><span class="p">,</span><span class="n">loopDuration</span><span class="p">):</span>
 		<span class="nb">super</span><span class="p">(</span><span class="n">GSStyle</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="n">order</span><span class="p">;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">=</span> <span class="n">numSteps</span><span class="p">;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span> <span class="o">=</span> <span class="n">loopDuration</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span> <span class="o">=</span> <span class="n">PatternMarkov</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span><span class="n">numSteps</span><span class="o">=</span><span class="n">numSteps</span><span class="p">,</span><span class="n">loopDuration</span><span class="o">=</span><span class="n">loopDuration</span><span class="p">)</span>
+
 
 
 <div class="viewcode-block" id="GSMarkovStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
@@ -147,52 +148,14 @@
 <span class="sd">		Args:</span>
 <span class="sd">			PatternClasses :  list of GSPatterns</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">PatternClasses</span><span class="p">,</span><span class="nb">list</span><span class="p">):</span>
-			<span class="k">print</span> <span class="s2">&quot;style need a list&quot;</span>
-			<span class="k">return</span> <span class="bp">False</span>
-		<span class="k">else</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">originPatterns</span> <span class="o">=</span> <span class="n">PatternClasses</span><span class="p">;</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">buildStyle</span><span class="p">();</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generateTransitionTableFromPatternList</span><span class="p">(</span><span class="n">PatternClasses</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="GSMarkovStyle.buildStyle"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.buildStyle">[docs]</a>	<span class="k">def</span> <span class="nf">buildStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; builds transisiont table for the previously given list of GSPattern</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span> <span class="o">=</span> <span class="p">[{}</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="p">))]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">buildTransitionTable</span><span class="p">()</span></div>
 
-		<span class="bp">self</span><span class="o">.</span><span class="n">binarizedPatterns</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">originPatterns</span><span class="p">)</span>
-		<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">binarizedPatterns</span><span class="p">:</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">formatPattern</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">checkSilences</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-			
-			<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duration</span><span class="p">)):</span>
-				<span class="n">l</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">getStartingEventsAtTime</span><span class="p">(</span><span class="n">step</span><span class="p">)];</span>
-				<span class="bp">self</span><span class="o">.</span><span class="n">checkSilenceInList</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-				<span class="n">curEvent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buildNameForEvents</span><span class="p">(</span><span class="n">l</span><span class="p">);</span>
-				<span class="n">combinationName</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buildNameForEvents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getLastEvents</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">step</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
-
-				<span class="n">curDic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">step</span><span class="p">)]</span>
-				
-				<span class="k">if</span> <span class="n">combinationName</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">curDic</span><span class="p">:</span>
-					<span class="n">curDic</span><span class="p">[</span><span class="n">combinationName</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-				
-				<span class="k">if</span> <span class="n">curEvent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">curDic</span><span class="p">[</span><span class="n">combinationName</span><span class="p">]:</span>
-					<span class="n">curDic</span><span class="p">[</span><span class="n">combinationName</span><span class="p">][</span><span class="n">curEvent</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-				<span class="k">else</span><span class="p">:</span>
-					<span class="n">curDic</span><span class="p">[</span><span class="n">combinationName</span><span class="p">][</span><span class="n">curEvent</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-				
-
-		
-		<span class="k">def</span> <span class="nf">_normalize</span><span class="p">():</span>
-			<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">:</span>
-				<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
-					<span class="nb">sum</span><span class="o">=</span> <span class="mi">0</span>
-					<span class="k">for</span> <span class="n">pe</span> <span class="ow">in</span> <span class="n">t</span><span class="p">[</span><span class="n">d</span><span class="p">]:</span>
-						<span class="nb">sum</span><span class="o">+=</span> <span class="n">t</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="n">pe</span><span class="p">]</span>
-					
-					<span class="k">for</span> <span class="n">pe</span> <span class="ow">in</span> <span class="n">t</span><span class="p">[</span><span class="n">d</span><span class="p">]:</span>
-						<span class="n">t</span><span class="p">[</span><span class="n">d</span><span class="p">][</span><span class="n">pe</span><span class="p">]</span><span class="o">/=</span><span class="mf">1.0</span><span class="o">*</span><span class="nb">sum</span>
-		<span class="n">_normalize</span><span class="p">()</span></div>
 		
 		
 
@@ -201,123 +164,8 @@
 <span class="sd">		Args:</span>
 <span class="sd">			seed: seed used for random initialisation of pattern (value of None generates a new one)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
-		<span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
-		<span class="n">potentialStartEvent</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span></div>
 
-		<span class="k">def</span> <span class="nf">_getAvailableAtStep</span><span class="p">(</span><span class="n">step</span><span class="p">):</span>
-			<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-			<span class="k">if</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span> <span class="n">step</span><span class="o">+=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">)</span>
-			<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">step</span><span class="p">]:</span>
-				<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">n</span><span class="p">]:</span>
-					<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-			<span class="k">return</span> <span class="n">res</span>
-
-		<span class="k">def</span> <span class="nf">_isValidState</span><span class="p">(</span><span class="n">step</span><span class="p">,</span><span class="n">previousTags</span><span class="p">):</span>
-			<span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">step</span><span class="p">]</span>
-			<span class="c1"># print d,previousTags</span>
-			<span class="k">return</span> <span class="n">previousTags</span> <span class="ow">in</span> <span class="n">d</span>
-
-		<span class="k">def</span> <span class="nf">_generateEventAtStep</span><span class="p">(</span><span class="n">step</span><span class="p">,</span><span class="n">previousTags</span><span class="p">):</span>
-			
-			<span class="k">if</span> <span class="ow">not</span> <span class="n">previousTags</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="p">:</span>  <span class="k">print</span> <span class="s2">&quot;wrong transition table, zero state for &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">previousTags</span><span class="p">);</span><span class="k">return</span> <span class="bp">None</span>
-			<span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="n">previousTags</span><span class="p">]</span>
-
-			<span class="n">chosenIdx</span> <span class="o">=</span> <span class="mi">0</span>
-			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
-				<span class="n">tSum</span> <span class="o">=</span> <span class="mi">0</span>
-				<span class="n">bins</span> <span class="o">=</span> <span class="p">[]</span>
-				<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">itervalues</span><span class="p">():</span>
-					<span class="n">tSum</span><span class="o">+=</span><span class="n">x</span>
-					<span class="n">bins</span><span class="o">+=</span><span class="p">[</span><span class="n">tSum</span><span class="p">]</span>
-				
-				<span class="n">r</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
-				<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">bins</span><span class="p">)):</span>
-					<span class="k">if</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;=</span><span class="n">r</span> <span class="ow">and</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;</span><span class="n">r</span><span class="p">:</span>
-						<span class="n">chosenIdx</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span>
-						<span class="k">break</span><span class="p">;</span>
-				<span class="c1"># print chosenIdx</span>
-				
-			<span class="k">return</span> <span class="n">d</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="n">chosenIdx</span><span class="p">]</span>
-
-
-		
-		<span class="n">cIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span>
-		<span class="n">startHypothesis</span> <span class="o">=</span><span class="p">[]</span>
-		<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">):</span>
-			<span class="n">startHypothesis</span><span class="o">+=</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">_getAvailableAtStep</span><span class="p">(</span><span class="n">n</span><span class="p">))]</span>
-		
-		<span class="k">while</span> <span class="ow">not</span> <span class="n">_isValidState</span><span class="p">(</span><span class="n">cIdx</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">startHypothesis</span><span class="p">)):</span>
-			<span class="n">startHypothesis</span> <span class="o">=</span><span class="p">[]</span>
-			<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">):</span>
-				<span class="n">startHypothesis</span><span class="o">+=</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">_getAvailableAtStep</span><span class="p">(</span><span class="n">n</span><span class="p">))]</span>
-
-		<span class="c1"># print startHypothesis</span>
-		<span class="n">events</span> <span class="o">=</span> <span class="n">startHypothesis</span>
-		<span class="n">i</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span>
-		<span class="n">maxNumtries</span> <span class="o">=</span> <span class="mi">10</span>
-		<span class="n">maxTries</span> <span class="o">=</span> <span class="n">maxNumtries</span>
-		<span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="ow">and</span> <span class="p">(</span><span class="n">maxTries</span><span class="p">)</span> <span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-			
-
-			<span class="n">newPast</span> <span class="o">=</span>  <span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">:</span><span class="n">i</span><span class="p">]</span>
-			
-			
-			<span class="n">newEv</span> <span class="o">=</span>  <span class="n">_generateEventAtStep</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newPast</span><span class="p">))</span>
-			<span class="k">print</span> <span class="n">i</span> <span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newPast</span><span class="p">),</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">==&gt;&quot;</span><span class="p">,</span> <span class="n">newEv</span>
-			<span class="k">if</span> <span class="n">newEv</span><span class="p">:</span>
-				<span class="c1"># print i,newEv</span>
-				<span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
-				<span class="n">maxTries</span> <span class="o">=</span> <span class="n">maxNumtries</span>
-				<span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
-			<span class="k">else</span><span class="p">:</span>
-				<span class="n">maxTries</span><span class="o">-=</span><span class="mi">1</span>
-				<span class="k">print</span> <span class="s2">&quot;not found combination&quot;</span><span class="p">,</span> <span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">newPast</span><span class="p">)</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">;</span>
-		
-
-		<span class="n">pattern</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
-		<span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-
-		<span class="n">stepSize</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span>
-
-		<span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-			<span class="n">l</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
-			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
-				<span class="k">if</span><span class="p">(</span><span class="n">e</span><span class="o">!=</span><span class="s1">&#39;silence&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">idx</span><span class="o">*</span><span class="n">stepSize</span><span class="p">,</span><span class="n">stepSize</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">127</span><span class="p">,</span><span class="n">e</span><span class="p">)]</span>
-			<span class="n">idx</span><span class="o">+=</span><span class="mi">1</span>
-		<span class="n">pattern</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span>
-		
-		<span class="k">return</span> <span class="n">pattern</span></div>
-
-<div class="viewcode-block" id="GSMarkovStyle.checkSilences"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilences">[docs]</a>	<span class="k">def</span> <span class="nf">checkSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">duration</span><span class="p">)):</span>
-			<span class="n">c</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">getStartingEventsAtTime</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span><span class="p">(</span> <span class="s1">&#39;silence&#39;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">):</span>
-				<span class="k">print</span> <span class="s2">&quot;wrong silence&quot;</span>
-				<span class="nb">exit</span><span class="p">()</span></div>
-<div class="viewcode-block" id="GSMarkovStyle.checkSilenceInList"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.checkSilenceInList">[docs]</a>	<span class="k">def</span> <span class="nf">checkSilenceInList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">c</span><span class="p">):</span>
-		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span><span class="p">(</span> <span class="s1">&#39;silence&#39;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">):</span>
-			<span class="k">print</span> <span class="s2">&quot;wrong silence&quot;</span>
-			<span class="nb">exit</span><span class="p">()</span></div>
-
-
-
-	<span class="k">def</span> <span class="nf">_buildNameForEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">events</span><span class="p">):</span>
-		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">events</span><span class="p">:</span>
-			<span class="n">curL</span> <span class="o">=</span> <span class="p">[]</span>
-			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">n</span><span class="p">:</span>
-				<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
-					<span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">curL</span> <span class="p">:</span> <span class="n">curL</span><span class="o">+=</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
-			<span class="n">curL</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
-			<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">curL</span><span class="p">]</span>
-		
-		<span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-		<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span>
-			<span class="n">out</span><span class="o">+=</span><span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
-			<span class="n">out</span><span class="o">+=</span><span class="s2">&quot;,&quot;</span>
-		<span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-			
-		<span class="k">return</span> <span class="n">out</span>
 
 <div class="viewcode-block" id="GSMarkovStyle.formatPattern"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.formatPattern">[docs]</a>	<span class="k">def</span> <span class="nf">formatPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
 		<span class="c1"># p.quantize(self.numSteps*1.0/self.loopDuration,self.numSteps*1.0/self.loopDuration);</span>
@@ -351,33 +199,16 @@
 
 <div class="viewcode-block" id="GSMarkovStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.getInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;transitionTable&quot;</span><span class="p">]</span> 	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span>
-		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> 			<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="p">;</span>
-		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;numSteps&quot;</span><span class="p">]</span> 		<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="p">;</span>
-		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;loopDuration&quot;</span><span class="p">]</span> 	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span> <span class="p">;</span>
+		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;markovChain&quot;</span><span class="p">]</span> 	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">getInternalState</span><span class="p">()</span>
 		<span class="k">return</span> <span class="n">res</span></div>
 <div class="viewcode-block" id="GSMarkovStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.setInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">state</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span><span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;transitionTable&quot;</span><span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;order&quot;</span><span class="p">]</span> 			
-		<span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;numSteps&quot;</span><span class="p">]</span> 		
-		<span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span> <span class="o">=</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;loopDuration&quot;</span><span class="p">]</span> 	</div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">setInternalState</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;markovChain&quot;</span><span class="p">])</span></div>
+
 <div class="viewcode-block" id="GSMarkovStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSMarkovStyle.GSMarkovStyle.isBuilt">[docs]</a>	<span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">transitionTable</span> <span class="o">!=</span><span class="p">{}</span></div></div>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">isBuilt</span><span class="p">()</span></div></div>
 
 
 
-
-
-<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
-	<span class="kn">import</span> <span class="nn">glob</span><span class="o">,</span><span class="nn">json</span>
-	
-	<span class="n">patterns</span><span class="o">=</span> <span class="n">GSIO</span><span class="o">.</span><span class="n">fromMidiCollection</span><span class="p">()</span>
-	<span class="n">s</span><span class="o">.</span><span class="n">generateStyle</span><span class="p">(</span><span class="n">patterns</span><span class="p">)</span>
-	<span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">transitionTable</span>
-	<span class="n">p</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">()</span>
-
-	<span class="n">p</span><span class="o">.</span><span class="n">printEvents</span><span class="p">()</span>
 </pre></div>
 
     </div>

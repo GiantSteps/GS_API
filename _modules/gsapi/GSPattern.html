@@ -115,8 +115,10 @@
     <div class="col-md-12 content">
       
   <h1>Source code for gsapi.GSPattern</h1><div class="highlight"><pre>
-<span></span>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">patternLog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;gsapi.GSPattern&quot;</span><span class="p">)</span>
 
 <span class="sd">&quot;&quot;&quot;Documentation for GSPattern module.</span>
 
@@ -226,7 +228,11 @@
 			<span class="n">newE</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">stepSize</span>
 			<span class="n">newE</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">stepSize</span>
 			<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">newE</span><span class="p">]</span>
-		<span class="k">return</span> <span class="n">res</span></div></div>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+		
+	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%i</span><span class="s2"> </span><span class="si">%f</span><span class="s2"> </span><span class="si">%f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span></div>
 
 
 <span class="c1"># ///////////////</span>
@@ -252,6 +258,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">timeSignature</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="o">.</span><span class="n">defaultTimeSignature</span><span class="p">;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">originFilePath</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+		
 
 
 <div class="viewcode-block" id="GSPattern.setDurationFromLastEvent"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.setDurationFromLastEvent">[docs]</a>	<span class="k">def</span> <span class="nf">setDurationFromLastEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">onlyIfBigger</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
@@ -381,23 +388,61 @@
 					<span class="n">tags</span><span class="o">+=</span><span class="p">[</span><span class="n">t</span><span class="p">];</span>
 		<span class="k">return</span> <span class="n">tags</span></div>
 
+
 <div class="viewcode-block" id="GSPattern.getPatternWithTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getPatternWithTags">[docs]</a>	<span class="k">def</span> <span class="nf">getPatternWithTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tags</span><span class="p">,</span><span class="n">exactSearch</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;Returns a sub-pattern with the given tags</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			tags: string list or lambda  expression (return boolean based on tag list input): tags to be checked for</span>
+<span class="sd">			exactSearch: bool : if True the tags have to be exactly the same, else they can be included in events Tags</span>
+<span class="sd">			copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</span>
+<span class="sd">		Returns:</span>
+<span class="sd">			a GSPattern with only events that tags corresponds to given tags</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tags</span><span class="p">,(</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+			<span class="k">if</span> <span class="n">exactSearch</span><span class="p">:</span>
+				<span class="n">boolFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">inTags</span> <span class="p">:</span> <span class="n">inTags</span> <span class="o">==</span> <span class="n">tags</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">boolFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">inTags</span> <span class="p">:</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">inTags</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tags</span><span class="p">,(</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+			<span class="k">if</span> <span class="n">exactSearch</span><span class="p">:</span>
+				<span class="n">boolFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">inTags</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">inTags</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">inTags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">tags</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">boolFunction</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">inTags</span> <span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">inTags</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">inTags</span>
+		<span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">tags</span><span class="p">):</span>
+			<span class="n">boolFunction</span> <span class="o">=</span> <span class="n">tags</span>
+
+		<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getACopyWithoutEvents</span><span class="p">();</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
+			<span class="n">found</span> <span class="o">=</span> <span class="n">boolFunction</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">);</span>
+			<span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+				<span class="n">res</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="GSPattern.getPatternWithoutTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getPatternWithoutTags">[docs]</a>	<span class="k">def</span> <span class="nf">getPatternWithoutTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tags</span><span class="p">,</span><span class="n">exactSearch</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Returns a sub-pattern without the given tags</span>
 
 <span class="sd">		Args:</span>
 <span class="sd">			tags: string list : tags to be checked for</span>
 <span class="sd">			exactSearch: bool : if True the tags have to be exactly the same, else they can be included in events Tags</span>
 <span class="sd">			copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</span>
 <span class="sd">		Returns:</span>
-<span class="sd">			a GSPattern with only events that tags corresponds to given tags</span>
+<span class="sd">			a GSPattern with events without given tags</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getACopyWithoutEvents</span><span class="p">();</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">exactSearch</span><span class="p">:</span> <span class="n">found</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">tags</span><span class="p">;</span>
-			<span class="k">else</span><span class="p">:</span> <span class="n">found</span> <span class="o">=</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span>
-			<span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+			<span class="k">if</span>  <span class="n">exactSearch</span> <span class="ow">and</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">tags</span><span class="p">:</span> <span class="k">pass</span>
+			<span class="k">elif</span> <span class="n">tags</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
+				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+				<span class="k">for</span> <span class="n">tRm</span> <span class="ow">in</span> <span class="n">newEv</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
+					<span class="n">newEv</span><span class="o">.</span><span class="n">tags</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">tRm</span><span class="p">)</span>
+				<span class="n">res</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
+			<span class="k">else</span> <span class="p">:</span>
 				<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 				<span class="n">res</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
+
 		<span class="k">return</span> <span class="n">res</span></div>
 
 
@@ -426,26 +471,44 @@
 				<span class="n">ea</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">startTime</span><span class="o">/</span><span class="n">stepSize</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="n">stepSize</span>
 				<span class="n">ea</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">stepSize</span>
 				<span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">ea</span><span class="p">]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newEvents</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newEvents</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GSPattern.removeOverlapped"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.removeOverlapped">[docs]</a>	<span class="k">def</span> <span class="nf">removeOverlapped</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.removeOverlapped"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.removeOverlapped">[docs]</a>	<span class="k">def</span> <span class="nf">removeOverlapped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">usePitchValues</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;remove overlapped elements</span>
 
+<span class="sd">			Args:</span>
+<span class="sd">				usePitchValues : use pitch to discriminate events</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">reorderEvents</span><span class="p">();</span>
 		<span class="n">newList</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
 			<span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+			<span class="n">overLappedEv</span> <span class="o">=</span><span class="p">[]</span>
 			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)):</span>
 				<span class="n">ee</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-				<span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">:</span>
-					<span class="n">found</span> <span class="o">|=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;=</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
-				<span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">usePitchValues</span> <span class="p">:</span> <span class="n">equals</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">pitch</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">)</span>
+				<span class="k">else</span> <span class="p">:</span> <span class="n">equals</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+				<span class="k">if</span> <span class="n">equals</span><span class="p">:</span>
+					<span class="k">if</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;=</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">):</span>
+						<span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+						<span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+							<span class="n">e</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span>
+							<span class="n">newList</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+							<span class="n">overLappedEv</span><span class="o">+=</span><span class="p">[</span><span class="n">ee</span><span class="p">]</span>
+
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">patternLog</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;strict overlapping of start times </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">ee</span><span class="p">))</span>
+						
+				<span class="k">if</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">+</span><span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">)):</span>
 					<span class="k">break</span>
 			<span class="k">if</span> <span class="ow">not</span> <span class="n">found</span> <span class="p">:</span>
 				<span class="n">newList</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">patternLog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;remove overlapping </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="n">overLappedEv</span><span class="p">))</span>
 			<span class="n">idx</span><span class="o">+=</span><span class="mi">1</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newList</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newList</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="GSPattern.getAllIdenticalEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getAllIdenticalEvents">[docs]</a>	<span class="k">def</span> <span class="nf">getAllIdenticalEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">event</span><span class="p">,</span><span class="n">allTagsMustBeEquals</span> <span class="o">=</span> <span class="bp">True</span><span class="p">):</span>
@@ -465,7 +528,11 @@
 			<span class="k">if</span> <span class="n">equals</span><span class="p">:</span>
 				<span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span></div>
 
-			
+		
+<div class="viewcode-block" id="GSPattern.getFilledWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getFilledWithSilences">[docs]</a>	<span class="k">def</span> <span class="nf">getFilledWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">maxSilenceTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">perTag</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">silenceTag</span> <span class="o">=</span> <span class="s1">&#39;silence&#39;</span><span class="p">):</span>
+		<span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+		<span class="n">pattern</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="n">maxSilenceTime</span><span class="o">=</span><span class="n">maxSilenceTime</span><span class="p">,</span><span class="n">perTag</span><span class="o">=</span><span class="n">perTag</span><span class="p">,</span><span class="n">silenceTag</span><span class="o">=</span><span class="n">silenceTag</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">pattern</span></div>
 
 <div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>	<span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">maxSilenceTime</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">perTag</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">silenceTag</span> <span class="o">=</span> <span class="s1">&#39;silence&#39;</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Fill empty (i.e no event ) spaces with silence event</span>
@@ -540,13 +607,15 @@
 
 
 
-<div class="viewcode-block" id="GSPattern.printEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.printEvents">[docs]</a>	<span class="k">def</span> <span class="nf">printEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; Nicely print out the list of events</span>
 
 <span class="sd">		each line represents an event formatted as  : tags pitch startTime duration</span>
 <span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;GSPattern </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-			<span class="k">print</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">duration</span></div>
+			<span class="n">s</span><span class="o">+=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="k">return</span> <span class="n">s</span>
 
 <div class="viewcode-block" id="GSPattern.toJSONDict"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.toJSONDict">[docs]</a>	<span class="k">def</span> <span class="nf">toJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; gives a standard dict for json output</span>
@@ -578,11 +647,12 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span>
 		<span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GSPattern.splitInEqualLengthPatterns"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">[docs]</a>	<span class="k">def</span> <span class="nf">splitInEqualLengthPatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">desiredLength</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.splitInEqualLengthPatterns"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">[docs]</a>	<span class="k">def</span> <span class="nf">splitInEqualLengthPatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">desiredLength</span><span class="p">,</span><span class="n">trimEnd</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; splits a pattern in consecutive equal length cuts</span>
 
 <span class="sd">		Args:</span>
 <span class="sd">			desiredLength: length desired for each pattern</span>
+<span class="sd">			trimEnd : trim the end to exact desiredLength</span>
 <span class="sd">			copy: retruns a distinc copy of original pattern events, if you don&#39;t need original pattern anymore setting it to False will increase speed</span>
 
 <span class="sd">		Returns:</span>
@@ -591,14 +661,17 @@
 		<span class="n">patterns</span> <span class="o">=</span> <span class="p">{}</span>
 		
 		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-			<span class="n">p</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">/</span><span class="n">desiredLength</span><span class="p">);</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">desiredLength</span><span class="p">);</span>
 			<span class="n">numPattern</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 			<span class="k">if</span> <span class="n">numPattern</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getACopyWithoutEvents</span><span class="p">()</span>
+				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="o">+=</span><span class="s2">&quot;_slice_&quot;</span><span class="o">+</span><span class="n">numPattern</span>
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">desiredLength</span><span class="p">;</span>
 				<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="n">numPattern</span><span class="p">;</span>
 			<span class="n">newEv</span> <span class="o">=</span> <span class="n">e</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">e</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span>
 			<span class="n">newEv</span><span class="o">.</span><span class="n">startTime</span><span class="o">-=</span><span class="n">p</span><span class="o">*</span><span class="n">desiredLength</span><span class="p">;</span>
+			<span class="k">if</span> <span class="n">trimEnd</span> <span class="ow">and</span> <span class="p">(</span><span class="n">newEv</span><span class="o">.</span><span class="n">startTime</span> <span class="o">+</span> <span class="n">newEv</span><span class="o">.</span><span class="n">duration</span> <span class="o">&gt;</span> <span class="n">desiredLength</span><span class="p">)</span> <span class="p">:</span>
+				<span class="n">newEv</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">desiredLength</span> <span class="o">-</span> <span class="n">newEv</span><span class="o">.</span><span class="n">startTime</span>
 			<span class="n">patterns</span><span class="p">[</span><span class="n">numPattern</span><span class="p">]</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">];</span>
 		
 		

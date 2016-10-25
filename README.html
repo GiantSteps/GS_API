@@ -179,6 +179,36 @@
 <li>one event tagged Kick starting at 0 with a duration of 1 a Midi Note Number of 64 and a velocity of 127</li>
 <li>one event tagged Snare starting at 1 with a duration of 3 a Midi Note Number of 62 and a velocity of 51</li>
 </ul>
+<ul class="simple">
+<li>get All loops from a dataset</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">GSDataSet</span><span class="p">(</span><span class="n">midiFolder</span><span class="o">=</span><span class="s2">&quot;The/Midi/Folder/To/Crawl&quot;</span><span class="p">,</span><span class="n">midiGlob</span><span class="o">=</span><span class="s2">&quot;*.mid&quot;</span><span class="p">,</span><span class="n">midiMap</span><span class="o">=</span><span class="n">GSIO</span><span class="o">.</span><span class="n">generalMidiMap</span><span class="p">,</span><span class="n">checkForOverlapped</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="n">allPatternsSliced</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">midiPattern</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">patterns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">sliced</span> <span class="ow">in</span> <span class="n">midiPattern</span><span class="o">.</span><span class="n">splitInEqualLengthPatterns</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span> <span class="c1"># split in 16 beat slices</span>
+        <span class="n">allPatternsSliced</span><span class="o">+=</span><span class="p">[</span><span class="n">sliced</span><span class="p">]</span>
+<span class="k">print</span> <span class="n">allPatternSliced</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>descriptors analysis example</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">densityDescriptor</span> <span class="o">=</span> <span class="n">GSDescriptorDensity</span><span class="p">();</span>
+<span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">patterns</span><span class="p">:</span>
+    <span class="n">kickPattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="s2">&quot;kick&quot;</span><span class="p">)</span>
+    <span class="n">densityOfKick</span> <span class="o">=</span> <span class="n">densityDescriptor</span><span class="o">.</span><span class="n">getDescriptorForPattern</span><span class="p">(</span><span class="n">kickPattern</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>style analysis example</li>
+</ul>
+<div class="highlight-python"><div class="highlight"><pre><span></span>
+<span class="n">markovStyle</span> <span class="o">=</span> <span class="n">GSMarkovStyle</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">numSteps</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span><span class="n">loopDuration</span><span class="o">=</span><span class="mi">16</span><span class="p">);</span>
+<span class="n">markovStyle</span><span class="o">.</span><span class="n">generateStyle</span><span class="p">(</span><span class="n">allPatternsSliced</span><span class="p">)</span>
+<span class="n">newPattern</span> <span class="o">=</span> <span class="n">markovStyle</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="api-philosophies">
 <span id="api-philosophies"></span><h2>API Philosophies<a class="headerlink" href="#api-philosophies" title="Permalink to this headline">¶</a></h2>

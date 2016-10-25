@@ -118,20 +118,28 @@
 <span></span><span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">gsiolog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;gsapi.GSIO&quot;</span><span class="p">)</span>
+<span class="n">gsiolog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">gsapi</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="o">*</span>
 
+<span class="kn">from</span> <span class="nn">MidiMap</span> <span class="kn">import</span> <span class="o">*</span>
 
 
 
-<div class="viewcode-block" id="fromMidi"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSIO.fromMidi">[docs]</a><span class="k">def</span> <span class="nf">fromMidi</span><span class="p">(</span><span class="n">midiPath</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">,</span><span class="n">tracksToGet</span> <span class="o">=</span> <span class="p">[],</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">filterOutNotMapped</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+
+
+
+<div class="viewcode-block" id="fromMidi"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSIO.fromMidi">[docs]</a><span class="k">def</span> <span class="nf">fromMidi</span><span class="p">(</span><span class="n">midiPath</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">,</span><span class="n">tracksToGet</span> <span class="o">=</span> <span class="p">[],</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">filterOutNotMapped</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">checkForOverlapped</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot; loads a midi file as a pattern</span>
 
 <span class="sd">	Args:</span>
 <span class="sd">		midiPath: midi filePath</span>
 <span class="sd">		NoteToTagsMap: dictionary converting pitches to tags </span>
+<span class="sd">			if only interssed by pitch, you can specify it to &quot;pitchNames&quot;, and optionaly set the value to the list of string for pitches from C</span>
 <span class="sd">			noteMapping maps classes to a list of possible Mappings, a mapping can be:</span>
 <span class="sd">			a tuple of (note, channel) if one of those doesnt matter it canbe replaced by &#39;*&#39; character</span>
 <span class="sd">			an integer if only pitch matters</span>
@@ -141,145 +149,10 @@
 <span class="sd">		TagsFromTrackNameEvents: use only track names to resolve mapping, useful for midi containing named tracks</span>
 <span class="sd">		filterOutNotMapped: if set to true, don&#39;t add event not represented by `NoteToTagsMap`</span>
 <span class="sd">		tracksToGet: if not empty, specifies tracks wanted either by name or index</span>
+<span class="sd">		checkForOverlapped : if true will check that two consecutiveEvents with exactly same MidiNote are not overlapping </span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">formatNoteToTags</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">):</span>
-		<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">NoteToTags</span><span class="p">:</span>
-			<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="nb">list</span><span class="p">):</span> <span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span>
-			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">])):</span>
-				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="nb">int</span><span class="p">):</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
-
-	<span class="k">def</span> <span class="nf">findTimeInfoFromMidi</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="n">midiFile</span><span class="p">):</span>
-		
-		<span class="n">foundTimeSignatureEvent</span> <span class="o">=</span> <span class="bp">False</span>
-		<span class="n">foundTempo</span> <span class="o">=</span> <span class="bp">False</span>
-		<span class="k">for</span> <span class="n">tracks</span> <span class="ow">in</span> <span class="n">midiFile</span><span class="p">:</span>
-			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tracks</span><span class="p">:</span>
-				<span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">MetaEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
-					<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span> <span class="o">==</span> <span class="n">midi</span><span class="o">.</span><span class="n">TimeSignatureEvent</span><span class="o">.</span><span class="n">metacommand</span> <span class="p">:</span>
-						<span class="k">if</span> <span class="n">foundTimeSignatureEvent</span><span class="p">:</span> <span class="k">print</span> <span class="s2">&quot;multiple time signature found, not supported&quot;</span> <span class="p">;</span> <span class="nb">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-						<span class="n">foundTimeSignatureEvent</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
-						<span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">denominator</span><span class="p">]</span>
-						<span class="c1">#  e.metronome = e.thirtyseconds ::  do we need that ???</span>
-					<span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span> <span class="o">==</span> <span class="n">midi</span><span class="o">.</span><span class="n">SetTempoEvent</span><span class="o">.</span><span class="n">metacommand</span> <span class="p">:</span>
-						<span class="k">if</span> <span class="n">foundTempo</span><span class="p">:</span> <span class="k">print</span> <span class="s2">&quot;multiple bpm found, not supported&quot;</span><span class="p">;</span> <span class="nb">exit</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-						<span class="n">foundTempo</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
-						<span class="n">pattern</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">bpm</span>
-
-			<span class="k">if</span> <span class="n">foundTimeSignatureEvent</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
-		<span class="k">if</span> <span class="ow">not</span> <span class="n">foundTimeSignatureEvent</span><span class="p">:</span> <span class="k">print</span> <span class="s2">&quot;no time event found&quot;</span>
-		
-
-
-	<span class="k">def</span> <span class="nf">findTagsFromName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">noteMapping</span><span class="p">):</span>
-		<span class="n">res</span> <span class="o">=</span><span class="p">[]</span>
-		<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">:</span>
-			<span class="k">if</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span> <span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">l</span><span class="p">];</span>
-		<span class="k">return</span> <span class="n">res</span>
-
-	<span class="k">def</span> <span class="nf">findTagsFromPitchAndChannel</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">channel</span><span class="p">,</span><span class="n">noteMapping</span><span class="p">):</span>
-		<span class="n">res</span> <span class="o">=</span> <span class="p">[];</span>
-		<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">:</span>
-			<span class="k">for</span> <span class="n">le</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">[</span><span class="n">l</span><span class="p">]:</span>
-				<span class="k">if</span> <span class="p">(</span><span class="n">le</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">pitch</span><span class="p">})</span> <span class="ow">and</span> <span class="p">(</span><span class="n">le</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">channel</span><span class="p">}):</span> <span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">l</span><span class="p">];</span> 
-			
-		<span class="k">return</span> <span class="n">res</span>
-
-	<span class="kn">import</span> <span class="nn">midi</span>
-	<span class="kn">import</span> <span class="nn">os</span>
-	<span class="n">globalMidi</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">read_midifile</span><span class="p">(</span><span class="n">midiPath</span><span class="p">)</span>
-	<span class="n">globalMidi</span><span class="o">.</span><span class="n">make_ticks_abs</span><span class="p">();</span>
-	<span class="n">pattern</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">();</span>
-	<span class="n">pattern</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">midiPath</span><span class="p">))[</span><span class="mi">0</span><span class="p">];</span>
-
-	<span class="n">formatNoteToTags</span><span class="p">(</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
-
-	<span class="c1"># first get signature</span>
-	<span class="n">findTimeInfoFromMidi</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="n">globalMidi</span><span class="p">);</span>
-
-	<span class="n">tick2quarterNote</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">globalMidi</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span> <span class="p">;</span>
-
-	<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">=</span><span class="p">[]</span>
-	<span class="n">lastNoteOff</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="n">notFoundTags</span> <span class="o">=</span> <span class="p">[]</span>
-	<span class="n">trackIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-	<span class="k">for</span> <span class="n">tracks</span> <span class="ow">in</span> <span class="n">globalMidi</span><span class="p">:</span>
-		<span class="n">shouldSkipTrack</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span>
-		<span class="n">lastPitch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-		<span class="n">lastTick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
-		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tracks</span><span class="p">:</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">shouldSkipTrack</span><span class="p">):</span><span class="k">continue</span>
-			
-			<span class="k">if</span> <span class="ow">not</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span> <span class="n">noteTags</span> <span class="o">=</span> <span class="p">[]</span>
-			
-			<span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">MetaEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
-				<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span><span class="o">==</span><span class="n">midi</span><span class="o">.</span><span class="n">TrackNameEvent</span><span class="o">.</span><span class="n">metacommand</span><span class="p">:</span>
-					<span class="k">if</span> <span class="n">tracksToGet</span><span class="o">!=</span><span class="p">[]</span> <span class="ow">and</span> <span class="ow">not</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">text</span> <span class="ow">in</span> <span class="n">tracksToGet</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">trackIdx</span> <span class="ow">in</span> <span class="n">tracksToGet</span><span class="p">)):</span> 
-						<span class="k">print</span> <span class="s1">&#39;skipping track :&#39;</span><span class="p">,</span><span class="n">trackIdx</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">;</span>
-						<span class="n">shouldSkipTrack</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
-						<span class="k">continue</span> <span class="p">;</span>
-					<span class="k">else</span><span class="p">:</span> 
-						<span class="k">print</span> <span class="s1">&#39;getting track :&#39;</span><span class="p">,</span><span class="n">trackIdx</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">text</span>
-
-					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span>
-						<span class="n">noteTags</span> <span class="o">=</span> <span class="n">findTagsFromName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
-
-
-			<span class="n">isNoteOn</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">NoteOnEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">)</span>
-			<span class="n">isNoteOff</span> <span class="o">=</span><span class="n">midi</span><span class="o">.</span><span class="n">NoteOffEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">);</span>
-			<span class="k">if</span><span class="p">(</span><span class="n">isNoteOn</span> <span class="ow">or</span> <span class="n">isNoteOff</span>  <span class="p">):</span>
-
-				<span class="n">pitch</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="c1"># optimize pitch property access</span>
-				<span class="n">tick</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">tick</span>
-				<span class="k">if</span> <span class="n">noteTags</span> <span class="o">==</span> <span class="p">[]:</span>
-					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span><span class="p">:</span><span class="k">continue</span>
-					<span class="n">noteTags</span> <span class="o">=</span> <span class="n">findTagsFromPitchAndChannel</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
-
-				<span class="k">if</span> <span class="n">noteTags</span> <span class="o">==</span><span class="p">[]</span> <span class="p">:</span>
-					<span class="k">if</span> <span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">pitch</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notFoundTags</span><span class="p">):</span>
-						<span class="k">print</span> <span class="s2">&quot;no tags found for pitch </span><span class="si">%d</span><span class="s2"> on channel </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
-						<span class="n">notFoundTags</span><span class="o">+=</span><span class="p">[[</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">pitch</span><span class="p">]]</span>
-					<span class="k">if</span> <span class="n">filterOutNotMapped</span><span class="p">:</span>
-						<span class="k">continue</span><span class="p">;</span>
-
-
-
-				<span class="k">if</span> <span class="n">isNoteOn</span><span class="p">:</span>
-					<span class="c1"># ignore duplicated events (can&#39;t have 2 simultaneous NoteOn for the same pitch)</span>
-					<span class="k">if</span>  <span class="n">pitch</span> <span class="o">==</span> <span class="n">lastPitch</span> <span class="ow">and</span> <span class="n">tick</span> <span class="o">==</span> <span class="n">lastTick</span><span class="p">:</span>
-						<span class="k">print</span> <span class="s1">&#39;skip duplicated event :&#39;</span><span class="p">,</span> <span class="n">pitch</span><span class="p">,</span><span class="n">tick</span>
-						<span class="k">continue</span><span class="p">;</span>
-					<span class="n">lastPitch</span> <span class="o">=</span> <span class="n">pitch</span>
-					<span class="n">lastTick</span> <span class="o">=</span> <span class="n">tick</span>
-					<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">tick</span><span class="o">*</span><span class="n">tick2quarterNote</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span><span class="n">noteTags</span><span class="p">)]</span>
-
-
-					
-					
-				
-				<span class="k">if</span> <span class="n">isNoteOn</span> <span class="ow">or</span> <span class="n">isNoteOff</span><span class="p">:</span>
-					<span class="n">foundNoteOn</span> <span class="o">=</span> <span class="bp">False</span>
-					<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
-						
-						<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">pitch</span> <span class="o">==</span> <span class="n">pitch</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">noteTags</span><span class="p">)</span> <span class="ow">and</span> <span class="n">tick</span><span class="o">*</span><span class="n">tick2quarterNote</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="o">.</span><span class="n">startTime</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">duration</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
-							<span class="n">foundNoteOn</span> <span class="o">=</span> <span class="bp">True</span>
-							<span class="n">i</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span><span class="n">tick</span><span class="o">*</span><span class="n">tick2quarterNote</span> <span class="o">-</span> <span class="n">i</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span>
-							<span class="n">lastNoteOff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">tick</span><span class="o">*</span><span class="n">tick2quarterNote</span><span class="p">,</span><span class="n">lastNoteOff</span><span class="p">);</span>
-							<span class="k">break</span><span class="p">;</span>
-					<span class="c1"># if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):</span>
-						<span class="c1"># print &quot;not found note on &quot;+str(e)+str(pattern.events[-1])</span>
-						<span class="c1"># exit()</span>
-		<span class="n">trackIdx</span><span class="o">+=</span><span class="mi">1</span>
-
-
-
-	<span class="n">elementSize</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-	<span class="n">barSize</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">elementSize</span><span class="p">;</span>
-	<span class="n">lastBarPos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lastNoteOff</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">barSize</span><span class="p">)</span><span class="o">*</span><span class="n">barSize</span><span class="p">;</span>
-	<span class="n">pattern</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">lastBarPos</span>
-
-	<span class="k">return</span> <span class="n">pattern</span></div>
-
-
+	<span class="n">_NoteToTagsMap</span><span class="o">=</span><span class="n">__formatNoteToTags</span><span class="p">(</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">__fromMidiFormatted</span><span class="p">(</span><span class="n">midiPath</span><span class="o">=</span><span class="n">midiPath</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="o">=</span><span class="n">_NoteToTagsMap</span><span class="p">,</span><span class="n">tracksToGet</span> <span class="o">=</span> <span class="n">tracksToGet</span><span class="p">,</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="n">TagsFromTrackNameEvents</span><span class="p">,</span><span class="n">filterOutNotMapped</span><span class="o">=</span><span class="n">filterOutNotMapped</span><span class="p">,</span><span class="n">checkForOverlapped</span><span class="o">=</span><span class="n">checkForOverlapped</span><span class="p">)</span></div>
 
 
 
@@ -296,11 +169,11 @@
 
 
 	<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
-	<span class="k">print</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">midiGlobPath</span><span class="p">)</span>
+	<span class="n">_NoteToTagsMap</span> <span class="o">=</span> <span class="n">__formatNoteToTags</span><span class="p">(</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
 	<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">midiGlobPath</span><span class="p">):</span>
 		<span class="n">name</span> <span class="o">=</span>  <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
-		<span class="k">print</span> <span class="s2">&quot;getting &quot;</span><span class="o">+</span><span class="n">name</span>
-		<span class="n">p</span> <span class="o">=</span> <span class="n">fromMidi</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">,</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="n">TagsFromTrackNameEvents</span><span class="p">,</span><span class="n">filterOutNotMapped</span> <span class="o">=</span><span class="n">filterOutNotMapped</span><span class="p">);</span>
+		<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span> <span class="s2">&quot;getting &quot;</span><span class="o">+</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="n">fromMidi</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">_NoteToTagsMap</span><span class="p">,</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="n">TagsFromTrackNameEvents</span><span class="p">,</span><span class="n">filterOutNotMapped</span> <span class="o">=</span><span class="n">filterOutNotMapped</span><span class="p">);</span>
 		
 		<span class="k">if</span> <span class="n">desiredLength</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 			<span class="n">res</span><span class="o">+=</span> <span class="n">p</span><span class="o">.</span><span class="n">splitInEqualLengthPatterns</span><span class="p">(</span><span class="n">desiredLength</span><span class="p">,</span><span class="n">copy</span><span class="o">=</span><span class="bp">False</span><span class="p">);</span>
@@ -329,6 +202,189 @@
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 		<span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">toJSONDict</span><span class="p">(),</span><span class="n">f</span><span class="p">)</span></div>
+
+
+
+
+<span class="k">def</span> <span class="nf">__formatNoteToTags</span><span class="p">(</span><span class="n">_NoteToTags</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot; internal conversion for consistent NoteTagMap Structure</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">import</span> <span class="nn">copy</span>
+	<span class="n">NoteToTags</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">_NoteToTags</span><span class="p">)</span> 
+	<span class="k">if</span><span class="p">(</span><span class="n">NoteToTags</span> <span class="o">==</span> <span class="s2">&quot;pitchNames&quot;</span><span class="p">):</span>
+		<span class="n">NoteToTags</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;pitchNames&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">}</span>
+	<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">NoteToTags</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">n</span><span class="o">==</span><span class="s2">&quot;pitchNames&quot;</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">NoteToTags</span><span class="p">[</span><span class="s2">&quot;pitchNames&quot;</span><span class="p">]:</span>
+				<span class="n">NoteToTags</span><span class="p">[</span><span class="s2">&quot;pitchNames&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultPitchNames</span>
+		<span class="k">else</span><span class="p">:</span>	
+			<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="nb">list</span><span class="p">):</span> <span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">]]</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">])):</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="nb">int</span><span class="p">):</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">NoteToTags</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="n">i</span><span class="p">],</span><span class="s1">&#39;*&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">NoteToTags</span>
+
+<span class="k">def</span> <span class="nf">__fromMidiFormatted</span><span class="p">(</span><span class="n">midiPath</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">,</span><span class="n">tracksToGet</span> <span class="o">=</span> <span class="p">[],</span><span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span><span class="n">filterOutNotMapped</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">checkForOverlapped</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot; internal function that accept only Consistent NoteTagMap structure as created by __formatNoteToTags</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">import</span> <span class="nn">midi</span>
+	<span class="kn">import</span> <span class="nn">os</span>
+	
+	<span class="n">globalMidi</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">read_midifile</span><span class="p">(</span><span class="n">midiPath</span><span class="p">)</span>
+	<span class="n">globalMidi</span><span class="o">.</span><span class="n">make_ticks_abs</span><span class="p">();</span>
+	<span class="n">pattern</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">();</span>
+	<span class="n">pattern</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">midiPath</span><span class="p">)</span>
+	
+
+	
+
+	<span class="c1"># first get signature</span>
+	<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;start processing </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+	<span class="n">__findTimeInfoFromMidi</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="n">globalMidi</span><span class="p">);</span>
+
+	<span class="n">tickToQNote</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">globalMidi</span><span class="o">.</span><span class="n">resolution</span><span class="p">)</span> <span class="p">;</span>
+
+	<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">=</span><span class="p">[]</span>
+	<span class="n">lastNoteOff</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">notFoundTags</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">trackIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="n">tracks</span> <span class="ow">in</span> <span class="n">globalMidi</span><span class="p">:</span>
+		<span class="n">shouldSkipTrack</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span>
+		<span class="n">lastPitch</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+		<span class="n">lastTick</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tracks</span><span class="p">:</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">shouldSkipTrack</span><span class="p">):</span><span class="k">continue</span>
+			
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span> <span class="n">noteTags</span> <span class="o">=</span> <span class="p">[]</span>
+			
+			<span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">MetaEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span><span class="o">==</span><span class="n">midi</span><span class="o">.</span><span class="n">TrackNameEvent</span><span class="o">.</span><span class="n">metacommand</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">tracksToGet</span><span class="o">!=</span><span class="p">[]</span> <span class="ow">and</span> <span class="ow">not</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">text</span> <span class="ow">in</span> <span class="n">tracksToGet</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">trackIdx</span> <span class="ow">in</span> <span class="n">tracksToGet</span><span class="p">)):</span> 
+						<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span> <span class="s1">&#39;skipping track : </span><span class="si">%i</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">trackIdx</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">));</span>
+						<span class="n">shouldSkipTrack</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
+						<span class="k">continue</span> <span class="p">;</span>
+					<span class="k">else</span><span class="p">:</span> 
+						<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39; : getting track : </span><span class="si">%i</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">trackIdx</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">))</span>
+
+					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span> <span class="p">:</span>
+						<span class="n">noteTags</span> <span class="o">=</span> <span class="n">__findTagsFromName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
+
+
+			<span class="n">isNoteOn</span> <span class="o">=</span> <span class="n">midi</span><span class="o">.</span><span class="n">NoteOnEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">)</span>
+			<span class="n">isNoteOff</span> <span class="o">=</span><span class="n">midi</span><span class="o">.</span><span class="n">NoteOffEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">);</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">isNoteOn</span> <span class="ow">or</span> <span class="n">isNoteOff</span>  <span class="p">):</span>
+
+				<span class="n">pitch</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="c1"># optimize pitch property access</span>
+				<span class="n">tick</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">tick</span>
+				<span class="n">curBeat</span> <span class="o">=</span> <span class="n">tick</span><span class="o">*</span><span class="mf">1.0</span><span class="o">*</span><span class="n">tickToQNote</span>
+				<span class="k">if</span> <span class="n">noteTags</span> <span class="o">==</span> <span class="p">[]:</span>
+					<span class="k">if</span> <span class="n">TagsFromTrackNameEvents</span><span class="p">:</span><span class="k">continue</span>
+					<span class="n">noteTags</span> <span class="o">=</span> <span class="n">__findTagsFromPitchAndChannel</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">NoteToTagsMap</span><span class="p">)</span>
+
+
+				<span class="k">if</span> <span class="n">noteTags</span> <span class="o">==</span><span class="p">[]</span> <span class="p">:</span>
+					<span class="k">if</span> <span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">pitch</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notFoundTags</span><span class="p">):</span>
+						<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; : no tags found for pitch </span><span class="si">%d</span><span class="s2"> on channel </span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">))</span>
+						<span class="n">notFoundTags</span><span class="o">+=</span><span class="p">[[</span><span class="n">e</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span><span class="n">pitch</span><span class="p">]]</span>
+					<span class="k">if</span> <span class="n">filterOutNotMapped</span><span class="p">:</span>
+						<span class="k">continue</span><span class="p">;</span>
+
+
+
+				<span class="k">if</span> <span class="n">isNoteOn</span><span class="p">:</span>
+					<span class="c1"># ignore duplicated events (can&#39;t have 2 simultaneous NoteOn for the same pitch)</span>
+					<span class="k">if</span>  <span class="n">pitch</span> <span class="o">==</span> <span class="n">lastPitch</span> <span class="ow">and</span> <span class="n">tick</span> <span class="o">==</span> <span class="n">lastTick</span><span class="p">:</span>
+						<span class="n">gsiolog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39; : skip duplicated event : </span><span class="si">%i</span><span class="s1"> </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">curBeat</span><span class="p">))</span>
+						<span class="k">continue</span><span class="p">;</span>
+					<span class="n">lastPitch</span> <span class="o">=</span> <span class="n">pitch</span>
+					<span class="n">lastTick</span> <span class="o">=</span> <span class="n">tick</span>
+					<span class="c1"># print &quot;on&quot;+str(pitch)+&quot;:&quot;+str( tick*1.0*tickToQNote)</span>
+					<span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">startTime</span><span class="o">=</span><span class="n">curBeat</span><span class="p">,</span><span class="n">duration</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">pitch</span><span class="o">=</span><span class="n">pitch</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">127</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="n">noteTags</span><span class="p">)]</span>
+
+
+					
+					
+				
+				<span class="k">if</span> <span class="n">isNoteOn</span> <span class="ow">or</span> <span class="n">isNoteOff</span><span class="p">:</span>
+					<span class="c1"># print &quot;off&quot;+str(pitch)+&quot;:&quot;+str( tick*1.0*tickToQNote)</span>
+					<span class="n">foundNoteOn</span> <span class="o">=</span> <span class="bp">False</span>
+					<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
+						
+						<span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">pitch</span> <span class="o">==</span> <span class="n">pitch</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">noteTags</span><span class="p">)</span> <span class="ow">and</span> <span class="n">curBeat</span> <span class="o">&gt;=</span> <span class="n">i</span><span class="o">.</span><span class="n">startTime</span> <span class="ow">and</span> <span class="n">i</span><span class="o">.</span><span class="n">duration</span><span class="o">&lt;=</span><span class="mf">0.0001</span><span class="p">:</span>
+							<span class="n">foundNoteOn</span> <span class="o">=</span> <span class="bp">True</span>
+
+							<span class="n">i</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0001</span><span class="p">,</span><span class="n">curBeat</span> <span class="o">-</span> <span class="n">i</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span>
+							<span class="n">lastNoteOff</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">curBeat</span><span class="p">,</span><span class="n">lastNoteOff</span><span class="p">);</span>
+							<span class="c1"># print &quot;set duration &quot;+str(i.duration) + &quot;at start &quot; + str(i.startTime)</span>
+							<span class="k">break</span><span class="p">;</span>
+					<span class="k">if</span> <span class="ow">not</span> <span class="n">foundNoteOn</span> <span class="ow">and</span> <span class="n">midi</span><span class="o">.</span><span class="n">NoteOffEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
+						<span class="n">gsiolog</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; : not found note on &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+						
+		<span class="n">trackIdx</span><span class="o">+=</span><span class="mi">1</span>
+
+
+
+	<span class="n">elementSize</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+	<span class="n">barSize</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">elementSize</span><span class="p">;</span>
+	<span class="n">lastBarPos</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">lastNoteOff</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="n">barSize</span><span class="p">)</span><span class="o">*</span><span class="n">barSize</span><span class="p">;</span>
+	<span class="n">pattern</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">lastBarPos</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">checkForOverlapped</span><span class="p">):</span>
+		<span class="n">pattern</span><span class="o">.</span><span class="n">removeOverlapped</span><span class="p">(</span><span class="n">usePitchValues</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">pattern</span>
+
+
+<span class="k">def</span> <span class="nf">__findTimeInfoFromMidi</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span><span class="n">midiFile</span><span class="p">):</span>
+	<span class="kn">import</span> <span class="nn">midi</span>
+	<span class="n">foundTimeSignatureEvent</span> <span class="o">=</span> <span class="bp">False</span>
+	<span class="n">foundTempo</span> <span class="o">=</span> <span class="bp">False</span>
+	<span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+	<span class="n">pattern</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="mi">60</span>
+	<span class="k">for</span> <span class="n">tracks</span> <span class="ow">in</span> <span class="n">midiFile</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tracks</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">midi</span><span class="o">.</span><span class="n">MetaEvent</span><span class="o">.</span><span class="n">is_event</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">statusmsg</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span> <span class="o">==</span> <span class="n">midi</span><span class="o">.</span><span class="n">TimeSignatureEvent</span><span class="o">.</span><span class="n">metacommand</span> <span class="p">:</span>
+					<span class="k">if</span> <span class="n">foundTimeSignatureEvent</span> <span class="ow">and</span> <span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span> <span class="o">!=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">denominator</span><span class="p">]):</span> <span class="n">gsiolog</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; : multiple time signature found, not supported, result can be alterated&quot;</span><span class="p">)</span> 
+					<span class="n">foundTimeSignatureEvent</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
+					<span class="n">pattern</span><span class="o">.</span><span class="n">timeSignature</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">numerator</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">denominator</span><span class="p">]</span>
+					<span class="c1">#  e.metronome = e.thirtyseconds ::  do we need that ???</span>
+				<span class="k">elif</span> <span class="n">e</span><span class="o">.</span><span class="n">metacommand</span> <span class="o">==</span> <span class="n">midi</span><span class="o">.</span><span class="n">SetTempoEvent</span><span class="o">.</span><span class="n">metacommand</span> <span class="p">:</span>
+					<span class="k">if</span> <span class="n">foundTempo</span><span class="p">:</span> <span class="n">gsiolog</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; : multiple bpm found, not supported&quot;</span><span class="p">);</span>
+					<span class="n">foundTempo</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
+					<span class="n">pattern</span><span class="o">.</span><span class="n">bpm</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">bpm</span>
+
+		<span class="k">if</span> <span class="n">foundTimeSignatureEvent</span><span class="p">:</span> <span class="k">break</span><span class="p">;</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">foundTimeSignatureEvent</span><span class="p">:</span> <span class="n">gsiolog</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="n">pattern</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s2">&quot; : no time signature event found&quot;</span><span class="p">)</span>
+	
+
+
+<span class="k">def</span> <span class="nf">__findTagsFromName</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">noteMapping</span><span class="p">):</span>
+	<span class="n">res</span> <span class="o">=</span><span class="p">[]</span>
+	<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">name</span><span class="p">:</span> <span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">l</span><span class="p">];</span>
+	<span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">__findTagsFromPitchAndChannel</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">channel</span><span class="p">,</span><span class="n">noteMapping</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">pitchToName</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">pitchNames</span><span class="p">):</span>
+		<span class="n">octaveLength</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pitchNames</span><span class="p">);</span>
+		<span class="n">octave</span>  <span class="o">=</span> <span class="p">(</span><span class="n">pitch</span><span class="o">/</span><span class="n">octaveLength</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="c1"># 0 is C-2</span>
+		<span class="n">note</span> <span class="o">=</span> <span class="n">pitch</span><span class="o">%</span><span class="n">octaveLength</span>
+		<span class="k">return</span>  <span class="n">pitchNames</span><span class="p">[</span><span class="n">note</span><span class="p">]</span><span class="o">+</span><span class="s2">&quot;_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">octave</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="s2">&quot;pitchNames&quot;</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">pitchToName</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span><span class="n">noteMapping</span><span class="p">[</span><span class="s2">&quot;pitchNames&quot;</span><span class="p">])]</span>
+	<span class="n">res</span> <span class="o">=</span> <span class="p">[];</span>
+	<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">:</span>
+		<span class="k">for</span> <span class="n">le</span> <span class="ow">in</span> <span class="n">noteMapping</span><span class="p">[</span><span class="n">l</span><span class="p">]:</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">le</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">pitch</span><span class="p">})</span> <span class="ow">and</span> <span class="p">(</span><span class="n">le</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="p">{</span><span class="s1">&#39;*&#39;</span><span class="p">,</span><span class="n">channel</span><span class="p">}):</span> <span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">l</span><span class="p">];</span> 
+		
+	<span class="k">return</span> <span class="n">res</span>
+
+
+
+
+
 
 </pre></div>
 
