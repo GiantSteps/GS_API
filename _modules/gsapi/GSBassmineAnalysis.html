@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gsapi.GSBassmineAnalysis &mdash; GS_API 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="GS_API 0.1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          GS_API</a>
+        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../gsapi.html">gsapi package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for gsapi.GSBassmineAnalysis</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Read Midi Folders from style</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">GSBassmineMarkov</span> <span class="kn">as</span> <span class="nn">markov</span>
+<span class="kn">import</span> <span class="nn">GSIO</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+
+<div class="viewcode-block" id="strip_suffix"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.strip_suffix">[docs]</a><span class="k">def</span> <span class="nf">strip_suffix</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Strip off the suffix of the given filename or string. Extracted from madmom</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		filename : (str) Filename or string to strip.</span>
+<span class="sd">		suffix : (str, optional) Suffix to be stripped off (e.g. &#39;.txt&#39; including the dot).</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		filename: Filename or string without suffix.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">suffix</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">filename</span><span class="p">[:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">suffix</span><span class="p">)]</span>
+	<span class="k">return</span> <span class="n">filename</span></div>
+
+
+<div class="viewcode-block" id="match_files"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.match_files">[docs]</a><span class="k">def</span> <span class="nf">match_files</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">match_list</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">match_suffix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Match a filename or string against a list of other filenames or strings.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		filename : (str) Filename or string to strip.</span>
+<span class="sd">		match_list : (list) Match to this list of filenames or strings.</span>
+<span class="sd">		suffix : (str, optional) Suffix of `filename` to be ignored.</span>
+<span class="sd">		match_suffix: Match only files from `match_list` with this suffix.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		matches: (list) List of matched files.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">import</span> <span class="nn">os</span>
+	<span class="kn">import</span> <span class="nn">fnmatch</span>
+
+	<span class="c1"># get the base name without the path</span>
+	<span class="n">basename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">strip_suffix</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+	<span class="c1"># init return list</span>
+	<span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="c1"># look for files with the same base name in the files_list</span>
+	<span class="k">if</span> <span class="n">match_suffix</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+		<span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;*</span><span class="si">%s</span><span class="s2">*</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">basename</span><span class="p">,</span> <span class="n">match_suffix</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">pattern</span> <span class="o">=</span> <span class="s2">&quot;*</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">basename</span>
+	<span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">match_list</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+		<span class="c1"># base names must match exactly</span>
+		<span class="k">if</span> <span class="n">basename</span> <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">strip_suffix</span><span class="p">(</span><span class="n">match</span><span class="p">,</span> <span class="n">match_suffix</span><span class="p">)):</span>
+			<span class="n">matches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+	<span class="c1"># return the matches</span>
+	<span class="k">return</span> <span class="n">matches</span></div>
+
+
+<div class="viewcode-block" id="search_files"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.search_files">[docs]</a><span class="k">def</span> <span class="nf">search_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Returns a list of files in `path` matching the given `suffix` or filters</span>
+<span class="sd">	the given list to include only those matching the given suffix.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		path : (str or list) Path or list of files to be searched / filtered.</span>
+<span class="sd">		suffix : (str, optional) Return only files matching this suffix.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		file_list: (list) List of files.</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="kn">import</span> <span class="nn">os</span>
+	<span class="kn">import</span> <span class="nn">glob</span>
+
+	<span class="c1"># determine the files</span>
+	<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+		<span class="c1"># a list of files or paths is given</span>
+		<span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="c1"># recursively call the function</span>
+		<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+			<span class="n">file_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">search_files</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+		<span class="c1"># use all files in the given path</span>
+		<span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/*&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suffix</span><span class="p">:</span>
+				<span class="n">file_list</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/*</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">s</span><span class="p">)))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">file_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/*</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">suffix</span><span class="p">))</span>
+	<span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+		<span class="n">file_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="c1"># no matching needed</span>
+		<span class="k">if</span> <span class="n">suffix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+			<span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+		<span class="c1"># a list of suffices is given</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">suffix</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+					<span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+		<span class="c1"># a single suffix is given</span>
+		<span class="k">elif</span> <span class="n">path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">suffix</span><span class="p">):</span>
+			<span class="n">file_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">IOError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> does not exist.&quot;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+	<span class="c1"># remove duplicates</span>
+	<span class="n">file_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">file_list</span><span class="p">))</span>
+	<span class="c1"># sort files</span>
+	<span class="n">file_list</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+	<span class="c1"># return the file list</span>
+	<span class="k">return</span> <span class="n">file_list</span></div>
+
+
+<div class="viewcode-block" id="write2pickle"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.write2pickle">[docs]</a><span class="k">def</span> <span class="nf">write2pickle</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../../models/&#39;</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Write numpy array in pickle format to the selected location</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    name: name of the output pickle file</span>
+<span class="sd">	    data: numpy array to be exported to pickle format</span>
+<span class="sd">	    path: (optional) output folder path</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># path = &#39;rhythmic_analysis/graph_models/pickle/&#39;</span>
+
+	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+		<span class="c1"># Pickle the &#39;data&#39; dictionary using the highest protocol available.</span>
+		<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="binaryBeatPattern"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.binaryBeatPattern">[docs]</a><span class="k">def</span> <span class="nf">binaryBeatPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">noBeats_bass</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Quantize array of note start times to specified resolution</span>
+<span class="sd">	Loop length is quantized to multiples of whole bars</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    pattern: list of start times (in beats)</span>
+<span class="sd">	    noBeats_bass: number of beats of the sequence</span>
+<span class="sd">	    resolution: quantization resolution (1/resolution beats). For 1/16 note resoltuion set resolution = 4, for 1/8</span>
+<span class="sd">	        set resolution= 2, and so on</span>
+<span class="sd">	Returns:</span>
+<span class="sd">	    rhythm: 2D list with binary representation of a pattern. Each row is a beat measure (i.e rhythm[n] gives beat &#39;n&#39; binary representation)</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># resolution = 4</span>
+	<span class="c1"># noBeats_bass = uf.numberOfBeats(pattern)  # Bass files length set the global length of analysis</span>
+	<span class="k">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"># of beats: &#39;</span><span class="p">,</span> <span class="n">noBeats_bass</span>
+	<span class="c1"># beat_subdiv = np.arange(start=0, step=0.25, stop=(noBeats_bass * RES) - 1)</span>
+	<span class="n">subdiv_aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">])</span>
+	<span class="c1"># Matrix to store the binary representation of the midi files</span>
+	<span class="c1"># Basslines -&gt; 1 matrix</span>
+	<span class="n">rhythm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">noBeats_bass</span><span class="p">,</span> <span class="n">resolution</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">pattern</span><span class="p">:</span>
+		<span class="c1"># quantize to the closest subdivision</span>
+		<span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="o">=</span> <span class="nb">divmod</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># i = row(beat number) , d = column (beat subdivision)</span>
+		<span class="n">d_</span> <span class="o">=</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">subdiv_aux</span> <span class="o">-</span> <span class="n">d</span><span class="p">))</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">noBeats_bass</span><span class="p">:</span>
+			<span class="n">rhythm</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">d_</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+	<span class="k">return</span> <span class="n">rhythm</span></div>
+
+
+<div class="viewcode-block" id="translate_rhythm"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.translate_rhythm">[docs]</a><span class="k">def</span> <span class="nf">translate_rhythm</span><span class="p">(</span><span class="n">rhythm</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Translate binary represented rhythms (from binaryBeatPattern()) to markov variables dictionary.</span>
+<span class="sd">	Each binarized pattern is presented as it&#39;s decimal representation.</span>
+<span class="sd">	Example: [1,0,1,0] = 10, [0,0,0,1] = 1 and so on</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    rhythm: 2D formatted list containing binary representation of pattern. Output from binaryBeatPattern()</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    id: decimal representation of binary onset pattern. This ids are used as dictionary for Markov operations.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="nb">id</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="k">for</span> <span class="n">beat</span> <span class="ow">in</span> <span class="n">rhythm</span><span class="p">:</span>
+		<span class="nb">id</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">beat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">beat</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">beat</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">beat</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+	<span class="k">return</span> <span class="nb">id</span></div>
+
+
+<div class="viewcode-block" id="corpus_analysis"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.corpus_analysis">[docs]</a><span class="k">def</span> <span class="nf">corpus_analysis</span><span class="p">(</span><span class="n">bass_path</span><span class="p">,</span> <span class="n">drum_path</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This functions implement the rhythmic analysis used by Bassmine (bassline generator). The input is a corpus of related</span>
+<span class="sd">	Bass and Drum MIDI files.</span>
+<span class="sd">	Input files must match their names : i.e. bass_[trackname].mid , drums_[trackname].mid</span>
+
+<span class="sd">	The algorithm computes a Markov model of the temporal context (probabilities of transitions between bass beat patterns)</span>
+<span class="sd">	and the interlocking context between bass and kick-drum (probabilities of concurrency between bass and kick-drum patterns)</span>
+
+<span class="sd">	Markovian models are computed by GSBassmineMarkov module.</span>
+
+<span class="sd">	[The pitch model is still a work in progress]</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">	    bass_path: folder with bass midi files</span>
+<span class="sd">	    drum_path: folder with drums midi files</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    rhythm_model: instance of GSBassmineMarkov.MarkovModel class. It contains initial, temporal and interlocking MTM</span>
+<span class="sd">	    kick_patterns: list of kick patterns in collection in Markov dictionary formatted ids</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">bass_files</span> <span class="o">=</span> <span class="n">search_files</span><span class="p">(</span><span class="n">bass_path</span><span class="p">,</span> <span class="s1">&#39;.mid&#39;</span><span class="p">)</span>
+	<span class="n">drum_files</span> <span class="o">=</span> <span class="n">search_files</span><span class="p">(</span><span class="n">drum_path</span><span class="p">,</span> <span class="s1">&#39;.mid&#39;</span><span class="p">)</span>
+
+	<span class="n">bass_names</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">drum_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="k">print</span> <span class="s2">&quot;Bass Files&quot;</span>
+	<span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="n">bass_files</span><span class="p">:</span>
+		<span class="n">bass_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bf</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">bass_path</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;.mid&#39;</span><span class="p">)])</span>
+	<span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Number of files: &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">bass_files</span><span class="p">)</span>
+
+	<span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Drums Files&quot;</span>
+	<span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">drum_files</span><span class="p">:</span>
+		<span class="n">drum_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">drum_path</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s1">&#39;.mid&#39;</span><span class="p">)])</span>
+	<span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Number of files: &quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">drum_files</span><span class="p">)</span>
+
+	<span class="c1"># File counter</span>
+	<span class="n">file_it</span> <span class="o">=</span> <span class="mi">0</span>
+
+	<span class="c1"># Markov analysis object</span>
+	<span class="n">rhythm_model</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">MarkovModel</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+	<span class="n">kick_patterns</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="c1"># Pitch Model</span>
+	<span class="c1"># pitch_model = markov.MarkovModel(25);</span>
+	<span class="c1"># pitch_contours = []</span>
+	<span class="c1"># LOOP THROUGH THE DIFFERENT MIDI INSTANCES</span>
+	<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">drum_files</span><span class="p">)):</span>
+		<span class="n">match</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;drums&#39;</span> <span class="o">+</span> <span class="n">bass_names</span><span class="p">[</span><span class="n">f</span><span class="p">][</span><span class="mi">4</span><span class="p">:],</span> <span class="n">drum_names</span><span class="p">))</span>
+		<span class="n">match_file</span> <span class="o">=</span> <span class="n">drum_path</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">match</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;.mid&#39;</span>
+
+		<span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Bass file: &#39;</span><span class="p">),</span> <span class="n">bass_files</span><span class="p">[</span><span class="n">f</span><span class="p">]</span>
+		<span class="k">print</span> <span class="p">(</span><span class="s1">&#39;Drum file: &#39;</span><span class="p">),</span> <span class="n">match_file</span>
+		<span class="k">print</span> <span class="n">bass_names</span><span class="p">[</span><span class="n">f</span><span class="p">][</span><span class="mi">5</span><span class="p">:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+
+		<span class="c1"># Read Bassline files</span>
+		<span class="n">bass_pattern</span> <span class="o">=</span> <span class="n">GSIO</span><span class="o">.</span><span class="n">fromMidi</span><span class="p">(</span><span class="n">bass_files</span><span class="p">[</span><span class="n">f</span><span class="p">],</span> <span class="s2">&quot;pitchNames&quot;</span><span class="p">,</span> <span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="n">onset_bass</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">startTime</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">bass_pattern</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
+
+		<span class="n">bass_rhythm</span> <span class="o">=</span> <span class="n">binaryBeatPattern</span><span class="p">(</span><span class="n">onset_bass</span><span class="p">,</span> <span class="n">bass_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+		<span class="c1"># print(bass_rhythm)</span>
+		<span class="n">bass_id</span> <span class="o">=</span> <span class="n">translate_rhythm</span><span class="p">(</span><span class="n">bass_rhythm</span><span class="p">)</span>
+		<span class="n">rhythm_model</span><span class="o">.</span><span class="n">add_temporal</span><span class="p">(</span><span class="n">bass_id</span><span class="p">)</span>
+
+		<span class="c1"># Read Drum files</span>
+		<span class="c1"># Filter kick notes</span>
+		<span class="n">kick_pattern</span> <span class="o">=</span> <span class="n">GSIO</span><span class="o">.</span><span class="n">fromMidi</span><span class="p">(</span><span class="n">match_file</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;Kick&quot;</span><span class="p">:</span> <span class="mi">36</span><span class="p">},</span> <span class="n">TagsFromTrackNameEvents</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+		<span class="n">onset_kick</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">startTime</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">kick_pattern</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
+		<span class="c1"># Quantize</span>
+		<span class="n">kick_rhythm</span> <span class="o">=</span> <span class="n">binaryBeatPattern</span><span class="p">(</span><span class="n">onset_kick</span><span class="p">,</span> <span class="n">kick_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+		<span class="c1"># print kick_rhythm</span>
+		<span class="c1"># Translate</span>
+		<span class="n">kick_id</span> <span class="o">=</span> <span class="n">translate_rhythm</span><span class="p">(</span><span class="n">kick_rhythm</span><span class="p">)</span>
+		<span class="n">kick_patterns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kick_id</span><span class="p">)</span>
+		<span class="c1"># Update interlocking model</span>
+		<span class="n">rhythm_model</span><span class="o">.</span><span class="n">add_interlocking</span><span class="p">(</span><span class="n">kick_id</span><span class="p">,</span> <span class="n">bass_id</span><span class="p">)</span>
+
+		<span class="c1"># Update file counter</span>
+		<span class="n">file_it</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">return</span> <span class="n">rhythm_model</span><span class="p">,</span> <span class="n">kick_patterns</span>  <span class="c1"># , pitch_model</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, MTG/GiantSteps.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
