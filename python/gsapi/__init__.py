@@ -7,7 +7,8 @@ from GSDataset import GSDataset
 from GSDescriptor import GSDescriptor
 from GSDescriptors import *
 from MidiMap import *
-
+from GSBassmineAnalysis import *
+from GSBassmineMarkov import *
 
 
 if __name__ == '__main__':
