@@ -5,8 +5,12 @@ import json
 def normalize(a):
 	"""
 	Normalize matrix by rows
-	:param a: matrix
-	:return: normalized matrix
+
+	Args:
+	    a: matrix (2D)
+
+	Returns:
+		a: normalized matrix
 	"""
 	c = 0
 	for row in a:
@@ -20,25 +24,45 @@ def normalize(a):
 def indices(a, func):
 	"""
 	Return indices in an array matching to a given function
-	EX: indices(array, lambda x: x <= 1)
-	:param a: array, list
-	:param func: lambda function
-	:return: indices matching lambda function
+
+	Examples: indices(array, lambda x: x <= 1)
+
+	Args:
+		a: array, list
+		func: lambda function
+
+	Returns:
+		Indices of 'a' matching lambda function
 	"""
-	# UF.
 	return [i for (i, val) in enumerate(a) if func(val)]
 
 
 class MarkovModel:
 	"""
-	Class to operate with markov models
+	Class to operate with markov models. Internal function used by GSBassmineAnalysis module.
+
+	Attributes:
+	    model_size: Dictionary size of the model
+	    normalized: Boolean to control if the model has been normalized
+
+	    support_temporal: internal matrix to compute markov model
+	    support_initial: internal matrix to compute markov model
+	    support_interlocking: internal matrix to compute markov model
+
+	    initial_model: matrix to store initial MTM
+	    temporal_model: matrix to store temporal MTM
+	    interlocking_model: matrix to store interlocking MTM
+
 	"""
 	def __init__(self, model_size, order=1):
 		"""
 		Constructor
-		:param model_size: Dictionary size of the model
-		:param order: default = 1 (not implemented)
-		:return: instance of MarkovModel
+
+		Args:
+			model_size: Dictionary size of the model
+			order: default = 1 (not implemented for other orders yet...)
+		Returns:
+			instance of MarkovModel
 		"""
 		if type(model_size) == tuple:
 			if len(model_size) == 2:
@@ -70,7 +94,8 @@ class MarkovModel:
 		First element counts are stored in self.initial_model
 		Rest of elements feed the transition matrix (no time-series)
 
-		:param pattern: list or array with idx of the state dictionary
+		Args:
+			pattern: list or array with idx of the state dictionary
 		"""
 		count = 0
 		for p in pattern:
@@ -84,10 +109,11 @@ class MarkovModel:
 
 	def add_interlocking(self, patt_kick, patt_bass):
 		"""
-		Create interlocking markov matrix given two sequences
+		Create interlocking (concurrency) markov matrix given two sequences
 
-		:param patt_kick: kick drum pattern (anchor)
-		:param patt_bass: bassline pattern
+		Args:
+			patt_kick: kick drum pattern (anchor)
+			patt_bass: bassline pattern
 		"""
 
 		l = min(len(patt_kick), len(patt_bass))
@@ -98,23 +124,29 @@ class MarkovModel:
 	def update_interlocking(self, x, y):
 		"""
 		internal function to update interlocking matrix
-		:param x: row (anchor)
-		:param y: col (bass)
+
+		Args:
+			x: row (anchor)
+			y: col (bass)
 		"""
 		self.support_interlocking[int(x), int(y)] += 1.
 
 	def update_temporal(self, x, y):
 		"""
 		internal function to update temporal matrix
-		:param x: row (past)
-		:param y: col (present)
+
+		Args:
+		 x: row (past)
+		 y: col (present)
 		"""
 		self.support_temporal[int(x), int(y)] += 1.
 
 	def update_initial(self, x):
 		"""
 		internal function to update initial probabilites
-		:param x: row (probabilities)
+
+		Args:
+			x: row (probabilities)
 		"""
 		self.support_initial[int(x)] += 1.
 
@@ -130,21 +162,27 @@ class MarkovModel:
 	def get_initial(self):
 		"""
 		Get initial probabilites
-		:return: list
+
+		Returns:
+			initial_model: list
 		"""
 		return self.initial_model
 
 	def get_temporal(self):
 		"""
 		Get temporal model
-		:return: matrix[][]
+
+		Returns:
+			temporal_model: 2D matrix
 		"""
 		return self.temporal_model
 
 	def get_interlocking(self):
 		"""
 		Get interlocking model
-		:return:
+
+		Returns:
+			interlocking_model: 2D matrix
 		"""
 		return self.interlocking_model
 
@@ -152,11 +190,12 @@ class MarkovModel:
 		"""
 		Build pitch model
 
-		work in progress...
+		[work in progress...]
 
 		Takes first not an assume it as root note. Other notes are represented as intervals relative to root (first note)
 
-		:return: dictionary{0: {'interval': , 'probs'}, {},{},...}
+		Returns:
+			dictionary{0: {'interval': , 'probs'}, {},{},...}
 		"""
 		pitch_temporal_model = markov_tm_2dict(self.get_temporal())
 		pitch_dict = dict()
@@ -177,18 +216,24 @@ class MarkovModel:
 		return pitch_dict
 
 
-def constrainMM(markov_model, target):
+def constrainMM(markov_model, target, _path):
 	"""
 
-	Compute non-homogeneuous markov model based on interlocking constraint
+	Compute non-homogeneuous markov model (NHMM) based on interlocking constraint.
+	Given a target pattern it constraint the original model and ensure arc-consistency
 
 	This function is also implemented as a pyext class.
 
-	:param markov_model: MarkovModel instance
-	:param target: Target pattern for interlocking (kick) represented by its pattern ids.
+	Args:
+		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())
+		target: Target pattern for interlocking (kick) represented by its pattern ids.
+		_path: Path to where the Markov models will be stored
+
+	Returns:
+		Interlocking model as dictionary in JSON format
 
 	"""
-	path = "output/"
+	path = _path
 
 	b0 = copy.copy(markov_model.get_initial())
 	b = copy.copy(markov_model.get_temporal())
@@ -315,9 +360,26 @@ def constrainMM(markov_model, target):
 	print len(out_Model)
 
 
-def variationMM(markov_model, target):
+def variationMM(markov_model, target, _path):
 
-	path =  "output/"
+	"""
+	Compute non-homogeneuous markov model (NHMM) based on variation constraint.
+	Given a target Variation Mask(VM) it constraint the original model and ensure arc-consistency
+
+	Examples:
+	    VM should be a list representing a pattern (id formatted) with negative numbers on those frames to variate.
+	    Positive values will be preserved.
+
+	Args:
+		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())
+		target: Variation Mask (list with negative numbers indicating variation of that time frame)
+		_path: Path to where the Markov models will be stored
+
+	Returns:
+	    Variation model as a dictionary in JSON format
+
+	"""
+	path = _path
 
 	b = copy.copy(markov_model.get_temporal())
 
@@ -341,7 +403,7 @@ def variationMM(markov_model, target):
 	V.append(dict())
 
 	if target[1] >= 0:
-		V[0][target[0]] = set([str(target[1])])
+		V[0][target[0]] = {str(target[1])}
 	else:
 		V[0][target[0]] = Dom_B[target[0]]
 
@@ -355,7 +417,7 @@ def variationMM(markov_model, target):
 			for key, value in V[i-1].iteritems():
 
 				# store keys that match target[i]
-				tmp_key = value.intersection(set([str(target[i])]))
+				tmp_key = value.intersection({str(target[i])})
 				if len(tmp_key) > 0:
 					V[i][int(list(tmp_key)[0])] = Dom_B[int(list(tmp_key)[0])]
 				#V[i][target[i-1]] = set([str(target[i])])
@@ -410,7 +472,7 @@ def variationMM(markov_model, target):
 	#print "\nFinal Model:"
 
 	for key,val in V[len(V)-1].iteritems():
-		tmp_val  = val.intersection(set([str(target[len(target)-1])]))
+		tmp_val  = val.intersection({str(target[len(target) - 1])})
 		print tmp_val
 		if len(tmp_val)>0:
 			V[len(V)-1][key] = tmp_val
@@ -451,14 +513,17 @@ def variationMM(markov_model, target):
 
 	print("Variation model build!")
 
+
 def markov_tm_2dict(a):
 	"""
 	Convert markov transition matrix to dictionary of sets.
 	Compact representation to avoid sparse matrices and better performance in the constrain model
 
-	:param a: MarkovModel temporal/interlocking/pitch matrix
+	Args:
+		a: MarkovModel temporal/interlocking/pitch matrix
 
-	:return dictionary
+	Returns:
+		dictionary{}
 	"""
 	out = dict()
 	key = 0
@@ -486,3 +551,19 @@ def markov_tm_2dict(a):
 		return set(tmp_dom)
 	else:
 		print "Wrong size"
+
+"""
+def generateBassRhythm(markov_model, target=[]):
+
+	if len(target) == 0:  # no constraints
+
+	else: # use constrained model
+
+
+	return 1
+
+
+def generateBassRhythmVariation():
+
+	return 1
+"""

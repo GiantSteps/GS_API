@@ -13,32 +13,31 @@ style_id = 2
 bass_path = '../../corpus/bassmine/' + style[style_id] + '/bass'
 drum_path = '../../corpus/bassmine/' + style[style_id] + '/drums'
 
-# Output folder
-_path = 'output/' + style[style_id] + '/'
-
 
 # Analyse corpus and build Markov model
-MM, kick_patterns= bassmine.corpus_analysis(bass_path, drum_path)
+MM, kick_patterns = bassmine.corpus_analysis(bass_path, drum_path)
 # Normalize transition matrices
 MM.normalize_model()
+# Output folder (to use with Max this folder should be Bassmine-master/models/)
+_path = 'output/'
+#  Uncomment to create models and export to pickle. REQUIRED to add new collections and use them in Max app.
+# Export to pickle files
+bassmine.write2pickle('initial', MM.get_initial(),_path + style[style_id] + '/')
+bassmine.write2pickle('temporal', MM.get_temporal(),_path + style[style_id] + '/')
+bassmine.write2pickle('interlocking', MM.get_interlocking(),_path + style[style_id] + '/')
 
 # EXAMPLES OF MARKOV INTERLOCKING CONSTRAINED MODEL
 # Given a Kick pattern generate a NHMM with interlocking constraint
-target = kick_patterns[random.randint(0,len(kick_patterns)-1)]
-print target
+target_kick = kick_patterns[random.randint(0,len(kick_patterns)-1)]
+print target_kick
 #print kick_patterns
 target = [8,8,8,9,8,8,9,0]
-markov.constrainMM(MM,target)
+markov.constrainMM(MM, target, _path)
 
 # Create variation model
 target_bass = [5,5,-5,5,5,-5,5,5]
-markov.variationMM(MM,target_bass)
+markov.variationMM(MM, target_bass, _path)
 
-#  Uncomment to create models and export to pickle. REQUIRED to add new collections and use them in Max app.
-# Export to pickle files
-bassmine.write2pickle('initial', MM.get_initial(),_path)
-bassmine.write2pickle('temporal', MM.get_temporal(),_path)
-bassmine.write2pickle('interlocking', MM.get_interlocking(),_path)
 
 
 #########################################
