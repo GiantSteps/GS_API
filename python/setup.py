@@ -61,7 +61,7 @@ setup(name='gsapi',
       # scripts=scripts,
       # cmdclass={'build_ext': build_ext},
       test_suite='nose.collector',
-      install_requires = ['python-midi'],
+      install_requires = ['python-midi', 'midiutil'],
       zip_safe = True
       # classifiers=classifiers
       )

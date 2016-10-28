@@ -1,6 +1,9 @@
 import numpy as np
 import copy
+import random
 import json
+import GSPattern
+import GSBassmineAnalysis
 
 def normalize(a):
 	"""
@@ -35,6 +38,17 @@ def indices(a, func):
 		Indices of 'a' matching lambda function
 	"""
 	return [i for (i, val) in enumerate(a) if func(val)]
+
+
+def pdf_sampling(n):  # variable argument list
+
+	x = random.random()
+	f = 0
+	for i in range(1, len(n)):
+		if x < sum(n[0:i]):
+			f = i - 1
+			break
+	return f
 
 
 class MarkovModel:
@@ -86,6 +100,8 @@ class MarkovModel:
 		self.initial_model = []
 		self.temporal_model = []
 		self.interlocking_model = []
+		# Pattern dictionary. Used for generation (table index -> onset pattern)
+		self.model_dictionary = createMarkovGenerationDictionary()
 
 	def add_temporal(self, pattern):
 		"""
@@ -186,13 +202,53 @@ class MarkovModel:
 		"""
 		return self.interlocking_model
 
+	def rhythm_model(self, _path="output/"):
+
+		path = _path
+
+		init_set = markov_tm_2dict(self.initial_model)
+		#print self.initial_model
+		init = []
+
+		init_dict = {}
+		init_dict['initial'] = {}
+		init_dict['initial']['pattern'] = [int(r) for r in init_set]
+		init_dict['initial']['prob'] = [self.initial_model[i] for i in init_dict['initial']['pattern']]
+		#print "init\n", init_dict
+
+		rhythm_temporal_model = markov_tm_2dict(self.get_temporal())
+		rhythm_dict = dict()
+		#print(pitch_temporal_model)
+		## Temporal model
+		for key,val in rhythm_temporal_model.iteritems():
+			rhythm_dict[key] = {}
+			#print key # parent
+			#print list(val) # child
+			tmp = [] # child
+			for v in val:
+				tmp.append(self.get_temporal()[key, int(v)])
+			#print list(tmp/sum(tmp))
+			rhythm_dict[key]['pattern'] = [int(r) for r in rhythm_temporal_model[key]]
+			rhythm_dict[key]['probs'] = list(tmp/sum(tmp))
+
+		with open( path + 'HModel.json', 'w') as outfile:
+			json.dump(rhythm_dict, outfile)
+			outfile.close()
+
+		with open( path + 'HModel_init.json', 'w') as outfile:
+			json.dump(init_dict, outfile)
+			outfile.close()
+		#print "Rhythm model computed\n", rhythm_dict
+		return [init_dict, rhythm_dict]
+
+
 	def pitch_model(self):
 		"""
 		Build pitch model
 
 		[work in progress...]
 
-		Takes first not an assume it as root note. Other notes are represented as intervals relative to root (first note)
+		Takes first note an assume it as root note. Other notes are represented as intervals relative to root (first note)
 
 		Returns:
 			dictionary{0: {'interval': , 'probs'}, {},{},...}
@@ -203,12 +259,12 @@ class MarkovModel:
 		## Temporal model
 		for key,val in pitch_temporal_model.iteritems():
 			pitch_dict[key-12] = {}
-			print key # parent
-			print list(val) # child
+			#print key # parent
+			#print list(val) # child
 			tmp = [] # child
 			for v in val:
 				tmp.append(self.get_temporal()[key, int(v)])
-			print list(tmp/sum(tmp))
+			#print list(tmp/sum(tmp))
 			pitch_dict[key-12]['interval'] = [int(x)-12 for x in val]
 			pitch_dict[key-12]['probs'] = list(tmp/sum(tmp))
 
@@ -216,7 +272,7 @@ class MarkovModel:
 		return pitch_dict
 
 
-def constrainMM(markov_model, target, _path):
+def constrainMM(markov_model, target, _path="output/"):
 	"""
 
 	Compute non-homogeneuous markov model (NHMM) based on interlocking constraint.
@@ -245,9 +301,9 @@ def constrainMM(markov_model, target, _path):
 	Dom_B = markov_tm_2dict(b)
 	Dom_I = markov_tm_2dict(inter)
 
-	print "Initial dict ", Dom_init
-	print "Temporal dict ", Dom_B
-	print "Interlocking dict ", Dom_I
+	#print "Initial dict ", Dom_init
+	#print "Temporal dict ", Dom_B
+	#print "Interlocking dict ", Dom_I
 
 	## Representation of target kick pattern as variable domain
 	target_setlist = []
@@ -357,10 +413,10 @@ def constrainMM(markov_model, target, _path):
 
 	print("Interlocking model build!")
 
-	print len(out_Model)
+	return [init_dict, out_Model]
 
 
-def variationMM(markov_model, target, _path):
+def variationMM(markov_model, target, _path="output/"):
 
 	"""
 	Compute non-homogeneuous markov model (NHMM) based on variation constraint.
@@ -438,9 +494,7 @@ def variationMM(markov_model, target, _path):
 	#V[len(target)-1][target[len(target)-1]] = set([str(target[len(target)-1])])
 
 	#print V
-	for v in V:
-		print v
-		print "\n"
+
 
 	## Delete values from each key in V[i] that are not in V[i+1]
 	val_del = dict()
@@ -473,9 +527,13 @@ def variationMM(markov_model, target, _path):
 
 	for key,val in V[len(V)-1].iteritems():
 		tmp_val  = val.intersection({str(target[len(target) - 1])})
-		print tmp_val
+		#print tmp_val
 		if len(tmp_val)>0:
 			V[len(V)-1][key] = tmp_val
+
+	#for v in V:
+	#	print v
+	#	print "\n"
 
 	out_Model = {}
 	# Force last beat
@@ -512,6 +570,7 @@ def variationMM(markov_model, target, _path):
 		outfile.close()
 
 	print("Variation model build!")
+	return [init_dict, out_Model]
 
 
 def markov_tm_2dict(a):
@@ -552,18 +611,148 @@ def markov_tm_2dict(a):
 	else:
 		print "Wrong size"
 
-"""
-def generateBassRhythm(markov_model, target=[]):
+
+def createMarkovGenerationDictionary(toJSON=False, _path="output/"):
+	"""
+	Internal function to build a dictionary relating binarized patterns into start times (in beats)
+	Args:
+	    toJSON: boolean. If true it exports to JSON
+	    _path: path to store the dictionary as JSON
+
+	Returns: Pattern dictionary
+
+	"""
+	start_times = [0,0.25,0.5,0.75]
+
+	out = dict()
+
+	out['patterns'] = dict()
+
+	for p in range(16):
+		# Binary pattern
+		binpatt = format(p, '04b')
+		st = []
+		for i in range(len(start_times)):
+			if binpatt[i] == '1':
+				st.append((start_times[i]))
+		val = st
+		out['patterns'][p] = val
+
+
+	#print out
+
+	path = _path
+	name = 'pattern_dict'
+	data = out
+
+	if toJSON:
+		with open(path + name + '.json', 'w') as outfile:
+				json.dump(data, outfile)
+
+	return data
+
+
+def generateBassRhythm(markov_model, beat_length=8, target=[]):
+	"""
+	Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular
+	Markov model (computed by MarkovModel.rhythm_model()).
+	If target given it is assumed as target constraint for interlocking model.
+	Args:
+	    markov_model: output from  MarkovModel.rhythm_model()
+	    beat_length: desired length of the generated pattern
+	    target: Pattern used as constraint in Interlocking Model.
+
+	Returns:
+	    bassline: GSPattern containing bassline onset pattern
+
+	"""
+	bassline = GSPattern.GSPattern()
+	pattern_idx = []
 
 	if len(target) == 0:  # no constraints
 
+		HMM = markov_model.rhythm_model()
+
+		pattern_idx.append(np.random.choice(HMM[0]['initial']['pattern'], p=HMM[0]['initial']['prob']))
+
+		for beat in range(beat_length-1):
+			pattern_idx.append(np.random.choice(HMM[1][pattern_idx[beat]]['pattern'],
+			                                    p=HMM[1][pattern_idx[beat]]['probs']))
+
 	else: # use constrained model
 
+		if len(target) < beat_length:
+			beat_length = len(target)
 
-	return 1
+		NHMM = constrainMM(markov_model, target)
+		pattern_idx.append(np.random.choice(NHMM[0]['initial']['pattern'], p=NHMM[0]['initial']['prob']))
+
+		for beat in range(beat_length-1):
+			pattern_idx.append(np.random.choice(NHMM[1][beat][pattern_idx[beat]]['pattern'],
+			                                    p=NHMM[1][beat][pattern_idx[beat]]['probs']))
+
+	bassline.duration = len(pattern_idx)
+
+	start_times = []
+	beat_count = 0
+	for idx in pattern_idx:
+		st = markov_model.model_dictionary['patterns'][idx]
+		if len(st)>0:
+			for s in st:
+				bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+		beat_count += 1
+
+	return bassline
 
 
-def generateBassRhythmVariation():
+def generateBassRhythmVariation(markov_model, target_pattern, variation_mask):
+	"""
+	Function that implements a variation model given an already generated pattern. Based on the variation mask it creates
+	a Markov model that preserve desired beat measures while it models "variation" beats to be stylistically consistent.
+	Args:
+	    markov_model: output from  MarkovModel.rhythm_model()
+	    target_pattern: GSPattern, for instance output from generateBassRhythm()
+	    variation_mask: List of the same length of the target_pattern(in beats). Positions with value 1 will be preserved,
+	    those with -1 will vary.
 
-	return 1
-"""
+	Returns:
+		bassline: generated GSPattern
+	"""
+
+	bassline = GSPattern.GSPattern()
+	pattern_idx = []
+
+	if len(variation_mask) < target_pattern.duration:
+		print "Variation mask must be same length as target_pattern (in beats)"
+		return
+	else:
+		#Convert target pattern to markov dictionary
+		onset_target = [x.startTime for x in target_pattern.events]
+		target_rhythm = GSBassmineAnalysis.binaryBeatPattern(onset_target, target_pattern.duration)
+		target_id = GSBassmineAnalysis.translate_rhythm(target_rhythm)
+		#Mask formatted pattern
+		masked_target = [target_id[i] * variation_mask[i] for i in range(len(variation_mask) - 1)]
+
+		#Build variation model
+		NHMM = variationMM(markov_model, masked_target)
+		#Generate GSPattern
+		pattern_idx.append(target_id[0])
+
+		for beat in range(len(masked_target) - 1):
+			pattern_idx.append(np.random.choice(NHMM[1][beat][pattern_idx[beat]]['pattern'],
+			                                    p=NHMM[1][beat][pattern_idx[beat]]['probs']))
+
+		bassline.duration = len(pattern_idx)
+
+		beat_count = 0
+		for idx in pattern_idx:
+			st = markov_model.model_dictionary['patterns'][idx]
+			if len(st)>0:
+				for s in st:
+					bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+			beat_count += 1
+
+		return bassline
+
+
+
