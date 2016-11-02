@@ -103,21 +103,6 @@ will return a list of *GSPattern* with event being tagged :
 
 # GS-API examples
 
-If not installed gsapi python module yet, follow the instructions:
-
-Download : https://github.com/GiantSteps/GS_API
-
-Open terminal:
-- cd GS_API/python
-- python setup.py build
-- python setup.py install
-
-
-```python
-# Import the GS API module
-from gsapi import GSPattern
-
-```
 
 All submodules within API provide help by typing help(Name of the module)
 
