@@ -8,7 +8,7 @@ if __name__=='__main__':
                                                     os.pardir,
                                                     "python")))
 
-defaultMidiFolder = "../../test/midiDatasets/corpus-harmony"
+defaultMidiFolder = "../../corpus/midiTests/harmony"
 dataset = GSDataset(midiFolder=defaultMidiFolder,
                     midiGlob="*.mid",
                     midiMap=GSIO.defaultPitchNames,

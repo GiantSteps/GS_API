@@ -27,7 +27,7 @@ class GSDataset(object):
                           "Conga":50,
                           "CowBell":51}
 
-    defaultMidiFolder = os.path.abspath(__file__ + "../../../../test/midiDatasets/")
+    defaultMidiFolder = os.path.abspath(__file__ + "../../../../corpus/midiTests/")
     defaultMidiGlob = "*/*.mid"
 
     def __init__(self,

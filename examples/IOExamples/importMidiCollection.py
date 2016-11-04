@@ -1,7 +1,6 @@
 from gsapi import *
 
-crawledFolder = "../../python/test/midi/*.mid"
-
+crawledFolder = "../../corpus/midiTests/*.mid"
 
 customNoteMapping = {
 		"spam": [(35,'*'),45],

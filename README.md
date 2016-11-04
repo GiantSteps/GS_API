@@ -122,7 +122,7 @@ from gsapi import *
 
 #Select the folder where the MIDI files for analysis are located
 
-defaultMidiFolder = "../../test/midiDatasets"
+defaultMidiFolder = "../../corpus/midiTests"
 
 #Use 'GSDataset' to extract the MIDI file
 

@@ -4,7 +4,7 @@ if __name__=='__main__':
 
 from gsapi import *
 
-defaultMidiFolder = "../../test/midiDatasets"
+defaultMidiFolder = "../../corpus/midiTests"
 
 
 
