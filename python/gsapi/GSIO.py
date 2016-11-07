@@ -7,9 +7,8 @@ from MidiMap import *
 gsiolog = logging.getLogger("gsapi.GSIO")
 gsiolog.setLevel(level=logging.INFO)
 
-
 def fromMidi(midiPath,
-             NoteToTagsMap=midiPitchMap,
+             NoteToTagsMap=defaultPitchNames, # find out if midimap is better!
              tracksToGet = [],  # TODO: unnecessary parameter??
              TagsFromTrackNameEvents=False,
              filterOutNotMapped=True,
@@ -32,8 +31,12 @@ def fromMidi(midiPath,
         checkForOverlapped : if true will check that two consecutiveEvents with exactly same MidiNote are not overlapping
     """
     _NoteToTagsMap = __formatNoteToTags(NoteToTagsMap)
-    return __fromMidiFormatted(midiPath=midiPath,NoteToTagsMap=_NoteToTagsMap,tracksToGet = tracksToGet,TagsFromTrackNameEvents=TagsFromTrackNameEvents,filterOutNotMapped=filterOutNotMapped,checkForOverlapped=checkForOverlapped)
-
+    return __fromMidiFormatted(midiPath=midiPath,
+                               NoteToTagsMap=_NoteToTagsMap,
+                               tracksToGet = tracksToGet,
+                               TagsFromTrackNameEvents=TagsFromTrackNameEvents,
+                               filterOutNotMapped=filterOutNotMapped,
+                               checkForOverlapped=checkForOverlapped)
 
 
 def fromMidiCollection(midiGlobPath,

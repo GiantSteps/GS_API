@@ -2,9 +2,8 @@ import sys, os
 from gsapi import *
 
 
-defaultMidiFolder = "../../corpus/harmony/"
-fil = GSIO.fromMidi(defaultMidiFolder + "/I5-IV.mid", "pitchNames")
+midiFile    = "../../corpus/harmony/I5-IV.mid"
+myPattern = GSIO.fromMidi("../../corpus/harmony/I5-IV.mid", "pitchNames")
 
-print fil
-
-print fil.getStartingEventsAtTime(4)
+print myPattern
+print myPattern.getStartingEventsAtTime(4)
