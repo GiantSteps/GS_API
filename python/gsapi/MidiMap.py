@@ -1,18 +1,18 @@
 
-defaultPitchNames = ["C",  # default pitch names for pitch class (MidiNote%12)
+defaultPitchNames = ["C",  # default pitch names for pitch class
                      "C#",
                      "D",
-                     "D#",
+                     "Eb",
                      "E",
                      "F",
                      "F#",
                      "G",
-                     "G#",
+                     "Ab",
                      "A",
-                     "A#",
+                     "Bb",
                      "B"]
 
-
+"""
 midiPitchMap = {"C-1": 0,
                "C#-1": 1,
                "D-1": 2,
@@ -142,6 +142,7 @@ midiPitchMap = {"C-1": 0,
                 "F#9": 126,
                 "G9": 127
                 }
+"""
 
 generalMidiMap = {"Acoustic Bass Drum":35, #  from General Midi Specification
                   "Bass Drum 1":36,

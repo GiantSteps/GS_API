@@ -18,7 +18,7 @@ class AgnosticDensity(GSPatternTransformer):
 		mode:['random','syncopation'] :  algorithm used 
 		originPattern: the origin pattern, e.g : the one given if all densities are equals to 1
 	"""
-	def __init__(self,mode='random',numSteps = 32):
+	def __init__(self, mode='random', numSteps = 32):
 		self.globalDensity=1
 		self.individualdensities = {}
 		self.mode='random'
@@ -35,8 +35,6 @@ class AgnosticDensity(GSPatternTransformer):
 		if self.originPattern==None:
 			print ("no pattern given for agnosticDensity transformation")
 			return 
-
-		
 
 	def buildDensityMap(pattern):
 		self.originPattern = pattern.copy();

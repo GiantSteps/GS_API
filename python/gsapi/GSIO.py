@@ -1,4 +1,5 @@
 import logging
+import glob
 from gsapi import *
 import math
 from MidiMap import *
@@ -259,10 +260,8 @@ def __findTimeInfoFromMidi(pattern, midiFile):
 def __findTagsFromName(name, noteMapping):
 
     res =[]
-
     for l in noteMapping:
         if l in name: res+=[l];
-
     return res
 
 
@@ -270,18 +269,18 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
 
     def pitchToName(pitch, pitchNames):
         octaveLength = len(pitchNames)
-        octave  = (pitch/octaveLength) - 2  # 0 is C-2
-        note = pitch%octaveLength
-        return  pitchNames[note] + "_" + str(octave)
+        # octave  = (pitch / octaveLength) - 2  # 0 is C-2
+        octave = (pitch / octaveLength) - 1  # 0 is C-1
+        note = pitch % octaveLength
+        # return  pitchNames[note] + "_" + str(octave) martin NOTATION
+        return  pitchNames[note] + str(octave) # STANDARD NOTATION (ANGEL)
 
     if "pitchNames" in noteMapping.keys():
         return [pitchToName(pitch, noteMapping["pitchNames"])]
 
     res = []
-
     for l in noteMapping:
         for le in noteMapping[l]:
             if (le[0] in {'*', pitch}) and (le[1] in {'*', channel}):
-                res+=[l]
-
+                res += [l]
     return res

@@ -45,6 +45,7 @@ class GSDataset(object):
 
     def setMidiGlob(self, globPattern):
 
+        import glob
         if '.mid' in globPattern[-4:]:
             globPattern = globPattern[:-4]
         self.midiGlob = globPattern + '.mid'
