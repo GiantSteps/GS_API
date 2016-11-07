@@ -1,6 +1,4 @@
 import logging
-
-
 from gsapi import GSPattern
 
 class GSDescriptor(object):
@@ -9,7 +7,7 @@ class GSDescriptor(object):
 		pass
 
 	def getDescriptorForPattern(self,pattern):
-		""" compute a unique value for a given pattern (can be a sliced part of a bigger one)
+		"""Compute a unique value for a given pattern (can be a sliced part of a bigger one)
 		"""
 		raise NotImplementedError( "Should have implemented this" )
 

@@ -1,6 +1,7 @@
 import math
 import copy
 import logging
+from MidiMap import *
 
 patternLog = logging.getLogger("gsapi.GSPattern")
 
@@ -10,8 +11,8 @@ GSPattern
 """
 
 class GSPatternEvent(object):
-    """Represent an event of a GSPattern.
-    An event is made of start and length, origin pitch, velocity and associated tags.
+    """Represents an event of a GSPattern.
+    An event has a startTime, duration, pitch, velocity and associated tags.
 
     Attributes:
         startTime: startTime of event
@@ -81,12 +82,11 @@ class GSPatternEvent(object):
         """
         return self.startTime + self.duration
 
-
     def copy(self):
         """ Copy an event.
 
         Returns:
-             A deep copy of this event to be manipulated without changing original
+            A deep copy of this event to be manipulated without changing original
         """
         return copy.deepcopy(self)
 
@@ -100,12 +100,12 @@ class GSPatternEvent(object):
         """
         res = []
         # if smaller still take it
-        num = max(1,int(self.duration/stepSize))
+        num = max(1, int(self.duration / stepSize))
         for i in range(num):
             newE = self.copy()
-            newE.startTime = self.startTime+i*stepSize
+            newE.startTime = self.startTime + i * stepSize
             newE.duration = stepSize
-            res+=[newE]
+            res += [newE]
         return res
 
     def __repr__(self):
@@ -124,10 +124,12 @@ class GSPattern(object):
     Holds a list of GSEvents and provide basic manipulation function.
 
     Args:
-        duration: length of pattern usually in beat, but time scale is up to the user (it can be useful if working on 32th note steps)
-        events: list of GSPatternEvent for this pattern
-        bpm:origin BPM for this pattern (default: 120)
-        timeSignature: list of integer representing time signature; i.e [numerator,denominator]
+        duration: length of pattern. Usually in beats, but time scale is up to
+            the user (it can be useful if working on 32th note steps).
+        events: list of GSPatternEvent for this pattern.
+        bpm: initial tempo in beats per minute for this pattern (default: 120).
+        timeSignature: list of integers representing the time signature,
+            i.e [numerator, denominator].
     """
     defaultTimeSignature = [4, 4]
     defaultBPM = 120
@@ -141,10 +143,19 @@ class GSPattern(object):
         self.name = ""
 
     def transpose(self, transposition_interval):
+
+        def pitchToName(pitch, pitchNames):
+            octaveLength = len(pitchNames)
+            octave = (pitch / octaveLength) - 1
+            note = pitch % octaveLength
+            return pitchNames[note] + str(octave)
+
         patt = self.copy()
         patt.events = []
         for e in self.events:
-            print e.pitch
+            e.pitch += transposition_interval
+            e.tags = [pitchToName(e.pitch, defaultPitchNames)]
+        return self
 
     def toMIDI(self, midiMap=None, path="output/", name="test"):
         """ Function to write GSPattern instance to MIDI.
@@ -159,7 +170,7 @@ class GSPattern(object):
         from midiutil.MidiFile import MIDIFile
 
         # Create the MIDIFile Object with 1 track
-        MyMIDI = MIDIFile(1,adjust_origin=False)
+        MyMIDI = MIDIFile(1, adjust_origin=False)
 
         # Tracks are numbered from zero. Times are measured in beats.
         track = 0
@@ -258,7 +269,7 @@ class GSPattern(object):
         res = []
         for e in self.events:
             if(time - e.startTime >= 0 and time - e.startTime <= tolerance):
-                res+=[e]
+                res += [e]
         return res
 
     def getActiveEventsAtTime(self, time):
@@ -272,13 +283,13 @@ class GSPattern(object):
         """
         res = []
         for e in self.events:
-            if(time-e.startTime >= 0 and time - e.startTime <= e.duration):
-                res+=[e]
+            if(time - e.startTime >= 0 and time - e.startTime <= e.duration):
+                res += [e]
         return res
 
 
     def copy(self):
-        """ Deepcopy a pattern
+        """Deepcopy a pattern
         """
         return copy.deepcopy(self)
 
