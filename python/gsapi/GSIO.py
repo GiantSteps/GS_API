@@ -293,3 +293,4 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
             if (le[0] in {'*', pitch}) and (le[1] in {'*', channel}):
                 res += [l]
     return res
+
