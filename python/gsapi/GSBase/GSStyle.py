@@ -1,4 +1,4 @@
-from GSPattern import GSPattern
+from gsapi.GSPattern import GSPattern
 
 class GSStyle(object):
 	""" base class for defining a style
@@ -15,7 +15,7 @@ class GSStyle(object):
 
 
 	"""
-	def __init__():
+	def __init__(self):
 		self.type = "None"
 
 	def generateStyle(self, PatternClasses):

@@ -1,4 +1,4 @@
-from GSPattern import GSPattern
+from gsapi.GSPattern import GSPattern
 
 class GSPatternTransformer(object):
 	""" Base class for defining a transform algorithm

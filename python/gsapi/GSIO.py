@@ -1,9 +1,10 @@
 import logging
-import glob
-import os
+# import glob
+# import math
 from gsapi import *
-import math
+import os
 from MidiMap import *
+from GSPatternUtils import *
 
 gsiolog = logging.getLogger("gsapi.GSIO")
 gsiolog.setLevel(level=logging.INFO)
@@ -114,6 +115,7 @@ def __formatNoteToTags(_NoteToTags):
                     NoteToTags[n][i] = (NoteToTags[n][i], '*')
     return NoteToTags
 
+
 def __fromMidiFormatted(midiPath,
                         NoteToTagsMap,
                         tracksToGet=[],
@@ -124,6 +126,7 @@ def __fromMidiFormatted(midiPath,
     Internal function that accept only consistent NoteTagMap structure as
     created by __formatNoteToTags.
     """
+    import math
     import midi
     import os
 
@@ -228,7 +231,6 @@ def __fromMidiFormatted(midiPath,
     barSize = pattern.timeSignature[0] * elementSize
     lastBarPos = math.ceil(lastNoteOff*1.0/barSize) * barSize
     pattern.duration = lastBarPos
-
     if(checkForOverlapped):
         pattern.removeOverlapped(usePitchValues=True)
 
@@ -267,7 +269,6 @@ def __findTimeInfoFromMidi(pattern, midiFile):
 
 
 def __findTagsFromName(name, noteMapping):
-
     res =[]
     for l in noteMapping:
         if l in name: res += [l];
@@ -275,7 +276,7 @@ def __findTagsFromName(name, noteMapping):
 
 
 def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
-
+    """
     def pitchToName(pitch, pitchNames):
         octaveLength = len(pitchNames)
         # octave  = (pitch / octaveLength) - 2  # 0 is C-2
@@ -283,7 +284,7 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
         note = pitch % octaveLength
         # return  pitchNames[note] + "_" + str(octave) martin NOTATION
         return  pitchNames[note] + str(octave) # STANDARD NOTATION (ANGEL)
-
+        """
     if "pitchNames" in noteMapping.keys():
         return [pitchToName(pitch, noteMapping["pitchNames"])]
 
@@ -294,3 +295,42 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
                 res += [l]
     return res
 
+
+def toMIDI(pattern, midiMap=None, path="output/", name="test"):
+    """ Function to write GSPattern instance to MIDI.
+
+    Args:
+        midiMap: mapping used to translate tags to MIDI pitch
+        path: folder where MIDI file is stored
+        name: name of the file
+    """
+
+    # Import the library
+    from midiutil.MidiFile import MIDIFile
+
+    # Create the MIDIFile Object with 1 track
+    MyMIDI = MIDIFile(1, adjust_origin=False)
+
+    # Tracks are numbered from zero. Times are measured in beats.
+    track = 0
+    time = 0
+
+    # Add track name and tempo.
+    MyMIDI.addTrackName(track, time, "Sample Track")
+    MyMIDI.addTempo(track, time, pattern.bpm)
+
+    # Add a note. addNote expects the following information:
+    track = 0
+    channel = 0
+
+    # Now add the note.
+    for e in pattern.events:
+        if midiMap is None:
+            MyMIDI.addNote(track, channel, e.pitch, e.startTime, e.duration, e.velocity)
+        else:
+            MyMIDI.addNote(track, channel, midiMap[e.tags[0]], e.startTime, e.duration, e.velocity)
+
+    # And write it to disk.
+    binfile = open(path + name + ".mid", 'wb')
+    MyMIDI.writeFile(binfile)
+    binfile.close()

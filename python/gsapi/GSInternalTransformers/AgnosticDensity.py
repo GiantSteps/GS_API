@@ -1,5 +1,4 @@
-from gsapi import GSPattern,GSPatternEvent
-from gsapi.GSPatternTransformer import GSPatternTransformer
+from gsapi.GSBase.GSPatternTransformer import GSPatternTransformer
 
 
 ################

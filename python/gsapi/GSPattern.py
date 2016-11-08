@@ -150,44 +150,7 @@ class GSPattern(object):
             e.tags = [pitchToName(e.pitch, defaultPitchNames)]
         return self
 
-    def toMIDI(self, midiMap=None, path="output/", name="test"):
-        """ Function to write GSPattern instance to MIDI.
 
-        Args:
-            midiMap: mapping used to translate tags to MIDI pitch
-            path: folder where MIDI file is stored
-            name: name of the file
-        """
-
-        #Import the library
-        from midiutil.MidiFile import MIDIFile
-
-        # Create the MIDIFile Object with 1 track
-        MyMIDI = MIDIFile(1, adjust_origin=False)
-
-        # Tracks are numbered from zero. Times are measured in beats.
-        track = 0
-        time = 0
-
-        # Add track name and tempo.
-        MyMIDI.addTrackName(track, time, "Sample Track")
-        MyMIDI.addTempo(track, time, self.bpm)
-
-        # Add a note. addNote expects the following information:
-        track = 0
-        channel = 0
-
-        # Now add the note.
-        for e in self.events:
-            if midiMap is None:
-                MyMIDI.addNote(track, channel, e.pitch, e.startTime, e.duration, e.velocity)
-            else:
-                MyMIDI.addNote(track, channel, midiMap[e.tags[0]], e.startTime, e.duration, e.velocity)
-
-        # And write it to disk.
-        binfile = open(path + name + ".mid", 'wb')
-        MyMIDI.writeFile(binfile)
-        binfile.close()
 
     def setDurationFromLastEvent(self, onlyIfBigger=True):
         """Sets duration to last event NoteOff
@@ -427,7 +390,7 @@ class GSPattern(object):
             if not found:
                 newList+=[e]
             else:
-                patternLog.info("remove overlapping %s with %s"%(e,overLappedEv))
+                patternLog.info("remove overlapping %s with %s"%(e, overLappedEv))
             idx += 1
         self.events = newList
         return self
