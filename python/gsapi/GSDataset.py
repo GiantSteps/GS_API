@@ -1,13 +1,13 @@
 import os
 import random
 from gsapi import *
-
+import logging
 datasetLog = logging.getLogger("GSDataset")
 
 
 class GSDataset(object):
     """
-    helper to hold a list of patterns imported from specific gpath (glob style)
+    Helper to hold a list of patterns imported from specific gpath (glob style)
     TODO documentation
     """
     defaultDrumMidiMap = {"Kick": 36,

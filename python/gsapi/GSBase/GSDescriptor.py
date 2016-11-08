@@ -1,6 +1,7 @@
 import logging
 from gsapi import GSPattern
 
+
 class GSDescriptor(object):
 
 	def __init__(self):

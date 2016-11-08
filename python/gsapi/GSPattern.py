@@ -2,6 +2,7 @@ import math
 import copy
 import logging
 from MidiMap import *
+from GSPatternUtils import *
 
 patternLog = logging.getLogger("gsapi.GSPattern")
 
@@ -144,57 +145,12 @@ class GSPattern(object):
 
     def transpose(self, transposition_interval):
 
-        def pitchToName(pitch, pitchNames):
-            octaveLength = len(pitchNames)
-            octave = (pitch / octaveLength) - 1
-            note = pitch % octaveLength
-            return pitchNames[note] + str(octave)
-
-        patt = self.copy()
-        patt.events = []
         for e in self.events:
             e.pitch += transposition_interval
             e.tags = [pitchToName(e.pitch, defaultPitchNames)]
         return self
 
-    def toMIDI(self, midiMap=None, path="output/", name="test"):
-        """ Function to write GSPattern instance to MIDI.
 
-        Args:
-            midiMap: mapping used to translate tags to MIDI pitch
-            path: folder where MIDI file is stored
-            name: name of the file
-        """
-
-        #Import the library
-        from midiutil.MidiFile import MIDIFile
-
-        # Create the MIDIFile Object with 1 track
-        MyMIDI = MIDIFile(1, adjust_origin=False)
-
-        # Tracks are numbered from zero. Times are measured in beats.
-        track = 0
-        time = 0
-
-        # Add track name and tempo.
-        MyMIDI.addTrackName(track, time, "Sample Track")
-        MyMIDI.addTempo(track, time, self.bpm)
-
-        # Add a note. addNote expects the following information:
-        track = 0
-        channel = 0
-
-        # Now add the note.
-        for e in self.events:
-            if midiMap is None:
-                MyMIDI.addNote(track, channel, e.pitch, e.startTime, e.duration, e.velocity)
-            else:
-                MyMIDI.addNote(track, channel, midiMap[e.tags[0]], e.startTime, e.duration, e.velocity)
-
-        # And write it to disk.
-        binfile = open(path + name + ".mid", 'wb')
-        MyMIDI.writeFile(binfile)
-        binfile.close()
 
     def setDurationFromLastEvent(self, onlyIfBigger=True):
         """Sets duration to last event NoteOff
@@ -405,7 +361,7 @@ class GSPattern(object):
         """remove overlapped elements
 
             Args:
-                usePitchValues : use pitch to discriminate events
+                usePitchValues: use pitch to discriminate events
         """
         self.reorderEvents()
         newList = []
@@ -434,7 +390,7 @@ class GSPattern(object):
             if not found:
                 newList+=[e]
             else:
-                patternLog.info("remove overlapping %s with %s"%(e,overLappedEv))
+                patternLog.info("remove overlapping %s with %s"%(e, overLappedEv))
             idx += 1
         self.events = newList
         return self
@@ -465,7 +421,7 @@ class GSPattern(object):
         """Fill empty (i.e no event ) spaces with silence event.
 
         Args:
-            maxSilenceTime : if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime
+            maxSilenceTime: if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime
             perTag: fill silence for each Tag
             silenceTag: tag that will be used when inserting the silence event
         """
@@ -505,7 +461,6 @@ class GSPattern(object):
             startTime: start time for time slice
             length: length of time slice
             trimEnd: cut any events that ends after startTime + length
-
         Returns:
             a new GSpattern within time slice
         """
@@ -520,16 +475,16 @@ class GSPattern(object):
             for e in p.events:
                 toCrop = e.startTime + e.duration - length
                 if toCrop > 0:
-                    e.duration-=toCrop
+                    e.duration -= toCrop
         return p
 
     def __repr__(self):
-        """Nicely print out the list of events
+        """Nicely print out the list of events.
         Each line represents an event formatted as: tags pitch startTime duration
         """
         s = "GSPattern %s\n"%(self.name)
         for e in self.events:
-            s+=str(e)+"\n"
+            s += str(e) + "\n"
         return s
 
     def toJSONDict(self):
