@@ -47,7 +47,7 @@ if __name__ == '__main__':
 #                     sources = cppSources)
 
 setup(name='gsapi',
-      version='1.0.1dev',
+      version='1.0.1',
       description='Python symbolic music manipulation tools',
       long_description="",
       author='MTG / GiantSteps',
