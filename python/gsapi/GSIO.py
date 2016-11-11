@@ -11,7 +11,7 @@ gsiolog.setLevel(level=logging.INFO)
 
 def fromMidi(midiPath,
              NoteToTagsMap=defaultPitchNames, # find out if midimap is better!
-             tracksToGet=[],  #TODO: unnecessary parameter??
+             tracksToGet=[],  # TODO: unnecessary parameter??
              TagsFromTrackNameEvents=False,
              filterOutNotMapped=True,
              checkForOverlapped=False):

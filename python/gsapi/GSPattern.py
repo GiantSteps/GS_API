@@ -150,8 +150,6 @@ class GSPattern(object):
             e.tags = [pitchToName(e.pitch, defaultPitchNames)]
         return self
 
-
-
     def setDurationFromLastEvent(self, onlyIfBigger=True):
         """Sets duration to last event NoteOff
 
@@ -214,11 +212,11 @@ class GSPattern(object):
         self.duration  *= ratio
 
     def getStartingEventsAtTime(self, time, tolerance=0):
-        """ Get all events activating at a givent time.
+        """ Get all events activating at a given time.
 
         Args:
             time: time asked for
-            tolerance: admited deviation of start time
+            tolerance: allowed deviation of start time
         Returns:
             list of events
         """
@@ -388,7 +386,7 @@ class GSPattern(object):
                 if ee.startTime > (e.startTime + e.duration):
                     break
             if not found:
-                newList+=[e]
+                newList += [e]
             else:
                 patternLog.info("remove overlapping %s with %s"%(e, overLappedEv))
             idx += 1
@@ -507,7 +505,6 @@ class GSPattern(object):
                                   'tagsIdx': findIdxforTags(e.tags, allTags)
                                   }]
         return res
-
 
     def fromJSONDict(self, json):
         """Loads a json API dict object to this pattern

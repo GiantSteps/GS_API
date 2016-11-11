@@ -12,6 +12,28 @@ defaultPitchNames = ["C",  # default pitch names for pitch class
                      "Bb",
                      "B"]
 
+chordTypes = {"0":          [0],             # one note
+              # two note reductions:
+              "5":          [0, 7],          # power chord
+              "maj(omit5)": [0, 4],          # power chord
+              "min(omit5)": [0, 3],          # power chord
+              "d5":         [0, 6],          # diminished fifth
+              # triads
+              "maj":        [0, 4, 7],
+              "min":        [0, 3, 7],
+              "aug":        [0, 4, 7],
+              "dim":        [0, 4, 7],
+              "sus4":       [0, 4, 5],
+              "sus2":       [0, 2, 7],
+              # tetrads
+              "7":          [0, 4, 7, 10],
+              "maj7":       [0, 4, 7, 11],
+              "min7":       [0, 3, 7, 10],
+              "min(maj7)":  [0, 3, 7, 11],
+              "min7(b5)":   [0, 3, 6, 10],
+              "dim7":       [0, 3, 6, 9],
+              }
+
 """
 midiPitchMap = {"C-1": 0,
                "C#-1": 1,
