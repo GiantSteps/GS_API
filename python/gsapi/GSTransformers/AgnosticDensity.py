@@ -1,10 +1,10 @@
-from gsapi.GSBase.GSPatternTransformer import GSPatternTransformer
+from gsapi.GSBase.GSTransformer import GSTransformer
 
 
 ################
 ## WIP
 
-class AgnosticDensity(GSPatternTransformer):
+class AgnosticDensity(GSTransformer):
 
 	""" Agnostic transformation algorithm
 	Args:
