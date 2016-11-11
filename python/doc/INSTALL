@@ -1,0 +1,34 @@
+setting up machine to generate the doc
+=============
+
+Git
+========
+cd python/doc
+mkdir gh-pages
+git clone -b gh-pages https://github.com/GiantSteps/GS_API.git gh-pages
+
+
+
+python environment
+=========
+
+pip install -U sphinx
+pip install sphinx_bootstrap_theme
+pip install sphinxcontrib-napoleon-0.5.3
+pip install -U recommonmark
+
+
+
+
+
+updating doc
+============
+be sure that gh-page folder is tracking gh-page branch and not master
+
+
+cd python/doc
+make html && make install
+cd gh-pages
+git add -A
+git commit -m"update doc with whatever comments"
+git push
