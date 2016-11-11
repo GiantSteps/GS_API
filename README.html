@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>GS_API &mdash; GS_API 0.1 documentation</title>
+    <title>GS_API &#8212; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,6 +29,8 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="GS_API 0.1 documentation" href="index.html" />
     <link rel="next" title="gsapi package" href="gsapi.html" />
     <link rel="prev" title="GS_API’s documentation" href="index.html" />
@@ -68,6 +70,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#gs-api-examples">GS-API examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
 </ul>
 </ul>
@@ -86,6 +89,18 @@
 <li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#using-the-library">Using the Library</a></li>
 <li><a class="reference internal" href="#api-philosophies">API Philosophies</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gs-api-examples">GS-API examples</a><ul>
+<li><a class="reference internal" href="#drum-and-bass-generative-example">Drum and bass generative example</a><ul>
+<li><a class="reference internal" href="#drums-example">Drums example</a></li>
+<li><a class="reference internal" href="#bassmine-example">Bassmine example</a><ul>
+<li><a class="reference internal" href="#stylistic-transformations-using-markov-models-with-constraints">Stylistic transformations using Markov Models with constraints</a></li>
+<li><a class="reference internal" href="#generation-examples">Generation examples</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -234,6 +249,161 @@ Note to tag mapping is reppresented by a dictionnary where key represent a tag a
 </ul>
 </div>
 </div>
+<div class="section" id="gs-api-examples">
+<span id="gs-api-examples"></span><h1>GS-API examples<a class="headerlink" href="#gs-api-examples" title="Permalink to this headline">¶</a></h1>
+<p>All submodules within API provide help by typing help(Name of the module)</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">GSPattern</span><span class="p">)</span>
+<span class="c1">#help(GSBassmineAnalysis)</span>
+</pre></div>
+</div>
+<div class="section" id="drum-and-bass-generative-example">
+<span id="drum-and-bass-generative-example"></span><h2>Drum and bass generative example<a class="headerlink" href="#drum-and-bass-generative-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="drums-example">
+<span id="drums-example"></span><h3>Drums example<a class="headerlink" href="#drums-example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1">#Select the folder where the MIDI files for analysis are located</span>
+
+<span class="n">defaultMidiFolder</span> <span class="o">=</span> <span class="s2">&quot;../../corpus/midiTests&quot;</span>
+
+<span class="c1">#Use &#39;GSDataset&#39; to extract the MIDI file</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">GSDataset</span><span class="p">(</span><span class="n">midiFolder</span><span class="o">=</span><span class="n">defaultMidiFolder</span><span class="p">,</span><span class="n">midiGlob</span><span class="o">=</span><span class="s2">&quot;motown.mid&quot;</span><span class="p">,</span><span class="n">midiMap</span><span class="o">=</span><span class="n">GSIO</span><span class="o">.</span><span class="n">generalMidiMap</span><span class="p">,</span><span class="n">checkForOverlapped</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+
+<span class="c1">#use the function&#39;splitInEqualLengthPatterns&#39; to split the </span>
+<span class="c1">#contents of the dataset and to set the minimum &quot;grain&quot; or &quot;timeframe&quot; of the analysis</span>
+<span class="c1">#save each slice as an element in a list called &quot;allPatternsSliced&quot;</span>
+
+<span class="n">allPatternsSliced</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">sizeOfSlice</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="k">for</span> <span class="n">midiPattern</span> <span class="ow">in</span> <span class="n">dataset</span><span class="o">.</span><span class="n">patterns</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">sliced</span> <span class="ow">in</span> <span class="n">midiPattern</span><span class="o">.</span><span class="n">splitInEqualLengthPatterns</span><span class="p">(</span><span class="n">sizeOfSlice</span><span class="p">):</span>
+        <span class="n">allPatternsSliced</span><span class="o">+=</span><span class="p">[</span><span class="n">sliced</span><span class="p">]</span>
+
+<span class="c1">#set the parameters of the markov style: the order, the number of steps and the final duration of the output</span>
+<span class="c1">#and create an instance of GSMarkovStyle called &quot;markovstyle&quot;</span>
+
+<span class="n">markovStyle</span> <span class="o">=</span> <span class="n">GSMarkovStyle</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">numSteps</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">loopDuration</span><span class="o">=</span><span class="n">sizeOfSlice</span><span class="p">);</span>
+
+<span class="c1">#generate a style based on the sliced patterns in the list &quot;allPatternsSliced&quot;</span>
+<span class="n">markovStyle</span><span class="o">.</span><span class="n">generateStyle</span><span class="p">(</span><span class="n">allPatternsSliced</span><span class="p">)</span>
+
+<span class="c1">#Create a pattern simply using the function &quot;generatePattern&quot; of the markovStyle</span>
+<span class="n">newPattern</span> <span class="o">=</span> <span class="n">markovStyle</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">()</span>
+
+<span class="c1"># Export to MIDI</span>
+<span class="n">newPattern</span><span class="o">.</span><span class="n">toMIDI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;drums&quot;</span><span class="p">,</span> <span class="n">midiMap</span><span class="o">=</span><span class="n">MidiMap</span><span class="o">.</span><span class="n">generalMidiMap</span><span class="p">)</span>
+
+<span class="c1">#print the pattern for visualization</span>
+<span class="k">print</span> <span class="n">newPattern</span>
+
+<span class="c1">#Extract the only the pattern of the kick drum from the complete pattern.</span>
+<span class="c1">#Using the function &quot;getPatternWithTags&quot; and asking for the &#39;Acoustic Bass Drum&#39; tag</span>
+<span class="c1">#makes it easy. To create such list, we should first extract the events as a class called &quot;justkick&quot;</span>
+<span class="c1">#and then extract each event on the class using justkick.events.</span>
+
+
+<span class="n">justkick</span><span class="o">=</span><span class="n">newPattern</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="s1">&#39;Acoustic Bass Drum&#39;</span><span class="p">,</span> <span class="n">exactSearch</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">kickAsList</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">sizeOfSlice</span>
+<span class="k">for</span> <span class="n">s</span><span class="p">,</span><span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">justkick</span><span class="o">.</span><span class="n">events</span><span class="p">):</span>
+
+    <span class="n">kickAsList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">)]</span><span class="o">=</span><span class="mi">1</span>
+
+<span class="k">print</span> <span class="n">kickAsList</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="bassmine-example">
+<span id="bassmine-example"></span><h3>Bassmine example<a class="headerlink" href="#bassmine-example" title="Permalink to this headline">¶</a></h3>
+<p>Following script commands present examples of Bassline rhythmic analysis for generative processes using GS-API.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gsapi.GSBassmineAnalysis</span> <span class="kn">as</span> <span class="nn">bassmine</span>
+<span class="kn">import</span> <span class="nn">gsapi.GSBassmineMarkov</span> <span class="kn">as</span> <span class="nn">markov</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">random</span>
+</pre></div>
+</div>
+<p>First step is to determine the datasets to use. In this case we need to provide a dataset that contains MIDI clips of basslines and drums in pairs. That means that each bass MIDI file has an associated drum MIDI file.</p>
+<p>The implemented algorithm builds two Markov models.</p>
+<p>First, contains the transition probabilities between bass beat patterns (temporal)
+Second, contains the concurrency probabilities between kick-drum and bass beat patterns.
+Moreover, the initial probabilites of events are computed, used to trigger the generation.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># STYLE DICTIONARY</span>
+<span class="n">style</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s1">&#39;booka_shade&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s1">&#39;mr_scruff&#39;</span><span class="p">}</span>
+
+<span class="c1"># SELECT STYLE</span>
+<span class="n">style_id</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="n">bass_path</span> <span class="o">=</span> <span class="s1">&#39;../../corpus/bassmine/&#39;</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="n">style_id</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/bass&#39;</span>
+<span class="n">drum_path</span> <span class="o">=</span> <span class="s1">&#39;../../corpus/bassmine/&#39;</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="n">style_id</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/drums&#39;</span>
+</pre></div>
+</div>
+<p>The implemented algorithm in [bassmine.corpus_analysis] builds two Markov models.</p>
+<ul class="simple">
+<li>Transition probabilities between bass beat patterns (temporal).</li>
+<li>Concurrency probabilities between kick-drum and bass beat patterns (interlocking).</li>
+</ul>
+<p>Moreover, the initial probabilites of events are computed, used to trigger the generation.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Analyse corpus and build Markov model</span>
+<span class="n">MM</span><span class="p">,</span> <span class="n">kick_patterns</span> <span class="o">=</span> <span class="n">bassmine</span><span class="o">.</span><span class="n">corpus_analysis</span><span class="p">(</span><span class="n">bass_path</span><span class="p">,</span> <span class="n">drum_path</span><span class="p">)</span>
+<span class="c1"># Normalize transition matrices</span>
+<span class="n">MM</span><span class="o">.</span><span class="n">normalize_model</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Once models are computed we can export them.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Output folder (to use with Max this folder should be Bassmine-master/models/)</span>
+<span class="n">_path</span> <span class="o">=</span> <span class="s1">&#39;output/&#39;</span>
+<span class="c1">#  Uncomment to create models and export to pickle. REQUIRED to add new collections and use them in Max app.</span>
+<span class="c1"># Export to pickle files</span>
+<span class="n">bassmine</span><span class="o">.</span><span class="n">write2pickle</span><span class="p">(</span><span class="s1">&#39;initial&#39;</span><span class="p">,</span> <span class="n">MM</span><span class="o">.</span><span class="n">get_initial</span><span class="p">(),</span><span class="n">_path</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="n">style_id</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="n">bassmine</span><span class="o">.</span><span class="n">write2pickle</span><span class="p">(</span><span class="s1">&#39;temporal&#39;</span><span class="p">,</span> <span class="n">MM</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">(),</span><span class="n">_path</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="n">style_id</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="n">bassmine</span><span class="o">.</span><span class="n">write2pickle</span><span class="p">(</span><span class="s1">&#39;interlocking&#39;</span><span class="p">,</span> <span class="n">MM</span><span class="o">.</span><span class="n">get_interlocking</span><span class="p">(),</span><span class="n">_path</span> <span class="o">+</span> <span class="n">style</span><span class="p">[</span><span class="n">style_id</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="stylistic-transformations-using-markov-models-with-constraints">
+<span id="stylistic-transformations-using-markov-models-with-constraints"></span><h4>Stylistic transformations using Markov Models with constraints<a class="headerlink" href="#stylistic-transformations-using-markov-models-with-constraints" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Compute Rhythm Homogeneous MM (HMM) and export to JSON</span>
+<span class="n">HModel</span> <span class="o">=</span> <span class="n">MM</span><span class="o">.</span><span class="n">rhythm_model</span><span class="p">(</span><span class="n">_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Given a Kick pattern generate a NHMM with interlocking constraint</span>
+<span class="c1"># Select a random Kick pattern from the corpus</span>
+<span class="n">target_kick</span> <span class="o">=</span> <span class="n">kick_patterns</span><span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">kick_patterns</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="c1">#print target_kick</span>
+<span class="c1">#target = [8,8,8,9,8,8,9,0]</span>
+<span class="n">NHMinter</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">constrainMM</span><span class="p">(</span><span class="n">MM</span><span class="p">,</span> <span class="n">target_kick</span><span class="p">,</span> <span class="n">_path</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Create variation model</span>
+<span class="n">target_bass</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">NHMvariation</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">variationMM</span><span class="p">(</span><span class="n">MM</span><span class="p">,</span> <span class="n">target_bass</span><span class="p">,</span> <span class="n">_path</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="generation-examples">
+<span id="generation-examples"></span><h4>Generation examples<a class="headerlink" href="#generation-examples" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Example od generation without constraints. It computes Homogeneous Markov Model (HM)</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">generateBassRhythm</span><span class="p">(</span><span class="n">MM</span><span class="p">)</span>
+<span class="n">pattern</span><span class="o">.</span><span class="n">toMIDI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;regular&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Example of generation using Interlocking constraint.</span>
+<span class="n">inter_pattern</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">generateBassRhythm</span><span class="p">(</span><span class="n">MM</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target_kick</span><span class="p">)</span>
+<span class="c1"># Write pattern to MIDI</span>
+<span class="n">inter_pattern</span><span class="o">.</span><span class="n">toMIDI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;interlock&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="c1"># Example of variation generation</span>
+<span class="n">var_mask</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">variation_pattern</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">generateBassRhythmVariation</span><span class="p">(</span><span class="n">MM</span><span class="p">,</span><span class="n">inter_pattern</span><span class="p">,</span><span class="n">var_mask</span><span class="p">)</span>
+<span class="n">variation_pattern</span><span class="o">.</span><span class="n">toMIDI</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;variation&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
 
 
     </div>
@@ -248,7 +418,7 @@ Note to tag mapping is reppresented by a dictionnary where key represent a tag a
     </p>
     <p>
         &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>

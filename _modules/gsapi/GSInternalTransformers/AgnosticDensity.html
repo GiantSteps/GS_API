@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSInternalTransformers.AgnosticDensity &mdash; GS_API 0.1 documentation</title>
+    <title>gsapi.GSInternalTransformers.AgnosticDensity &#8212; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -29,6 +29,8 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
     <link rel="top" title="GS_API 0.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
@@ -67,6 +69,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#gs-api-examples">GS-API examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gsapi.html">gsapi package</a></li>
 </ul>
 </ul>
@@ -115,8 +118,7 @@
     <div class="col-md-12 content">
       
   <h1>Source code for gsapi.GSInternalTransformers.AgnosticDensity</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="n">GSPattern</span><span class="p">,</span><span class="n">GSPatternEvent</span>
-<span class="kn">from</span> <span class="nn">gsapi.GSPatternTransformer</span> <span class="kn">import</span> <span class="n">GSPatternTransformer</span>
+<span></span><span class="kn">from</span> <span class="nn">gsapi.GSBase.GSPatternTransformer</span> <span class="k">import</span> <span class="n">GSPatternTransformer</span>
 
 
 <span class="c1">################</span>
@@ -135,11 +137,11 @@
 <span class="sd">		mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used </span>
 <span class="sd">		originPattern: the origin pattern, e.g : the one given if all densities are equals to 1</span>
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span><span class="n">numSteps</span> <span class="o">=</span> <span class="mi">32</span><span class="p">):</span>
+	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">numSteps</span> <span class="o">=</span> <span class="mi">32</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">globalDensity</span><span class="o">=</span><span class="mi">1</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">individualdensities</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="kc">None</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">=</span> <span class="n">numSteps</span>
 
 <div class="viewcode-block" id="AgnosticDensity.configure"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.configure">[docs]</a>	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
@@ -147,13 +149,11 @@
 			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">paramDict</span><span class="p">[</span><span class="s1">&#39;originPattern&#39;</span><span class="p">])</span></div>
 
 <div class="viewcode-block" id="AgnosticDensity.TransformPattern"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">[docs]</a>	<span class="k">def</span> <span class="nf">TransformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">paramDict</span><span class="p">):</span>
-		<span class="k">if</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">None</span> <span class="ow">and</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">pattern</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">:</span>
 			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">==</span><span class="bp">None</span><span class="p">:</span>
-			<span class="k">print</span> <span class="p">(</span><span class="s2">&quot;no pattern given for agnosticDensity transformation&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+			<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;no pattern given for agnosticDensity transformation&quot;</span><span class="p">)</span>
 			<span class="k">return</span> </div>
-
-		
 
 <div class="viewcode-block" id="AgnosticDensity.buildDensityMap"><a class="viewcode-back" href="../../../gsapi.GSInternalTransformers.html#gsapi.GSInternalTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">[docs]</a>	<span class="k">def</span> <span class="nf">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span>
@@ -175,7 +175,7 @@
     </p>
     <p>
         &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>

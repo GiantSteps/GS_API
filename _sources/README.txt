@@ -101,6 +101,187 @@ will return a list of *GSPattern* with event being tagged :
 * 'ClosedHihat' if MIDI pitch is 33 on whatever channel or MIDI pitch is 45 on whatever channel
 
 
+# GS-API examples
+
+
+All submodules within API provide help by typing help(Name of the module)
+
+
+```python
+help(GSPattern)
+#help(GSBassmineAnalysis)
+```
+
+## Drum and bass generative example
+
+### Drums example
+
+
+```python
+from gsapi import *
+
+#Select the folder where the MIDI files for analysis are located
+
+defaultMidiFolder = "../../corpus/midiTests"
+
+#Use 'GSDataset' to extract the MIDI file
+
+dataset = GSDataset(midiFolder=defaultMidiFolder,midiGlob="motown.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
+
+#use the function'splitInEqualLengthPatterns' to split the 
+#contents of the dataset and to set the minimum "grain" or "timeframe" of the analysis
+#save each slice as an element in a list called "allPatternsSliced"
+
+allPatternsSliced = []
+sizeOfSlice = 16
+for midiPattern in dataset.patterns:
+    for sliced in midiPattern.splitInEqualLengthPatterns(sizeOfSlice):
+        allPatternsSliced+=[sliced]
+
+#set the parameters of the markov style: the order, the number of steps and the final duration of the output
+#and create an instance of GSMarkovStyle called "markovstyle"
+
+markovStyle = GSMarkovStyle(order=1,numSteps=16,loopDuration=sizeOfSlice);
+
+#generate a style based on the sliced patterns in the list "allPatternsSliced"
+markovStyle.generateStyle(allPatternsSliced)
+
+#Create a pattern simply using the function "generatePattern" of the markovStyle
+newPattern = markovStyle.generatePattern()
+
+# Export to MIDI
+newPattern.toMIDI(name="drums", midiMap=MidiMap.generalMidiMap)
+
+#print the pattern for visualization
+print newPattern
+
+#Extract the only the pattern of the kick drum from the complete pattern.
+#Using the function "getPatternWithTags" and asking for the 'Acoustic Bass Drum' tag
+#makes it easy. To create such list, we should first extract the events as a class called "justkick"
+#and then extract each event on the class using justkick.events.
+
+
+justkick=newPattern.getPatternWithTags('Acoustic Bass Drum', exactSearch=True, copy=True)
+
+kickAsList=[0]*sizeOfSlice
+for s,e in enumerate(justkick.events):
+
+    kickAsList[int(e.startTime)]=1
+
+print kickAsList
+```
+
+### Bassmine example
+
+Following script commands present examples of Bassline rhythmic analysis for generative processes using GS-API.
+
+
+```python
+import gsapi.GSBassmineAnalysis as bassmine
+import gsapi.GSBassmineMarkov as markov
+import json
+import csv
+import random
+```
+
+First step is to determine the datasets to use. In this case we need to provide a dataset that contains MIDI clips of basslines and drums in pairs. That means that each bass MIDI file has an associated drum MIDI file. 
+
+The implemented algorithm builds two Markov models.
+
+First, contains the transition probabilities between bass beat patterns (temporal)
+Second, contains the concurrency probabilities between kick-drum and bass beat patterns.
+Moreover, the initial probabilites of events are computed, used to trigger the generation.
+
+
+
+```python
+# STYLE DICTIONARY
+style = {1: 'booka_shade', 2: 'mr_scruff'}
+
+# SELECT STYLE
+style_id = 2
+
+bass_path = '../../corpus/bassmine/' + style[style_id] + '/bass'
+drum_path = '../../corpus/bassmine/' + style[style_id] + '/drums'
+```
+
+The implemented algorithm in [bassmine.corpus_analysis] builds two Markov models.
+
+- Transition probabilities between bass beat patterns (temporal). 
+- Concurrency probabilities between kick-drum and bass beat patterns (interlocking). 
+
+Moreover, the initial probabilites of events are computed, used to trigger the generation.
+
+
+```python
+# Analyse corpus and build Markov model
+MM, kick_patterns = bassmine.corpus_analysis(bass_path, drum_path)
+# Normalize transition matrices
+MM.normalize_model()
+```
+
+Once models are computed we can export them.
+
+
+```python
+# Output folder (to use with Max this folder should be Bassmine-master/models/)
+_path = 'output/'
+#  Uncomment to create models and export to pickle. REQUIRED to add new collections and use them in Max app.
+# Export to pickle files
+bassmine.write2pickle('initial', MM.get_initial(),_path + style[style_id] + '/')
+bassmine.write2pickle('temporal', MM.get_temporal(),_path + style[style_id] + '/')
+bassmine.write2pickle('interlocking', MM.get_interlocking(),_path + style[style_id] + '/')
+```
+
+#### Stylistic transformations using Markov Models with constraints
+
+
+```python
+# Compute Rhythm Homogeneous MM (HMM) and export to JSON
+HModel = MM.rhythm_model(_path)
+```
+
+
+```python
+# Given a Kick pattern generate a NHMM with interlocking constraint
+# Select a random Kick pattern from the corpus
+target_kick = kick_patterns[random.randint(0,len(kick_patterns)-1)]
+#print target_kick
+#target = [8,8,8,9,8,8,9,0]
+NHMinter = markov.constrainMM(MM, target_kick, _path)
+```
+
+
+```python
+# Create variation model
+target_bass = [5,5,-5,5,5,-5,5,5]
+NHMvariation = markov.variationMM(MM, target_bass, _path)
+```
+
+#### Generation examples
+
+
+```python
+# Example od generation without constraints. It computes Homogeneous Markov Model (HM)
+pattern = markov.generateBassRhythm(MM)
+pattern.toMIDI(name='regular')
+```
+
+
+```python
+# Example of generation using Interlocking constraint.
+inter_pattern = markov.generateBassRhythm(MM, target=target_kick)
+# Write pattern to MIDI
+inter_pattern.toMIDI(name='interlock')
+```
+
+
+```python
+# Example of variation generation
+var_mask = [1, 1, 1, -1, 1, 1, -1, 1]
+variation_pattern = markov.generateBassRhythmVariation(MM,inter_pattern,var_mask)
+variation_pattern.toMIDI(name='variation')
+```
 
 
 

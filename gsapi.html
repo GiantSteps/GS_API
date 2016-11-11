@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi package &mdash; GS_API 0.1 documentation</title>
+    <title>gsapi package &#8212; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -29,6 +29,8 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="GS_API 0.1 documentation" href="index.html" />
     <link rel="next" title="gsapi.GSInternalStyles package" href="gsapi.GSInternalStyles.html" />
     <link rel="prev" title="GS_API" href="README.html" />
@@ -68,6 +70,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#gs-api-examples">GS-API examples</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">gsapi package</a></li>
 </ul>
 </ul>
@@ -86,7 +89,7 @@
 <li><a class="reference internal" href="#subpackages">Subpackages</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSIO">gsapi.GSIO module</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSPattern">gsapi.GSPattern module</a></li>
-<li><a class="reference internal" href="#module-gsapi.GSPatternTransformer">gsapi.GSPatternTransformer module</a></li>
+<li><a class="reference internal" href="#gsapi-gspatterntransformer-module">gsapi.GSPatternTransformer module</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSStyle">gsapi.GSStyle module</a></li>
 <li><a class="reference internal" href="#gsapi-gsbassmineanalysis-module">gsapi.GSBassmineAnalysis module</a></li>
 <li><a class="reference internal" href="#gsapi-gsbassminemarkov-module">gsapi.GSBassmineMarkov module</a></li>
@@ -141,6 +144,19 @@
       
   <div class="section" id="module-gsapi">
 <span id="gsapi-package"></span><h1>gsapi package<a class="headerlink" href="#module-gsapi" title="Permalink to this headline">¶</a></h1>
+<p>The GS_API is a Python/C++ library for manipulating musical symbolic data.
+all modules are documented, for more infos on the given module</p>
+<blockquote>
+<div><p>type</p>
+<p>&gt;&gt; help(gsapi.modulename)</p>
+</div></blockquote>
+<p>other useful resources :</p>
+<blockquote>
+<div><ul class="simple">
+<li>online tutorials and documentation : <a class="reference external" href="https://giantsteps.github.io/GS_API">https://giantsteps.github.io/GS_API</a></li>
+<li>source code : <a class="reference external" href="https://github.com/GiantSteps/GS_API">https://github.com/GiantSteps/GS_API</a></li>
+</ul>
+</div></blockquote>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -161,25 +177,36 @@
 <span id="gsapi-gsio-module"></span><h2>gsapi.GSIO module<a class="headerlink" href="#module-gsapi.GSIO" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="gsapi.GSIO.fromMidi">
-<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em>, <em>checkForOverlapped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
-<dd><p>loads a midi file as a pattern</p>
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidi</code><span class="sig-paren">(</span><em>midiPath, NoteToTagsMap=['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'], tracksToGet=[], TagsFromTrackNameEvents=False, filterOutNotMapped=True, checkForOverlapped=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a midi file as a pattern.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>midiPath</strong> &#8211; midi filePath</li>
-<li><strong>NoteToTagsMap</strong> &#8211; dictionary converting pitches to tags
-if only interssed by pitch, you can specify it to &#8220;pitchNames&#8221;, and optionaly set the value to the list of string for pitches from C
-noteMapping maps classes to a list of possible Mappings, a mapping can be:
-a tuple of (note, channel) if one of those doesnt matter it canbe replaced by &#8216;*&#8217; character
-an integer if only pitch matters
-for simplicity one can pass only one integer (i.e not a list) for one to one mappings
-if midi track contain the name of one element of mapping, it&#8217;ll be choosed without anyother consideration</li>
-<li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping, useful for midi containing named tracks</li>
+<li><strong>NoteToTagsMap</strong> &#8211; <p>dictionary converting pitches to tags
+if only interested in pitch, you can set this to &#8220;pitchNames&#8221;,
+or optionaly set the value to the list of string for pitches from C.
+noteMapping maps classes to a list of possible Mappings,
+a mapping can be:
+a tuple of (note, channel)</p>
+<blockquote>
+<div>if one of those doesnt matter it canbe replaced by &#8216;*&#8217; character</div></blockquote>
+<dl class="docutils">
+<dt>an integer</dt>
+<dd>if only pitch matters</dd>
+</dl>
+<p>for simplicity, one can pass only one integer (i.e not a list) for one to one mappings
+if midi track contains the name of one element of mapping,
+it&#8217;ll be choosed without anyother consideration</p>
+</li>
+<li><strong>TagsFromTrackNameEvents</strong> &#8211; use only track names to resolve mapping,
+useful for midi containing named tracks</li>
 <li><strong>filterOutNotMapped</strong> &#8211; if set to true, don&#8217;t add event not represented by <cite>NoteToTagsMap</cite></li>
 <li><strong>tracksToGet</strong> &#8211; if not empty, specifies tracks wanted either by name or index</li>
-<li><strong>checkForOverlapped</strong> &#8211; if true will check that two consecutiveEvents with exactly same MidiNote are not overlapping</li>
+<li><strong>checkForOverlapped</strong> &#8211; if true will check that two consecutiveEvents with
+exactly same MidiNote are not overlapping</li>
 </ul>
 </td>
 </tr>
@@ -189,16 +216,16 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 
 <dl class="function">
 <dt id="gsapi.GSIO.fromMidiCollection">
-<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidiCollection</code><span class="sig-paren">(</span><em>midiGlobPath</em>, <em>NoteToTagsMap</em>, <em>tracksToGet=[]</em>, <em>TagsFromTrackNameEvents=False</em>, <em>filterOutNotMapped=True</em>, <em>desiredLength=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidiCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidiCollection" title="Permalink to this definition">¶</a></dt>
-<dd><p>loads a midi collection</p>
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">fromMidiCollection</code><span class="sig-paren">(</span><em>midiGlobPath, NoteToTagsMap=['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B'], tracksToGet=[], TagsFromTrackNameEvents=False, filterOutNotMapped=True, desiredLength=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#fromMidiCollection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.fromMidiCollection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads a midi collection.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>midiGlobPath</strong> &#8211; midi filePath in glob naming convention (e.g &#8216;/folder/To/Crawl/<a href="#id1"><span class="problematic" id="id2">*</span></a>.mid&#8217;)</li>
+<li><strong>midiGlobPath</strong> &#8211; midi filePath in glob naming convention (e.g. &#8216;/folder/To/Crawl/<a href="#id1"><span class="problematic" id="id2">*</span></a>.mid&#8217;)</li>
 <li><strong>desiredLength</strong> &#8211; optionally cut patterns in equal length</li>
-<li><strong>otherArguments</strong> &#8211; are defined in <a class="reference internal" href="#gsapi.GSIO.fromMidi" title="gsapi.GSIO.fromMidi"><code class="xref py py-func docutils literal"><span class="pre">fromMidi()</span></code></a></li>
+<li><strong>otherArguments</strong> &#8211; as defined in <a class="reference internal" href="#gsapi.GSIO.fromMidi" title="gsapi.GSIO.fromMidi"><code class="xref py py-func docutils literal"><span class="pre">fromMidi()</span></code></a></li>
 </ul>
 </td>
 </tr>
@@ -212,7 +239,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="function">
 <dt id="gsapi.GSIO.PatternFromJSONFile">
 <code class="descclassname">gsapi.GSIO.</code><code class="descname">PatternFromJSONFile</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#PatternFromJSONFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.PatternFromJSONFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>load a pattern to internal JSON Format</p>
+<dd><p>Load a pattern to internal JSON Format</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -226,12 +253,31 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="function">
 <dt id="gsapi.GSIO.PatternToJSONFile">
 <code class="descclassname">gsapi.GSIO.</code><code class="descname">PatternToJSONFile</code><span class="sig-paren">(</span><em>pattern</em>, <em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#PatternToJSONFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.PatternToJSONFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>save a pattern to internal JSON Format</p>
+<dd><p>Save a pattern to internal JSON Format.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filePath</strong> &#8211; filePath where to save it</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSIO.toMIDI">
+<code class="descclassname">gsapi.GSIO.</code><code class="descname">toMIDI</code><span class="sig-paren">(</span><em>pattern</em>, <em>midiMap=None</em>, <em>path='output/'</em>, <em>name='test'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSIO.html#toMIDI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSIO.toMIDI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to write GSPattern instance to MIDI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>midiMap</strong> &#8211; mapping used to translate tags to MIDI pitch</li>
+<li><strong>path</strong> &#8211; folder where MIDI file is stored</li>
+<li><strong>name</strong> &#8211; name of the file</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -251,8 +297,8 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dt id="gsapi.GSPattern.GSPatternEvent">
 <em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represent an event of a GSPattern</p>
-<p>an event is made of start and length , origin pitch , velocity and associated tags</p>
+<p>Represents an event of a GSPattern.
+An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="attribute">
 <dt id="gsapi.GSPattern.GSPatternEvent.startTime">
 <code class="descname">startTime</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.startTime" title="Permalink to this definition">¶</a></dt>
@@ -286,14 +332,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith">
 <code class="descname">hasOneCommonTagWith</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.hasOneCommonTagWith"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith" title="Permalink to this definition">¶</a></dt>
-<dd><p>compare tags between events</p>
+<dd><p>Compare tags between events.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> &#8211; event to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">true if at least one tag is equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if at least one tag is equal</td>
 </tr>
 </tbody>
 </table>
@@ -302,14 +348,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.hasOneOfTags">
 <code class="descname">hasOneOfTags</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.hasOneOfTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.hasOneOfTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with a list of strings</p>
+<dd><p>Compare this event&#8217;s tags with a list of strings.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of strings to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">true if at least one tag is equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if at least one tag is equal</td>
 </tr>
 </tbody>
 </table>
@@ -318,14 +364,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.tagsAre">
 <code class="descname">tagsAre</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.tagsAre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.tagsAre" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with a list of strings</p>
+<dd><p>Compare this event&#8217;s tags with a list of strings.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of strings to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">true if all tags are equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all tags are equal</td>
 </tr>
 </tbody>
 </table>
@@ -334,14 +380,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith">
 <code class="descname">allTagsAreEqualWith</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.allTagsAreEqualWith"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with an other event</p>
+<dd><p>Compare this event&#8217;s tags with an other event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> &#8211; event to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">true if all tags are equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all tags are equal</td>
 </tr>
 </tbody>
 </table>
@@ -350,7 +396,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.getEndTime">
 <code class="descname">getEndTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.getEndTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.getEndTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns the time when this events ends</p>
+<dd><p>Returns the time when this events ends</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -364,7 +410,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.copy">
 <code class="descname">copy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.copy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.copy" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy an event</p>
+<dd><p>Copy an event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -378,7 +424,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.cutInSteps">
 <code class="descname">cutInSteps</code><span class="sig-paren">(</span><em>stepSize</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.cutInSteps"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.cutInSteps" title="Permalink to this definition">¶</a></dt>
-<dd><p>Cut an event in steps of stepsize length</p>
+<dd><p>Cut an event in steps of stepsize length.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -397,17 +443,19 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dt id="gsapi.GSPattern.GSPattern">
 <em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPattern</code><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class representing a pattern made of GSPatternEvent</p>
-<p>holds a list of GSEvents and provide basic manipulation function</p>
+<p>Class representing a pattern made of GSPatternEvent.
+Holds a list of GSEvents and provide basic manipulation function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>duration</strong> &#8211; length of pattern usually in beat, but time scale is up to the user (can be useful if working on 32th note steps)</li>
-<li><strong>events</strong> &#8211; list of GSPatternEvent for this pattern</li>
-<li><strong>bpm</strong> &#8211; origin BPM for this pattern (default: 120)</li>
-<li><strong>timeSignature</strong> &#8211; list of integer representing time signature ; i.e [numerator,denominator]</li>
+<li><strong>duration</strong> &#8211; length of pattern. Usually in beats, but time scale is up to
+the user (it can be useful if working on 32th note steps).</li>
+<li><strong>events</strong> &#8211; list of GSPatternEvent for this pattern.</li>
+<li><strong>bpm</strong> &#8211; initial tempo in beats per minute for this pattern (default: 120).</li>
+<li><strong>timeSignature</strong> &#8211; list of integers representing the time signature,
+i.e [numerator, denominator].</li>
 </ul>
 </td>
 </tr>
@@ -424,9 +472,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dd></dd></dl>
 
 <dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.transpose">
+<code class="descname">transpose</code><span class="sig-paren">(</span><em>transposition_interval</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.transpose" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.setDurationFromLastEvent">
 <code class="descname">setDurationFromLastEvent</code><span class="sig-paren">(</span><em>onlyIfBigger=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.setDurationFromLastEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.setDurationFromLastEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>sets duration to last event NoteOff</p>
+<dd><p>Sets duration to last event NoteOff</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -441,7 +494,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.reorderEvents">
 <code class="descname">reorderEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.reorderEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.reorderEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>ensure than our internal event list <cite>events</cite> is time sorted</p>
+<dd><p>Ensure than our internal event list <cite>events</cite> is time sorted</p>
 <p>can be useful for time sensitive events iteration</p>
 </dd></dl>
 
@@ -462,7 +515,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.addEvent">
 <code class="descname">addEvent</code><span class="sig-paren">(</span><em>GSPatternEvent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.addEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.addEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add an event increasing duration if needed</p>
+<dd><p>Add an event increasing duration if needed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -476,7 +529,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.quantize">
 <code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Quantize events</p>
+<dd><p>Quantize events.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -490,7 +543,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.timeStretch">
 <code class="descname">timeStretch</code><span class="sig-paren">(</span><em>ratio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.timeStretch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.timeStretch" title="Permalink to this definition">¶</a></dt>
-<dd><p>time  stretch a pattern</p>
+<dd><p>Time-stretch a pattern.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -504,7 +557,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getStartingEventsAtTime">
 <code class="descname">getStartingEventsAtTime</code><span class="sig-paren">(</span><em>time</em>, <em>tolerance=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getStartingEventsAtTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getStartingEventsAtTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all events activating at a givent time</p>
+<dd><p>Get all events activating at a givent time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -525,7 +578,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getActiveEventsAtTime">
 <code class="descname">getActiveEventsAtTime</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getActiveEventsAtTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getActiveEventsAtTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get all events currently active at a givent time</p>
+<dd><p>Get all events currently active at a givent time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -552,14 +605,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getACopyWithoutEvents">
 <code class="descname">getACopyWithoutEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getACopyWithoutEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getACopyWithoutEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>copy all fields but events</p>
-<p>useful for creating patterns from patterns</p>
+<dd><p>Copy all fields but events.
+Useful for creating patterns from patterns.</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getAllTags">
 <code class="descname">getAllTags</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getAllTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getAllTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns all used tags in this pattern</p>
+<dd><p>Returns all used tags in this pattern.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -573,14 +626,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithTags">
 <code class="descname">getPatternWithTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a sub-pattern with the given tags</p>
+<dd><p>Returns a sub-pattern with the given tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>tags</strong> &#8211; string list or lambda  expression (return boolean based on tag list input): tags to be checked for</li>
-<li><strong>exactSearch</strong> &#8211; bool : if True the tags have to be exactly the same, else they can be included in events Tags</li>
+<li><strong>exactSearch</strong> &#8211; bool: if True the tags have to be exactly the same, else they can be included in events Tags</li>
 <li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
@@ -595,14 +648,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithoutTags">
 <code class="descname">getPatternWithoutTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=False</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithoutTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithoutTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a sub-pattern without the given tags</p>
+<dd><p>Returns a sub-pattern without the given tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tags</strong> &#8211; string list : tags to be checked for</li>
-<li><strong>exactSearch</strong> &#8211; bool : if True the tags have to be exactly the same, else they can be included in events Tags</li>
+<li><strong>tags</strong> &#8211; string list: tags to be checked for</li>
+<li><strong>exactSearch</strong> &#8211; bool: if True the tags have to be exactly the same, else they can be included in events Tags</li>
 <li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
@@ -617,22 +670,30 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.alignOnGrid">
 <code class="descname">alignOnGrid</code><span class="sig-paren">(</span><em>stepSize, repeatibleTags=['silence']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.alignOnGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.alignOnGrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>align this pattern on a temporal grid</p>
-<dl class="docutils">
-<dt>very useful to deal with step-sequenced pattern :</dt>
-<dd><ul class="first last simple">
+<dd><p>Align this pattern on a temporal grid.
+Very useful to deal with step-sequenced pattern:</p>
+<blockquote>
+<div><ul class="simple">
 <li>all events durations are shortened to stepsize</li>
 <li>all events startTimes are quantified to stepsize</li>
 </ul>
-</dd>
-<dt>repeatibleTags allow to deal with <cite>silences type</cite> of events :</dt>
+</div></blockquote>
+<dl class="docutils">
+<dt>RepeatibleTags allow to deal with <cite>silences type</cite> of events:</dt>
 <dd><ul class="first last simple">
 <li>if a silence spread over more than one stepsize, we generate an event for each stepSize</li>
 </ul>
 </dd>
 </dl>
-<p>thus each step is ensured to be filled with one distinct event at least
-:param stepSize: temporal definition of the grid</p>
+<p>Thus each step is ensured to be filled with one distinct event at least.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stepSize</strong> &#8211; temporal definition of the grid</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -652,7 +713,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getAllIdenticalEvents">
 <code class="descname">getAllIdenticalEvents</code><span class="sig-paren">(</span><em>event</em>, <em>allTagsMustBeEquals=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getAllIdenticalEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getAllIdenticalEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a list of event with same tags</p>
+<dd><p>Get a list of event with same tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -678,7 +739,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
 <code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill empty (i.e no event ) spaces with silence event</p>
+<dd><p>Fill empty (i.e no event ) spaces with silence event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -697,7 +758,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternForTimeSlice">
 <code class="descname">getPatternForTimeSlice</code><span class="sig-paren">(</span><em>startTime</em>, <em>length</em>, <em>trimEnd=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternForTimeSlice"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternForTimeSlice" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a pattern within given timeslice</p>
+<dd><p>Returns a pattern within given timeslice.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -719,7 +780,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.toJSONDict">
 <code class="descname">toJSONDict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.toJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.toJSONDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>gives a standard dict for json output</p>
+<dd><p>Gives a standard dict for json output.</p>
 </dd></dl>
 
 <dl class="method">
@@ -739,7 +800,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">
 <code class="descname">splitInEqualLengthPatterns</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>trimEnd=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.splitInEqualLengthPatterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns" title="Permalink to this definition">¶</a></dt>
-<dd><p>splits a pattern in consecutive equal length cuts</p>
+<dd><p>Splits a pattern in consecutive equal length cuts.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -747,7 +808,7 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>desiredLength</strong> &#8211; length desired for each pattern</li>
 <li><strong>trimEnd</strong> &#8211; trim the end to exact desiredLength</li>
-<li><strong>copy</strong> &#8211; retruns a distinc copy of original pattern events, if you don&#8217;t need original pattern anymore setting it to False will increase speed</li>
+<li><strong>copy</strong> &#8211; returns a distint copy of original pattern events, if you don&#8217;t need original pattern anymore setting it to False will increase speed</li>
 </ul>
 </td>
 </tr>
@@ -761,57 +822,14 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </dd></dl>
 
 </div>
-<div class="section" id="module-gsapi.GSPatternTransformer">
-<span id="gsapi-gspatterntransformer-module"></span><h2>gsapi.GSPatternTransformer module<a class="headerlink" href="#module-gsapi.GSPatternTransformer" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
-<dt id="gsapi.GSPatternTransformer.GSPatternTransformer">
-<em class="property">class </em><code class="descclassname">gsapi.GSPatternTransformer.</code><code class="descname">GSPatternTransformer</code><a class="reference internal" href="_modules/gsapi/GSPatternTransformer.html#GSPatternTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformer.GSPatternTransformer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Base class for defining a transform algorithm</p>
-<dl class="docutils">
-<dt>such class needs to provide following functions :</dt>
-<dd><ul class="first last simple">
-<li>configure(self, dict) : configure current transformer based on implementation specific parameters passed in dict argument</li>
-<li>TransformPattern(self,GSPattern) : return a transformed version of GSPattern</li>
-</ul>
-</dd>
-</dl>
-<dl class="method">
-<dt id="gsapi.GSPatternTransformer.GSPatternTransformer.configure">
-<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformer.html#GSPatternTransformer.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformer.GSPatternTransformer.configure" title="Permalink to this definition">¶</a></dt>
-<dd><p>configure current transformer based on implenmentation specific parameters passed in dict argument</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>paramDict</strong> &#8211; a dictionnary filed with configuration values</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="gsapi.GSPatternTransformer.GSPatternTransformer.TransformPattern">
-<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformer.html#GSPatternTransformer.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformer.GSPatternTransformer.TransformPattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>returns a transformed version of GSPattern</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> &#8211; the pattern to be transformed</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+<div class="section" id="gsapi-gspatterntransformer-module">
+<h2>gsapi.GSPatternTransformer module<a class="headerlink" href="#gsapi-gspatterntransformer-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-gsapi.GSStyle">
 <span id="gsapi-gsstyle-module"></span><h2>gsapi.GSStyle module<a class="headerlink" href="#module-gsapi.GSStyle" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gsapi.GSStyle.GSStyle">
-<em class="property">class </em><code class="descclassname">gsapi.GSStyle.</code><code class="descname">GSStyle</code><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">gsapi.GSStyle.</code><code class="descname">GSStyle</code><a class="headerlink" href="#gsapi.GSStyle.GSStyle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>base class for defining a style</p>
 <dl class="docutils">
@@ -829,72 +847,72 @@ if midi track contain the name of one element of mapping, it&#8217;ll be choosed
 </dd>
 </dl>
 <dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.generateStyle">
-<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.generateStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
-<dd><p>compute inner state of style based on list of patterns</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.generatePattern">
-<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.generatePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
+<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>generate a new random pattern using seed if not None (idealy same seeds should lead to same patterns...)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.getDistanceFromStyle">
-<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.getDistanceFromStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
-<dd><p>return a normalized value representing the &#8220;styliness&#8221; of a pattern 1 being farthest from style</p>
+<dt id="gsapi.GSStyle.GSStyle.generateStyle">
+<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>compute inner state of style based on list of patterns</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.getClosestPattern">
-<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.getClosestPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>return the closest pattern in this style</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.getInterpolated">
-<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.getInterpolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
-<dd><p>interpolate between two pattern given this style constraints</p>
+<dt id="gsapi.GSStyle.GSStyle.getDistanceFromStyle">
+<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
+<dd><p>return a normalized value representing the &#8220;styliness&#8221; of a pattern 1 being farthest from style</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.getInternalState">
-<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.getInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
 <dd><p>should return a dict representing current internal state</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.setInternalState">
-<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>internalStateDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.setInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
-<dd><p>load internal state from a given dict</p>
+<dt id="gsapi.GSStyle.GSStyle.getInterpolated">
+<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
+<dd><p>interpolate between two pattern given this style constraints</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.isBuilt">
-<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.isBuilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
+<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns true if style hasbeen correctly build</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.saveToJSON">
-<code class="descname">saveToJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.saveToJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.saveToJSON" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.loadFromJSON">
-<code class="descname">loadFromJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.loadFromJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.loadFromJSON" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="gsapi.GSStyle.GSStyle.saveToPickle">
-<code class="descname">saveToPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.saveToPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.saveToPickle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadFromJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.loadFromJSON" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSStyle.GSStyle.loadFromPickle">
-<code class="descname">loadFromPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyle.html#GSStyle.loadFromPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyle.GSStyle.loadFromPickle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">loadFromPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.loadFromPickle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSStyle.GSStyle.saveToJSON">
+<code class="descname">saveToJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.saveToJSON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSStyle.GSStyle.saveToPickle">
+<code class="descname">saveToPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.saveToPickle" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSStyle.GSStyle.setInternalState">
+<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>internalStateDict</em><span class="sig-paren">)</span><a class="headerlink" href="#gsapi.GSStyle.GSStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
+<dd><p>load internal state from a given dict</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -1066,7 +1084,7 @@ and the interlocking context between bass and kick-drum (probabilities of concur
 kick_patterns: list of kick patterns in collection in Markov dictionary formatted ids</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">rhythm_model</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#gsapi.GSBassmineMarkov.MarkovModel.rhythm_model" title="gsapi.GSBassmineMarkov.MarkovModel.rhythm_model">rhythm_model</a></p>
 </td>
 </tr>
 </tbody>
@@ -1115,6 +1133,11 @@ kick_patterns: list of kick patterns in collection in Markov dictionary formatte
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.pdf_sampling">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">pdf_sampling</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#pdf_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.pdf_sampling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="class">
 <dt id="gsapi.GSBassmineMarkov.MarkovModel">
@@ -1307,11 +1330,16 @@ Rest of elements feed the transition matrix (no time-series)</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.rhythm_model">
+<code class="descname">rhythm_model</code><span class="sig-paren">(</span><em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.rhythm_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.rhythm_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
 <dt id="gsapi.GSBassmineMarkov.MarkovModel.pitch_model">
 <code class="descname">pitch_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.pitch_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.pitch_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Build pitch model</p>
 <p>[work in progress...]</p>
-<p>Takes first not an assume it as root note. Other notes are represented as intervals relative to root (first note)</p>
+<p>Takes first note an assume it as root note. Other notes are represented as intervals relative to root (first note)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -1328,7 +1356,7 @@ Rest of elements feed the transition matrix (no time-series)</p>
 
 <dl class="function">
 <dt id="gsapi.GSBassmineMarkov.constrainMM">
-<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">constrainMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#constrainMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.constrainMM" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">constrainMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#constrainMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.constrainMM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute non-homogeneuous markov model (NHMM) based on interlocking constraint.
 Given a target pattern it constraint the original model and ensure arc-consistency</p>
 <p>This function is also implemented as a pyext class.</p>
@@ -1352,7 +1380,7 @@ Given a target pattern it constraint the original model and ensure arc-consisten
 
 <dl class="function">
 <dt id="gsapi.GSBassmineMarkov.variationMM">
-<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">variationMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#variationMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.variationMM" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">variationMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#variationMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.variationMM" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compute non-homogeneuous markov model (NHMM) based on variation constraint.
 Given a target Variation Mask(VM) it constraint the original model and ensure arc-consistency</p>
 <p class="rubric">Examples</p>
@@ -1393,6 +1421,57 @@ Compact representation to avoid sparse matrices and better performance in the co
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.createMarkovGenerationDictionary">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">createMarkovGenerationDictionary</code><span class="sig-paren">(</span><em>toJSON=False</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#createMarkovGenerationDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.createMarkovGenerationDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal function to build a dictionary relating binarized patterns into start times (in beats)
+:param toJSON: boolean. If true it exports to JSON
+:param _path: path to store the dictionary as JSON</p>
+<p>Returns: Pattern dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.generateBassRhythm">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">generateBassRhythm</code><span class="sig-paren">(</span><em>markov_model</em>, <em>beat_length=8</em>, <em>target=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#generateBassRhythm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.generateBassRhythm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular
+Markov model (computed by MarkovModel.rhythm_model()).
+If target given it is assumed as target constraint for interlocking model.
+:param markov_model: output from  MarkovModel.rhythm_model()
+:param beat_length: desired length of the generated pattern
+:param target: Pattern used as constraint in Interlocking Model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">GSPattern containing bassline onset pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bassline</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.generateBassRhythmVariation">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">generateBassRhythmVariation</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target_pattern</em>, <em>variation_mask</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#generateBassRhythmVariation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.generateBassRhythmVariation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that implements a variation model given an already generated pattern. Based on the variation mask it creates
+a Markov model that preserve desired beat measures while it models &#8220;variation&#8221; beats to be stylistically consistent.
+:param markov_model: output from  MarkovModel.rhythm_model()
+:param target_pattern: GSPattern, for instance output from generateBassRhythm()
+:param variation_mask: List of the same length of the target_pattern(in beats). Positions with value 1 will be preserved,
+:param those with -1 will vary.:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generated GSPattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bassline</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -1409,7 +1488,7 @@ Compact representation to avoid sparse matrices and better performance in the co
     </p>
     <p>
         &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>

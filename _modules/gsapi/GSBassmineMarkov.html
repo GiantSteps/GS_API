@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSBassmineMarkov &mdash; GS_API 0.1 documentation</title>
+    <title>gsapi.GSBassmineMarkov &#8212; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -29,6 +29,8 @@
     <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="GS_API 0.1 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
@@ -67,6 +69,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html#gs-api-examples">GS-API examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../gsapi.html">gsapi package</a></li>
 </ul>
 </ul>
@@ -115,9 +118,12 @@
     <div class="col-md-12 content">
       
   <h1>Source code for gsapi.GSBassmineMarkov</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">GSPattern</span>
+<span class="kn">import</span> <span class="nn">GSBassmineAnalysis</span>
 
 <div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -152,6 +158,17 @@
 <span class="sd">		Indices of &#39;a&#39; matching lambda function</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">if</span> <span class="n">func</span><span class="p">(</span><span class="n">val</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="pdf_sampling"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.pdf_sampling">[docs]</a><span class="k">def</span> <span class="nf">pdf_sampling</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>  <span class="c1"># variable argument list</span>
+
+	<span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">n</span><span class="p">)):</span>
+		<span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="nb">sum</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">]):</span>
+			<span class="n">f</span> <span class="o">=</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="k">break</span>
+	<span class="k">return</span> <span class="n">f</span></div>
 
 
 <div class="viewcode-block" id="MarkovModel"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.MarkovModel">[docs]</a><span class="k">class</span> <span class="nc">MarkovModel</span><span class="p">:</span>
@@ -192,7 +209,7 @@
 			<span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;Model size must be an integer or a tuple of the form (x,y)&quot;</span><span class="p">)</span>
 
 		<span class="c1"># Model state</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">normalized</span> <span class="o">=</span> <span class="bp">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">normalized</span> <span class="o">=</span> <span class="kc">False</span>
 
 		<span class="c1"># Temporal model</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">support_temporal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
@@ -203,6 +220,8 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">temporal_model</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">interlocking_model</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="c1"># Pattern dictionary. Used for generation (table index -&gt; onset pattern)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model_dictionary</span> <span class="o">=</span> <span class="n">createMarkovGenerationDictionary</span><span class="p">()</span>
 
 <div class="viewcode-block" id="MarkovModel.add_temporal"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.MarkovModel.add_temporal">[docs]</a>	<span class="k">def</span> <span class="nf">add_temporal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -274,7 +293,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">support_initial</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">support_initial</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">temporal_model</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">support_temporal</span><span class="p">)</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">interlocking_model</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">support_interlocking</span><span class="p">)</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">normalized</span> <span class="o">=</span> <span class="bp">True</span></div>
+		<span class="bp">self</span><span class="o">.</span><span class="n">normalized</span> <span class="o">=</span> <span class="kc">True</span></div>
 
 <div class="viewcode-block" id="MarkovModel.get_initial"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.MarkovModel.get_initial">[docs]</a>	<span class="k">def</span> <span class="nf">get_initial</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
@@ -303,13 +322,53 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">interlocking_model</span></div>
 
+<div class="viewcode-block" id="MarkovModel.rhythm_model"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.MarkovModel.rhythm_model">[docs]</a>	<span class="k">def</span> <span class="nf">rhythm_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">):</span>
+
+		<span class="n">path</span> <span class="o">=</span> <span class="n">_path</span>
+
+		<span class="n">init_set</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span><span class="p">)</span>
+		<span class="c1">#print self.initial_model</span>
+		<span class="n">init</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="n">init_dict</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">init_set</span><span class="p">]</span>
+		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]]</span>
+		<span class="c1">#print &quot;init\n&quot;, init_dict</span>
+
+		<span class="n">rhythm_temporal_model</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">())</span>
+		<span class="n">rhythm_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+		<span class="c1">#print(pitch_temporal_model)</span>
+		<span class="c1">## Temporal model</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">rhythm_temporal_model</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+			<span class="c1">#print key # parent</span>
+			<span class="c1">#print list(val) # child</span>
+			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
+			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">()[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
+			<span class="c1">#print list(tmp/sum(tmp))</span>
+			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rhythm_temporal_model</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
+
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;HModel.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">rhythm_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+			<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;HModel_init.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+			<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+		<span class="c1">#print &quot;Rhythm model computed\n&quot;, rhythm_dict</span>
+		<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">rhythm_dict</span><span class="p">]</span></div>
+
+
 <div class="viewcode-block" id="MarkovModel.pitch_model"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.MarkovModel.pitch_model">[docs]</a>	<span class="k">def</span> <span class="nf">pitch_model</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Build pitch model</span>
 
 <span class="sd">		[work in progress...]</span>
 
-<span class="sd">		Takes first not an assume it as root note. Other notes are represented as intervals relative to root (first note)</span>
+<span class="sd">		Takes first note an assume it as root note. Other notes are represented as intervals relative to root (first note)</span>
 
 <span class="sd">		Returns:</span>
 <span class="sd">			dictionary{0: {&#39;interval&#39;: , &#39;probs&#39;}, {},{},...}</span>
@@ -320,20 +379,20 @@
 		<span class="c1">## Temporal model</span>
 		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">pitch_temporal_model</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-			<span class="k">print</span> <span class="n">key</span> <span class="c1"># parent</span>
-			<span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="c1"># child</span>
+			<span class="c1">#print key # parent</span>
+			<span class="c1">#print list(val) # child</span>
 			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
 				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">()[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-			<span class="k">print</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
+			<span class="c1">#print list(tmp/sum(tmp))</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">][</span><span class="s1">&#39;interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">12</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
 
-		<span class="k">print</span> <span class="s2">&quot;Pitch model computed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pitch_dict</span>
+		<span class="nb">print</span> <span class="s2">&quot;Pitch model computed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pitch_dict</span>
 		<span class="k">return</span> <span class="n">pitch_dict</span></div></div>
 
 
-<div class="viewcode-block" id="constrainMM"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.constrainMM">[docs]</a><span class="k">def</span> <span class="nf">constrainMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">_path</span><span class="p">):</span>
+<div class="viewcode-block" id="constrainMM"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.constrainMM">[docs]</a><span class="k">def</span> <span class="nf">constrainMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">	Compute non-homogeneuous markov model (NHMM) based on interlocking constraint.</span>
@@ -362,9 +421,9 @@
 	<span class="n">Dom_B</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 	<span class="n">Dom_I</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="n">inter</span><span class="p">)</span>
 
-	<span class="k">print</span> <span class="s2">&quot;Initial dict &quot;</span><span class="p">,</span> <span class="n">Dom_init</span>
-	<span class="k">print</span> <span class="s2">&quot;Temporal dict &quot;</span><span class="p">,</span> <span class="n">Dom_B</span>
-	<span class="k">print</span> <span class="s2">&quot;Interlocking dict &quot;</span><span class="p">,</span> <span class="n">Dom_I</span>
+	<span class="c1">#print &quot;Initial dict &quot;, Dom_init</span>
+	<span class="c1">#print &quot;Temporal dict &quot;, Dom_B</span>
+	<span class="c1">#print &quot;Interlocking dict &quot;, Dom_I</span>
 
 	<span class="c1">## Representation of target kick pattern as variable domain</span>
 	<span class="n">target_setlist</span> <span class="o">=</span> <span class="p">[]</span>
@@ -374,7 +433,7 @@
 			<span class="n">target_setlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dom_I</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">target_setlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dom_I</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
-			<span class="k">print</span> <span class="s2">&quot;Kick pattern mistmatch&quot;</span>
+			<span class="nb">print</span> <span class="s2">&quot;Kick pattern mistmatch&quot;</span>
 	<span class="c1">#print target_setlist</span>
 
 	<span class="c1">## V store the domain of patterns at each step</span>
@@ -434,7 +493,7 @@
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 				<span class="c1">## Delete key</span>
-				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 			<span class="c1">## Delete in previous continuations</span>
 			<span class="c1">#print V[step-2]</span>
 			<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -472,12 +531,12 @@
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Interlocking model build!&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interlocking model build!&quot;</span><span class="p">)</span>
 
-	<span class="k">print</span> <span class="nb">len</span><span class="p">(</span><span class="n">out_Model</span><span class="p">)</span></div>
+	<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">out_Model</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="variationMM"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.variationMM">[docs]</a><span class="k">def</span> <span class="nf">variationMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">_path</span><span class="p">):</span>
+<div class="viewcode-block" id="variationMM"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.variationMM">[docs]</a><span class="k">def</span> <span class="nf">variationMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">):</span>
 
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Compute non-homogeneuous markov model (NHMM) based on variation constraint.</span>
@@ -555,9 +614,7 @@
 	<span class="c1">#V[len(target)-1][target[len(target)-1]] = set([str(target[len(target)-1])])</span>
 
 	<span class="c1">#print V</span>
-	<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">V</span><span class="p">:</span>
-		<span class="k">print</span> <span class="n">v</span>
-		<span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+
 
 	<span class="c1">## Delete values from each key in V[i] that are not in V[i+1]</span>
 	<span class="n">val_del</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -580,7 +637,7 @@
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 				<span class="c1">## Delete key</span>
-				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 			<span class="c1">## Delete in previous continuations</span>
 			<span class="c1">#print V[step-2]</span>
 			<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -590,9 +647,13 @@
 
 	<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
 		<span class="n">tmp_val</span>  <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])})</span>
-		<span class="k">print</span> <span class="n">tmp_val</span>
+		<span class="c1">#print tmp_val</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_val</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 			<span class="n">V</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_val</span>
+
+	<span class="c1">#for v in V:</span>
+	<span class="c1">#	print v</span>
+	<span class="c1">#	print &quot;\n&quot;</span>
 
 	<span class="n">out_Model</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="c1"># Force last beat</span>
@@ -628,7 +689,8 @@
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="k">print</span><span class="p">(</span><span class="s2">&quot;Variation model build!&quot;</span><span class="p">)</span></div>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variation model build!&quot;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">out_Model</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="markov_tm_2dict"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.markov_tm_2dict">[docs]</a><span class="k">def</span> <span class="nf">markov_tm_2dict</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
@@ -667,23 +729,153 @@
 
 		<span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dom</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="k">print</span> <span class="s2">&quot;Wrong size&quot;</span></div>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">def generateBassRhythm(markov_model, target=[]):</span>
-
-<span class="sd">	if len(target) == 0:  # no constraints</span>
-
-<span class="sd">	else: # use constrained model</span>
+		<span class="nb">print</span> <span class="s2">&quot;Wrong size&quot;</span></div>
 
 
-<span class="sd">	return 1</span>
+<div class="viewcode-block" id="createMarkovGenerationDictionary"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.createMarkovGenerationDictionary">[docs]</a><span class="k">def</span> <span class="nf">createMarkovGenerationDictionary</span><span class="p">(</span><span class="n">toJSON</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Internal function to build a dictionary relating binarized patterns into start times (in beats)</span>
+<span class="sd">	Args:</span>
+<span class="sd">	    toJSON: boolean. If true it exports to JSON</span>
+<span class="sd">	    _path: path to store the dictionary as JSON</span>
+
+<span class="sd">	Returns: Pattern dictionary</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">start_times</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.75</span><span class="p">]</span>
+
+	<span class="n">out</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+	<span class="n">out</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+	<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">16</span><span class="p">):</span>
+		<span class="c1"># Binary pattern</span>
+		<span class="n">binpatt</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="s1">&#39;04b&#39;</span><span class="p">)</span>
+		<span class="n">st</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">start_times</span><span class="p">)):</span>
+			<span class="k">if</span> <span class="n">binpatt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span><span class="p">:</span>
+				<span class="n">st</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">start_times</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+		<span class="n">val</span> <span class="o">=</span> <span class="n">st</span>
+		<span class="n">out</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
 
-<span class="sd">def generateBassRhythmVariation():</span>
+	<span class="c1">#print out</span>
 
-<span class="sd">	return 1</span>
-<span class="sd">&quot;&quot;&quot;</span>
+	<span class="n">path</span> <span class="o">=</span> <span class="n">_path</span>
+	<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pattern_dict&#39;</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="n">out</span>
+
+	<span class="k">if</span> <span class="n">toJSON</span><span class="p">:</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+				<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">data</span></div>
+
+
+<div class="viewcode-block" id="generateBassRhythm"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.generateBassRhythm">[docs]</a><span class="k">def</span> <span class="nf">generateBassRhythm</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">beat_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="p">[]):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular</span>
+<span class="sd">	Markov model (computed by MarkovModel.rhythm_model()).</span>
+<span class="sd">	If target given it is assumed as target constraint for interlocking model.</span>
+<span class="sd">	Args:</span>
+<span class="sd">	    markov_model: output from  MarkovModel.rhythm_model()</span>
+<span class="sd">	    beat_length: desired length of the generated pattern</span>
+<span class="sd">	    target: Pattern used as constraint in Interlocking Model.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    bassline: GSPattern containing bassline onset pattern</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPattern</span><span class="p">()</span>
+	<span class="n">pattern_idx</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># no constraints</span>
+
+		<span class="n">HMM</span> <span class="o">=</span> <span class="n">markov_model</span><span class="o">.</span><span class="n">rhythm_model</span><span class="p">()</span>
+
+		<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">HMM</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">HMM</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]))</span>
+
+		<span class="k">for</span> <span class="n">beat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">beat_length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">HMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span>
+			                                    <span class="n">p</span><span class="o">=</span><span class="n">HMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;probs&#39;</span><span class="p">]))</span>
+
+	<span class="k">else</span><span class="p">:</span> <span class="c1"># use constrained model</span>
+
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">beat_length</span><span class="p">:</span>
+			<span class="n">beat_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+
+		<span class="n">NHMM</span> <span class="o">=</span> <span class="n">constrainMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+		<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]))</span>
+
+		<span class="k">for</span> <span class="n">beat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">beat_length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+			<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span>
+			                                    <span class="n">p</span><span class="o">=</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;probs&#39;</span><span class="p">]))</span>
+
+	<span class="n">bassline</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern_idx</span><span class="p">)</span>
+
+	<span class="n">start_times</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">beat_count</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">pattern_idx</span><span class="p">:</span>
+		<span class="n">st</span> <span class="o">=</span> <span class="n">markov_model</span><span class="o">.</span><span class="n">model_dictionary</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
+				<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bass&quot;</span><span class="p">]))</span>
+		<span class="n">beat_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">return</span> <span class="n">bassline</span></div>
+
+
+<div class="viewcode-block" id="generateBassRhythmVariation"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineMarkov.generateBassRhythmVariation">[docs]</a><span class="k">def</span> <span class="nf">generateBassRhythmVariation</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target_pattern</span><span class="p">,</span> <span class="n">variation_mask</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Function that implements a variation model given an already generated pattern. Based on the variation mask it creates</span>
+<span class="sd">	a Markov model that preserve desired beat measures while it models &quot;variation&quot; beats to be stylistically consistent.</span>
+<span class="sd">	Args:</span>
+<span class="sd">	    markov_model: output from  MarkovModel.rhythm_model()</span>
+<span class="sd">	    target_pattern: GSPattern, for instance output from generateBassRhythm()</span>
+<span class="sd">	    variation_mask: List of the same length of the target_pattern(in beats). Positions with value 1 will be preserved,</span>
+<span class="sd">	    those with -1 will vary.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		bassline: generated GSPattern</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPattern</span><span class="p">()</span>
+	<span class="n">pattern_idx</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variation_mask</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
+		<span class="nb">print</span> <span class="s2">&quot;Variation mask must be same length as target_pattern (in beats)&quot;</span>
+		<span class="k">return</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="c1">#Convert target pattern to markov dictionary</span>
+		<span class="n">onset_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">startTime</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
+		<span class="n">target_rhythm</span> <span class="o">=</span> <span class="n">GSBassmineAnalysis</span><span class="o">.</span><span class="n">binaryBeatPattern</span><span class="p">(</span><span class="n">onset_target</span><span class="p">,</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+		<span class="n">target_id</span> <span class="o">=</span> <span class="n">GSBassmineAnalysis</span><span class="o">.</span><span class="n">translate_rhythm</span><span class="p">(</span><span class="n">target_rhythm</span><span class="p">)</span>
+		<span class="c1">#Mask formatted pattern</span>
+		<span class="n">masked_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">variation_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variation_mask</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
+
+		<span class="c1">#Build variation model</span>
+		<span class="n">NHMM</span> <span class="o">=</span> <span class="n">variationMM</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">masked_target</span><span class="p">)</span>
+		<span class="c1">#Generate GSPattern</span>
+		<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">target_id</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+		<span class="k">for</span> <span class="n">beat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">masked_target</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+			<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span>
+			                                    <span class="n">p</span><span class="o">=</span><span class="n">NHMM</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;probs&#39;</span><span class="p">]))</span>
+
+		<span class="n">bassline</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern_idx</span><span class="p">)</span>
+
+		<span class="n">beat_count</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">pattern_idx</span><span class="p">:</span>
+			<span class="n">st</span> <span class="o">=</span> <span class="n">markov_model</span><span class="o">.</span><span class="n">model_dictionary</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
+					<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bass&quot;</span><span class="p">]))</span>
+			<span class="n">beat_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="k">return</span> <span class="n">bassline</span></div>
+
+
+
 </pre></div>
 
     </div>
@@ -698,7 +890,7 @@
     </p>
     <p>
         &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>

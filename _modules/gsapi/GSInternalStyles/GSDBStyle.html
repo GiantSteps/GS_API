@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSInternalStyles.GSDBStyle &mdash; GS_API 0.1 documentation</title>
+    <title>gsapi.GSInternalStyles.GSDBStyle &#8212; GS_API 0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -29,6 +29,8 @@
     <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
     <link rel="top" title="GS_API 0.1 documentation" href="../../../index.html" />
     <link rel="up" title="Module code" href="../../index.html" />
 <meta charset='utf-8'>
@@ -67,6 +69,7 @@
       role="menu"
       aria-labelledby="dLabelGlobalToc"><ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../README.html#gs-api-examples">GS-API examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../gsapi.html">gsapi package</a></li>
 </ul>
 </ul>
@@ -116,7 +119,7 @@
       
   <h1>Source code for gsapi.GSInternalStyles.GSDBStyle</h1><div class="highlight"><pre>
 <span></span>
-<span class="kn">from</span> <span class="nn">gsapi</span> <span class="kn">import</span> <span class="n">GSStyle</span><span class="p">,</span><span class="n">GSPattern</span><span class="p">,</span><span class="n">GSPatternEvent</span>
+<span class="kn">from</span> <span class="nn">gsapi</span> <span class="k">import</span> <span class="n">GSStyle</span><span class="p">,</span><span class="n">GSPattern</span><span class="p">,</span><span class="n">GSPatternEvent</span>
 <span class="kn">import</span> <span class="nn">random</span>
 
 <div class="viewcode-block" id="GSDBStyle"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle">[docs]</a><span class="k">class</span> <span class="nc">GSDBStyle</span><span class="p">(</span><span class="n">GSStyle</span><span class="p">):</span>
@@ -133,12 +136,12 @@
 <div class="viewcode-block" id="GSDBStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="n">PatternClasses</span><span class="p">;</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GSDBStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSInternalStyles.html#gsapi.GSInternalStyles.GSDBStyle.GSDBStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">==</span><span class="s1">&#39;increasing&#39;</span><span class="p">:</span>
 			<span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">]</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="o">+=</span><span class="mi">1</span>
-			<span class="k">print</span> <span class="s2">&quot;reading &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span>
+			<span class="nb">print</span> <span class="s2">&quot;reading &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span>
 			<span class="k">return</span> <span class="n">p</span>
 		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">==</span><span class="s1">&#39;random&#39;</span><span class="p">:</span>
 			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">))]</span>
@@ -186,7 +189,7 @@
     </p>
     <p>
         &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
     </p>
   </div>
 </footer>
