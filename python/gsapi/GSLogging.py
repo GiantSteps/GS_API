@@ -1,6 +1,6 @@
 import logging
 
-USE_COLOR_OUTPUT = False
+
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
 # The background is set with 40 plus the number of the color, and the foreground with 30
@@ -9,7 +9,7 @@ RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ  = "\033[1m"
 
-
+USE_COLOR_OUTPUT = False
 COLORS = {'WARNING': YELLOW,
           'INFO': WHITE,
           'DEBUG': BLUE,
@@ -18,7 +18,7 @@ COLORS = {'WARNING': YELLOW,
           }
 
 
-def formatter_message(message, use_color = USE_COLOR_OUTPUT):
+def formatter_message(message, use_color = True):
     if use_color:
         message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
     else:
@@ -42,11 +42,14 @@ class ColoredFormatter(logging.Formatter):
 class ColoredLogger(logging.Logger):
     """Custom logger class with multiple destinations."""
     FORMAT = "[$BOLD%(name)-20s$RESET][%(levelname)-18s]  %(message)s ($BOLD%(filename)s$RESET:%(lineno)d)"
-    COLOR_FORMAT = formatter_message(FORMAT, True)
+    # enable / disable colored output for console that suports
+    
+    useColor = USE_COLOR_OUTPUT
+    COLOR_FORMAT = formatter_message(FORMAT, USE_COLOR_OUTPUT)
 
     def __init__(self, name):
         logging.Logger.__init__(self, name, logging.DEBUG)                
-        color_formatter = ColoredFormatter(self.COLOR_FORMAT)
+        color_formatter = ColoredFormatter(self.COLOR_FORMAT,self.useColor)
         console = logging.StreamHandler()
         console.setFormatter(color_formatter)
         self.addHandler(console)
