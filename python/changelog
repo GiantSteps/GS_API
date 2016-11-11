@@ -1,0 +1,17 @@
+v 1.0.1
+1.0.1 (11 Nov 2016)
+-------------------
+- add global help for gsapi module
+- JUCEPython : JUCE4.3 compatible
+- fix use color output typo
+- add BassMine Algorithm
+- add toMidi export facility
+- create GSBase module for base classes
+
+v 1.0
+-------------------
+- initial commit
+
+
+
+
