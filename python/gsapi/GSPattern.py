@@ -1,7 +1,6 @@
 import math
 import copy
 import logging
-from MidiMap import *
 from GSPatternUtils import *
 
 patternLog = logging.getLogger("gsapi.GSPattern")
@@ -110,10 +109,10 @@ class GSPatternEvent(object):
         return res
 
     def __repr__(self):
-        return "%s %i %f %f"%(self.tags,
-                              self.pitch,
-                              self.startTime,
-                              self.duration)
+        return "%s %i %f %f" % (self.tags,
+                                self.pitch,
+                                self.startTime,
+                                self.duration)
 
 
 # ==============================================================================

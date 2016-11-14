@@ -7,7 +7,8 @@ import logging
 from gsapi import *
 from music21 import *
 
-gsiolog.setLevel(level=logging.ERROR)
+GSIO.gsiolog.setLevel(level=logging.ERROR)
+
 
 myPattern = GSIO.fromMidi("../../corpus/harmony/Im7-Vm9.mid", "pitchNames")
 print myPattern
@@ -24,7 +25,7 @@ for e in first_chord:
     first_notes.append(e.pitch)
 
 # we sort them in ascending order:
-# (afterwards we could check if the agregate is a chord and if it is in root position)
+# (afterwards we could check if the aggregate is a chord and if it is in root position)
 first_notes.sort()
 first_root = first_notes[0]
 
@@ -32,22 +33,23 @@ first_root = first_notes[0]
 transposition_interval = 60 - first_root
 myPattern.transpose(transposition_interval)
 
-# in the example of transposition we could make that minor chords transpose automatically to A minor
-# and major chords to C...
 
-
-#myPattern.quantize(1)  # I need to experiment with the quantization factor..0
+#myPattern.quantize(1)  # I need to experiment with the quantization factor.
 #print myPattern
+
 myPattern.fillWithSilences()  # adds silences when needed!
 print myPattern
 
+for event in myPattern.events:
+    a = GSPatternUtils.GSPatternEventToList(event)
+    print a
 # b = a.splitInEqualLengthPatterns(2)
 
 # a.alignOnGrid(2)
 
 # print a.duration
 
-GSIO.toMIDI(myPattern, path='./', name='test')
+# GSIO.toMIDI(myPattern, path='./', name='test')
 # s = converter.parse('./test.mid')
 # s.duration = duration.Duration(myPattern.duration)
 # s.show()

@@ -20,30 +20,26 @@ except:
     print "couldn't load arguments"
 
 
-def test_gsio():
+def GSPatternToList(GSPattern):
+    list_of_events = []
+    for event in GSPattern.events:
+        list_of_events.append(str(event.tags))
+        list_of_events.append(event.pitch)
+        list_of_events.append(event.startTime)
+        list_of_events.append(event.duration)
+    return list_of_events
+
+
+def normalize_to_c4():
     my_pattern = GSIO.fromMidi("/Users/angeluni/Git/GS_API/corpus/harmony/I-VIIm7.mid", "pitchNames")
-    # print myPattern
-
-    # get start time of first event in the pattern:
     start_event = my_pattern.events[0].startTime
-
-    # get all vertical components at start time:
     first_chord = my_pattern.getStartingEventsAtTime(start_event)
-
-    # get the midi note numbers of the first chord:
     first_notes = []
     for e in first_chord:
         first_notes.append(e.pitch)
-
-    # we sort them in ascending order and take the lowest as root:
-    # (afterwards we could check if the agregate is a chord and if it is in root position)
     first_notes.sort()
     first_root = first_notes[0]
-
-    # find a transposition factor and transpose the progression to middle C:
     transposition_interval = 60 - first_root
     my_pattern.transpose(transposition_interval)
-    my_pattern.fillWithSilences()  # adds silences when needed!
-    return my_pattern.events
-
-#
+    my_pattern.fillWithSilences()
+    return GSPatternToList(my_pattern)
