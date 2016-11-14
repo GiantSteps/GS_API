@@ -20,41 +20,8 @@ except:
     print "couldn't load arguments"
 
 
-def numargs(*args):   # variable argument list
-    """Return the number of arguments"""
-    return len(args)
-
-
-def strlen(arg):   
-    """Return the string length"""
-    # we must convert to string first (it's a symbol type most likely)
-    return len(str(arg))
-
-
-def strcat(*args):
-    """Concatenate several symbols"""
-    return reduce(lambda a, b: a+str(b), args,"")
-
-
-def addall(*args):   # variable argument list
-    """Add a couple of numbers"""
-    return reduce(lambda a,b: a+b, args,0)
-
-
-def ret1():
-    return 1, 2, 3, 4
-
-
-def ret2():
-    return "sd", "lk", "ki"
-
-
-def ret3():
-    return ["sd", "lk", "ki"]
-
-
 def test_gsio():
-    my_pattern = GSIO.fromMidi("../../corpus/harmony/Im7-Vm9.mid", "pitchNames")
+    my_pattern = GSIO.fromMidi("/Users/angeluni/Git/GS_API/corpus/harmony/I-VIIm7.mid", "pitchNames")
     # print myPattern
 
     # get start time of first event in the pattern:
@@ -77,4 +44,6 @@ def test_gsio():
     transposition_interval = 60 - first_root
     my_pattern.transpose(transposition_interval)
     my_pattern.fillWithSilences()  # adds silences when needed!
-    return my_pattern
+    return my_pattern.events
+
+#
