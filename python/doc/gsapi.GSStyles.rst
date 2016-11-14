@@ -1,7 +1,7 @@
-gsapi.GSStyles module
+gsapi.GSBase.GSStyle module
 ==============================
 
-.. automodule:: gsapi.GSInternalStyles
+.. automodule:: gsapi.GSBase.GSStyle
     :members:
     :undoc-members:
     :show-inheritance:

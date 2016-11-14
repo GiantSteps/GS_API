@@ -11,7 +11,7 @@ class DescriptorTests(GSPatternTestUtils):
 	dataset = GSDataset(midiGlob="funkyfresh.mid",midiMap="pitchNames",checkForOverlapped = True)
 
 	def test_density_simple(self):
-		descriptor = GSDescriptorDensity();
+		descriptor = GSDescriptors.GSDescriptorDensity();
 		for p in self.dataset.patterns:
 			allTags = p.getAllTags()
 			density = descriptor.getDescriptorForPattern(p);
@@ -26,7 +26,7 @@ class DescriptorTests(GSPatternTestUtils):
 
 
 	def test_syncopation(self):
-		descriptor = GSDescriptorSyncopation();
+		descriptor = GSDescriptors.GSDescriptorSyncopation();
 		for p in self.dataset.patterns:
 			# p = p.getPatternWithTags(p.getAllTags()[0])
 			sliced = p.splitInEqualLengthPatterns(descriptor.duration)

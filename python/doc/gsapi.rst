@@ -12,23 +12,16 @@ Submodules
 .. toctree::
     gsapi.GSPattern
     gsapi.GSIO
-    gsapi.GSInternalStyles
-    gsapi.GSInternalTransformers
-    gsapi.GSStyle
+    gsapi.GSStyles
+    gsapi.GSPatternTransformers
 
 
-gsapi.GSPatternTransformer module
----------------------------------
 
-.. automodule:: gsapi.GSPatternTransformer
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 
 
 gsapi.GSBassmineAnalysis module
---------------------
+-------------------------------------------
 
 .. automodule:: gsapi.GSBassmineAnalysis
     :members:
@@ -36,7 +29,7 @@ gsapi.GSBassmineAnalysis module
     :show-inheritance:
 
 gsapi.GSBassmineMarkov module
---------------------
+-------------------------------------------
 
 .. automodule:: gsapi.GSBassmineMarkov
     :members:

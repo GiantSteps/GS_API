@@ -1,6 +1,6 @@
 from gsapi.GSPattern import GSPattern
 
-class GSTransformer(object):
+class GSPatternTransformer(object):
 	""" Base class for defining a transform algorithm
 
 	such class needs to provide following functions :

@@ -8,7 +8,7 @@ from gsapi import *
 class GSDescriptorDensity(GSBase.GSDescriptor):
 
 	def __init__(self,ignoredTags = ["silence"],includedTags=[]):
-		GSDescriptor.__init__(self)
+		GSBase.GSDescriptor.__init__(self)
 		self.ignoredTags = ignoredTags
 		self.includedTags = includedTags
 

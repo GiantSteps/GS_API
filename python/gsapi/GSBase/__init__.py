@@ -3,5 +3,5 @@ this module represent all base classes that gsapi Algorithm implementations can 
 this ensure common interface (so interchangeability) between gsapi objects of same base class
 """
 from GSDescriptor import GSDescriptor
-from GSTransformer import GSTransformer
+from GSPatternTransformer import GSPatternTransformer
 from GSStyle import GSStyle

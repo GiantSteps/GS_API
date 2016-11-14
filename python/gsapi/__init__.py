@@ -1,7 +1,7 @@
 """
 The GS_API is a Python/C++ library for manipulating musical symbolic data.
 all modules are documented, for more infos on the given module 
- type
+type :
 
  >> help(gsapi.modulename)
 

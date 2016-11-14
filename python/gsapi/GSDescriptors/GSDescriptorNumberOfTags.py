@@ -2,10 +2,10 @@ import os,sys
 if __name__=='__main__':
 	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
 
-from gsapi import *
+from gsapi.GSBase import *
 
 
-class GSDescriptorNumberOfTags(GSBase.GSDescriptor):
+class GSDescriptorNumberOfTags(GSDescriptor):
 
 	def __init__(self,ignoredTags = ["silence"],includedTags=[]):
 		GSDescriptor.__init__(self)
