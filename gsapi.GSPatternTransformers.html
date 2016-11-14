@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gsapi.GSBase.GSPatternTransformer module &#8212; GS_API 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="GS_API 1.0.1 documentation" href="index.html" />
+    <link rel="up" title="gsapi package" href="gsapi.html" />
+    <link rel="prev" title="gsapi.GSBase.GSStyle module" href="gsapi.GSStyles.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          GS_API</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#gs-api-examples">GS-API examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">gsapi.GSBase.GSPatternTransformer module</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSPatternTransformers.AgnosticDensity">gsapi.GSPatternTransformers.AgnosticDensity module</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="gsapi.GSStyles.html" title="Previous Chapter: gsapi.GSBase.GSStyle module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi.GSBase....</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/gsapi.GSPatternTransformers.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="gsapi-gsbase-gspatterntransformer-module">
+<h1>gsapi.GSBase.GSPatternTransformer module<a class="headerlink" href="#gsapi-gsbase-gspatterntransformer-module" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-gsapi.GSBase.GSPatternTransformer"></span><dl class="class">
+<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer">
+<em class="property">class </em><code class="descclassname">gsapi.GSBase.GSPatternTransformer.</code><code class="descname">GSPatternTransformer</code><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base class for defining a transform algorithm</p>
+<dl class="docutils">
+<dt>such class needs to provide following functions :</dt>
+<dd><ul class="first last simple">
+<li>configure(self, dict) : configure current transformer based on implementation specific parameters passed in dict argument</li>
+<li>TransformPattern(self,GSPattern) : return a transformed version of GSPattern</li>
+</ul>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>configure current transformer based on implenmentation specific parameters passed in dict argument</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>paramDict</strong> &#8211; a dictionnary filed with configuration values</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.TransformPattern">
+<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.TransformPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns a transformed version of GSPattern</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> &#8211; the pattern to be transformed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="module-gsapi.GSPatternTransformers.AgnosticDensity">
+<span id="gsapi-gspatterntransformers-agnosticdensity-module"></span><h2>gsapi.GSPatternTransformers.AgnosticDensity module<a class="headerlink" href="#module-gsapi.GSPatternTransformers.AgnosticDensity" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity">
+<em class="property">class </em><code class="descclassname">gsapi.GSPatternTransformers.AgnosticDensity.</code><code class="descname">AgnosticDensity</code><span class="sig-paren">(</span><em>mode='random'</em>, <em>numSteps=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/AgnosticDensity.html#AgnosticDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer" title="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSBase.GSPatternTransformer.GSPatternTransformer</span></code></a></p>
+<p>Agnostic transformation algorithm
+:param numSteps: number of steps to consider
+:param mode: [&#8216;random&#8217;,&#8217;syncopation&#8217;] :  algorithm used</p>
+<dl class="attribute">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.globalDensity">
+<code class="descname">globalDensity</code><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.globalDensity" title="Permalink to this definition">¶</a></dt>
+<dd><p>float (0..2) the desired global density ,i.e 0 is an empty pattern, 1 matches the origin pattern, 2 is a pattern with all events</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.individualDensities">
+<code class="descname">individualDensities</code><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.individualDensities" title="Permalink to this definition">¶</a></dt>
+<dd><p>dict[tag]=density :  a per Tag density, densities should be in the same range as globalDensity</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.mode">
+<code class="descname">mode</code><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>[&#8216;random&#8217;,&#8217;syncopation&#8217;] :  algorithm used</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.originPattern">
+<code class="descname">originPattern</code><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.originPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>the origin pattern, e.g : the one given if all densities are equals to 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/AgnosticDensity.html#AgnosticDensity.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.configure" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">
+<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em>, <em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/AgnosticDensity.html#AgnosticDensity.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.TransformPattern" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">
+<code class="descname">buildDensityMap</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/AgnosticDensity.html#AgnosticDensity.buildDensityMap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, MTG/GiantSteps.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSPattern &#8212; GS_API 0.1 documentation</title>
+    <title>gsapi.GSPattern &#8212; GS_API 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '../../',
-        VERSION:     '0.1',
+        VERSION:     '1.0.1',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -31,7 +31,7 @@
     <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="top" title="GS_API 0.1 documentation" href="../../index.html" />
+    <link rel="top" title="GS_API 1.0.1 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -52,7 +52,7 @@
         </button>
         <a class="navbar-brand" href="../../index.html">
           GS_API</a>
-        <span class="navbar-text navbar-version pull-left"><b>0.1</b></span>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
       </div>
 
         <div class="collapse navbar-collapse nav-collapse">
@@ -131,7 +131,7 @@
 <span class="sd">GSPattern</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="GSPatternEvent"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent">[docs]</a><span class="k">class</span> <span class="nc">GSPatternEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent">[docs]</a><span class="k">class</span> <span class="nc">GSPatternEvent</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Represents an event of a GSPattern.</span>
 <span class="sd">    An event has a startTime, duration, pitch, velocity and associated tags.</span>
 
@@ -152,7 +152,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">velocity</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
 
-<div class="viewcode-block" id="GSPatternEvent.hasOneCommonTagWith"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith">[docs]</a>    <span class="k">def</span> <span class="nf">hasOneCommonTagWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.hasOneCommonTagWith"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith">[docs]</a>    <span class="k">def</span> <span class="nf">hasOneCommonTagWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare tags between events.</span>
 
 <span class="sd">        Args:</span>
@@ -162,7 +162,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasOneOfTags</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.hasOneOfTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.hasOneOfTags">[docs]</a>    <span class="k">def</span> <span class="nf">hasOneOfTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.hasOneOfTags"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.hasOneOfTags">[docs]</a>    <span class="k">def</span> <span class="nf">hasOneOfTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare this event&#39;s tags with a list of strings.</span>
 
 <span class="sd">        Args:</span>
@@ -175,7 +175,7 @@
                 <span class="k">return</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.tagsAre"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.tagsAre">[docs]</a>    <span class="k">def</span> <span class="nf">tagsAre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.tagsAre"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.tagsAre">[docs]</a>    <span class="k">def</span> <span class="nf">tagsAre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare this event&#39;s tags with a list of strings.</span>
 
 <span class="sd">        Args:</span>
@@ -185,7 +185,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tags</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.allTagsAreEqualWith"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith">[docs]</a>    <span class="k">def</span> <span class="nf">allTagsAreEqualWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.allTagsAreEqualWith"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith">[docs]</a>    <span class="k">def</span> <span class="nf">allTagsAreEqualWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare this event&#39;s tags with an other event.</span>
 
 <span class="sd">        Args:</span>
@@ -195,7 +195,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tagsAre</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.getEndTime"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.getEndTime">[docs]</a>    <span class="k">def</span> <span class="nf">getEndTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.getEndTime"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.getEndTime">[docs]</a>    <span class="k">def</span> <span class="nf">getEndTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns the time when this events ends</span>
 
 <span class="sd">        Returns:</span>
@@ -203,7 +203,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">duration</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.copy"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.copy"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Copy an event.</span>
 
 <span class="sd">        Returns:</span>
@@ -211,7 +211,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPatternEvent.cutInSteps"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPatternEvent.cutInSteps">[docs]</a>    <span class="k">def</span> <span class="nf">cutInSteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepSize</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPatternEvent.cutInSteps"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.cutInSteps">[docs]</a>    <span class="k">def</span> <span class="nf">cutInSteps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepSize</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Cut an event in steps of stepsize length.</span>
 
 <span class="sd">        Args:</span>
@@ -240,7 +240,7 @@
 <span class="c1"># *********************** GSPattern Class Declaration **************************</span>
 <span class="c1"># ==============================================================================</span>
 
-<div class="viewcode-block" id="GSPattern"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern">[docs]</a><span class="k">class</span> <span class="nc">GSPattern</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern">[docs]</a><span class="k">class</span> <span class="nc">GSPattern</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Class representing a pattern made of GSPatternEvent.</span>
 <span class="sd">    Holds a list of GSEvents and provide basic manipulation function.</span>
 
@@ -263,16 +263,14 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">originFilePath</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-<div class="viewcode-block" id="GSPattern.transpose"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transposition_interval</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.transpose"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transposition_interval</span><span class="p">):</span>
 
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="o">+=</span> <span class="n">transposition_interval</span>
             <span class="n">e</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">pitchToName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span> <span class="n">defaultPitchNames</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-
-
-<div class="viewcode-block" id="GSPattern.setDurationFromLastEvent"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.setDurationFromLastEvent">[docs]</a>    <span class="k">def</span> <span class="nf">setDurationFromLastEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onlyIfBigger</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.setDurationFromLastEvent"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.setDurationFromLastEvent">[docs]</a>    <span class="k">def</span> <span class="nf">setDurationFromLastEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onlyIfBigger</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sets duration to last event NoteOff</span>
 
 <span class="sd">        Args:</span>
@@ -284,14 +282,14 @@
             <span class="c1"># print &quot;resizing : &quot;+str(total) +&#39;old : &#39;+ str(self.duration)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">total</span></div>
 
-<div class="viewcode-block" id="GSPattern.reorderEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.reorderEvents">[docs]</a>    <span class="k">def</span> <span class="nf">reorderEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.reorderEvents"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.reorderEvents">[docs]</a>    <span class="k">def</span> <span class="nf">reorderEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Ensure than our internal event list `events` is time sorted</span>
 
 <span class="sd">            can be useful for time sensitive events iteration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPattern.getLastNoteOff"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getLastNoteOff">[docs]</a>    <span class="k">def</span> <span class="nf">getLastNoteOff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getLastNoteOff"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getLastNoteOff">[docs]</a>    <span class="k">def</span> <span class="nf">getLastNoteOff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gets last event end time</span>
 
 <span class="sd">        Returns:</span>
@@ -304,7 +302,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="GSPattern.addEvent"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.addEvent">[docs]</a>    <span class="k">def</span> <span class="nf">addEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">GSPatternEvent</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.addEvent"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.addEvent">[docs]</a>    <span class="k">def</span> <span class="nf">addEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">GSPatternEvent</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add an event increasing duration if needed.</span>
 
 <span class="sd">        Args:</span>
@@ -313,7 +311,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">+=</span> <span class="p">[</span><span class="n">GSPatternEvent</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="GSPattern.quantize"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.quantize">[docs]</a>    <span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beatDivision</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.quantize"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.quantize">[docs]</a>    <span class="k">def</span> <span class="nf">quantize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">beatDivision</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Quantize events.</span>
 
 <span class="sd">        Args:</span>
@@ -322,7 +320,7 @@
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">*</span> <span class="n">beatDivision</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">beatDivision</span></div>
 
-<div class="viewcode-block" id="GSPattern.timeStretch"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.timeStretch">[docs]</a>    <span class="k">def</span> <span class="nf">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.timeStretch"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.timeStretch">[docs]</a>    <span class="k">def</span> <span class="nf">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ratio</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Time-stretch a pattern.</span>
 
 <span class="sd">        Args:</span>
@@ -333,12 +331,12 @@
             <span class="n">e</span><span class="o">.</span><span class="n">duration</span> <span class="o">*=</span> <span class="n">ratio</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>  <span class="o">*=</span> <span class="n">ratio</span></div>
 
-<div class="viewcode-block" id="GSPattern.getStartingEventsAtTime"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getStartingEventsAtTime">[docs]</a>    <span class="k">def</span> <span class="nf">getStartingEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get all events activating at a givent time.</span>
+<div class="viewcode-block" id="GSPattern.getStartingEventsAtTime"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getStartingEventsAtTime">[docs]</a>    <span class="k">def</span> <span class="nf">getStartingEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get all events activating at a given time.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            time: time asked for</span>
-<span class="sd">            tolerance: admited deviation of start time</span>
+<span class="sd">            tolerance: allowed deviation of start time</span>
 <span class="sd">        Returns:</span>
 <span class="sd">            list of events</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -348,7 +346,7 @@
                 <span class="n">res</span> <span class="o">+=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="GSPattern.getActiveEventsAtTime"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getActiveEventsAtTime">[docs]</a>    <span class="k">def</span> <span class="nf">getActiveEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getActiveEventsAtTime"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getActiveEventsAtTime">[docs]</a>    <span class="k">def</span> <span class="nf">getActiveEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get all events currently active at a givent time.</span>
 
 <span class="sd">        Args:</span>
@@ -364,12 +362,12 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="GSPattern.copy"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.copy"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.copy">[docs]</a>    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Deepcopy a pattern</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPattern.getACopyWithoutEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getACopyWithoutEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getACopyWithoutEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getACopyWithoutEvents"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getACopyWithoutEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getACopyWithoutEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Copy all fields but events.</span>
 <span class="sd">            Useful for creating patterns from patterns.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -381,7 +379,7 @@
         <span class="n">p</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">return</span> <span class="n">p</span></div>
 
-<div class="viewcode-block" id="GSPattern.getAllTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getAllTags">[docs]</a>    <span class="k">def</span> <span class="nf">getAllTags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getAllTags"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getAllTags">[docs]</a>    <span class="k">def</span> <span class="nf">getAllTags</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns all used tags in this pattern.</span>
 
 <span class="sd">        Returns:</span>
@@ -394,7 +392,7 @@
                     <span class="n">tags</span><span class="o">+=</span><span class="p">[</span><span class="n">t</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">tags</span></div>
 
-<div class="viewcode-block" id="GSPattern.getPatternWithTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getPatternWithTags">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternWithTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">exactSearch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getPatternWithTags"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getPatternWithTags">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternWithTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">exactSearch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a sub-pattern with the given tags.</span>
 
 <span class="sd">        Args:</span>
@@ -426,7 +424,7 @@
                 <span class="n">res</span><span class="o">.</span><span class="n">events</span> <span class="o">+=</span> <span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="GSPattern.getPatternWithoutTags"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getPatternWithoutTags">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternWithoutTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">exactSearch</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getPatternWithoutTags"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getPatternWithoutTags">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternWithoutTags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tags</span><span class="p">,</span> <span class="n">exactSearch</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Returns a sub-pattern without the given tags.</span>
 
 <span class="sd">        Args:</span>
@@ -451,7 +449,7 @@
                 <span class="n">res</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="GSPattern.alignOnGrid"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.alignOnGrid">[docs]</a>    <span class="k">def</span> <span class="nf">alignOnGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepSize</span><span class="p">,</span> <span class="n">repeatibleTags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;silence&#39;</span><span class="p">]):</span>
+<div class="viewcode-block" id="GSPattern.alignOnGrid"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.alignOnGrid">[docs]</a>    <span class="k">def</span> <span class="nf">alignOnGrid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stepSize</span><span class="p">,</span> <span class="n">repeatibleTags</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;silence&#39;</span><span class="p">]):</span>
         <span class="sd">&quot;&quot;&quot;Align this pattern on a temporal grid.</span>
 <span class="sd">        Very useful to deal with step-sequenced pattern:</span>
 <span class="sd">            - all events durations are shortened to stepsize</span>
@@ -477,7 +475,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newEvents</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GSPattern.removeOverlapped"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.removeOverlapped">[docs]</a>    <span class="k">def</span> <span class="nf">removeOverlapped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usePitchValues</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.removeOverlapped"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.removeOverlapped">[docs]</a>    <span class="k">def</span> <span class="nf">removeOverlapped</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">usePitchValues</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;remove overlapped elements</span>
 
 <span class="sd">            Args:</span>
@@ -508,14 +506,14 @@
                 <span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">):</span>
                     <span class="k">break</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span>
-                <span class="n">newList</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                <span class="n">newList</span> <span class="o">+=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">patternLog</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;remove overlapping </span><span class="si">%s</span><span class="s2"> with </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">overLappedEv</span><span class="p">))</span>
             <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newList</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GSPattern.getAllIdenticalEvents"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getAllIdenticalEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getAllIdenticalEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">allTagsMustBeEquals</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getAllIdenticalEvents"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getAllIdenticalEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getAllIdenticalEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">allTagsMustBeEquals</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get a list of event with same tags.</span>
 
 <span class="sd">        Args:</span>
@@ -532,12 +530,12 @@
             <span class="k">if</span> <span class="n">equals</span><span class="p">:</span>
                 <span class="n">res</span> <span class="o">+=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GSPattern.getFilledWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getFilledWithSilences">[docs]</a>    <span class="k">def</span> <span class="nf">getFilledWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">silenceTag</span><span class="o">=</span><span class="s1">&#39;silence&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getFilledWithSilences"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getFilledWithSilences">[docs]</a>    <span class="k">def</span> <span class="nf">getFilledWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">silenceTag</span><span class="o">=</span><span class="s1">&#39;silence&#39;</span><span class="p">):</span>
         <span class="n">pattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
         <span class="n">pattern</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="n">maxSilenceTime</span><span class="o">=</span><span class="n">maxSilenceTime</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="n">perTag</span><span class="p">,</span> <span class="n">silenceTag</span><span class="o">=</span><span class="n">silenceTag</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pattern</span></div>
 
-<div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>    <span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">silenceTag</span> <span class="o">=</span><span class="s1">&#39;silence&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>    <span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">silenceTag</span> <span class="o">=</span><span class="s1">&#39;silence&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Fill empty (i.e no event ) spaces with silence event.</span>
 
 <span class="sd">        Args:</span>
@@ -574,7 +572,7 @@
                 <span class="n">allEvents</span> <span class="o">+=</span> <span class="n">_fillListWithSilence</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">exactSearch</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">silenceTag</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">allEvents</span></div>
 
-<div class="viewcode-block" id="GSPattern.getPatternForTimeSlice"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.getPatternForTimeSlice">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternForTimeSlice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">trimEnd</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.getPatternForTimeSlice"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getPatternForTimeSlice">[docs]</a>    <span class="k">def</span> <span class="nf">getPatternForTimeSlice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">startTime</span><span class="p">,</span> <span class="n">length</span><span class="p">,</span> <span class="n">trimEnd</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns a pattern within given timeslice.</span>
 
 <span class="sd">        Args:</span>
@@ -607,7 +605,7 @@
             <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">s</span>
 
-<div class="viewcode-block" id="GSPattern.toJSONDict"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.toJSONDict">[docs]</a>    <span class="k">def</span> <span class="nf">toJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.toJSONDict"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.toJSONDict">[docs]</a>    <span class="k">def</span> <span class="nf">toJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Gives a standard dict for json output.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
@@ -628,8 +626,7 @@
                                   <span class="p">}]</span>
         <span class="k">return</span> <span class="n">res</span></div>
 
-
-<div class="viewcode-block" id="GSPattern.fromJSONDict"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.fromJSONDict">[docs]</a>    <span class="k">def</span> <span class="nf">fromJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.fromJSONDict"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.fromJSONDict">[docs]</a>    <span class="k">def</span> <span class="nf">fromJSONDict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Loads a json API dict object to this pattern</span>
 
 <span class="sd">        Args:</span>
@@ -643,7 +640,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="GSPattern.splitInEqualLengthPatterns"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">[docs]</a>    <span class="k">def</span> <span class="nf">splitInEqualLengthPatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desiredLength</span><span class="p">,</span> <span class="n">trimEnd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.splitInEqualLengthPatterns"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">[docs]</a>    <span class="k">def</span> <span class="nf">splitInEqualLengthPatterns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">desiredLength</span><span class="p">,</span> <span class="n">trimEnd</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Splits a pattern in consecutive equal length cuts.</span>
 
 <span class="sd">        Args:</span>

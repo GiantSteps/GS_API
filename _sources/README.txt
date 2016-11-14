@@ -150,7 +150,7 @@ markovStyle.generateStyle(allPatternsSliced)
 newPattern = markovStyle.generatePattern()
 
 # Export to MIDI
-newPattern.toMIDI(name="drums", midiMap=MidiMap.generalMidiMap)
+GSIO.toMIDI(newPattern, name="drums", midiMap=GSPatternUtils.generalMidiMap)
 
 #print the pattern for visualization
 print newPattern

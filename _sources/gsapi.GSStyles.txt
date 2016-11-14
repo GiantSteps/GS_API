@@ -1,24 +1,24 @@
-gsapi.GSInternalStyles package
+gsapi.GSBase.GSStyle module
 ==============================
 
-.. automodule:: gsapi.GSInternalStyles
+.. automodule:: gsapi.GSBase.GSStyle
     :members:
     :undoc-members:
     :show-inheritance:
 
 
-gsapi.GSInternalStyles.GSDBStyle module
+gsapi.GSStyles.GSDBStyle module
 ---------------------------------------
 
-.. automodule:: gsapi.GSInternalStyles.GSDBStyle
+.. automodule:: gsapi.GSStyles.GSDBStyle
     :members:
     :undoc-members:
     :show-inheritance:
 
-gsapi.GSInternalStyles.GSMarkovStyle module
+gsapi.GSStyles.GSMarkovStyle module
 -------------------------------------------
 
-.. automodule:: gsapi.GSInternalStyles.GSMarkovStyle
+.. automodule:: gsapi.GSStyles.GSMarkovStyle
     :members:
     :undoc-members:
     :show-inheritance:
