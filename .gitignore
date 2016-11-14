@@ -18,3 +18,4 @@ DBStyle.json
 .idea/*
 python/.idea/*
 python/gsapi/.idea/*
+*.pyo

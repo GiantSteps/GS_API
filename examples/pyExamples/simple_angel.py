@@ -12,7 +12,6 @@ gsiolog.setLevel(level=logging.ERROR)
 myPattern = GSIO.fromMidi("../../corpus/harmony/Im7-Vm9.mid", "pitchNames")
 print myPattern
 
-
 # get start time of first event in the pattern:
 start_event = myPattern.events[0].startTime
 
@@ -25,9 +24,10 @@ for e in first_chord:
     first_notes.append(e.pitch)
 
 # we sort them in ascending order:
+# (afterwards we could check if the agregate is a chord and if it is in root position)
 first_notes.sort()
-
 first_root = first_notes[0]
+
 # find a transposition factor and transpose the progression to middle C:
 transposition_interval = 60 - first_root
 myPattern.transpose(transposition_interval)
@@ -36,8 +36,8 @@ myPattern.transpose(transposition_interval)
 # and major chords to C...
 
 
-myPattern.quantize(1)  # I need to experiment with the quantization factor..0
-print myPattern
+#myPattern.quantize(1)  # I need to experiment with the quantization factor..0
+#print myPattern
 myPattern.fillWithSilences()  # adds silences when needed!
 print myPattern
 
