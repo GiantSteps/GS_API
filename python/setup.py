@@ -25,7 +25,7 @@ if __name__ == '__main__':
       toAppend = ['clean','--all']
       
       toAppend = ['build']
-      toAppend  = ['install']
+      toAppend  = ['sdist','bdist_wheel','install']
       if len(sys.argv)==1:
             for s in toAppend:
                   sys.argv.append(s)

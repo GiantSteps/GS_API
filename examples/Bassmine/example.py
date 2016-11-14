@@ -44,7 +44,7 @@ NHMvariation = markov.variationMM(MM, target_bass, _path)
 #patt_dict = markov.createMarkovGenerationDictionary(toJSON=True)
 #print patt_dict
 pattern = markov.generateBassRhythm(MM)
-pattern.toMIDI(name='regular')
+GSIO.toMIDI(pattern,name='regular')
 
 inter_pattern = markov.generateBassRhythm(MM, target=target_kick)
 # Write pattern to MIDI

@@ -1,4 +1,4 @@
-from gsapi.GSPattern import GSPattern
+from gsapi import GSPattern
 
 class GSStyle(object):
 	""" base class for defining a style

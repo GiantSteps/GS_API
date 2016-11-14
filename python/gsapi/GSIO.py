@@ -1,9 +1,8 @@
 import logging
 # import glob
 # import math
-from gsapi import *
+from GSPattern import *
 import os
-from MidiMap import *
 from GSPatternUtils import *
 
 gsiolog = logging.getLogger("gsapi.GSIO")
@@ -22,12 +21,13 @@ def fromMidi(midiPath,
         NoteToTagsMap: dictionary converting pitches to tags
             if only interested in pitch, you can set this to "pitchNames",
             or optionaly set the value to the list of string for pitches from C.
-            noteMapping maps classes to a list of possible Mappings,
-            a mapping can be:
-            a tuple of (note, channel)
+            noteMapping maps classes to a list of possible mappings, a mapping can be either :
+
+            * a tuple of (note, channel) : 
                 if one of those doesnt matter it canbe replaced by '*' character
-            an integer
+            * an integer : 
                 if only pitch matters
+
             for simplicity, one can pass only one integer (i.e not a list) for one to one mappings
             if midi track contains the name of one element of mapping,
             it'll be choosed without anyother consideration

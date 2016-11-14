@@ -1,4 +1,4 @@
-gsapi.GSInternalTransformers package
+gsapi.GSInternalTransformers module
 ====================================
 
 .. automodule:: gsapi.GSInternalTransformers

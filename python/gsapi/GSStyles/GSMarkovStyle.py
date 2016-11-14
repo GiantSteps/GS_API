@@ -1,4 +1,4 @@
-from gsapi import *
+from gsapi import GSPattern , GSPatternEvent,GSBase
 from gsapi.MathUtils import PatternMarkov
 import random
 
@@ -7,7 +7,7 @@ import copy
 import logging
 markovLog = logging.getLogger('gsapi.GSStyle.GSMarkovStyle')
 
-class GSMarkovStyle(GSStyle):
+class GSMarkovStyle(GSBase.GSStyle):
 	""" compute sa style based on markov chains
 
 	Args:

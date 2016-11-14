@@ -6,30 +6,16 @@ gsapi package
     :undoc-members:
     :show-inheritance:
 
-Subpackages
+Submodules
 -----------
 
 .. toctree::
-
+    gsapi.GSPattern
+    gsapi.GSIO
     gsapi.GSInternalStyles
     gsapi.GSInternalTransformers
+    gsapi.GSStyle
 
-
-gsapi.GSIO module
------------------
-
-.. automodule:: gsapi.GSIO
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-gsapi.GSPattern module
-----------------------
-
-.. automodule:: gsapi.GSPattern
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 gsapi.GSPatternTransformer module
 ---------------------------------
@@ -39,13 +25,7 @@ gsapi.GSPatternTransformer module
     :undoc-members:
     :show-inheritance:
 
-gsapi.GSStyle module
---------------------
 
-.. automodule:: gsapi.GSStyle
-    :members:
-    :undoc-members:
-    :show-inheritance:
 
 gsapi.GSBassmineAnalysis module
 --------------------
