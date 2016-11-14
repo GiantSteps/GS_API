@@ -2,7 +2,8 @@ if __name__ == '__main__':
 	import sys,os;
 	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
 
-from gsapi import GSStyle,GSPattern,GSPatternEvent
+from gsapi import GSPattern,GSPatternEvent
+
 import random
 import logging
 patternMarkovLog = logging.getLogger('MathUtils.PatternMarkov')
@@ -262,7 +263,7 @@ class PatternMarkov(object):
 
 if __name__ == '__main__':
 	import glob,json
-	
+	from gsapi import *
 	
 	dataset= GSDataset(midiGlob="*.mid")
 	pM = PatternMarkov(order=2,numSteps=32,loopDuration=8)
