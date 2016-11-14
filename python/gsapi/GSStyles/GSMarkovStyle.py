@@ -1,4 +1,4 @@
-from gsapi import *
+from gsapi import GSPattern , GSPatternEvent
 from gsapi.MathUtils import PatternMarkov
 import random
 

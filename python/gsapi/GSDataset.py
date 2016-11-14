@@ -1,10 +1,9 @@
 import os
 import random
-from gsapi import *
+import GSIO,GSPatternUtils
 
 import logging
 datasetLog = logging.getLogger("GSDataset")
-
 
 
 

@@ -13,13 +13,17 @@ other useful resources :
 
 
 """
+
+
 from GSLogging import gsapiLogger
 import GSPatternUtils
+
+
 from GSPattern import GSPatternEvent, GSPattern
 
 from GSDataset import GSDataset
 import GSBase 
-import GSIO 
+import GSIO
 
 import GSStyles 
 import GSDescriptors 

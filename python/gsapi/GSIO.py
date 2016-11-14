@@ -1,7 +1,7 @@
 import logging
 # import glob
 # import math
-from gsapi import *
+from GSPattern import *
 import os
 from GSPatternUtils import *
 

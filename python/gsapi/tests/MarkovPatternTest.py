@@ -2,6 +2,7 @@ import unittest,os,sys
 if __name__=='__main__': sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
 
 from gsapi import *
+
 from gsapi.MathUtils import *
 import random,glob
 
@@ -82,5 +83,6 @@ class MarkovPatternTest(GSPatternTestUtils):
 
 
 if __name__ == "__main__":
+	
 	runTest(profile=False,getStat=False)
 
