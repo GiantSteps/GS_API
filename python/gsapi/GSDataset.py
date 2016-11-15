@@ -3,7 +3,7 @@ import random
 import GSIO,GSPatternUtils
 
 import logging
-datasetLog = logging.getLogger("GSDataset")
+datasetLog = logging.getLogger("gsapi.GSDataset")
 
 
 

@@ -1,3 +1,4 @@
+from gsapi import *
 import gsapi.GSBassmineAnalysis as bassmine
 import gsapi.GSBassmineMarkov as markov
 import json
@@ -48,11 +49,11 @@ GSIO.toMIDI(pattern,name='regular')
 
 inter_pattern = markov.generateBassRhythm(MM, target=target_kick)
 # Write pattern to MIDI
-inter_pattern.toMIDI(name='interlock')
+GSIO.toMIDI(inter_pattern,name='interlock')
 
 var_mask = [1, 1, 1, -1, 1, 1, -1, 1]
 variation_pattern = markov.generateBassRhythmVariation(MM,inter_pattern,var_mask)
-variation_pattern.toMIDI(name='variation')
+GSIO.toMIDI(variation_pattern,name='variation')
 #########################################
 #  DEBUG
 

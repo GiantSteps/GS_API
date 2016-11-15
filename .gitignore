@@ -19,3 +19,5 @@ DBStyle.json
 python/.idea/*
 python/gsapi/.idea/*
 *.pyo
+
+examples/Bassmine/output/*

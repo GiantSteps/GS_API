@@ -20,7 +20,7 @@ class GSMarkovStyle(GSBase.GSStyle):
 
 	"""
 	def __init__(self,order,numSteps,loopDuration):
-		super(GSStyle,self).__init__()
+		super(GSBase.GSStyle,self).__init__()
 		self.type = "None"
 		self.markovChain = PatternMarkov(order=order,numSteps=numSteps,loopDuration=loopDuration)
 
