@@ -49,6 +49,15 @@ class GSPatternTest(GSPatternTestUtils):
 
 			self.assertTrue(p.events[-1].startTime == 31)
 			self.checkPatternValid(p,msg='stretch failed \n\n%s \n\n%s'%(originPattern,p))
+
+	def test_legato(self):
+		dataSet = GSDataset(midiGlob="*.mid",midiMap="pitchNames",checkForOverlapped=True)
+		patternList = dataSet[0].splitInEqualLengthPatterns(4,copy=False)
+		for p in patternList:
+			p.applyLegato()
+			self.checkPatternValid(p,msg='legato failed')
+
+
 			
 
 
@@ -56,9 +65,7 @@ class GSPatternTest(GSPatternTestUtils):
 
 
 if __name__=='__main__':
-
-	# gsapiLogger.setLevel(level=logging.INFO)
-
+	
 	runTest(profile = True,getStat = False)
 
 

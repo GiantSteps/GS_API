@@ -215,7 +215,7 @@ class PatternMarkov(object):
 		return out
 
 	def formatPattern(self,p):
-		# p.quantize(self.numSteps*1.0/self.loopDuration);
+		# p.quantize(self.loopDuration*1.0/self.numSteps);
 		p.timeStretch(self.numSteps*1.0/self.loopDuration)
 
 		p.alignOnGrid(1)

@@ -67,5 +67,9 @@ class GSDataset(object):
             self.patterns += [p]
 
         return self.patterns
+    def __getitem__(self, index):
+    	"""Utility to access paterns as list member : GSDataset[idx] = GSDataset.patterns[idx]
+    	"""
+    	return self.patterns[index]
 
 

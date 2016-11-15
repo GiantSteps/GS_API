@@ -2,10 +2,10 @@ from gsapi.GSPattern import GSPattern
 
 class GSBasePatternTransformer(object):
 	""" Base class for defining a transform algorithm
-
+	
 	such class needs to provide following functions :
-		- configure(self, dict) : configure current transformer based on implementation specific parameters passed in dict argument
-		- TransformPattern(self,GSPattern) : return a transformed version of GSPattern
+		- :func:`GSBasePatternTransformer.configure`  : configure current transformer based on implementation specific parameters passed in dict argument
+		- :func:`GSBasePatternTransformer.TransformPattern` : return a transformed version of GSPattern
 
 	"""
 	def __init__(self):

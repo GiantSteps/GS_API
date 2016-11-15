@@ -57,9 +57,9 @@ def fromMidiCollection(midiGlobPath,
     """Loads a midi collection.
 
     Args:
-        midiGlobPath: midi filePath in glob naming convention (e.g. '/folder/To/Crawl/*.mid')
+        midiGlobPath: midi filePath in glob naming convention (e.g. '/folder/To/Crawl/\*.mid')
         desiredLength: optionally cut patterns in equal length
-        otherArguments: as defined in :py:func:`fromMidi`
+        otherArguments: as defined in :func:`fromMidi` 
 
     Returns:
         a list of GSPattern build from Midi folder

@@ -1,13 +1,16 @@
+
+"""GSPattern module holds classes :class:`GSPatternEvent` and :class:`GSPattern`
+"""
+
 import math
 import copy
 import logging
 from GSPatternUtils import *
 
+
+
 patternLog = logging.getLogger("gsapi.GSPattern")
-
-"""Documentation for GSPattern module.
-
-GSPattern
+"""logger for pattern related operations
 """
 
 class GSPatternEvent(object):
@@ -196,14 +199,15 @@ class GSPattern(object):
         self.events += [GSPatternEvent]
         self.setDurationFromLastEvent()
 
-    def quantize(self, beatDivision,quantizeStartTime=True,quantizeDuration = True):
+    def quantize(self, stepSize,quantizeStartTime=True,quantizeDuration = True):
         """ Quantize events.
 
         Args:
-            beatDivision: the fraction of beat that we want to quantize to
+            stepSize: the duration that we want to quantize to
             quantizeDuration : do we quantize duration ?
             quantizeStartTime : do we quantize startTimes
         """
+        beatDivision = 1.0/stepSize
         if(quantizeStartTime and quantizeDuration) :
 			for e in self.events:
 				e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
@@ -284,9 +288,21 @@ class GSPattern(object):
         tags = []
         for e in self.events:
             for  t in e.tags:
-                if not t in tags:
-                    tags+=[t]
+                tags+=[t]
+        tags = list(set(tags))
         return tags
+
+    def getAllPitches(self):
+    	""" Returns all used pitch in this pattern.
+
+        Returns:
+            list of integers composed of all pitches present in this pattern
+        """
+        pitchs = []
+        for e in self.events:
+             pitchs+=[e.pitch]
+        pitchs = list(set(pitch))
+        return pitchs
 
     def getPatternWithTags(self, tags, exactSearch=True, copy=True):
         """Returns a sub-pattern with the given tags.
@@ -303,7 +319,7 @@ class GSPattern(object):
             if exactSearch:
                 boolFunction = lambda inTags: inTags == tags
             else:
-                boolFunction = lambda inTags: tags in inTags
+                boolFunction = lambda inTags: not set(tags).isdisjoint(inTags)
         elif isinstance(tags, (str)):
             if exactSearch:
                 boolFunction = lambda inTags: len(inTags) == 1 and inTags[0] == tags
@@ -312,9 +328,29 @@ class GSPattern(object):
         elif callable(tags):
             boolFunction = tags
 
+
         res = self.getACopyWithoutEvents()
         for e in self.events:
             found = boolFunction(e.tags)
+            if found:
+                newEv = e if not copy else e.copy()
+                res.events += [newEv]
+        return res
+
+    def getPatternWithPitch(self, pitch, copy=True):
+        """Returns a sub-pattern with the given tags.
+
+        Args:
+            pitch: pitch to look for
+            copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+        Returns:
+            a GSPattern with only events that pitch corresponds to given pitch
+        """
+
+
+        res = self.getACopyWithoutEvents()
+        for e in self.events:
+            found = (e.pitch == pitch)
             if found:
                 newEv = e if not copy else e.copy()
                 res.events += [newEv]
@@ -348,11 +384,12 @@ class GSPattern(object):
     def alignOnGrid(self, stepSize, repeatibleTags = ['silence']):
         """Align this pattern on a temporal grid.
         Very useful to deal with step-sequenced pattern:
-            - all events durations are shortened to stepsize
-            - all events startTimes are quantified to stepsize
+        - all events durations are shortened to stepsize
+        - all events startTimes are quantified to stepsize
 
         RepeatibleTags allow to deal with `silences type` of events:
-            - if a silence spread over more than one stepsize, we generate an event for each stepSize
+        - if a silence spread over more than one stepsize, we generate an event for each stepSize
+
         Thus each step is ensured to be filled with one distinct event at least.
 
         Args:
@@ -438,13 +475,15 @@ class GSPattern(object):
             maxSilenceTime: if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime
             perTag: fill silence for each Tag
             silenceTag: tag that will be used when inserting the silence event
+            silencePitch : the desired pitch of new silences events
         """
         self.reorderEvents()
 
-        def _fillListWithSilence(list, silenceTag,silencePitch =-1):
+        def _fillListWithSilence(pattern, silenceTag,silencePitch =-1):
             lastOff = 0
             newEvents = []
-            for e in self.events:
+
+            for e in pattern.events:
                 if e.startTime > lastOff:
                     if maxSilenceTime > 0:
                         while e.startTime - lastOff > maxSilenceTime:
@@ -453,20 +492,54 @@ class GSPattern(object):
                     newEvents += [GSPatternEvent(lastOff, e.startTime - lastOff, silencePitch, 0, [silenceTag])]
                 newEvents += [e]
                 lastOff = max(lastOff, e.startTime + e.duration)
-            if lastOff < self.duration:
+
+            if lastOff < pattern.duration:
                 if maxSilenceTime > 0:
-                    while lastOff < self.duration - maxSilenceTime:
+                    while lastOff < pattern.duration - maxSilenceTime:
                         newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, [silenceTag])]
                         lastOff += maxSilenceTime
-                newEvents += [GSPatternEvent(lastOff, self.duration - lastOff, silencePitch, 0, [silenceTag])]
+                newEvents += [GSPatternEvent(lastOff, pattern.duration - lastOff, silencePitch, 0, [silenceTag])]
             return newEvents
+
+
         if not perTag:
-            self.events = _fillListWithSilence(self.events, silenceTag,silencePitch)
+            self.events = _fillListWithSilence(self, silenceTag,silencePitch)
         else:
             allEvents = []
             for t in self.getAllTags():
                 allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag,silencePitch)
             self.events = allEvents
+
+    def applyLegato(self,usePitchValues=False):
+    	""" this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
+    	Args:
+    		usePitchValues: should we consider pitch numbers instead of tags (bit faster)
+
+    	"""
+
+    	def _perVoiceLegato(pattern):
+    		pattern.reorderEvents()
+    		if(len(pattern)==0) : 
+    			patternLog.warning("try to apply legato on an empty voice")
+    			return
+    		for idx in range(1,len(pattern)):
+    			diff =  pattern[idx].startTime-pattern[idx-1].getEndTime()
+    			if(diff>0):
+    				pattern[idx-1].duration+=diff
+
+    		diff = pattern.duration - pattern[-1].getEndTime()
+    		if(diff>0):
+    			pattern[-1].duration+=diff
+    		
+
+    	if usePitchValues:
+    		for p in self.getAllPitches():
+    			voice = self.getPatternWithPitch(p)
+    			_perVoiceLegato(voice)
+    	for t in self.getAllTags():
+    		voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
+    		_perVoiceLegato(voice)
+
 
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
         """Returns a pattern within given timeslice.
@@ -502,9 +575,15 @@ class GSPattern(object):
         return s
 
     def __getitem__(self, index):
-    	"""Utility to access events as list member : GSPattern[idx] = GSEvent
+    	"""Utility to access events as list member : GSPattern[idx] = GSPattern.events[idx]
      	"""
     	return self.events[index]
+
+    def __setitem__(self, index, item):
+    	self.events[index] = item 
+
+    def __len__(self):
+    	return len(self.events)
 
     def toJSONDict(self):
         """Gives a standard dict for json output.
