@@ -10,7 +10,7 @@ from music21 import *
 GSIO.gsiolog.setLevel(level=logging.ERROR)
 
 
-myPattern = GSIO.fromMidi("../../corpus/harmony/Im7-Vm9.mid", "pitchNames")
+myPattern = GSIO.fromMidi("../../corpus/harmony/I5-IV.mid", "pitchNames")
 print myPattern
 
 # get start time of first event in the pattern:
@@ -33,16 +33,15 @@ first_root = first_notes[0]
 transposition_interval = 60 - first_root
 myPattern.transpose(transposition_interval)
 
+# POSIBLY USEFUL FUNCTIONS
+myPattern.removeOverlapped(usePitchValues=True)
+myPattern.quantize(0.25)
+# myPattern.fillWithSilences()  # fills empty time intervals with silences
+# myPattern.alignOnGrid(0.25)
 
-#myPattern.quantize(1)  # I need to experiment with the quantization factor.
-#print myPattern
 
-myPattern.fillWithSilences()  # adds silences when needed!
 print myPattern
 
-for event in myPattern.events:
-    a = GSPatternUtils.GSPatternEventToList(event)
-    print a
 # b = a.splitInEqualLengthPatterns(2)
 
 # a.alignOnGrid(2)

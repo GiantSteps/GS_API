@@ -1,14 +1,24 @@
-#N canvas 290 534 722 458 12;
+#N canvas 445 120 443 266 12;
 #X declare -stdlib py;
-#X obj 159 219 py gs_script test_gsio;
-#X msg 172 189 bang;
-#X msg 159 157 reload;
+#X msg 13 79 reload;
 #X obj 12 12 declare -stdlib py;
-#X obj 159 246 zexy/repack 4;
-#X obj 159 272 list split 1;
-#X obj 205 299 print;
-#X connect 0 0 4 0;
-#X connect 1 0 0 0;
-#X connect 2 0 0 0;
+#X obj 13 133 zexy/repack 4;
+#X obj 13 106 py gs_script normalize_to_c4;
+#X obj 13 159 list trim;
+#X obj 13 185 print GSPattern;
+#X obj 234 37 openpanel;
+#X obj 234 17 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X obj 234 81 symbol;
+#X obj 240 61 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X text 258 12 load a midi file;
+#X text 147 185 see the GSPattern as lists;
+#X connect 0 0 3 0;
+#X connect 2 0 4 0;
+#X connect 3 0 2 0;
 #X connect 4 0 5 0;
-#X connect 5 1 6 0;
+#X connect 6 0 8 0;
+#X connect 7 0 6 0;
+#X connect 8 0 3 1;
+#X connect 9 0 8 0;

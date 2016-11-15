@@ -29,7 +29,7 @@ class GSPatternEvent(object):
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
-        self.tags = tags
+        self.tags = tags # TODO check if this is a dupe...
 
     def hasOneCommonTagWith(self, event):
         """Compare tags between events.
@@ -142,10 +142,15 @@ class GSPattern(object):
         self.originFilePath = ""
         self.name = ""
 
-    def transpose(self, transposition_interval):
+    def transpose(self, interval):
+        """Transposes a GSPattern to the desired interval
 
+                Args:
+                    interval: transposition factor in semitones
+                    (it can be a positive or negative int)
+                """
         for e in self.events:
-            e.pitch += transposition_interval
+            e.pitch += interval
             e.tags = [pitchToName(e.pitch, defaultPitchNames)]
         return self
 
@@ -208,7 +213,7 @@ class GSPattern(object):
         for e in self.events:
             e.startTime *= ratio
             e.duration *= ratio
-        self.duration  *= ratio
+        self.duration *= ratio
 
     def getStartingEventsAtTime(self, time, tolerance=0):
         """ Get all events activating at a given time.
@@ -350,7 +355,7 @@ class GSPattern(object):
             for ea in evToAdd:
                 ea.startTime = int(ea.startTime/stepSize+0.5)*stepSize
                 ea.duration = stepSize
-                newEvents+=[ea]
+                newEvents += [ea]
         self.events = newEvents
         return self
 
@@ -365,17 +370,17 @@ class GSPattern(object):
         idx = 0
         for e in self.events:
             found = False
-            overLappedEv =[]
+            overLappedEv = []
             for i in range(idx + 1, len(self.events)):
                 ee = self.events[i]
                 if usePitchValues:
                     equals = (ee.pitch == e.pitch)
                 else:
-                    equals = (ee.tags==e.tags)
+                    equals = (ee.tags == e.tags)
                 if equals:
                     if (ee.startTime >= e.startTime) and (ee.startTime < e.startTime + e.duration):
                         found = True
-                        if ee.startTime - e.startTime>0:
+                        if ee.startTime - e.startTime > 0:
                             e.duration = ee.startTime - e.startTime
                             newList += [e]
                             overLappedEv += [ee]
@@ -415,7 +420,7 @@ class GSPattern(object):
         return pattern
 
     def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag ='silence'):
-        """Fill empty (i.e no event ) spaces with silence event.
+        """Fill empty time intervals (i.e no event) with silence event.
 
         Args:
             maxSilenceTime: if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime
@@ -479,7 +484,7 @@ class GSPattern(object):
         """Nicely print out the list of events.
         Each line represents an event formatted as: tags pitch startTime duration
         """
-        s = "GSPattern %s\n"%(self.name)
+        s = "GSPattern %s\n" % self.name
         for e in self.events:
             s += str(e) + "\n"
         return s
@@ -548,6 +553,6 @@ class GSPattern(object):
         res = []
         for p in patterns:
             patterns[p].setDurationFromLastEvent()
-            res+=[patterns[p]]
+            res += [patterns[p]]
 
         return res

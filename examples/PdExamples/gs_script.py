@@ -10,14 +10,16 @@
 import sys
 import logging
 from gsapi import *
-from music21 import *
 
 print "Script initialized"
 
 try:
     print "Script arguments: ", sys.argv
 except:
-    print "couldn't load arguments"
+    print "Couldn't load arguments"
+
+# Set GS_API verbose level:
+GSIO.gsiolog.setLevel(level=logging.ERROR)
 
 
 def GSPatternToList(GSPattern):
@@ -30,8 +32,8 @@ def GSPatternToList(GSPattern):
     return list_of_events
 
 
-def normalize_to_c4():
-    my_pattern = GSIO.fromMidi("/Users/angeluni/Git/GS_API/corpus/harmony/I-VIIm7.mid", "pitchNames")
+def normalize_to_c4(midi_file):
+    my_pattern = GSIO.fromMidi(str(midi_file), "pitchNames")
     start_event = my_pattern.events[0].startTime
     first_chord = my_pattern.getStartingEventsAtTime(start_event)
     first_notes = []
