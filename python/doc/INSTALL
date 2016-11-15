@@ -14,11 +14,15 @@ python environment
 
 pip install -U sphinx
 pip install sphinx_bootstrap_theme
-pip install sphinxcontrib-napoleon-0.5.3
+pip install sphinxcontrib-napoleon
 pip install -U recommonmark
 
 
-
+on OSX
+==========
+be sure to have following lines in your ~/.bash_profile
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
 
 
 updating doc
@@ -30,5 +34,5 @@ cd python/doc
 make html && make install
 cd gh-pages
 git add -A
-git commit -m"update doc with whatever comments"
+git commit -m "update doc with whatever comments"
 git push
