@@ -1,13 +1,16 @@
 gsapi.GSPatternTransformers
-==============================
+===========================
+.. automodule:: gsapi.GSPatternTransformers
+    :members:
+    :undoc-members:
+    :show-inheritance:
 
 gsapi.GSPatternTransformers.GSBasePatternTransformer module
 -----------------------------------------------------------
 
 .. automodule:: gsapi.GSPatternTransformers.GSBasePatternTransformer
     :members:
-    :undoc-members:
-    :show-inheritance:
+    
 
 
 

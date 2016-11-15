@@ -1,5 +1,8 @@
 gsapi.GSStyles
 ==============
+.. automodule:: gsapi.GSStyles
+    :members:
+    :undoc-members:
 
 gsapi.GSStyles.GSBaseStyle module
 ---------------------------------
@@ -7,7 +10,6 @@ gsapi.GSStyles.GSBaseStyle module
 .. automodule:: gsapi.GSStyles.GSBaseStyle
     :members:
     :undoc-members:
-    :show-inheritance:
 
 
 gsapi.GSStyles.GSDBStyle module

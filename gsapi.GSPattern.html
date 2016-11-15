@@ -1,153 +1,160 @@
+
+
 <!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>gsapi.GSPattern module &mdash; GS_API 1.0.1 documentation</title>
+  
 
+  
+  
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  
+
+  
+  
     
-    <title>gsapi.GSPattern module &#8212; GS_API 1.0.1 documentation</title>
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="GS_API 1.0.1 documentation" href="index.html"/>
+        <link rel="up" title="gsapi package" href="gsapi.html"/>
+        <link rel="next" title="gsapi.GSIO module" href="gsapi.GSIO.html"/>
+        <link rel="prev" title="gsapi package" href="gsapi.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
     
-    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '1.0.1',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="top" title="GS_API 1.0.1 documentation" href="index.html" />
-    <link rel="up" title="gsapi package" href="gsapi.html" />
-    <link rel="next" title="gsapi.GSIO module" href="gsapi.GSIO.html" />
-    <link rel="prev" title="gsapi package" href="gsapi.html" />
-<meta charset='utf-8'>
-<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
-<meta name="apple-mobile-web-app-capable" content="yes">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-  </head>
-  <body role="document">
+          
+            <a href="index.html" class="icon icon-home"> GS_API
+          
 
-  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
-    <div class="container">
-      <div class="navbar-header">
-        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="index.html">
-          GS_API</a>
-        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
-      </div>
-
-        <div class="collapse navbar-collapse nav-collapse">
-          <ul class="nav navbar-nav">
-            
-            
-              <li class="dropdown globaltoc-container">
-  <a role="button"
-     id="dLabelGlobalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="index.html">Site <b class="caret"></b></a>
-  <ul class="dropdown-menu globaltoc"
-      role="menu"
-      aria-labelledby="dLabelGlobalToc"><ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="README.html#gs-api-examples">GS-API examples</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
-</ul>
-</ul>
-</li>
-              
-                <li class="dropdown">
-  <a role="button"
-     id="dLabelLocalToc"
-     data-toggle="dropdown"
-     data-target="#"
-     href="#">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"
-      role="menu"
-      aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">gsapi.GSPattern module</a></li>
-</ul>
-</ul>
-</li>
-              
-            
-            
-              
-                
-  <li>
-    <a href="gsapi.html" title="Previous Chapter: gsapi package"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi package</span>
-    </a>
-  </li>
-  <li>
-    <a href="gsapi.GSIO.html" title="Next Chapter: gsapi.GSIO module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">gsapi.GSIO mo... &raquo;</span>
-    </a>
-  </li>
-              
-            
-            
-            
-            
-              <li class="hidden-sm">
-<div id="sourcelink">
-  <a href="_sources/gsapi.GSPattern.txt"
-     rel="nofollow">Source</a>
-</div></li>
-            
-          </ul>
+          
+          </a>
 
           
             
-<form class="navbar-form navbar-right" action="search.html" method="get">
- <div class="form-group">
-  <input type="text" name="q" class="form-control" placeholder="Search" />
- </div>
-  <input type="hidden" name="check_keywords" value="yes" />
-  <input type="hidden" name="area" value="default" />
-</form>
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
           
         </div>
-    </div>
-  </div>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12 content">
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#gs-api-examples">GS-API examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gsapi.GSPattern module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsapi.GSIO.html">gsapi.GSIO module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsapi.GSStyles.html">gsapi.GSStyles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsapi.GSPatternTransformers.html">gsapi.GSPatternTransformers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gsapi.GSBassmine.html">gsapi.GSBassmine</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
       
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">GS_API</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+ 
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="gsapi.html">gsapi package</a> &raquo;</li>
+      
+    <li>gsapi.GSPattern module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/gsapi.GSPattern.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
   <div class="section" id="module-gsapi.GSPattern">
 <span id="gsapi-gspattern-module"></span><h1>gsapi.GSPattern module<a class="headerlink" href="#module-gsapi.GSPattern" title="Permalink to this headline">¶</a></h1>
+<p>GSPattern module holds classes <a class="reference internal" href="#gsapi.GSPattern.GSPatternEvent" title="gsapi.GSPattern.GSPatternEvent"><code class="xref py py-class docutils literal"><span class="pre">GSPatternEvent</span></code></a> and <a class="reference internal" href="#gsapi.GSPattern.GSPattern" title="gsapi.GSPattern.GSPattern"><code class="xref py py-class docutils literal"><span class="pre">GSPattern</span></code></a></p>
 <dl class="data">
 <dt id="gsapi.GSPattern.patternLog">
 <code class="descclassname">gsapi.GSPattern.</code><code class="descname">patternLog</code><em class="property"> = &lt;gsapi.GSLogging.ColoredLogger object&gt;</em><a class="headerlink" href="#gsapi.GSPattern.patternLog" title="Permalink to this definition">¶</a></dt>
-<dd><p>Documentation for GSPattern module.</p>
-<p>GSPattern</p>
+<dd><p>logger for pattern related operations</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="gsapi.GSPattern.GSPatternEvent">
 <em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Represents an event of a GSPattern.
+<dd><p>Represents an event of a GSPattern.
 An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="attribute">
 <dt id="gsapi.GSPattern.GSPatternEvent.startTime">
@@ -292,8 +299,7 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="class">
 <dt id="gsapi.GSPattern.GSPattern">
 <em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPattern</code><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class representing a pattern made of GSPatternEvent.
+<dd><p>Class representing a pattern made of GSPatternEvent.
 Holds a list of GSEvents and provide basic manipulation function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -391,14 +397,14 @@ i.e [numerator, denominator].</li>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.quantize">
-<code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em>, <em>quantizeStartTime=True</em>, <em>quantizeDuration=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">quantize</code><span class="sig-paren">(</span><em>stepSize</em>, <em>quantizeStartTime=True</em>, <em>quantizeDuration=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantize events.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>beatDivision</strong> &#8211; the fraction of beat that we want to quantize to</li>
+<li><strong>stepSize</strong> &#8211; the duration that we want to quantize to</li>
 <li><strong>quantizeDuration</strong> &#8211; do we quantize duration ?</li>
 <li><strong>quantizeStartTime</strong> &#8211; do we quantize startTimes</li>
 </ul>
@@ -492,6 +498,20 @@ Useful for creating patterns from patterns.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.getAllPitches">
+<code class="descname">getAllPitches</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getAllPitches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getAllPitches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all used pitch in this pattern.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of integers composed of all pitches present in this pattern</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithTags">
 <code class="descname">getPatternWithTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithTags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a sub-pattern with the given tags.</p>
@@ -507,6 +527,27 @@ Useful for creating patterns from patterns.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that tags corresponds to given tags</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.getPatternWithPitch">
+<code class="descname">getPatternWithPitch</code><span class="sig-paren">(</span><em>pitch</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithPitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithPitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sub-pattern with the given tags.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pitch</strong> &#8211; pitch to look for</li>
+<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that pitch corresponds to given pitch</p>
 </td>
 </tr>
 </tbody>
@@ -539,20 +580,11 @@ Useful for creating patterns from patterns.</p>
 <dt id="gsapi.GSPattern.GSPattern.alignOnGrid">
 <code class="descname">alignOnGrid</code><span class="sig-paren">(</span><em>stepSize, repeatibleTags=['silence']</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.alignOnGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.alignOnGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>Align this pattern on a temporal grid.
-Very useful to deal with step-sequenced pattern:</p>
-<blockquote>
-<div><ul class="simple">
-<li>all events durations are shortened to stepsize</li>
-<li>all events startTimes are quantified to stepsize</li>
-</ul>
-</div></blockquote>
-<dl class="docutils">
-<dt>RepeatibleTags allow to deal with <cite>silences type</cite> of events:</dt>
-<dd><ul class="first last simple">
-<li>if a silence spread over more than one stepsize, we generate an event for each stepSize</li>
-</ul>
-</dd>
-</dl>
+Very useful to deal with step-sequenced pattern:
+- all events durations are shortened to stepsize
+- all events startTimes are quantified to stepsize</p>
+<p>RepeatibleTags allow to deal with <cite>silences type</cite> of events:
+- if a silence spread over more than one stepsize, we generate an event for each stepSize</p>
 <p>Thus each step is ensured to be filled with one distinct event at least.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -616,11 +648,19 @@ Very useful to deal with step-sequenced pattern:</p>
 <li><strong>maxSilenceTime</strong> &#8211; if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime</li>
 <li><strong>perTag</strong> &#8211; fill silence for each Tag</li>
 <li><strong>silenceTag</strong> &#8211; tag that will be used when inserting the silence event</li>
+<li><strong>silencePitch</strong> &#8211; the desired pitch of new silences events</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.applyLegato">
+<code class="descname">applyLegato</code><span class="sig-paren">(</span><em>usePitchValues=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.applyLegato"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.applyLegato" title="Permalink to this definition">¶</a></dt>
+<dd><p>this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
+:param usePitchValues: should we consider pitch numbers instead of tags (bit faster)</p>
 </dd></dl>
 
 <dl class="method">
@@ -692,21 +732,71 @@ Very useful to deal with step-sequenced pattern:</p>
 </div>
 
 
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="gsapi.GSIO.html" class="btn btn-neutral float-right" title="gsapi.GSIO module" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gsapi.html" class="btn btn-neutral" title="gsapi package" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
     </div>
-      
-  </div>
-</div>
-<footer class="footer">
-  <div class="container">
-    <p class="pull-right">
-      <a href="#">Back to top</a>
-      
-    </p>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
     <p>
-        &copy; Copyright 2016, MTG/GiantSteps.<br/>
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+        &copy; Copyright 2016, MTG/GiantSteps.
+
     </p>
   </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
 </footer>
-  </body>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'1.0.1',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

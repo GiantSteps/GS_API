@@ -1,6 +1,7 @@
 GS_API
 ===
 
+
 The GS_API is a Python/C++ library for manipulating musical symbolic data.
 
 
@@ -14,8 +15,12 @@ The GS_API provides Python/C++ classes and interface for dealing with musical da
 * More to come.
 
 
-Using the Library
+Installing the Library
 -----
+Installing last stable release can be done via pip
+```
+pip install gsapi
+```
 
 **Python**
 
@@ -31,11 +36,8 @@ python setup.py build
 python setup.py install
 ```
 
-*All modules are documented so typing help(GSPattern) provides relevant information.*
 
-
-
-* naive example:
+* naive use cases example:
 
 ```python
 from gsapi import *
@@ -51,7 +53,7 @@ will fill *GSPattern* p with :
 * get All loops from a dataset
 ```python
 from gsapi import *
-dataset = GSDataSet(midiFolder="The/Midi/Folder/To/Crawl",midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
+dataset = GSDataSet(midiFolder="The/Midi/Folder/To/Crawl",midiGlob="*.mid", midiMap=GSIO.generalMidiMap)
 allPatternsSliced = []
 for midiPattern in dataset.patterns:
 	for sliced in midiPattern.splitInEqualLengthPatterns(16): # split in 16 beat slices
