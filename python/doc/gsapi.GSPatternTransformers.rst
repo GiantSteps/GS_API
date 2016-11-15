@@ -1,7 +1,10 @@
-gsapi.GSBase.GSPatternTransformer module
+gsapi.GSPatternTransformers
 ==============================
 
-.. automodule:: gsapi.GSBase.GSPatternTransformer
+gsapi.GSPatternTransformers.GSBasePatternTransformer module
+-----------------------------------------------------------
+
+.. automodule:: gsapi.GSPatternTransformers.GSBasePatternTransformer
     :members:
     :undoc-members:
     :show-inheritance:
@@ -9,7 +12,7 @@ gsapi.GSBase.GSPatternTransformer module
 
 
 gsapi.GSPatternTransformers.AgnosticDensity module
----------------------------------------------------
+--------------------------------------------------
 
 .. automodule:: gsapi.GSPatternTransformers.AgnosticDensity
     :members:
