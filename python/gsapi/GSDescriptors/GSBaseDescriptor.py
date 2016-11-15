@@ -2,7 +2,7 @@ import logging
 from gsapi import GSPattern
 
 
-class GSDescriptor(object):
+class GSBaseDescriptor(object):
 
 	def __init__(self):
 		pass

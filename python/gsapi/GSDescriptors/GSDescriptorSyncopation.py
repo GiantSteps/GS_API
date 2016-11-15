@@ -2,16 +2,16 @@ import os,sys
 if __name__=='__main__':
 	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
 
-from gsapi import GSBase
+from GSBaseDescriptor import *
 
 import math
 
-class GSDescriptorSyncopation(GSBase.GSDescriptor):
+class GSDescriptorSyncopation(GSBaseDescriptor):
 	""" computes the syncopation value from a pattern : 
 	"""
 	
 	def __init__(self):
-		GSBase.GSDescriptor.__init__(self)
+		GSBaseDescriptor.__init__(self)
 		self.weights = []
 		self.duration  = 16
 		self.noteGrid = []

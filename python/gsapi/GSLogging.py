@@ -70,7 +70,10 @@ gsapiLogger = logging.getLogger("gsapi")
 if not len(gsapiLogger.handlers):
     gsapiLogger.addHandler(ColoredLogger.consoleHandler)
 else:
+    # for debugging purpose this line can be commented out but
+    # when using local and global version of gsapi at the same time, this line is triggered some times
     raise ImportError("double import of GSLogging, should never happen")
+    pass
 
 
 

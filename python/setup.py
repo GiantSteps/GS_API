@@ -46,9 +46,9 @@ if __name__ == '__main__':
 #                     library_dirs = ['/usr/local/lib'],
                     
 #                     sources = cppSources)
-
+import gsapi
 setup(name='gsapi',
-      version='1.0.1',
+      version=gsapi.getGSAPIFullVersion(),
       description='Python symbolic music manipulation tools',
       long_description="",
       author='MTG / GiantSteps',

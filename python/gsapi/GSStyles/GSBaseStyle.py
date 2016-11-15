@@ -1,6 +1,6 @@
 from gsapi import GSPattern
 
-class GSStyle(object):
+class GSBaseStyle(object):
 	""" base class for defining a style
 
 	such class needs to provide following functions :

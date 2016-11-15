@@ -3,13 +3,13 @@ The GS_API is a Python/C++ library for manipulating musical symbolic data.
 all modules are documented, for more infos on the given module 
 type :
 
- >> help(gsapi.modulename)
+>> help(gsapi.modulename)
 
 
 other useful resources :
 
- * online tutorials and documentation : https://giantsteps.github.io/GS_API
- * source code : https://github.com/GiantSteps/GS_API
+* online tutorials and documentation : https://giantsteps.github.io/GS_API
+* source code : https://github.com/GiantSteps/GS_API
 
 
 """
@@ -24,7 +24,7 @@ import GSPatternUtils
 from GSPattern import GSPatternEvent, GSPattern
 
 from GSDataset import GSDataset
-import GSBase 
+
 import GSIO
 
 import GSStyles 
@@ -32,6 +32,22 @@ import GSDescriptors
 import GSBassmineAnalysis 
 import GSBassmineMarkov 
 
+
+# this is the full version name
+# changing it will change version when uploading to pip and in the documentation
+GSAPIFullVersion = u'1.0.1'
+
+
+def getGSAPIFullVersion():
+	"""helper to get full version name
+	"""
+	return GSAPIFullVersion
+
+
+def getGSAPIShortVersion():
+	"""helper to get only first two elements of full version name
+	"""
+	return u'.'.join(GSAPIFullVersion.split('.')[:2])
 
 
 

@@ -1,9 +1,9 @@
 
-from gsapi import GSBase,GSPattern,GSPatternEvent
+from GSBaseStyle import *
 
 import random
 
-class GSDBStyle(GSBase.GSStyle):
+class GSDBStyle(GSBaseStyle):
 	""" A database based style
 	simply generatePatterns from existing patterns
 

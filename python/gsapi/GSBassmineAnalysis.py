@@ -124,7 +124,9 @@ def write2pickle(name, data, path='../../models/'):
 
 	"""
 	# path = 'rhythmic_analysis/graph_models/pickle/'
-
+	import os
+	if not os.path.exists(path):
+		os.makedirs(path)
 	with open(path + name + '.pickle', 'wb') as f:
 		# Pickle the 'data' dictionary using the highest protocol available.
 		pickle.dump(data, f, pickle.HIGHEST_PROTOCOL)
