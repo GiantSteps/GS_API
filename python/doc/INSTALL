@@ -13,10 +13,11 @@ python environment
 =========
 
 pip install -U sphinx
-pip install sphinx_bootstrap_theme
+
 pip install sphinxcontrib-napoleon
 pip install -U recommonmark
-
+pip install sphinx_rtd_theme
+(old one pip install sphinx_bootstrap_theme)
 
 on OSX
 ==========

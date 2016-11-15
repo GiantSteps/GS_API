@@ -1,6 +1,9 @@
 gsapi.GSBassmine
 ========================
 
+temporary place for documenting temporary bassmine
+
+
 gsapi.GSBassmineAnalysis module
 -------------------------------------------
 
