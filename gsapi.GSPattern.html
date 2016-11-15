@@ -323,8 +323,21 @@ i.e [numerator, denominator].</li>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.transpose">
-<code class="descname">transpose</code><span class="sig-paren">(</span><em>transposition_interval</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.transpose" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">transpose</code><span class="sig-paren">(</span><em>interval</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.transpose"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.transpose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transposes a GSPattern to the desired interval</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>interval</strong> &#8211; transposition factor in semitones</li>
+<li><strong>can be a positive or negative int)</strong> (<em>(it</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.setDurationFromLastEvent">
@@ -589,7 +602,7 @@ Very useful to deal with step-sequenced pattern:</p>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
 <code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fill empty (i.e no event ) spaces with silence event.</p>
+<dd><p>Fill empty time intervals (i.e no event) with silence event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

@@ -121,7 +121,6 @@
 <span></span><span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">from</span> <span class="nn">MidiMap</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">GSPatternUtils</span> <span class="k">import</span> <span class="o">*</span>
 
 <span class="n">patternLog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;gsapi.GSPattern&quot;</span><span class="p">)</span>
@@ -150,7 +149,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">startTime</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span> <span class="o">=</span> <span class="n">pitch</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">velocity</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="n">tags</span> <span class="c1"># TODO check if this is a dupe...</span>
 
 <div class="viewcode-block" id="GSPatternEvent.hasOneCommonTagWith"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith">[docs]</a>    <span class="k">def</span> <span class="nf">hasOneCommonTagWith</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compare tags between events.</span>
@@ -230,10 +229,10 @@
         <span class="k">return</span> <span class="n">res</span></div>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%i</span><span class="s2"> </span><span class="si">%f</span><span class="s2"> </span><span class="si">%f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span>
-                              <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> </span><span class="si">%i</span><span class="s2"> </span><span class="si">%f</span><span class="s2"> </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tags</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">startTime</span><span class="p">,</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -263,10 +262,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">originFilePath</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-<div class="viewcode-block" id="GSPattern.transpose"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transposition_interval</span><span class="p">):</span>
+<div class="viewcode-block" id="GSPattern.transpose"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.transpose">[docs]</a>    <span class="k">def</span> <span class="nf">transpose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Transposes a GSPattern to the desired interval</span>
 
+<span class="sd">                Args:</span>
+<span class="sd">                    interval: transposition factor in semitones</span>
+<span class="sd">                    (it can be a positive or negative int)</span>
+<span class="sd">                &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
-            <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="o">+=</span> <span class="n">transposition_interval</span>
+            <span class="n">e</span><span class="o">.</span><span class="n">pitch</span> <span class="o">+=</span> <span class="n">interval</span>
             <span class="n">e</span><span class="o">.</span><span class="n">tags</span> <span class="o">=</span> <span class="p">[</span><span class="n">pitchToName</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">,</span> <span class="n">defaultPitchNames</span><span class="p">)]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -329,7 +333,7 @@
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">*=</span> <span class="n">ratio</span>
             <span class="n">e</span><span class="o">.</span><span class="n">duration</span> <span class="o">*=</span> <span class="n">ratio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span>  <span class="o">*=</span> <span class="n">ratio</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duration</span> <span class="o">*=</span> <span class="n">ratio</span></div>
 
 <div class="viewcode-block" id="GSPattern.getStartingEventsAtTime"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.getStartingEventsAtTime">[docs]</a>    <span class="k">def</span> <span class="nf">getStartingEventsAtTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">tolerance</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get all events activating at a given time.</span>
@@ -471,7 +475,7 @@
             <span class="k">for</span> <span class="n">ea</span> <span class="ow">in</span> <span class="n">evToAdd</span><span class="p">:</span>
                 <span class="n">ea</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ea</span><span class="o">.</span><span class="n">startTime</span><span class="o">/</span><span class="n">stepSize</span><span class="o">+</span><span class="mf">0.5</span><span class="p">)</span><span class="o">*</span><span class="n">stepSize</span>
                 <span class="n">ea</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">stepSize</span>
-                <span class="n">newEvents</span><span class="o">+=</span><span class="p">[</span><span class="n">ea</span><span class="p">]</span>
+                <span class="n">newEvents</span> <span class="o">+=</span> <span class="p">[</span><span class="n">ea</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">events</span> <span class="o">=</span> <span class="n">newEvents</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -486,17 +490,17 @@
         <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">found</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">overLappedEv</span> <span class="o">=</span><span class="p">[]</span>
+            <span class="n">overLappedEv</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">)):</span>
                 <span class="n">ee</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">usePitchValues</span><span class="p">:</span>
                     <span class="n">equals</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">pitch</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">pitch</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">equals</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">tags</span><span class="o">==</span><span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
+                    <span class="n">equals</span> <span class="o">=</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">tags</span> <span class="o">==</span> <span class="n">e</span><span class="o">.</span><span class="n">tags</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">equals</span><span class="p">:</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&gt;=</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&lt;</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="n">duration</span><span class="p">):</span>
                         <span class="n">found</span> <span class="o">=</span> <span class="kc">True</span>
-                        <span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                             <span class="n">e</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">startTime</span> <span class="o">-</span> <span class="n">e</span><span class="o">.</span><span class="n">startTime</span>
                             <span class="n">newList</span> <span class="o">+=</span> <span class="p">[</span><span class="n">e</span><span class="p">]</span>
                             <span class="n">overLappedEv</span> <span class="o">+=</span> <span class="p">[</span><span class="n">ee</span><span class="p">]</span>
@@ -536,7 +540,7 @@
         <span class="k">return</span> <span class="n">pattern</span></div>
 
 <div class="viewcode-block" id="GSPattern.fillWithSilences"><a class="viewcode-back" href="../../gsapi.GSPattern.html#gsapi.GSPattern.GSPattern.fillWithSilences">[docs]</a>    <span class="k">def</span> <span class="nf">fillWithSilences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">perTag</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">silenceTag</span> <span class="o">=</span><span class="s1">&#39;silence&#39;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Fill empty (i.e no event ) spaces with silence event.</span>
+        <span class="sd">&quot;&quot;&quot;Fill empty time intervals (i.e no event) with silence event.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            maxSilenceTime: if positive value is given, will add multiple silence of maxSilenceTime for empty time larger than maxSilenceTime</span>
@@ -600,7 +604,7 @@
         <span class="sd">&quot;&quot;&quot;Nicely print out the list of events.</span>
 <span class="sd">        Each line represents an event formatted as: tags pitch startTime duration</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;GSPattern </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;GSPattern </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
         <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">events</span><span class="p">:</span>
             <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
         <span class="k">return</span> <span class="n">s</span>
@@ -669,7 +673,7 @@
         <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
             <span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">setDurationFromLastEvent</span><span class="p">()</span>
-            <span class="n">res</span><span class="o">+=</span><span class="p">[</span><span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]]</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="p">[</span><span class="n">patterns</span><span class="p">[</span><span class="n">p</span><span class="p">]]</span>
 
         <span class="k">return</span> <span class="n">res</span></div></div>
 </pre></div>
