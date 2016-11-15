@@ -109,8 +109,9 @@ class GSPatternEvent(object):
         return res
 
     def __repr__(self):
-        return "%s %i %f %f" % (self.tags,
+        return "%s %i %i %05.2f %05.2f" % (self.tags,
                                 self.pitch,
+                                self.velocity,
                                 self.startTime,
                                 self.duration)
 
@@ -195,14 +196,25 @@ class GSPattern(object):
         self.events += [GSPatternEvent]
         self.setDurationFromLastEvent()
 
-    def quantize(self, beatDivision):
+    def quantize(self, beatDivision,quantizeStartTime=True,quantizeDuration = True):
         """ Quantize events.
 
         Args:
             beatDivision: the fraction of beat that we want to quantize to
+            quantizeDuration : do we quantize duration ?
+            quantizeStartTime : do we quantize startTimes
         """
-        for e in self.events:
-            e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
+        if(quantizeStartTime and quantizeDuration) :
+			for e in self.events:
+				e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
+				e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
+        elif quantizeStartTime :
+			for e in self.events:
+				e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
+        elif quantizeDuration :
+			for e in self.events:
+				e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
+
 
     def timeStretch(self, ratio):
         """Time-stretch a pattern.
@@ -419,7 +431,7 @@ class GSPattern(object):
         pattern.fillWithSilences(maxSilenceTime=maxSilenceTime, perTag=perTag, silenceTag=silenceTag)
         return pattern
 
-    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag ='silence'):
+    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag ='silence',silencePitch = -1):
         """Fill empty time intervals (i.e no event) with silence event.
 
         Args:
@@ -429,35 +441,35 @@ class GSPattern(object):
         """
         self.reorderEvents()
 
-        def _fillListWithSilence(list, silenceTag):
+        def _fillListWithSilence(list, silenceTag,silencePitch =-1):
             lastOff = 0
             newEvents = []
             for e in self.events:
                 if e.startTime > lastOff:
                     if maxSilenceTime > 0:
                         while e.startTime - lastOff > maxSilenceTime:
-                            newEvents += [GSPatternEvent(lastOff, maxSilenceTime, 0, 0, [silenceTag])]
+                            newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, [silenceTag])]
                             lastOff += maxSilenceTime
-                    newEvents += [GSPatternEvent(lastOff, e.startTime - lastOff, 0, 0, [silenceTag])]
+                    newEvents += [GSPatternEvent(lastOff, e.startTime - lastOff, silencePitch, 0, [silenceTag])]
                 newEvents += [e]
                 lastOff = max(lastOff, e.startTime + e.duration)
             if lastOff < self.duration:
                 if maxSilenceTime > 0:
                     while lastOff < self.duration - maxSilenceTime:
-                        newEvents += [GSPatternEvent(lastOff, maxSilenceTime, 0, 0, [silenceTag])]
+                        newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, [silenceTag])]
                         lastOff += maxSilenceTime
-                newEvents += [GSPatternEvent(lastOff, self.duration - lastOff, 0, 0, [silenceTag])]
+                newEvents += [GSPatternEvent(lastOff, self.duration - lastOff, silencePitch, 0, [silenceTag])]
             return newEvents
         if not perTag:
-            self.events = _fillListWithSilence(self.events, silenceTag)
+            self.events = _fillListWithSilence(self.events, silenceTag,silencePitch)
         else:
             allEvents = []
             for t in self.getAllTags():
-                allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag)
+                allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag,silencePitch)
             self.events = allEvents
 
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
-        """ Returns a pattern within given timeslice.
+        """Returns a pattern within given timeslice.
 
         Args:
             startTime: start time for time slice
@@ -488,6 +500,11 @@ class GSPattern(object):
         for e in self.events:
             s += str(e) + "\n"
         return s
+
+    def __getitem__(self, index):
+    	"""Utility to access events as list member : GSPattern[idx] = GSEvent
+     	"""
+    	return self.events[index]
 
     def toJSONDict(self):
         """Gives a standard dict for json output.

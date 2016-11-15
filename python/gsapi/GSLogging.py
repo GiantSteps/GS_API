@@ -9,7 +9,9 @@ RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ  = "\033[1m"
 
-USE_COLOR_OUTPUT = False
+
+
+
 COLORS = {'WARNING': YELLOW,
           'INFO': WHITE,
           'DEBUG': BLUE,
@@ -18,44 +20,71 @@ COLORS = {'WARNING': YELLOW,
           }
 
 
-def formatter_message(message, use_color = True):
-    if use_color:
-        message = message.replace("$RESET", RESET_SEQ).replace("$BOLD", BOLD_SEQ)
-    else:
-        message = message.replace("$RESET", "").replace("$BOLD", "")
-    return message
+
 
 
 class ColoredFormatter(logging.Formatter):
-    def __init__(self, msg, use_color = True):
+    def __init__(self, msg):
         logging.Formatter.__init__(self, msg)
-        self.use_color = use_color
 
     def format(self, record):
+
         levelname = record.levelname
-        if self.use_color and levelname in COLORS:
+        if ColoredLogger.USE_COLOR_OUTPUT and levelname in COLORS:
             levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
             record.levelname = levelname_color
+            record.boldSeq = BOLD_SEQ
+            record.resetSeq = RESET_SEQ
+        else:
+            record.boldSeq = ""
+            record.resetSeq = ""
+
         return logging.Formatter.format(self, record)
 
 
 class ColoredLogger(logging.Logger):
     """Custom logger class with multiple destinations."""
-    FORMAT = "[$BOLD%(name)-20s$RESET][%(levelname)-18s]  %(message)s ($BOLD%(filename)s$RESET:%(lineno)d)"
-    # enable / disable colored output for console that suports
     
-    useColor = USE_COLOR_OUTPUT
-    COLOR_FORMAT = formatter_message(FORMAT, USE_COLOR_OUTPUT)
 
+    USE_COLOR_OUTPUT = False
+    
+    FORMAT = "[%(boldSeq)s%(name)-15s%(resetSeq)s][%(levelname)-8s]  %(message)s (%(boldSeq)s%(filename)s%(resetSeq)s:%(lineno)d)"
+    
+    color_formatter = ColoredFormatter(FORMAT)
+    consoleHandler = logging.StreamHandler()
+    consoleHandler.setFormatter(color_formatter)
+    
+    
     def __init__(self, name):
-        logging.Logger.__init__(self, name, logging.DEBUG)                
-        color_formatter = ColoredFormatter(self.COLOR_FORMAT,self.useColor)
-        console = logging.StreamHandler()
-        console.setFormatter(color_formatter)
-        self.addHandler(console)
+        logging.Logger.__init__(self, name)
         return
 
 
-gsapiLogger = logging.getLogger("gsapi")
-logging.basicConfig(format="%(levelname)s: %(name)s: %(message)s")
+
+
+
 logging.setLoggerClass(ColoredLogger)
+gsapiLogger = logging.getLogger("gsapi")
+
+# handler is only on the root to avoid logs duplications while propagating to the root
+if not len(gsapiLogger.handlers):
+    gsapiLogger.addHandler(ColoredLogger.consoleHandler)
+else:
+    raise ImportError("double import of GSLogging, should never happen")
+
+
+
+
+def setDefaultLoggingLevel(lvl):
+    """ sets the default log level if not defined inner each module
+    Args:
+        lvl: one of default python's logging levels : logging.[CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET]
+    """
+    gsapiLogger.setLevel(lvl)
+
+def setUseColoredOutput(useColor):
+    """ Enable or not colored console output powerful in the console, but annoying otherwise
+    Args:
+        useColor: do we use colored output
+    """
+    ColoredLogger.USE_COLOR_OUTPUT = useColor

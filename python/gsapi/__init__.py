@@ -14,8 +14,10 @@ other useful resources :
 
 """
 
-
+import logging
 from GSLogging import gsapiLogger
+
+
 import GSPatternUtils
 
 

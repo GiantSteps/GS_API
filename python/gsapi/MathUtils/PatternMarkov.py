@@ -1,7 +1,3 @@
-if __name__ == '__main__':
-	import sys,os;
-	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir)))
-
 from gsapi import GSPattern,GSPatternEvent
 
 import random
@@ -261,15 +257,3 @@ class PatternMarkov(object):
 
 
 
-if __name__ == '__main__':
-	import glob,json
-	from gsapi import *
-	
-	dataset= GSDataset(midiGlob="*.mid")
-	pM = PatternMarkov(order=2,numSteps=32,loopDuration=8)
-	
-	pM.generateTransitionTableFromPatternList(dataset.getAllSliceOfDuration(8))
-	# print pM.transitionTable
-	p = pM.generatePattern()
-
-	print p

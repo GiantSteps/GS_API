@@ -1,12 +1,13 @@
 import logging
-# import glob
+import glob
 # import math
 from GSPattern import *
-import os
 from GSPatternUtils import *
+import os
+
 
 gsiolog = logging.getLogger("gsapi.GSIO")
-gsiolog.setLevel(level=logging.INFO)
+# gsiolog.setLevel(level=logging.INFO)
 
 def fromMidi(midiPath,
              NoteToTagsMap=defaultPitchNames, # find out if midimap is better!
