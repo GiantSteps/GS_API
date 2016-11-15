@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSBase.GSPatternTransformer &#8212; GS_API 1.0.1 documentation</title>
+    <title>gsapi.GSPatternTransformers.GSBasePatternTransformer &#8212; GS_API 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -117,10 +117,10 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for gsapi.GSBase.GSPatternTransformer</h1><div class="highlight"><pre>
+  <h1>Source code for gsapi.GSPatternTransformers.GSBasePatternTransformer</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">gsapi.GSPattern</span> <span class="k">import</span> <span class="n">GSPattern</span>
 
-<div class="viewcode-block" id="GSPatternTransformer"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer">[docs]</a><span class="k">class</span> <span class="nc">GSPatternTransformer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBasePatternTransformer"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer">[docs]</a><span class="k">class</span> <span class="nc">GSBasePatternTransformer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot; Base class for defining a transform algorithm</span>
 
 <span class="sd">	such class needs to provide following functions :</span>
@@ -131,7 +131,7 @@
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
 
-<div class="viewcode-block" id="GSPatternTransformer.configure"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.configure">[docs]</a>	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBasePatternTransformer.configure"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.configure">[docs]</a>	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;configure current transformer based on implenmentation specific parameters passed in dict argument</span>
 
 <span class="sd">		Args:</span>
@@ -139,7 +139,7 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSPatternTransformer.TransformPattern"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.TransformPattern">[docs]</a>	<span class="k">def</span> <span class="nf">TransformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBasePatternTransformer.TransformPattern"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.TransformPattern">[docs]</a>	<span class="k">def</span> <span class="nf">TransformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;returns a transformed version of GSPattern</span>
 
 <span class="sd">		Args:</span>

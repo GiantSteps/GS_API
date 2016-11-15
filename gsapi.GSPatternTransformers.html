@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSBase.GSPatternTransformer module &#8212; GS_API 1.0.1 documentation</title>
+    <title>gsapi.GSPatternTransformers &#8212; GS_API 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -33,7 +33,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="GS_API 1.0.1 documentation" href="index.html" />
     <link rel="up" title="gsapi package" href="gsapi.html" />
-    <link rel="prev" title="gsapi.GSBase.GSStyle module" href="gsapi.GSStyles.html" />
+    <link rel="prev" title="gsapi.GSStyles" href="gsapi.GSStyles.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -85,7 +85,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">gsapi.GSBase.GSPatternTransformer module</a><ul>
+<li><a class="reference internal" href="#">gsapi.GSPatternTransformers</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSPatternTransformers.GSBasePatternTransformer">gsapi.GSPatternTransformers.GSBasePatternTransformer module</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSPatternTransformers.AgnosticDensity">gsapi.GSPatternTransformers.AgnosticDensity module</a></li>
 </ul>
 </li>
@@ -98,7 +99,7 @@
               
                 
   <li>
-    <a href="gsapi.GSStyles.html" title="Previous Chapter: gsapi.GSBase.GSStyle module"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi.GSBase....</span>
+    <a href="gsapi.GSStyles.html" title="Previous Chapter: gsapi.GSStyles"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi.GSStyles</span>
     </a>
   </li>
               
@@ -132,11 +133,13 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="gsapi-gsbase-gspatterntransformer-module">
-<h1>gsapi.GSBase.GSPatternTransformer module<a class="headerlink" href="#gsapi-gsbase-gspatterntransformer-module" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-gsapi.GSBase.GSPatternTransformer"></span><dl class="class">
-<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer">
-<em class="property">class </em><code class="descclassname">gsapi.GSBase.GSPatternTransformer.</code><code class="descname">GSPatternTransformer</code><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer" title="Permalink to this definition">¶</a></dt>
+  <div class="section" id="gsapi-gspatterntransformers">
+<h1>gsapi.GSPatternTransformers<a class="headerlink" href="#gsapi-gspatterntransformers" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gsapi.GSPatternTransformers.GSBasePatternTransformer">
+<span id="gsapi-gspatterntransformers-gsbasepatterntransformer-module"></span><h2>gsapi.GSPatternTransformers.GSBasePatternTransformer module<a class="headerlink" href="#module-gsapi.GSPatternTransformers.GSBasePatternTransformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer">
+<em class="property">class </em><code class="descclassname">gsapi.GSPatternTransformers.GSBasePatternTransformer.</code><code class="descname">GSBasePatternTransformer</code><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/GSBasePatternTransformer.html#GSBasePatternTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Base class for defining a transform algorithm</p>
 <dl class="docutils">
@@ -148,8 +151,8 @@
 </dd>
 </dl>
 <dl class="method">
-<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.configure">
-<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.configure" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>paramDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/GSBasePatternTransformer.html#GSBasePatternTransformer.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.configure" title="Permalink to this definition">¶</a></dt>
 <dd><p>configure current transformer based on implenmentation specific parameters passed in dict argument</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -162,8 +165,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.TransformPattern">
-<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSPatternTransformer.html#GSPatternTransformer.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer.TransformPattern" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.TransformPattern">
+<code class="descname">TransformPattern</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/GSBasePatternTransformer.html#GSBasePatternTransformer.TransformPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer.TransformPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns a transformed version of GSPattern</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -177,12 +180,13 @@
 
 </dd></dl>
 
+</div>
 <div class="section" id="module-gsapi.GSPatternTransformers.AgnosticDensity">
 <span id="gsapi-gspatterntransformers-agnosticdensity-module"></span><h2>gsapi.GSPatternTransformers.AgnosticDensity module<a class="headerlink" href="#module-gsapi.GSPatternTransformers.AgnosticDensity" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity">
 <em class="property">class </em><code class="descclassname">gsapi.GSPatternTransformers.AgnosticDensity.</code><code class="descname">AgnosticDensity</code><span class="sig-paren">(</span><em>mode='random'</em>, <em>numSteps=32</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPatternTransformers/AgnosticDensity.html#AgnosticDensity"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gsapi.GSBase.GSPatternTransformer.GSPatternTransformer" title="gsapi.GSBase.GSPatternTransformer.GSPatternTransformer"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSBase.GSPatternTransformer.GSPatternTransformer</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer" title="gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSPatternTransformers.GSBasePatternTransformer.GSBasePatternTransformer</span></code></a></p>
 <p>Agnostic transformation algorithm
 :param numSteps: number of steps to consider
 :param mode: [&#8216;random&#8217;,&#8217;syncopation&#8217;] :  algorithm used</p>

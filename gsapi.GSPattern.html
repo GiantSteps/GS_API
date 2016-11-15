@@ -391,13 +391,18 @@ i.e [numerator, denominator].</li>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.quantize">
-<code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">quantize</code><span class="sig-paren">(</span><em>beatDivision</em>, <em>quantizeStartTime=True</em>, <em>quantizeDuration=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.quantize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.quantize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Quantize events.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>beatDivision</strong> &#8211; the fraction of beat that we want to quantize to</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>beatDivision</strong> &#8211; the fraction of beat that we want to quantize to</li>
+<li><strong>quantizeDuration</strong> &#8211; do we quantize duration ?</li>
+<li><strong>quantizeStartTime</strong> &#8211; do we quantize startTimes</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -601,7 +606,7 @@ Very useful to deal with step-sequenced pattern:</p>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
-<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em>, <em>silencePitch=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill empty time intervals (i.e no event) with silence event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

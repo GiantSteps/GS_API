@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>gsapi.GSBassmineAnalysis &#8212; GS_API 1.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.6/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="GS_API 1.0.1 documentation" href="index.html" />
+    <link rel="up" title="gsapi package" href="gsapi.html" />
+    <link rel="prev" title="gsapi.GSPatternTransformers" href="gsapi.GSPatternTransformers.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          GS_API</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.0</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">GS_API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="README.html#gs-api-examples">GS-API examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="gsapi.html">gsapi package</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">gsapi.GSBassmineAnalysis</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSBassmineAnalysis">gsapi.GSBassmineAnalysis module</a></li>
+<li><a class="reference internal" href="#module-gsapi.GSBassmineMarkov">gsapi.GSBassmineMarkov module</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="gsapi.GSPatternTransformers.html" title="Previous Chapter: gsapi.GSPatternTransformers"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; gsapi.GSPatte...</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/gsapi.GSBassmine.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <div class="section" id="gsapi-gsbassmineanalysis">
+<h1>gsapi.GSBassmineAnalysis<a class="headerlink" href="#gsapi-gsbassmineanalysis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gsapi.GSBassmineAnalysis">
+<span id="gsapi-gsbassmineanalysis-module"></span><h2>gsapi.GSBassmineAnalysis module<a class="headerlink" href="#module-gsapi.GSBassmineAnalysis" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.strip_suffix">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">strip_suffix</code><span class="sig-paren">(</span><em>filename</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#strip_suffix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.strip_suffix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strip off the suffix of the given filename or string. Extracted from madmom</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; (str) Filename or string to strip.</li>
+<li><strong>suffix</strong> &#8211; (str, optional) Suffix to be stripped off (e.g. &#8216;.txt&#8217; including the dot).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Filename or string without suffix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">filename</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.match_files">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">match_files</code><span class="sig-paren">(</span><em>filename</em>, <em>match_list</em>, <em>suffix=None</em>, <em>match_suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#match_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.match_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Match a filename or string against a list of other filenames or strings.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> &#8211; (str) Filename or string to strip.</li>
+<li><strong>match_list</strong> &#8211; (list) Match to this list of filenames or strings.</li>
+<li><strong>suffix</strong> &#8211; (str, optional) Suffix of <cite>filename</cite> to be ignored.</li>
+<li><strong>match_suffix</strong> &#8211; Match only files from <cite>match_list</cite> with this suffix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(list) List of matched files.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">matches</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.search_files">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">search_files</code><span class="sig-paren">(</span><em>path</em>, <em>suffix=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#search_files"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.search_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of files in <cite>path</cite> matching the given <cite>suffix</cite> or filters
+the given list to include only those matching the given suffix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>path</strong> &#8211; (str or list) Path or list of files to be searched / filtered.</li>
+<li><strong>suffix</strong> &#8211; (str, optional) Return only files matching this suffix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">(list) List of files.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file_list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.write2pickle">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">write2pickle</code><span class="sig-paren">(</span><em>name</em>, <em>data</em>, <em>path='../../models/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#write2pickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.write2pickle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write numpy array in pickle format to the selected location</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> &#8211; name of the output pickle file</li>
+<li><strong>data</strong> &#8211; numpy array to be exported to pickle format</li>
+<li><strong>path</strong> &#8211; (optional) output folder path</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.binaryBeatPattern">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">binaryBeatPattern</code><span class="sig-paren">(</span><em>pattern</em>, <em>noBeats_bass</em>, <em>resolution=4</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#binaryBeatPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.binaryBeatPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantize array of note start times to specified resolution
+Loop length is quantized to multiples of whole bars</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>pattern</strong> &#8211; list of start times (in beats)</li>
+<li><strong>noBeats_bass</strong> &#8211; number of beats of the sequence</li>
+<li><strong>resolution</strong> &#8211; quantization resolution (1/resolution beats). For 1/16 note resoltuion set resolution = 4, for 1/8
+set resolution= 2, and so on</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">2D list with binary representation of a pattern. Each row is a beat measure (i.e rhythm[n] gives beat &#8216;n&#8217; binary representation)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">rhythm</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.translate_rhythm">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">translate_rhythm</code><span class="sig-paren">(</span><em>rhythm</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#translate_rhythm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.translate_rhythm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate binary represented rhythms (from binaryBeatPattern()) to markov variables dictionary.
+Each binarized pattern is presented as it&#8217;s decimal representation.
+Example: [1,0,1,0] = 10, [0,0,0,1] = 1 and so on</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rhythm</strong> &#8211; 2D formatted list containing binary representation of pattern. Output from binaryBeatPattern()</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">decimal representation of binary onset pattern. This ids are used as dictionary for Markov operations.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">id</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineAnalysis.corpus_analysis">
+<code class="descclassname">gsapi.GSBassmineAnalysis.</code><code class="descname">corpus_analysis</code><span class="sig-paren">(</span><em>bass_path</em>, <em>drum_path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineAnalysis.html#corpus_analysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineAnalysis.corpus_analysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>This functions implement the rhythmic analysis used by Bassmine (bassline generator). The input is a corpus of related
+Bass and Drum MIDI files.
+Input files must match their names : i.e. bass_[trackname].mid , drums_[trackname].mid</p>
+<p>The algorithm computes a Markov model of the temporal context (probabilities of transitions between bass beat patterns)
+and the interlocking context between bass and kick-drum (probabilities of concurrency between bass and kick-drum patterns)</p>
+<p>Markovian models are computed by GSBassmineMarkov module.</p>
+<p>[The pitch model is still a work in progress]</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>bass_path</strong> &#8211; folder with bass midi files</li>
+<li><strong>drum_path</strong> &#8211; folder with drums midi files</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">instance of GSBassmineMarkov.MarkovModel class. It contains initial, temporal and interlocking MTM
+kick_patterns: list of kick patterns in collection in Markov dictionary formatted ids</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#gsapi.GSBassmineMarkov.MarkovModel.rhythm_model" title="gsapi.GSBassmineMarkov.MarkovModel.rhythm_model">rhythm_model</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-gsapi.GSBassmineMarkov">
+<span id="gsapi-gsbassminemarkov-module"></span><h2>gsapi.GSBassmineMarkov module<a class="headerlink" href="#module-gsapi.GSBassmineMarkov" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.normalize">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">normalize</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize matrix by rows</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> &#8211; matrix (2D)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">normalized matrix</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">a</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.indices">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">indices</code><span class="sig-paren">(</span><em>a</em>, <em>func</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#indices"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.indices" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return indices in an array matching to a given function</p>
+<p>Examples: indices(array, lambda x: x &lt;= 1)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>a</strong> &#8211; array, list</li>
+<li><strong>func</strong> &#8211; lambda function</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Indices of &#8216;a&#8217; matching lambda function</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.pdf_sampling">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">pdf_sampling</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#pdf_sampling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.pdf_sampling" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel">
+<em class="property">class </em><code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">MarkovModel</code><span class="sig-paren">(</span><em>model_size</em>, <em>order=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class to operate with markov models. Internal function used by GSBassmineAnalysis module.</p>
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.model_size">
+<code class="descname">model_size</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.model_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary size of the model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.normalized">
+<code class="descname">normalized</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.normalized" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boolean to control if the model has been normalized</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.support_temporal">
+<code class="descname">support_temporal</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.support_temporal" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal matrix to compute markov model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.support_initial">
+<code class="descname">support_initial</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.support_initial" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal matrix to compute markov model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.support_interlocking">
+<code class="descname">support_interlocking</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.support_interlocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal matrix to compute markov model</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.initial_model">
+<code class="descname">initial_model</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.initial_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>matrix to store initial MTM</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.temporal_model">
+<code class="descname">temporal_model</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.temporal_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>matrix to store temporal MTM</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.interlocking_model">
+<code class="descname">interlocking_model</code><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.interlocking_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>matrix to store interlocking MTM</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.add_temporal">
+<code class="descname">add_temporal</code><span class="sig-paren">(</span><em>pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.add_temporal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.add_temporal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create markov transition matrix given a sequence</p>
+<p>First element counts are stored in self.initial_model
+Rest of elements feed the transition matrix (no time-series)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>pattern</strong> &#8211; list or array with idx of the state dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.add_interlocking">
+<code class="descname">add_interlocking</code><span class="sig-paren">(</span><em>patt_kick</em>, <em>patt_bass</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.add_interlocking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.add_interlocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create interlocking (concurrency) markov matrix given two sequences</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>patt_kick</strong> &#8211; kick drum pattern (anchor)</li>
+<li><strong>patt_bass</strong> &#8211; bassline pattern</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.update_interlocking">
+<code class="descname">update_interlocking</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.update_interlocking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.update_interlocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal function to update interlocking matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; row (anchor)</li>
+<li><strong>y</strong> &#8211; col (bass)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.update_temporal">
+<code class="descname">update_temporal</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.update_temporal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.update_temporal" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal function to update temporal matrix</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; row (past)</li>
+<li><strong>y</strong> &#8211; col (present)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.update_initial">
+<code class="descname">update_initial</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.update_initial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.update_initial" title="Permalink to this definition">¶</a></dt>
+<dd><p>internal function to update initial probabilites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>x</strong> &#8211; row (probabilities)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.normalize_model">
+<code class="descname">normalize_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.normalize_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.normalize_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize matrices</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.get_initial">
+<code class="descname">get_initial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.get_initial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.get_initial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get initial probabilites</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gsapi.GSBassmineMarkov.MarkovModel.initial_model" title="gsapi.GSBassmineMarkov.MarkovModel.initial_model">initial_model</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.get_temporal">
+<code class="descname">get_temporal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.get_temporal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.get_temporal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get temporal model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">2D matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gsapi.GSBassmineMarkov.MarkovModel.temporal_model" title="gsapi.GSBassmineMarkov.MarkovModel.temporal_model">temporal_model</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.get_interlocking">
+<code class="descname">get_interlocking</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.get_interlocking"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.get_interlocking" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get interlocking model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">2D matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#gsapi.GSBassmineMarkov.MarkovModel.interlocking_model" title="gsapi.GSBassmineMarkov.MarkovModel.interlocking_model">interlocking_model</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.rhythm_model">
+<code class="descname">rhythm_model</code><span class="sig-paren">(</span><em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.rhythm_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.rhythm_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSBassmineMarkov.MarkovModel.pitch_model">
+<code class="descname">pitch_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#MarkovModel.pitch_model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.MarkovModel.pitch_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build pitch model</p>
+<p>[work in progress...]</p>
+<p>Takes first note an assume it as root note. Other notes are represented as intervals relative to root (first note)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">{&#8216;interval&#8217;: , &#8216;probs&#8217;}, {},{},...}</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dictionary{0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.constrainMM">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">constrainMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#constrainMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.constrainMM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute non-homogeneuous markov model (NHMM) based on interlocking constraint.
+Given a target pattern it constraint the original model and ensure arc-consistency</p>
+<p>This function is also implemented as a pyext class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>markov_model</strong> &#8211; MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())</li>
+<li><strong>target</strong> &#8211; Target pattern for interlocking (kick) represented by its pattern ids.</li>
+<li><strong>_path</strong> &#8211; Path to where the Markov models will be stored</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Interlocking model as dictionary in JSON format</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.variationMM">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">variationMM</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#variationMM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.variationMM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute non-homogeneuous markov model (NHMM) based on variation constraint.
+Given a target Variation Mask(VM) it constraint the original model and ensure arc-consistency</p>
+<p class="rubric">Examples</p>
+<p>VM should be a list representing a pattern (id formatted) with negative numbers on those frames to variate.
+Positive values will be preserved.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>markov_model</strong> &#8211; MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())</li>
+<li><strong>target</strong> &#8211; Variation Mask (list with negative numbers indicating variation of that time frame)</li>
+<li><strong>_path</strong> &#8211; Path to where the Markov models will be stored</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Variation model as a dictionary in JSON format</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.markov_tm_2dict">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">markov_tm_2dict</code><span class="sig-paren">(</span><em>a</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#markov_tm_2dict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.markov_tm_2dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert markov transition matrix to dictionary of sets.
+Compact representation to avoid sparse matrices and better performance in the constrain model</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a</strong> &#8211; MarkovModel temporal/interlocking/pitch matrix</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary{}</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.createMarkovGenerationDictionary">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">createMarkovGenerationDictionary</code><span class="sig-paren">(</span><em>toJSON=False</em>, <em>_path='output/'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#createMarkovGenerationDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.createMarkovGenerationDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal function to build a dictionary relating binarized patterns into start times (in beats)
+:param toJSON: boolean. If true it exports to JSON
+:param _path: path to store the dictionary as JSON</p>
+<p>Returns: Pattern dictionary</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.generateBassRhythm">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">generateBassRhythm</code><span class="sig-paren">(</span><em>markov_model</em>, <em>beat_length=8</em>, <em>target=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#generateBassRhythm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.generateBassRhythm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular
+Markov model (computed by MarkovModel.rhythm_model()).
+If target given it is assumed as target constraint for interlocking model.
+:param markov_model: output from  MarkovModel.rhythm_model()
+:param beat_length: desired length of the generated pattern
+:param target: Pattern used as constraint in Interlocking Model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">GSPattern containing bassline onset pattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bassline</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="gsapi.GSBassmineMarkov.generateBassRhythmVariation">
+<code class="descclassname">gsapi.GSBassmineMarkov.</code><code class="descname">generateBassRhythmVariation</code><span class="sig-paren">(</span><em>markov_model</em>, <em>target_pattern</em>, <em>variation_mask</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBassmineMarkov.html#generateBassRhythmVariation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBassmineMarkov.generateBassRhythmVariation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that implements a variation model given an already generated pattern. Based on the variation mask it creates
+a Markov model that preserve desired beat measures while it models &#8220;variation&#8221; beats to be stylistically consistent.
+:param markov_model: output from  MarkovModel.rhythm_model()
+:param target_pattern: GSPattern, for instance output from generateBassRhythm()
+:param variation_mask: List of the same length of the target_pattern(in beats). Positions with value 1 will be preserved,
+:param those with -1 will vary.:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">generated GSPattern</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bassline</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2016, MTG/GiantSteps.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

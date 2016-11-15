@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSBase.GSStyle &#8212; GS_API 1.0.1 documentation</title>
+    <title>gsapi.GSStyles.GSBaseStyle &#8212; GS_API 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="../../../_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
@@ -117,10 +117,10 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <h1>Source code for gsapi.GSBase.GSStyle</h1><div class="highlight"><pre>
+  <h1>Source code for gsapi.GSStyles.GSBaseStyle</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">gsapi</span> <span class="k">import</span> <span class="n">GSPattern</span>
 
-<div class="viewcode-block" id="GSStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle">[docs]</a><span class="k">class</span> <span class="nc">GSStyle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle">[docs]</a><span class="k">class</span> <span class="nc">GSBaseStyle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot; base class for defining a style</span>
 
 <span class="sd">	such class needs to provide following functions :</span>
@@ -138,54 +138,54 @@
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
 
-<div class="viewcode-block" id="GSStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;compute inner state of style based on list of patterns</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;generate a new random pattern using seed if not None (idealy same seeds should lead to same patterns...)</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.getDistanceFromStyle">[docs]</a>	<span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getDistanceFromStyle">[docs]</a>	<span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;return a normalized value representing the &quot;styliness&quot; of a pattern 1 being farthest from style</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.getClosestPattern">[docs]</a>	<span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getClosestPattern">[docs]</a>	<span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;return the closest pattern in this style</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.getInterpolated">[docs]</a>	<span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PatternA</span><span class="p">,</span><span class="n">PatternB</span><span class="p">,</span><span class="n">distanceFromA</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInterpolated">[docs]</a>	<span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PatternA</span><span class="p">,</span><span class="n">PatternB</span><span class="p">,</span><span class="n">distanceFromA</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot; interpolate between two pattern given this style constraints</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.getInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;should return a dict representing current internal state</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.setInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">internalStateDict</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.setInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">internalStateDict</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;load internal state from a given dict</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span>	</div>
 
-<div class="viewcode-block" id="GSStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.isBuilt">[docs]</a>	<span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.isBuilt">[docs]</a>	<span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;returns true if style hasbeen correctly build</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSStyle.saveToJSON"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.saveToJSON">[docs]</a>	<span class="k">def</span> <span class="nf">saveToJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePath</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.saveToJSON"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToJSON">[docs]</a>	<span class="k">def</span> <span class="nf">saveToJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filePath</span><span class="p">):</span>
 		<span class="kn">import</span> <span class="nn">json</span>
 		<span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInternalState</span><span class="p">();</span>
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="n">f</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="GSStyle.loadFromJSON"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.loadFromJSON">[docs]</a>	<span class="k">def</span> <span class="nf">loadFromJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.loadFromJSON"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromJSON">[docs]</a>	<span class="k">def</span> <span class="nf">loadFromJSON</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
 		<span class="kn">import</span> <span class="nn">json</span>
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 			<span class="n">state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
@@ -193,10 +193,10 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">setInternalState</span><span class="p">(</span><span class="n">state</span><span class="p">);</span></div>
 
 
-<div class="viewcode-block" id="GSStyle.saveToPickle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.saveToPickle">[docs]</a>	<span class="k">def</span> <span class="nf">saveToPickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.saveToPickle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToPickle">[docs]</a>	<span class="k">def</span> <span class="nf">saveToPickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
 		<span class="kn">import</span> <span class="nn">cPickle</span>
 		<span class="n">cPickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">)</span></div>
-<div class="viewcode-block" id="GSStyle.loadFromPickle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSBase.GSStyle.GSStyle.loadFromPickle">[docs]</a>	<span class="k">def</span> <span class="nf">loadFromPickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
+<div class="viewcode-block" id="GSBaseStyle.loadFromPickle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromPickle">[docs]</a>	<span class="k">def</span> <span class="nf">loadFromPickle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filePath</span><span class="p">):</span>
 		<span class="kn">import</span> <span class="nn">cPickle</span>
 		<span class="bp">self</span> <span class="o">=</span> <span class="n">cPickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">filePath</span><span class="p">)</span></div></div>
 </pre></div>

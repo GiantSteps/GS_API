@@ -5,7 +5,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>gsapi.GSBase.GSStyle module &#8212; GS_API 1.0.1 documentation</title>
+    <title>gsapi.GSStyles &#8212; GS_API 1.0.1 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -33,7 +33,7 @@
     <link rel="search" title="Search" href="search.html" />
     <link rel="top" title="GS_API 1.0.1 documentation" href="index.html" />
     <link rel="up" title="gsapi package" href="gsapi.html" />
-    <link rel="next" title="gsapi.GSBase.GSPatternTransformer module" href="gsapi.GSPatternTransformers.html" />
+    <link rel="next" title="gsapi.GSPatternTransformers" href="gsapi.GSPatternTransformers.html" />
     <link rel="prev" title="gsapi.GSIO module" href="gsapi.GSIO.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -86,7 +86,8 @@
   <ul class="dropdown-menu localtoc"
       role="menu"
       aria-labelledby="dLabelLocalToc"><ul>
-<li><a class="reference internal" href="#">gsapi.GSBase.GSStyle module</a><ul>
+<li><a class="reference internal" href="#">gsapi.GSStyles</a><ul>
+<li><a class="reference internal" href="#module-gsapi.GSStyles.GSBaseStyle">gsapi.GSStyles.GSBaseStyle module</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSStyles.GSDBStyle">gsapi.GSStyles.GSDBStyle module</a></li>
 <li><a class="reference internal" href="#module-gsapi.GSStyles.GSMarkovStyle">gsapi.GSStyles.GSMarkovStyle module</a></li>
 </ul>
@@ -104,7 +105,7 @@
     </a>
   </li>
   <li>
-    <a href="gsapi.GSPatternTransformers.html" title="Next Chapter: gsapi.GSBase.GSPatternTransformer module"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">gsapi.GSBase.... &raquo;</span>
+    <a href="gsapi.GSPatternTransformers.html" title="Next Chapter: gsapi.GSPatternTransformers"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">gsapi.GSPatte... &raquo;</span>
     </a>
   </li>
               
@@ -138,11 +139,13 @@
   <div class="row">
     <div class="col-md-12 content">
       
-  <div class="section" id="module-gsapi.GSBase.GSStyle">
-<span id="gsapi-gsbase-gsstyle-module"></span><h1>gsapi.GSBase.GSStyle module<a class="headerlink" href="#module-gsapi.GSBase.GSStyle" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="gsapi-gsstyles">
+<h1>gsapi.GSStyles<a class="headerlink" href="#gsapi-gsstyles" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-gsapi.GSStyles.GSBaseStyle">
+<span id="gsapi-gsstyles-gsbasestyle-module"></span><h2>gsapi.GSStyles.GSBaseStyle module<a class="headerlink" href="#module-gsapi.GSStyles.GSBaseStyle" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="gsapi.GSBase.GSStyle.GSStyle">
-<em class="property">class </em><code class="descclassname">gsapi.GSBase.GSStyle.</code><code class="descname">GSStyle</code><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle">
+<em class="property">class </em><code class="descclassname">gsapi.GSStyles.GSBaseStyle.</code><code class="descname">GSBaseStyle</code><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>base class for defining a style</p>
 <dl class="docutils">
@@ -160,81 +163,82 @@
 </dd>
 </dl>
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.generateStyle">
-<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.generateStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generateStyle">
+<code class="descname">generateStyle</code><span class="sig-paren">(</span><em>PatternClasses</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.generateStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generateStyle" title="Permalink to this definition">¶</a></dt>
 <dd><p>compute inner state of style based on list of patterns</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.generatePattern">
-<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.generatePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generatePattern">
+<code class="descname">generatePattern</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.generatePattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.generatePattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>generate a new random pattern using seed if not None (idealy same seeds should lead to same patterns...)</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.getDistanceFromStyle">
-<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.getDistanceFromStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getDistanceFromStyle">
+<code class="descname">getDistanceFromStyle</code><span class="sig-paren">(</span><em>Pattern</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.getDistanceFromStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getDistanceFromStyle" title="Permalink to this definition">¶</a></dt>
 <dd><p>return a normalized value representing the &#8220;styliness&#8221; of a pattern 1 being farthest from style</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.getClosestPattern">
-<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.getClosestPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getClosestPattern">
+<code class="descname">getClosestPattern</code><span class="sig-paren">(</span><em>Pattern</em>, <em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.getClosestPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getClosestPattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>return the closest pattern in this style</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.getInterpolated">
-<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.getInterpolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInterpolated">
+<code class="descname">getInterpolated</code><span class="sig-paren">(</span><em>PatternA</em>, <em>PatternB</em>, <em>distanceFromA</em>, <em>seed=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.getInterpolated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInterpolated" title="Permalink to this definition">¶</a></dt>
 <dd><p>interpolate between two pattern given this style constraints</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.getInternalState">
-<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.getInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInternalState">
+<code class="descname">getInternalState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.getInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.getInternalState" title="Permalink to this definition">¶</a></dt>
 <dd><p>should return a dict representing current internal state</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.setInternalState">
-<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>internalStateDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.setInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.setInternalState">
+<code class="descname">setInternalState</code><span class="sig-paren">(</span><em>internalStateDict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.setInternalState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.setInternalState" title="Permalink to this definition">¶</a></dt>
 <dd><p>load internal state from a given dict</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.isBuilt">
-<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.isBuilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.isBuilt">
+<code class="descname">isBuilt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.isBuilt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.isBuilt" title="Permalink to this definition">¶</a></dt>
 <dd><p>returns true if style hasbeen correctly build</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.saveToJSON">
-<code class="descname">saveToJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.saveToJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.saveToJSON" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToJSON">
+<code class="descname">saveToJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.saveToJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToJSON" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.loadFromJSON">
-<code class="descname">loadFromJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.loadFromJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.loadFromJSON" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromJSON">
+<code class="descname">loadFromJSON</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.loadFromJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromJSON" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.saveToPickle">
-<code class="descname">saveToPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.saveToPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.saveToPickle" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToPickle">
+<code class="descname">saveToPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.saveToPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.saveToPickle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSBase.GSStyle.GSStyle.loadFromPickle">
-<code class="descname">loadFromPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSBase/GSStyle.html#GSStyle.loadFromPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSBase.GSStyle.GSStyle.loadFromPickle" title="Permalink to this definition">¶</a></dt>
+<dt id="gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromPickle">
+<code class="descname">loadFromPickle</code><span class="sig-paren">(</span><em>filePath</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSBaseStyle.html#GSBaseStyle.loadFromPickle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle.loadFromPickle" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
+</div>
 <div class="section" id="module-gsapi.GSStyles.GSDBStyle">
 <span id="gsapi-gsstyles-gsdbstyle-module"></span><h2>gsapi.GSStyles.GSDBStyle module<a class="headerlink" href="#module-gsapi.GSStyles.GSDBStyle" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="gsapi.GSStyles.GSDBStyle.GSDBStyle">
 <em class="property">class </em><code class="descclassname">gsapi.GSStyles.GSDBStyle.</code><code class="descname">GSDBStyle</code><span class="sig-paren">(</span><em>generatePatternOrdering='indexed'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSDBStyle.html#GSDBStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSDBStyle.GSDBStyle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gsapi.GSBase.GSStyle.GSStyle" title="gsapi.GSBase.GSStyle.GSStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSBase.GSStyle.GSStyle</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle" title="gsapi.GSStyles.GSBaseStyle.GSBaseStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSStyles.GSBaseStyle.GSBaseStyle</span></code></a></p>
 <p>A database based style
 simply generatePatterns from existing patterns</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -293,7 +297,7 @@ simply generatePatterns from existing patterns</p>
 <dl class="class">
 <dt id="gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle">
 <em class="property">class </em><code class="descclassname">gsapi.GSStyles.GSMarkovStyle.</code><code class="descname">GSMarkovStyle</code><span class="sig-paren">(</span><em>order</em>, <em>numSteps</em>, <em>loopDuration</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSStyles/GSMarkovStyle.html#GSMarkovStyle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#gsapi.GSBase.GSStyle.GSStyle" title="gsapi.GSBase.GSStyle.GSStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSBase.GSStyle.GSStyle</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#gsapi.GSStyles.GSBaseStyle.GSBaseStyle" title="gsapi.GSStyles.GSBaseStyle.GSBaseStyle"><code class="xref py py-class docutils literal"><span class="pre">gsapi.GSStyles.GSBaseStyle.GSBaseStyle</span></code></a></p>
 <p>compute sa style based on markov chains</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

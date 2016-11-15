@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="GS_API 1.0.1 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="gsapi" href="../gsapi.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -126,7 +126,7 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 
 
-<div class="viewcode-block" id="strip_suffix"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.strip_suffix">[docs]</a><span class="k">def</span> <span class="nf">strip_suffix</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="strip_suffix"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.strip_suffix">[docs]</a><span class="k">def</span> <span class="nf">strip_suffix</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Strip off the suffix of the given filename or string. Extracted from madmom</span>
 
@@ -143,7 +143,7 @@
 	<span class="k">return</span> <span class="n">filename</span></div>
 
 
-<div class="viewcode-block" id="match_files"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.match_files">[docs]</a><span class="k">def</span> <span class="nf">match_files</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">match_list</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">match_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="match_files"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.match_files">[docs]</a><span class="k">def</span> <span class="nf">match_files</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">match_list</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">match_suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Match a filename or string against a list of other filenames or strings.</span>
 
@@ -177,7 +177,7 @@
 	<span class="k">return</span> <span class="n">matches</span></div>
 
 
-<div class="viewcode-block" id="search_files"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.search_files">[docs]</a><span class="k">def</span> <span class="nf">search_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="search_files"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.search_files">[docs]</a><span class="k">def</span> <span class="nf">search_files</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">suffix</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Returns a list of files in `path` matching the given `suffix` or filters</span>
 <span class="sd">	the given list to include only those matching the given suffix.</span>
@@ -233,7 +233,7 @@
 	<span class="k">return</span> <span class="n">file_list</span></div>
 
 
-<div class="viewcode-block" id="write2pickle"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.write2pickle">[docs]</a><span class="k">def</span> <span class="nf">write2pickle</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../../models/&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="write2pickle"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.write2pickle">[docs]</a><span class="k">def</span> <span class="nf">write2pickle</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;../../models/&#39;</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Write numpy array in pickle format to the selected location</span>
 
@@ -244,13 +244,15 @@
 
 <span class="sd">	&quot;&quot;&quot;</span>
 	<span class="c1"># path = &#39;rhythmic_analysis/graph_models/pickle/&#39;</span>
-
+	<span class="kn">import</span> <span class="nn">os</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+		<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 		<span class="c1"># Pickle the &#39;data&#39; dictionary using the highest protocol available.</span>
 		<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="binaryBeatPattern"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.binaryBeatPattern">[docs]</a><span class="k">def</span> <span class="nf">binaryBeatPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">noBeats_bass</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+<div class="viewcode-block" id="binaryBeatPattern"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.binaryBeatPattern">[docs]</a><span class="k">def</span> <span class="nf">binaryBeatPattern</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">noBeats_bass</span><span class="p">,</span> <span class="n">resolution</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Quantize array of note start times to specified resolution</span>
 <span class="sd">	Loop length is quantized to multiples of whole bars</span>
@@ -282,7 +284,7 @@
 	<span class="k">return</span> <span class="n">rhythm</span></div>
 
 
-<div class="viewcode-block" id="translate_rhythm"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.translate_rhythm">[docs]</a><span class="k">def</span> <span class="nf">translate_rhythm</span><span class="p">(</span><span class="n">rhythm</span><span class="p">):</span>
+<div class="viewcode-block" id="translate_rhythm"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.translate_rhythm">[docs]</a><span class="k">def</span> <span class="nf">translate_rhythm</span><span class="p">(</span><span class="n">rhythm</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Translate binary represented rhythms (from binaryBeatPattern()) to markov variables dictionary.</span>
 <span class="sd">	Each binarized pattern is presented as it&#39;s decimal representation.</span>
@@ -301,7 +303,7 @@
 	<span class="k">return</span> <span class="nb">id</span></div>
 
 
-<div class="viewcode-block" id="corpus_analysis"><a class="viewcode-back" href="../../gsapi.html#gsapi.GSBassmineAnalysis.corpus_analysis">[docs]</a><span class="k">def</span> <span class="nf">corpus_analysis</span><span class="p">(</span><span class="n">bass_path</span><span class="p">,</span> <span class="n">drum_path</span><span class="p">):</span>
+<div class="viewcode-block" id="corpus_analysis"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineAnalysis.corpus_analysis">[docs]</a><span class="k">def</span> <span class="nf">corpus_analysis</span><span class="p">(</span><span class="n">bass_path</span><span class="p">,</span> <span class="n">drum_path</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This functions implement the rhythmic analysis used by Bassmine (bassline generator). The input is a corpus of related</span>
 <span class="sd">	Bass and Drum MIDI files.</span>

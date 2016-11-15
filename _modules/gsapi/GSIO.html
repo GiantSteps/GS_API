@@ -32,7 +32,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="top" title="GS_API 1.0.1 documentation" href="../../index.html" />
-    <link rel="up" title="Module code" href="../index.html" />
+    <link rel="up" title="gsapi" href="../gsapi.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
@@ -119,14 +119,15 @@
       
   <h1>Source code for gsapi.GSIO</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">logging</span>
-<span class="c1"># import glob</span>
+<span class="kn">import</span> <span class="nn">glob</span>
 <span class="c1"># import math</span>
 <span class="kn">from</span> <span class="nn">GSPattern</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">GSPatternUtils</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
 
 <span class="n">gsiolog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;gsapi.GSIO&quot;</span><span class="p">)</span>
-<span class="n">gsiolog</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+<span class="c1"># gsiolog.setLevel(level=logging.INFO)</span>
 
 <div class="viewcode-block" id="fromMidi"><a class="viewcode-back" href="../../gsapi.GSIO.html#gsapi.GSIO.fromMidi">[docs]</a><span class="k">def</span> <span class="nf">fromMidi</span><span class="p">(</span><span class="n">midiPath</span><span class="p">,</span>
              <span class="n">NoteToTagsMap</span><span class="o">=</span><span class="n">defaultPitchNames</span><span class="p">,</span> <span class="c1"># find out if midimap is better!</span>
