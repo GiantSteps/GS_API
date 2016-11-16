@@ -22,7 +22,10 @@ public:
   PyJUCEParameter(PyObject * o,const String & _name);
   virtual ~PyJUCEParameter();
 
-
+  bool  updateUidFromObject(PyObject * o);
+  static int64 getUidFromObject(PyObject *o);
+  int64 pyUID;
+  static PyObject * uidKey;
   String name;
   var value;
   Rectangle<float> relativeArea;

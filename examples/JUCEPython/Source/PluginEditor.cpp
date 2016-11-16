@@ -88,7 +88,7 @@ static int defaultLoggerWidth = 400;
 void JucepythonAudioProcessorEditor::showLogger(bool show){
 
   if(show && !logger){
-    logger = new PyLogger();
+    logger = new PyLogger(owner->pyAPI.pyUID);
     addAndMakeVisible(logger);
     setSize(getLocalBounds().getWidth() + defaultLoggerWidth, getLocalBounds().getHeight());
   }

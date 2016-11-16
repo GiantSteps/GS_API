@@ -14,6 +14,9 @@
 
 #include "PyPatternParameter.h"
 
+
+PyObject * PyJUCEParameter::uidKey = PyFromString("uuidKey");
+
 class PyVar : public ReferenceCountedObject{
 public :
 
@@ -68,8 +71,7 @@ public :
 }
 
 
-static 
- PyObject * varToPy(var v){
+static PyObject * varToPy(var v){
   if(v.isInt()){return PyInt_FromLong((int)v);}
   else if(v.isBool()){return PyBool_FromLong((int)v);}
   else if(v.isDouble()){return PyFloat_FromDouble((double)v);}
@@ -107,7 +109,7 @@ static
 
 PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),pyRef(o),pyJuceApi(nullptr){
   Py_IncRef(pyRef);
-
+  updateUidFromObject(o);
 
   listenerName = PyString_FromString(String("vstListener_"+name).toStdString().c_str());
   Py_IncRef(listenerName);
@@ -118,6 +120,16 @@ PyJUCEParameter::PyJUCEParameter(PyObject * o,const String & _name):name(_name),
 
 }
 
+bool PyJUCEParameter::updateUidFromObject(PyObject * o){
+  if(PyObject * u = PyObject_GetAttr(o, PyJUCEParameter::uidKey)){
+    int64 uid = PyLong_AsLong(u);
+    pyUID =uid;
+    return true;
+  }
+  jassertfalse;
+  return false;
+  
+}
 PyJUCEParameter::~PyJUCEParameter(){
   for(auto s : linkedComponents){
     if(s.get()){
@@ -141,7 +153,7 @@ void PyJUCEParameter::deleteOldComponents(){
 
 void PyJUCEParameter::setValue(var v){
 	value=v;
-  PythonWrap::i()->callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
+  PythonWrap::i(pyUID)->callFunction(cbFunc,pyJuceApi->interfaceModule,Py_BuildValue("(O,O)",listenerName,getPythonObject()));
   paramListeners.call(&ParameterListener::parameterChanged,this);
 }
 
@@ -409,4 +421,12 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
     res->linkToJuceApi(pyAPI);
 	}
 	return res;
+}
+
+int64 PyJUCEParameter::getUidFromObject(PyObject * o){
+  if(PyObject * u = PyObject_GetAttr(o, PyJUCEParameter::uidKey)){
+    int64 uid = PyLong_AsLong(u);
+    return uid;
+  }
+  return -1;
 }

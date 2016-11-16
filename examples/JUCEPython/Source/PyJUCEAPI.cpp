@@ -17,6 +17,8 @@
 
 GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
 
+int PyJUCEAPI::instanceCount =0;
+
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
 
 TimeListener(1),
@@ -29,13 +31,15 @@ paramBuilder(this)
 {
   timePyObj = PyDict_New();
   timeKey=PyFromString("time");
+  instanceCount++;
+  pyUID = instanceCount;
 }
 
 
 void PyJUCEAPI::callTimeChanged(double time){
 	// TODO bug multiple load
   PyDict_SetItem(timePyObj, timeKey, PyFloat_FromDouble(time));
-  PythonWrap::i()->callFunction("onTimeChanged",pluginModule,timePyObj);
+  PythonWrap::i(pyUID)->callFunction("onTimeChanged",pluginModule,timePyObj);
 	
   Py_DECREF(timePyObj);
 	
@@ -66,7 +70,7 @@ bool PyJUCEAPI::setNewPattern(PyObject * o){
 void PyJUCEAPI::callSetupFunction(){
   PyObject * o=nullptr;
 	
-  if((o = PythonWrap::i()->callFunction("setup",pluginModule))){
+  if((o = PythonWrap::i(pyUID)->callFunction("setup",pluginModule))){
 		
     if(PyString_Check(o)){
       DBG("setup returned " << PyToString(o));
@@ -104,10 +108,10 @@ void PyJUCEAPI::init(){
     if (bin=="") {bin = pyHome+"/bin/python2.7";}
     else if(bin=="system"){bin = "";}
 		else{		DBG("using custom python : " << bin);}
-    PythonWrap::i()->printPyState();
+    PythonWrap::i(pyUID)->printPyState();
     if (pyHome!="") bin=File(pyHome).getFullPathName();
     if (bin!="") bin=File(bin).getFullPathName();
-    PythonWrap::i()->init(bin.toStdString(),pyHome.toStdString());
+    PythonWrap::i(pyUID)->init(bin.toStdString(),pyHome.toStdString());
     initJUCEAPI(this,&apiModuleObject);
 		GSPatternWrap.init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
@@ -137,8 +141,8 @@ void PyJUCEAPI::init(){
 		}
 
 		if(pythonFile.exists()){
-			PythonWrap::i()->initSearchPath();
-			PythonWrap::i()->setFolderPath(VSTPluginFolder.getFullPathName().toStdString());
+			PythonWrap::i(pyUID)->initSearchPath();
+			PythonWrap::i(pyUID)->setFolderPath(VSTPluginFolder.getFullPathName().toStdString());
 		}
 		else{
 			jassertfalse;
@@ -163,7 +167,7 @@ bool PyJUCEAPI::setParam(PyObject* o){
 void PyJUCEAPI::load(){
 	// hack to load only the first time VST is called and for subsequent UI actions
 	if(MessageManager::getInstance()->isThisTheMessageThread()  || !pluginModule){
-  pluginModule =  PythonWrap::i()->loadModule(VSTPluginName.toStdString(),pluginModule);
+  pluginModule =  PythonWrap::i(pyUID)->loadModule(VSTPluginName.toStdString(),pluginModule);
   lastPythonFileMod = pythonFile.getLastModificationTime();
 	
   if (pluginModule){
@@ -182,15 +186,17 @@ void PyJUCEAPI::buildParamsFromScript(){
 	listeners.call(&Listener::paramsBeingCleared);
   params.clear();
   
-  if((interfaceModule = PythonWrap::i()->loadModule(VSTPluginName.toStdString()+"_interface",interfaceModule))){
+  if((interfaceModule = PythonWrap::i(pyUID)->loadModule(VSTPluginName.toStdString()+"_interface",interfaceModule))){
 		
-    PyObject * o = PythonWrap::i()->callFunction("getAllParameters",interfaceModule);
+    PyObject * o = PythonWrap::i(pyUID)->callFunction("getAllParameters",interfaceModule);
     if (o){
-			
+
       if(PyList_Check(o)) {
         int s = PyList_GET_SIZE(o);
         for (int i = 0 ; i < s; i++){
           PyObject * it = PyList_GET_ITEM(o, i);
+           PyObject * uidVal = PyLong_FromLong(pyUID);
+          jassert(PyObject_SetAttr(it, PyJUCEParameter::uidKey, uidVal)!=-1);
           PyJUCEParameter * p = paramBuilder.buildParamFromObject(it);
           if(p){
             params.add(p);

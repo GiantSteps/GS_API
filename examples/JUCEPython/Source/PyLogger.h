@@ -16,15 +16,15 @@
 
 class PyLogger :public ListBox,ListBoxModel,ChangeListener{
 public:
-  PyLogger():ListBox("Logger"){
-    PythonWrap::i()->getIntercepter()->addLogListener(this);
+  PyLogger(int64 pyUID):ListBox("Logger"),pyUID(pyUID){
+    PythonWrap::i(pyUID)->getIntercepter()->addLogListener(this);
     
     setModel(this);
     setRowHeight(12);
   }
   ~PyLogger(){
 		
-    PythonWrap::i()->getIntercepter()->removeLogListener(this);
+    PythonWrap::i(pyUID)->getIntercepter()->removeLogListener(this);
 
   }
 
@@ -35,7 +35,7 @@ public:
 
   void changeListenerCallback (ChangeBroadcaster* source)override{
     {
-      PythonWrap::PipeIntercepter * intercept =PythonWrap::i()->getIntercepter();
+      PythonWrap::PipeIntercepter * intercept =PythonWrap::i(pyUID)->getIntercepter();
       lock_guard<mutex> lk(intercept->mut);
       int size = intercept->entries.size();
       for(int i = 0 ; i < size ; i++){
@@ -88,7 +88,8 @@ public:
     return Colours::darkgrey;
     
   }
-  
+
+  int64 pyUID;
   
 };
 

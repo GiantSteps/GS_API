@@ -23,7 +23,7 @@ public:
   void removeListener(Component *c)override;
   void patternChanged(PatternComponent * )override;
   void updateComponentState(Component *c) override;
-  static int count ;
+  
   bool isMainPattern();
 
 
@@ -31,6 +31,7 @@ public:
 
   GSPattern * pattern;
   PyObject * getPythonObject() override;
+  static HashMap<int64, int> counts;
 };
 
 

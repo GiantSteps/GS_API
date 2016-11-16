@@ -188,6 +188,7 @@ void VoicesContainer::BlockDragger::updatePattern(){
     return;
   }
   if(lastVoice == nullptr){lastVoice = originVoice ;}
+
   if(targetVoice ){
     double scale = owner->pattern.duration*1.0/targetVoice->getWidth();
     originComponent->evt->start = scale*originComponent->getX();
@@ -197,7 +198,7 @@ void VoicesContainer::BlockDragger::updatePattern(){
       lastPatternUpdateTime = Time::currentTimeMillis();
     }
     if(lastVoice!=targetVoice){
-
+      if(!lastVoice)lastVoice = targetVoice;
       if(targetVoice->displayPitch){originComponent->evt->pitch = targetVoice->tag.getIntValue();}
       else{
         auto  res = std::find(originComponent->evt->eventTags.begin(),originComponent->evt->eventTags.end(),lastVoice->tag);
@@ -220,9 +221,11 @@ void VoicesContainer::BlockDragger::endDraggingBlock(){
     originComponent->setTopLeftPosition(originComponent->getX(), 0);
     targetVoice->addAndMakeVisible(originComponent);
     targetVoice->blocks.add(originComponent);
+    originComponent->owner = targetVoice;
     targetVoice = nullptr;
     lastVoice = nullptr;
     originVoice = nullptr;
+
   }
 }
 void VoicesContainer::BlockDragger::setOriginComponent(BlockComponent * b){

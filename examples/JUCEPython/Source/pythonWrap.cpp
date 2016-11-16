@@ -10,53 +10,91 @@
 
 #include "pythonWrap.h"
 
-juce_ImplementSingleton(PythonWrap);
+//juce_ImplementSingleton(PythonWrap);
 
-PythonWrap * PythonWrap::i(){
-  return getInstance();
+HashMap<int64, PythonWrap* > PythonWrap::interpreters;
+
+PyThreadState * PythonWrap::globalTs;
+
+
+PythonWrap * PythonWrap::i(int64 pyUID){
+  if(!interpreters.contains(pyUID)){
+    interpreters.set(pyUID,(PythonWrap*) new PythonWrap(pyUID));
+  }
+  return interpreters[pyUID];
 }
 
-PythonWrap::PipeIntercepter * PythonWrap::getIntercepter(){return &PythonWrap::i()->errIntercept;}
+PythonWrap::PythonWrap(int64 p):pyUID(p),errIntercept(p),threadState(nullptr){}
+PythonWrap::~PythonWrap(){
+  if(Py_IsInitialized()){
+//    Py_DecRef(originStdErr);
+//    Py_DecRef(originStdOut);
+//    Py_DecRef(customStdErr);
+//    Py_DecRef(customStdOut);
+    PyThreadState_Swap(threadState);
+    Py_EndInterpreter(threadState);
 
- PyObject *
+  }
+}
+PythonWrap::PipeIntercepter * PythonWrap::getIntercepter(){return &errIntercept;}
+
+PythonWrap * PythonWrap::getCurrentPythonWrap(){
+  PyThreadState * st = PyGILState_GetThisThreadState();
+  HashMap<int64, PythonWrap* >::Iterator it(interpreters);
+  while(it.next()){
+    if(PythonWrap * pyW=it.getValue()){
+      if(st == pyW->threadState){
+        return pyW;
+      }
+    }
+  }
+  return nullptr;
+}
+PyObject *
 PythonWrap::PyErrCB(PyObject *self, PyObject *args)
 {
-	const char *what;
-  PipeIntercepter * errIntercept = PythonWrap::getIntercepter();
-	if (!PyArg_ParseTuple(args, "s", &what))
-		return NULL;
-	{
-		lock_guard<mutex> lk(errIntercept->mut);
-		errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::error));
-	}
-	errIntercept->sendChangeMessage();
-	return Py_BuildValue("");
+  if(PythonWrap * pyW = PythonWrap::getCurrentPythonWrap()){
+    const char *what;
+
+    PipeIntercepter * errIntercept = pyW->getIntercepter();
+    if (!PyArg_ParseTuple(args, "s", &what))
+      return NULL;
+    {
+      lock_guard<mutex> lk(errIntercept->mut);
+      errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::error));
+    }
+    errIntercept->sendChangeMessage();
+
+  }
+  return Py_BuildValue("");
 }
 
 
- PyObject *
+PyObject *
 PythonWrap::PyOutCB(PyObject *self, PyObject *args)
 {
-	const char *what;
-  PipeIntercepter * errIntercept = PythonWrap::getIntercepter();
-	if (!PyArg_ParseTuple(args, "s", &what))
-		return NULL;
+  if(PythonWrap * pyW = PythonWrap::getCurrentPythonWrap()){
+    const char *what;
+    PipeIntercepter * errIntercept = pyW->getIntercepter();
+    if (!PyArg_ParseTuple(args, "s", &what))
+      return NULL;
 
-	{
-		lock_guard<mutex> lk(errIntercept->mut);
-		errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::warning));
-	}
-	errIntercept->sendChangeMessage();
-	return Py_BuildValue("");
+    {
+      lock_guard<mutex> lk(errIntercept->mut);
+      errIntercept->entries.add(PipeIntercepter::Entry(String(what),PipeIntercepter::Entry::warning));
+    }
+    errIntercept->sendChangeMessage();
+  }
+  return Py_BuildValue("");
 }
 static PyMethodDef PyErr_methods[] = {
-	{"write", PythonWrap::PyErrCB, METH_VARARGS, "PyErr Callback"},
-	{NULL, NULL, 0, NULL}
+  {"write", PythonWrap::PyErrCB, METH_VARARGS, "PyErr Callback"},
+  {NULL, NULL, 0, NULL}
 };
 
 static PyMethodDef PyOut_methods[] = {
-	{"write", PythonWrap::PyOutCB, METH_VARARGS, "PyOut Callback"},
-	{NULL, NULL, 0, NULL}
+  {"write", PythonWrap::PyOutCB, METH_VARARGS, "PyOut Callback"},
+  {NULL, NULL, 0, NULL}
 };
 
 
@@ -64,8 +102,8 @@ static PyMethodDef PyOut_methods[] = {
 
 
 void PythonWrap::init(  string home, string  bin){
-	
-	if(!Py_IsInitialized())
+
+  if(!Py_IsInitialized())
   {
     Py_SetPythonHome(&home[0]);
     if(bin!=""){Py_SetProgramName(&bin[0]);}
@@ -77,16 +115,27 @@ void PythonWrap::init(  string home, string  bin){
     Py_NoSiteFlag =0;
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
+    PyEval_InitThreads();
     Py_InitializeEx(0);
-
-    originStdErr  = PySys_GetObject("stderr");
-    originStdOut  = PySys_GetObject("stdout");
-
-    customStdErr = Py_InitModule("PyErrCB", PyErr_methods);
-    customStdOut = Py_InitModule("PyOutCB", PyOut_methods);
+    globalTs = PyThreadState_GET();
+    int dbg;
+    dbg++;
 
 
 
+
+  }
+  if(Py_IsInitialized()){
+    jassert(threadState==nullptr);
+    if(threadState==nullptr){
+      threadState = Py_NewInterpreter();
+      originStdErr  = PySys_GetObject("stderr");
+      originStdOut  = PySys_GetObject("stdout");
+
+      customStdErr = Py_InitModule("PyErrCB", PyErr_methods);
+      customStdOut = Py_InitModule("PyOutCB", PyOut_methods);
+//      PyThreadState_Swap(threadState);
+    }
   }
 }
 
@@ -95,8 +144,8 @@ void PythonWrap::redirectStd(bool t){
 
 
   if(t){
-		PySys_SetObject("stderr", customStdErr);
-		PySys_SetObject("stdout", customStdOut);
+    PySys_SetObject("stderr", customStdErr);
+    PySys_SetObject("stdout", customStdOut);
   }
   else{
     PySys_SetObject("stderr", originStdErr);
@@ -104,8 +153,17 @@ void PythonWrap::redirectStd(bool t){
   }
 
 }
-void PythonWrap::deinit(){
-	Py_Finalize();
+void PythonWrap::finalize(){
+  // crashes for unknown reason, creates a memory leak but better that than crash
+  //  PyErr_Print();
+  bool pyInitialized = Py_IsInitialized();
+  if(pyInitialized){
+    PyThreadState_Swap(globalTs);
+    PyThreadState * ts= PyThreadState_GET();
+    if(ts){
+      Py_Finalize();
+    }
+  }
 }
 
 
@@ -137,7 +195,12 @@ void PythonWrap::addSearchPath(const string & p){
 
 PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   // Import the module "plugin" (from the file "plugin.py")
-
+  if(threadState){
+    jassert(PyThreadState_Swap(threadState));
+  }
+  else{
+    jassertfalse;
+  }
   PyObject* moduleName = PyFromString(name.c_str());
 
   PyObject * newModule = nullptr;
@@ -161,7 +224,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   }
   else{
     //    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);
-//		PyImport_ExecCodeModuleEx
+    //		PyImport_ExecCodeModuleEx
     newModule = PyImport_Import(moduleName);
 
   }
@@ -171,7 +234,7 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
     PyErr_Print();
 
   }
-	getIntercepter()->flush();
+  getIntercepter()->flush();
 
 
   Py_DECREF(moduleName);
@@ -197,6 +260,14 @@ PyObject *  PythonWrap::callFunction(const string & func,PyObject * module,PyObj
 }
 PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObject * args){
   if(pyFunc ==nullptr){return nullptr;}
+
+  if(threadState){
+    jassert(PyThreadState_Swap(threadState));
+  }
+  else{
+    jassertfalse;
+  }
+
   PyObject * targs = nullptr;
   if(args){
     if(!PyTuple_CheckExact(args)) targs =PyTuple_Pack(1,args);
@@ -207,7 +278,7 @@ PyObject *  PythonWrap::callFunction(PyObject * pyFunc,PyObject * module,PyObjec
   PyObject *res= PyObject_CallObject(pyFunc,targs);
   if(targs)Py_DecRef(targs);
   PyErr_Print();
-	errIntercept.flush();
+  errIntercept.flush();
 
   return res;
 }

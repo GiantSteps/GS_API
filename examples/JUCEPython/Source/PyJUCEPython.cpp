@@ -51,8 +51,7 @@ typedef struct PyJUCEAPIRef_Type:PyTypeObject{
 
 
 
-static PyObject *
-PyJUCEAPI_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+static PyObject * PyJUCEAPI_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
   PyJUCEAPIObject * self = (PyJUCEAPIObject *)type->tp_alloc(type, 0);
   if (self != NULL) {}
@@ -63,8 +62,7 @@ static void PyJUCEAPI_dealloc(PyJUCEAPIObject* self){}
 
 
 
-static PyObject *
-updateParam(PyTypeObject *self, PyObject *args)
+static PyObject * updateParam(PyTypeObject *self, PyObject *args)
 {
   PyObject * param = nullptr;
 
