@@ -29,11 +29,11 @@ public:
     init();
   }
   ~GSPatternEventPyWrap(){
-    Py_DECREF(TagsObjName);
-    Py_DECREF(DurationObjName);
-    Py_DECREF(StartObjName);
-    Py_DECREF(PitchObjName);
-    Py_DECREF(VelocityObjName);
+    Py_CLEAR(TagsObjName);
+    Py_CLEAR(DurationObjName);
+    Py_CLEAR(StartObjName);
+    Py_CLEAR(PitchObjName);
+    Py_CLEAR(VelocityObjName);
   }
 
   void init(){
@@ -110,6 +110,7 @@ public:
       else{DBG("can't create event");}
     }
 
+
     if(res==nullptr){
 
       PyObject * creationArg = Py_BuildValue("(i,i,i,i,O)",start,duration,pitch,velocity,tags);
@@ -123,7 +124,7 @@ public:
       if(PyObject_SetAttr(res, TagsObjName, tags) == -1){DBG("can't set tag");}
     }
 
-
+    Py_DecRef(tags);
 
     return res;
 

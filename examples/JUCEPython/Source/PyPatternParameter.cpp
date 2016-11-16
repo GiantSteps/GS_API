@@ -13,7 +13,7 @@
 HashMap<int64, int>  PyPatternParameter::counts ;
 
 PyPatternParameter::PyPatternParameter(PyObject * o,const String & n):PyJUCEParameter(o,n){
-  pattern =  PyJUCEAPI::GSPatternWrap.GenerateFromObj(pyVal);
+  pattern =  PyJUCEAPI::GSPatternWrap->GenerateFromObj(pyVal);
   int originCount = 0;
   if(counts.contains(pyUID)){originCount = counts[pyUID];}
   counts.set(pyUID, originCount+1);
@@ -37,7 +37,7 @@ void PyPatternParameter::patternChanged(PatternComponent * ){
   setValue(var());
 }
 void PyPatternParameter::updateComponentState(Component *c) {
-  pattern = PyJUCEAPI::GSPatternWrap.GenerateFromObj(pyVal,pattern);
+  pattern = PyJUCEAPI::GSPatternWrap->GenerateFromObj(pyVal,pattern);
   ((PatternComponent*)c)->newPatternLoaded(pattern);
 
 }
@@ -55,4 +55,4 @@ bool PyPatternParameter::isMainPattern(){
   return isFirstAdded|| name=="Main";
 }
 
-PyObject * PyPatternParameter::getPythonObject() {return PyJUCEAPI::GSPatternWrap.GeneratePyObj(pattern,pyVal);}
+PyObject * PyPatternParameter::getPythonObject() {return PyJUCEAPI::GSPatternWrap->GeneratePyObj(pattern,pyVal);}

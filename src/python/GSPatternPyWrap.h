@@ -25,6 +25,8 @@ public:
     DurationObjName = PyFromString("duration");
     EventsObjName = PyFromString("events");
     timeSignatureName =PyFromString("timeSignature");
+    gsapiModule = nullptr;
+    gsPatternType = nullptr;
 
   }
 
@@ -33,16 +35,20 @@ public:
 
 
   ~GSPatternPyWrap(){
-    Py_DECREF(NameObjName);
-    Py_DECREF(DurationObjName);
-    Py_DECREF(EventsObjName);
-    Py_DECREF(timeSignatureName);
+    Py_CLEAR(NameObjName);
+    Py_CLEAR(DurationObjName);
+    Py_CLEAR(EventsObjName);
+    Py_CLEAR(timeSignatureName);
+    
+    Py_CLEAR(gsapiModule);
+//    Py_DecRef(gsPatternType);
   }
   void init(){
     gsapiModule = PyImport_ImportModule("gsapi");
     PyObject * gsapiDict = PyModule_GetDict(gsapiModule);
     gsPatternType = (PyTypeObject*)PyDict_GetItemString(gsapiDict, "GSPattern");
     eventWrap.gsPatternEventType = (PyTypeObject*)PyDict_GetItemString(gsapiDict, "GSPatternEvent");
+//    Py_DecRef(gsapiDict);
     //
     //		GSPattern p;
     //		p.name = "test";
@@ -123,6 +129,7 @@ public:
       PyList_SetItem(n, 0, PyInt_FromLong(p->timeSigNumerator));
       PyList_SetItem(n, 1, PyInt_FromLong(p->timeSigDenominator));
       if(PyObject_SetAttr(res, timeSignatureName, n)==-1){DBG("can't set timesignature");};
+      Py_DecRef(n);
     }
 
 
@@ -135,6 +142,7 @@ public:
         else{DBG("can't generate pyObj for event");}
       }
       PyObject_SetAttr(res, EventsObjName, n);
+      Py_DecRef(n);
     }
 
 

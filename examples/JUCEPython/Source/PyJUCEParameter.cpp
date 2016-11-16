@@ -26,7 +26,7 @@ public :
   }
 
   ~PyVar(){
-    Py_DecRef(ref);
+    Py_CLEAR(ref);
   }
   typedef ReferenceCountedObjectPtr<PyVar> Ptr;
   PyObject * ref;
@@ -137,8 +137,8 @@ PyJUCEParameter::~PyJUCEParameter(){
       DBG("old component still linked");
     }
   }
-  Py_DecRef(pyRef);
-	Py_DecRef(listenerName);
+  Py_CLEAR(pyRef);
+	Py_CLEAR(listenerName);
 }
 
 void PyJUCEParameter::deleteOldComponents(){
@@ -400,7 +400,7 @@ PyJUCEParameter * PyJUCEParameterBuilder::buildParamFromObject( PyObject* o){
   String className (o->ob_type->tp_name);
   String paramName = properties.getWithDefault("name", className+"_defaultName");
 	if(!value){DBG("ui element not valid");jassertfalse;return nullptr;}
-	if(value->ob_type == PyJUCEAPI::GSPatternWrap.gsPatternType){
+	if(value->ob_type == PyJUCEAPI::GSPatternWrap->gsPatternType){
 		res = new PyPatternParameter(o,paramName);
 	}
   else if ((PyLong_CheckExact(value)|| PyInt_CheckExact(value)) && properties.contains("choicesList")){

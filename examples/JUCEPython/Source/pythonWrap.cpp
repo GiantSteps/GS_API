@@ -115,7 +115,7 @@ void PythonWrap::init(  string home, string  bin){
     Py_NoSiteFlag =0;
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
-    PyEval_InitThreads();
+//    PyEval_InitThreads();
     Py_InitializeEx(0);
     globalTs = PyThreadState_GET();
     int dbg;
@@ -154,14 +154,15 @@ void PythonWrap::redirectStd(bool t){
 
 }
 void PythonWrap::finalize(){
-  // crashes for unknown reason, creates a memory leak but better that than crash
-  //  PyErr_Print();
+
+
   bool pyInitialized = Py_IsInitialized();
   if(pyInitialized){
     PyThreadState_Swap(globalTs);
     PyThreadState * ts= PyThreadState_GET();
     if(ts){
-      Py_Finalize();
+// crashes for unknown reason when recreating, creates a memory leak but better that than crash
+//      Py_Finalize();
     }
   }
 }

@@ -15,8 +15,8 @@
 #include "PyJUCEPython.h"
 #include "Utils.h"
 
-GSPatternPyWrap PyJUCEAPI::GSPatternWrap;
 
+GSPatternPyWrap * PyJUCEAPI::GSPatternWrap(nullptr);
 int PyJUCEAPI::instanceCount =0;
 
 PyJUCEAPI::PyJUCEAPI(JucepythonAudioProcessor * o):
@@ -33,6 +33,24 @@ paramBuilder(this)
   timeKey=PyFromString("time");
   instanceCount++;
   pyUID = instanceCount;
+  
+}
+PyJUCEAPI::~PyJUCEAPI(){
+  cancelPendingUpdate();
+  isInitialized = false;
+  Py_DECREF(timePyObj);
+  Py_DECREF(timeKey);
+  Py_CLEAR(interfaceModule);
+  Py_CLEAR(pluginModule);
+  if(PythonWrap *pyW = PythonWrap::i(pyUID)){
+    PythonWrap::interpreters.remove(pyUID);
+    delete pyW;
+  }
+  if(PythonWrap::interpreters.size()==0){
+    delete GSPatternWrap;
+    GSPatternWrap = nullptr;
+    PythonWrap::finalize();
+  }
 }
 
 
@@ -112,8 +130,11 @@ void PyJUCEAPI::init(){
     if (pyHome!="") bin=File(pyHome).getFullPathName();
     if (bin!="") bin=File(bin).getFullPathName();
     PythonWrap::i(pyUID)->init(bin.toStdString(),pyHome.toStdString());
+    PyThreadState_Swap(PythonWrap::i(pyUID)->threadState);
     initJUCEAPI(this,&apiModuleObject);
-		GSPatternWrap.init();
+    jassert(GSPatternWrap==nullptr);
+    GSPatternWrap = new GSPatternPyWrap();
+		GSPatternWrap->init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
 		bool loadCustom = pythonFolder=="custom";
 		bool loadDefault = pythonFolder=="default";
