@@ -6,7 +6,10 @@ if __name__=='__main__':
 	
 
 from gsapi import *
-from gsapi.GSInternalStyles import *
+
+
+
+
 import json
 import glob
 import random
@@ -23,24 +26,6 @@ from UIParameter import *
 """ this example generates stylistic markovian pattern to demonstrate passing GSPattern to C++ plugin
 """
 #generalMidiMap
-midiMap = {
-			"Kick":36,
-			"Rimshot":37,
-			"Snare":38,
-			"Clap":39,
-			"Clave":40,
-			"LowTom":41,
-			"ClosedHH":42,
-			"MidTom":43,
-			"Shake":44,
-			"HiTom":45,
-			"OpenHH":46,
-			"LowConga":47,
-			"HiConga":48,
-			"Cymbal":49,
-			"Conga":50,
-			"CowBell":51
-	}
 
 localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 
@@ -50,9 +35,9 @@ localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 # searchPath = "/Users/Tintamar/Dev/GS_API/corpus/midiTests/miniDaftPunk.mid";
 searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
 # searchPath = os.path.join(localDirectory,"midi/corpus-harmony","*.mid");
-searchPath = os.path.join(localDirectory,"*.mid");
+#searchPath = os.path.join(localDirectory,"*.mid");
 # midiMap = "pitchNames"
-dataSet = GSDataSet(midiGlob=searchPath,midiMap=midiMap)
+dataSet = GSDataset(midiGlob=searchPath,midiMap=GSPatternUtils.simpleDrumMap)
 # searchPath = os.path.join(localDirectory,"midi","*.mid");
 
 # searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
@@ -61,7 +46,7 @@ styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
 numSteps = NumParameter(32)
 loopDuration = NumParameter(8)
 generateNewP = EventParameter()
-style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
+style = GSStyles.GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
 patterns = None
 # style = GSDBStyle(generatePatternOrdering = "increasing");
 
@@ -93,7 +78,7 @@ def onTimeChanged(time):
 def tagToPitch(tag):
 	split = tag.split('_')
 
-	note = GSIO.defaultPitchNames.index(split[0])
+	note = GPatternUtils.defaultPitchNames.index(split[0])
 	octave = int(split[1])
 	return note+octave*12
 
@@ -113,7 +98,7 @@ def mapMidi(pattern,midiMap):
 
 def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFromJSON = False):
 	
-	global midiMap
+
 	global style
 	global styleSavingPath
 	global patterns
@@ -135,7 +120,7 @@ def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFrom
 		
 
 	if forceRebuild or forceParamUpdate :
-		style = GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
+		style = GSStyles.GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
 		patterns = []
 		for p in dataSet.patterns:
 			patterns += p.splitInEqualLengthPatterns(loopDuration.value);
@@ -162,7 +147,7 @@ def generatePattern():
 
 	generateStyleIfNeeded();
 	newPattern = style.generatePattern()
-	newPattern = mapMidi(newPattern,midiMap)
+	newPattern = mapMidi(newPattern,GSPatternUtils.simpleDrumMap)
 	print 'newPattern set'
 	patternParameter.value = newPattern
 	
