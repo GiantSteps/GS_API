@@ -29,7 +29,7 @@ def createLayout():
 	header = area.removeFromTop(40);
 	VSTPlugin.patternParameter.setBoundsRect(header);
 	firstStack = area.removeFromLeft(30)
-	VSTPlugin.loopDuration.setBoundsRect(firstStack.removeFromTop(50))
+	VSTPlugin.loopDuration.setBoundsRect(firstStack.removeFromTop(30))
 	VSTPlugin.numSteps.setBoundsRect(firstStack)
 
 	secondStack = area.removeFromLeft(10)
