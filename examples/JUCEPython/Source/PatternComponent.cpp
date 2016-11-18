@@ -23,6 +23,7 @@ PatternComponent::PatternComponent():TimeListener(1),voicesContainer(this){
 
 void PatternComponent::newPatternLoaded(GSPattern * p) {
   nextPatternToLoad = p;
+  voicesContainer.blockDragger.interruptDrag();
   postCommandMessage(0);
 }
 GSPattern * PatternComponent::getPattern(){
@@ -162,6 +163,16 @@ void VoicesContainer::BlockDragger::checkBounds (Rectangle<int>& bounds,const Re
   bounds.setX(jmin(targetVoice->getWidth()-bounds.getWidth(),bounds.getX()));
 
 
+}
+
+void VoicesContainer::BlockDragger::interruptDrag(){
+  if(originComponent){
+    originComponent->removeMouseListener(targetVoice);
+    endDraggingBlock();
+  }
+
+
+  originComponent = nullptr;
 }
 
 void VoicesContainer::BlockDragger::startDraggingBlock(BlockComponent * bk,const MouseEvent & e){

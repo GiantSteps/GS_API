@@ -86,7 +86,7 @@ class VoicesContainer:public Component{
 	
 	class BlockDragger : public ComponentBoundsConstrainer{
 	public:
-		BlockDragger(VoicesContainer * _owner):owner(_owner){};
+		BlockDragger(VoicesContainer * _owner):owner(_owner),originComponent(nullptr),targetVoice(nullptr),lastVoice(nullptr),originVoice(nullptr){};
 		void checkBounds (Rectangle<int>& bounds,
                               const Rectangle<int>& previousBounds,
                               const Rectangle<int>& limits,
@@ -101,6 +101,7 @@ class VoicesContainer:public Component{
 		void draggingBlock(BlockComponent * ,const MouseEvent &);
 		void endDraggingBlock();
     void setOriginComponent(BlockComponent *);
+    void interruptDrag();
 private:
 		VoiceComponent * targetVoice ,*lastVoice,*originVoice;
 	VoicesContainer * owner;

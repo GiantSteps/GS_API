@@ -21,6 +21,8 @@ JucepythonAudioProcessor::JucepythonAudioProcessor():player(&mapper),pyAPI(this)
   pyAPI.addListener(this);
 	addTimeListener(&pyAPI);
   mainPattern = nullptr;
+//  disableNonMainBuses();
+//  setPlayConfigDetails(0,0,getSampleRate(),getBlockSize());
 }
 
 JucepythonAudioProcessor::~JucepythonAudioProcessor()

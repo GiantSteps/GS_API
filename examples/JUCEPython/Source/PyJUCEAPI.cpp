@@ -132,9 +132,8 @@ void PyJUCEAPI::init(){
     PythonWrap::i(pyUID)->init(bin.toStdString(),pyHome.toStdString());
     PyThreadState_Swap(PythonWrap::i(pyUID)->threadState);
     initJUCEAPI(this,&apiModuleObject);
-    jassert(GSPatternWrap==nullptr);
-    GSPatternWrap = new GSPatternPyWrap();
-		GSPatternWrap->init();
+    if(GSPatternWrap==nullptr){GSPatternWrap = new GSPatternPyWrap();}
+    GSPatternWrap->init();
 		String pythonFolder = getVSTProperties().getValue("VSTPythonFolderPath");
 		bool loadCustom = pythonFolder=="custom";
 		bool loadDefault = pythonFolder=="default";

@@ -105,6 +105,7 @@ void PythonWrap::init(  string home, string  bin){
 
   if(!Py_IsInitialized())
   {
+
     Py_SetPythonHome(&home[0]);
     if(bin!=""){Py_SetProgramName(&bin[0]);}
     char* c =  Py_GetPythonHome();
@@ -116,6 +117,7 @@ void PythonWrap::init(  string home, string  bin){
     Py_VerboseFlag = 0;
     Py_DebugFlag = 0;
 //    PyEval_InitThreads();
+
     Py_InitializeEx(0);
     globalTs = PyThreadState_GET();
     int dbg;
