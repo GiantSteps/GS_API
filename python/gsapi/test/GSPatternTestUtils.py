@@ -18,15 +18,40 @@ def runTest(profile=False,getStat=False):
 	if not getStat and not profile:
 		unittest.main()
 
-class GSPatternTestUtils(unittest.TestCase):
+
+class singleTonDataset(GSDataset):
+	def __init__(self,**kwargs):
+		self.creationArgs = kwargs
+		self.dataset = None
+
+	def get():
+		if not self.dataset:
+			self.dataset = GSDataset(**self.creationArgs)
+		return dataset
+
+class GSTestBase(unittest.TestCase):
 	"""
 	helper function for test classes
 	"""
-	
-	# def __init__(self,GSDataset):
-	# 	unittest.TestCase.__init__(self,*args)
+
+
+	__cachedDataset = None
+	@property
+	def cachedDataset(self):
+		if not self.__cachedDataset:
+			self.__cachedDataset = self.generateCachedDataset()
+		return self.__cachedDataset
 		
 
+	# sub class can override that to load a cached dataset only once per session (not per test)
+	#  default will crawl all midiTests Folder
+	def generateCachedDataset(self):
+		raise GSDataset(midiGlob="*.mid",midiFolder = self.getLocalCorpusPath('midiTests'),midiMap="pitchNames",checkForOverlapped = True)
+
+	# helper to get local corpus path
+	def getLocalCorpusPath(self,toAppend=""):
+		import os
+		return os.path.abspath(__file__ + "../../../../../corpus/"+toAppend)
 
 
 	def checkNoTagsOverlaps(self,pattern,msg=None):
@@ -38,7 +63,7 @@ class GSPatternTestUtils(unittest.TestCase):
 					self.assertTrue(e.startTime>=lastTimeOff,"%s : (%f<%f) tag : %s"%(msg,e.startTime,lastTimeOff,t));
 					lastTimeOff = e.getEndTime()
 
-	def checkPatternValid(self,pattern,checkForDoublons =True,checkOverlap = True,msg=None):
+	def checkPatternValid(self,pattern,checkForDoublons =True,checkOverlap = True,msg=""):
 		self.assertTrue(len(pattern.events)>0,msg)
 		i=0
 		for e in pattern.events:
@@ -58,3 +83,9 @@ class GSPatternTestUtils(unittest.TestCase):
 				i+=1
 
 		if checkOverlap : self.checkNoTagsOverlaps(pattern,msg )
+
+
+	def setUp(self):
+		print '-------------------------------------'
+		print "Starting test : ", self._testMethodName
+		print '-------------------------------------'

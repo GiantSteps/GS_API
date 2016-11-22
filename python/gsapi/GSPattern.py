@@ -111,6 +111,20 @@ class GSPatternEvent(object):
             res += [newE]
         return res
 
+    def isSimilarTo(self,event):
+        """ helper to compare events that could have be copy of each other (equality compares reference not content...)
+        Args:
+            event:event to compare wuith
+        """
+        return (self.startTime == event.startTime) and (self.duration==event.duration) and (self.tags==event.tags) and (self.pitch == event.pitch)
+
+    def containsTime(self,time):
+        """return true if event is active at given time
+        Args:
+            time : time to compare with
+        """
+        return (time >= self.startTime) and (time < self.startTime+self.duration)
+
     def __repr__(self):
         return "%s %i %i %05.2f %05.2f" % (self.tags,
                                 self.pitch,
@@ -190,14 +204,30 @@ class GSPattern(object):
         else:
             return None
 
-    def addEvent(self, GSPatternEvent):
+    def addEvent(self, event):
         """Add an event increasing duration if needed.
 
         Args:
             GSPatternEvent: the event to be added
         """
-        self.events += [GSPatternEvent]
+        self.events += [event]
         self.setDurationFromLastEvent()
+
+    def removeEvent(self,event):
+        """remove given event
+        Args:
+            GSPatternEvent: the event to be added
+        """
+        idxToRemove = []
+        idx = 0;
+        for e in self.events:
+            if event==e or event.isSimilarTo(e):
+                idxToRemove+=[idx]
+            idx+=1
+
+        for i in idxToRemove:
+            del self.events[i]
+
 
     def quantize(self, stepSize,quantizeStartTime=True,quantizeDuration = True):
         """ Quantize events.
@@ -257,7 +287,7 @@ class GSPattern(object):
         """
         res = []
         for e in self.events:
-            if(time - e.startTime >= 0 and time - e.startTime <= e.duration):
+            if(time - e.startTime >= 0 and time - e.startTime < e.duration):
                 res += [e]
         return res
 
@@ -403,9 +433,13 @@ class GSPattern(object):
                 evToAdd = [e]
             for ea in evToAdd:
                 ea.startTime = int(ea.startTime/stepSize+0.5)*stepSize
-                ea.duration = stepSize
-                newEvents += [ea]
+                # avoid adding last event out of duration range
+                if ea.startTime < self.duration:
+                    ea.duration = stepSize
+                    newEvents += [ea]
+
         self.events = newEvents
+        self.removeOverlapped()
         return self
 
     def removeOverlapped(self, usePitchValues=False):
@@ -434,7 +468,7 @@ class GSPattern(object):
                             newList += [e]
                             overLappedEv += [ee]
                         else:
-                            patternLog.warning("strict overlapping of start times %s with %s"%(e, ee))
+                            patternLog.info("strict overlapping of start times %s with %s"%(e, ee))
 
                 if ee.startTime > (e.startTime + e.duration):
                     break
@@ -652,3 +686,55 @@ class GSPattern(object):
             res += [patterns[p]]
 
         return res
+    def printASCIIGrid(self,blockSize = 1):
+        def __areSilenceEvts(l):
+            if len(l)>0:
+                for e in l:
+                    if not 'silence' in e.tags:
+                        return False
+            return True
+
+
+        for t in self.getAllTags():
+            noteOnASCII = '|'
+            sustainASCII = '>'
+            silenceASCII = '-' 
+            out = "["
+            p = self.getPatternWithTags(t,copy=True);#.alignOnGrid(blockSize);
+            # p.fillWithSilences(maxSilenceTime = blockSize)
+            isSilence = __areSilenceEvts(p.getActiveEventsAtTime(0))
+            inited = False
+            lastActiveEvent = p.events[0]
+            numSteps = int(self.duration*1.0/blockSize)
+            
+            for i in range(numSteps):
+                time = i*1.0*blockSize
+
+                el = p.getActiveEventsAtTime(time)
+
+                newSilenceState = __areSilenceEvts(el)
+                
+                if newSilenceState!=isSilence :
+                    
+                    if newSilenceState:
+                        out+=silenceASCII
+                    else:
+                        out+=noteOnASCII
+                        lastActiveEvent = el[0]
+                elif newSilenceState:
+                    out+=silenceASCII
+                elif not newSilenceState:
+                    if el[0].startTime==lastActiveEvent.startTime:
+                        out+=sustainASCII
+                    else:
+                        out+=noteOnASCII
+                        lastActiveEvent = el[0]
+
+                isSilence = newSilenceState
+                inited = True
+
+
+            out+="] : "+t
+            print out
+
+        

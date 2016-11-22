@@ -29,6 +29,7 @@ import GSIO
 
 import GSStyles 
 import GSDescriptors 
+import GSPatternTransformers
 import GSBassmineAnalysis 
 import GSBassmineMarkov 
 

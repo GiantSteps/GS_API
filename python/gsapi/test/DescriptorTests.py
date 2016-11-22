@@ -6,13 +6,16 @@ from gsapi import *
 
 from GSPatternTestUtils import *
 
-class DescriptorTests(GSPatternTestUtils):
+class DescriptorTests(GSTestBase):
 
-	dataset = GSDataset(midiGlob="funkyfresh.mid",midiMap="pitchNames",checkForOverlapped = True)
+
+	def generateCachedDataset(self):
+		return GSDataset(midiGlob="funkyfresh.mid",midiFolder = self.getLocalCorpusPath('midiTests'),midiMap="pitchNames",checkForOverlapped = True)
 
 	def test_density_simple(self):
+
 		descriptor = GSDescriptors.GSDescriptorDensity();
-		for p in self.dataset.patterns:
+		for p in self.cachedDataset.patterns:
 			allTags = p.getAllTags()
 			density = descriptor.getDescriptorForPattern(p);
 			p2 = p.getPatternWithTags([allTags[0]])
@@ -27,7 +30,7 @@ class DescriptorTests(GSPatternTestUtils):
 
 	def test_syncopation(self):
 		descriptor = GSDescriptors.GSDescriptorSyncopation();
-		for p in self.dataset.patterns:
+		for p in self.cachedDataset.patterns:
 			# p = p.getPatternWithTags(p.getAllTags()[0])
 			sliced = p.splitInEqualLengthPatterns(descriptor.duration)
 			print p

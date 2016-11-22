@@ -19,7 +19,7 @@ class GSBasePatternTransformer(object):
 		"""
 		raise NotImplementedError( "Should have implemented this" )
 
-	def TransformPattern(self,pattern):
+	def transformPattern(self,pattern):
 		"""returns a transformed version of GSPattern
 
 		Args:

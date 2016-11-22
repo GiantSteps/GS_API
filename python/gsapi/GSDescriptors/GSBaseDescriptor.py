@@ -12,3 +12,9 @@ class GSBaseDescriptor(object):
 		"""
 		raise NotImplementedError( "Should have implemented this" )
 
+	def configure(self,paramDict):
+		"""configure current descriptor mapping dict to parameters 
+		"""
+		raise NotImplementedError( "Should have implemented this" )
+
+

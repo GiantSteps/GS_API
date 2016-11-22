@@ -10,17 +10,21 @@ from GSPatternTestUtils import *
 
 
 
-class MarkovPatternTest(GSPatternTestUtils):
+class MarkovPatternTest(GSTestBase):
 
-	dataSet = GSDataset(midiGlob="miniDaftPunk.mid",midiMap="pitchNames")
+	
 
 	# def __init__(self,*args):
 	# 	GSPatternTestUtils.__init__(self,*args)
 
+	def generateCachedDataset(self):
+		return GSDataset(midiGlob="miniDaftPunk.mid",midiFolder = self.getLocalCorpusPath('midiTests'),midiMap="pitchNames")
+
 	def buildMarkov(self,order,numSteps,loopDuration):
+
 		self.patternList=[]
 
-		for p in self.dataSet.patterns:
+		for p in self.cachedDataset.patterns:
 			self.patternList += p.splitInEqualLengthPatterns(loopDuration,False);
 		
 		for p in self.patternList :print p

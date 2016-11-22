@@ -21,3 +21,5 @@ python/gsapi/.idea/*
 *.pyo
 
 examples/Bassmine/output/*
+
+profiled
