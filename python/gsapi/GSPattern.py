@@ -331,7 +331,7 @@ class GSPattern(object):
         pitchs = []
         for e in self.events:
              pitchs+=[e.pitch]
-        pitchs = list(set(pitch))
+        pitchs = list(set(pitchs))
         return pitchs
 
     def getPatternWithTags(self, tags, exactSearch=True, copy=True):

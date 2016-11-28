@@ -39,6 +39,17 @@ class DescriptorTests(GSTestBase):
 				
 				self.assertTrue(syncopation>=0 , "syncopation value not valid : %f"%(syncopation))
 
+	def test_chords(self):
+		descriptor = GSDescriptors.GSDescriptorChord(forceMajMin=False)
+		harmonyDataset = GSDataset(midiGlob="*.mid",midiFolder = self.getLocalCorpusPath('harmony'),midiMap="pitchNames",checkForOverlapped = True)
+		
+		for  p in harmonyDataset:
+			sliced = p.splitInEqualLengthPatterns(4);
+			for s in sliced:
+				s.printASCIIGrid(1);
+				chord = descriptor.getDescriptorForPattern(s)
+				print chord
+
 
 if __name__=='__main__':
 	runTest(profile = True,getStat = False)

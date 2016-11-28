@@ -177,7 +177,8 @@ class PatternMarkov(object):
 		for el in events:
 			l = el.split("/")
 			for e in l:
-				if(e!='silence') : pattern.events+=[GSPatternEvent(idx*stepSize,stepSize,100,127,e)]
+				if(e!='silence') : 
+					pattern.events+=[GSPatternEvent(idx*stepSize,stepSize,100,127,e)]
 			idx+=1
 		pattern.duration = self.loopDuration
 		
@@ -197,12 +198,17 @@ class PatternMarkov(object):
 
 
 	def _buildNameForEvents(self,events):
+		""" build a string from list of list of events :
+		if list is [ [a1,a2],[b1,b2,b3]] (where an and bn are tags of listed events)
+		this function returns "a1/a2,b1/b2/b3"
+		"""
 		res = []
-		for n in events:
+		for evAtStep in events:
 			curL = []
-			for s in n:
-				for t in s.tags:
+			for e in evAtStep:
+				for t in e.tags:
 					if t not in curL : curL+=[t]
+			# we sort it for having consistent ordering
 			curL.sort()
 			res+=[curL]
 		
@@ -215,6 +221,8 @@ class PatternMarkov(object):
 		return out
 
 	def formatPattern(self,p):
+		"""format pattern to have a grid aligned on markov steps size
+		"""
 		# p.quantize(self.loopDuration*1.0/self.numSteps);
 		p.timeStretch(self.numSteps*1.0/self.loopDuration)
 
@@ -236,11 +244,12 @@ class PatternMarkov(object):
 
 
 	def getInternalState(self):
-		res = {}
-		res["transitionTable"] 	= self.transitionTable
-		res["order"] 			= self.order ;
-		res["numSteps"] 		= self.numSteps ;
-		res["loopDuration"] 	= self.loopDuration ;
+		res = {
+		"transitionTable": self.transitionTable,
+		"order": self.order ,
+		"numSteps" : self.numSteps ,
+		"loopDuration" :self.loopDuration 
+		}
 		return res
 
 	def setInternalState(self,state):
