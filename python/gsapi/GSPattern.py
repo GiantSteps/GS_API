@@ -32,7 +32,7 @@ class GSPatternEvent(object):
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
-        self.tags = tags # TODO check if this is a dupe...
+        self.tags = tags  # TODO check if this is a dupe...
 
     def hasOneCommonTagWith(self, event):
         """Compare tags between events.
@@ -239,15 +239,15 @@ class GSPattern(object):
         """
         beatDivision = 1.0/stepSize
         if(quantizeStartTime and quantizeDuration) :
-			for e in self.events:
-				e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
-				e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
+            for e in self.events:
+                e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
+                e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
         elif quantizeStartTime :
-			for e in self.events:
-				e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
+            for e in self.events:
+                e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
         elif quantizeDuration :
-			for e in self.events:
-				e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
+            for e in self.events:
+                e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
 
 
     def timeStretch(self, ratio):
@@ -323,7 +323,7 @@ class GSPattern(object):
         return tags
 
     def getAllPitches(self):
-    	""" Returns all used pitch in this pattern.
+        """ Returns all used pitch in this pattern.
 
         Returns:
             list of integers composed of all pitches present in this pattern
@@ -545,34 +545,34 @@ class GSPattern(object):
             self.events = allEvents
 
     def applyLegato(self,usePitchValues=False):
-    	""" this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
-    	Args:
-    		usePitchValues: should we consider pitch numbers instead of tags (bit faster)
+        """ this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
+        Args:
+            usePitchValues: should we consider pitch numbers instead of tags (bit faster)
 
-    	"""
+        """
 
-    	def _perVoiceLegato(pattern):
-    		pattern.reorderEvents()
-    		if(len(pattern)==0) : 
-    			patternLog.warning("try to apply legato on an empty voice")
-    			return
-    		for idx in range(1,len(pattern)):
-    			diff =  pattern[idx].startTime-pattern[idx-1].getEndTime()
-    			if(diff>0):
-    				pattern[idx-1].duration+=diff
+        def _perVoiceLegato(pattern):
+            pattern.reorderEvents()
+            if(len(pattern)==0) :
+                patternLog.warning("try to apply legato on an empty voice")
+                return
+            for idx in range(1,len(pattern)):
+                diff =  pattern[idx].startTime-pattern[idx-1].getEndTime()
+                if(diff>0):
+                    pattern[idx-1].duration+=diff
 
-    		diff = pattern.duration - pattern[-1].getEndTime()
-    		if(diff>0):
-    			pattern[-1].duration+=diff
-    		
+            diff = pattern.duration - pattern[-1].getEndTime()
+            if(diff>0):
+                pattern[-1].duration+=diff
 
-    	if usePitchValues:
-    		for p in self.getAllPitches():
-    			voice = self.getPatternWithPitch(p)
-    			_perVoiceLegato(voice)
-    	for t in self.getAllTags():
-    		voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
-    		_perVoiceLegato(voice)
+
+        if usePitchValues:
+            for p in self.getAllPitches():
+                voice = self.getPatternWithPitch(p)
+                _perVoiceLegato(voice)
+        for t in self.getAllTags():
+            voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
+            _perVoiceLegato(voice)
 
 
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
@@ -609,15 +609,15 @@ class GSPattern(object):
         return s
 
     def __getitem__(self, index):
-    	"""Utility to access events as list member : GSPattern[idx] = GSPattern.events[idx]
-     	"""
-    	return self.events[index]
+        """Utility to access events as list member : GSPattern[idx] = GSPattern.events[idx]
+        """
+        return self.events[index]
 
     def __setitem__(self, index, item):
-    	self.events[index] = item 
+        self.events[index] = item
 
     def __len__(self):
-    	return len(self.events)
+        return len(self.events)
 
     def toJSONDict(self):
         """Gives a standard dict for json output.
@@ -698,7 +698,7 @@ class GSPattern(object):
         for t in self.getAllTags():
             noteOnASCII = '|'
             sustainASCII = '>'
-            silenceASCII = '-' 
+            silenceASCII = '-'
             out = "["
             p = self.getPatternWithTags(t,copy=True);#.alignOnGrid(blockSize);
             # p.fillWithSilences(maxSilenceTime = blockSize)
@@ -706,16 +706,16 @@ class GSPattern(object):
             inited = False
             lastActiveEvent = p.events[0]
             numSteps = int(self.duration*1.0/blockSize)
-            
+
             for i in range(numSteps):
                 time = i*1.0*blockSize
 
                 el = p.getActiveEventsAtTime(time)
 
                 newSilenceState = __areSilenceEvts(el)
-                
+
                 if newSilenceState!=isSilence :
-                    
+
                     if newSilenceState:
                         out+=silenceASCII
                     else:
@@ -737,4 +737,4 @@ class GSPattern(object):
             out+="] : "+t
             print out
 
-        
+
