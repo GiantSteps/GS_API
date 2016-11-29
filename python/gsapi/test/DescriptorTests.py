@@ -42,11 +42,12 @@ class DescriptorTests(GSTestBase):
 	def test_chords(self):
 		descriptor = GSDescriptors.GSDescriptorChord(forceMajMin=False)
 		harmonyDataset = GSDataset(midiGlob="*.mid",midiFolder = self.getLocalCorpusPath('harmony'),midiMap="pitchNames",checkForOverlapped = True)
-		
+
 		for  p in harmonyDataset:
+			print p.name
 			sliced = p.splitInEqualLengthPatterns(4);
 			for s in sliced:
-				s.printASCIIGrid(1);
+				# s.printASCIIGrid(1);
 				chord = descriptor.getDescriptorForPattern(s)
 				print chord
 

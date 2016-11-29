@@ -98,9 +98,9 @@ chordTypes = {"0":          [0],             # one note
               # triads
               "maj":        [0, 4, 7],
               "min":        [0, 3, 7],
-              # "aug":        [0, 4, 7], @Angel: we should avoid having same types with different names no?
-              # "dim":        [0, 4, 7],
-              "sus4":       [0, 4, 5],
+              "aug":        [0, 4, 8], 
+              "dim":        [0, 3, 6],
+              "sus4":       [0, 5, 7],
               "sus2":       [0, 2, 7],
               # tetrads
               "7":          [0, 4, 7, 10],
@@ -109,6 +109,15 @@ chordTypes = {"0":          [0],             # one note
               "min(maj7)":  [0, 3, 7, 11],
               "min7(b5)":   [0, 3, 6, 10],
               "dim7":       [0, 3, 6, 9],
+
+              
+              "6":          [0, 4, 7, 9],
+              "min6":       [0, 3, 7, 9],
+
+              "min9":       [0, 3, 7, 14],
+              "maj9":       [0, 4, 7, 14],
+              # "min11":       [0, 3, 7, 16],
+              # "maj11":       [0, 4, 7, 18],
               }
 
 

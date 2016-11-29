@@ -6,9 +6,9 @@ from gsapi.GSPatternUtils import *
 
 
 def intervalListToProfile(intervalList,length=12):
-		profile = [0]*length
+		profile = [-1]*length
 		for e in intervalList:
-			profile[e]=1
+			profile[e%length]=1
 		return profile
 
 class GSDescriptorChord(GSBaseDescriptor):
@@ -43,30 +43,32 @@ class GSDescriptorChord(GSBaseDescriptor):
 			return "silence"
 		ordered = [{'chroma':i,'density':chromas[i]} for i in range(len(chromas))]
 		ordered.sort(cmp=lambda x,y:int(x['density']-y['density']))
-		if elemNum <= 2	:
-			return defaultPitchNames[ordered[0]['chroma']]
+		# if elemNum <= 2	:
+		# 	return defaultPitchNames[ordered[0]['chroma']]
 		profileToConsider = GSDescriptorChord.allProfiles
 		if self.forceMajMin:
 			profileToConsider = {'min':profileToConsider['min'],'maj':profileToConsider['maj']}
-		bestScore = findBestScoreForProfiles(chromas,profileToConsider)
+		bestScore = findBestScoreForProfiles(chromas,profileToConsider,penalityWeight=pattern.duration/2.0)
 		return defaultPitchNames[bestScore[0]]+' '+bestScore[1]
 		
 
 
 
 
-def findBestScoreForProfiles(chromas,pitchProfileDict):
+def findBestScoreForProfiles(chromas,pitchProfileDict,penalityWeight):
 	maxScore = 0
 	bestProfile = ""
 	bestRoot = 0
 	for k,v in pitchProfileDict.iteritems():
-		conv = convolveWithPitchProfile(chromas,v)
+		conv = convolveWithPitchProfile(chromas,v,penalityWeight)
 		score =  findMaxAndIdx(conv)
 		nonZero = getNumNonZero(v)
-		# to be a complex chord score should be higher (not only part of it)
-		# if nonZero>3:
-		score[0]*=pow(nonZero,-.5)
-		print  k,score[0],score[1]
+		
+		# print v
+		# print chromas
+		# print conv
+
+		# print  k,score[0]
 		if score[0]>maxScore:
 			maxScore = score[0]
 			bestProfile = k
@@ -81,7 +83,7 @@ def getNumNonZero(li):
 			count+=1
 	return count
 
-def convolveWithPitchProfile(chromas,pitchProfile):
+def convolveWithPitchProfile(chromas,pitchProfile,penalityWeight):
 	if len(pitchProfile) != len(chromas):
 		print 'chroma and pitchProfile of different length'
 		return None
@@ -91,8 +93,11 @@ def convolveWithPitchProfile(chromas,pitchProfile):
 	for i in range(convLen):
 		conv = 0
 		for c in range(convLen):
-			idx = (i+c)%convLen
+			idx = (c-i+convLen)%convLen
 			conv+=chromas[c]*pitchProfile[idx]
+			# penalize if notes from pitch profile are missing
+			if pitchProfile[idx]>0 and chromas[c]<=0:
+				conv-=penalityWeight
 		convList[i]=conv
 	return convList
 
