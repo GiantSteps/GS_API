@@ -8,7 +8,6 @@ import logging
 from GSPatternUtils import *
 
 
-
 patternLog = logging.getLogger("gsapi.GSPattern")
 """logger for pattern related operations
 """
@@ -111,26 +110,26 @@ class GSPatternEvent(object):
             res += [newE]
         return res
 
-    def isSimilarTo(self,event):
+    def isSimilarTo(self, event):
         """ helper to compare events that could have be copy of each other (equality compares reference not content...)
         Args:
             event:event to compare wuith
         """
-        return (self.startTime == event.startTime) and (self.duration==event.duration) and (self.tags==event.tags) and (self.pitch == event.pitch)
+        return (self.startTime == event.startTime) and (self.duration == event.duration) and (self.tags == event.tags) and (self.pitch == event.pitch)
 
-    def containsTime(self,time):
+    def containsTime(self, time):
         """return true if event is active at given time
         Args:
             time : time to compare with
         """
-        return (time >= self.startTime) and (time < self.startTime+self.duration)
+        return (time >= self.startTime) and (time < self.startTime + self.duration)
 
     def __repr__(self):
         return "%s %i %i %05.2f %05.2f" % (self.tags,
-                                self.pitch,
-                                self.velocity,
-                                self.startTime,
-                                self.duration)
+                                           self.pitch,
+                                           self.velocity,
+                                           self.startTime,
+                                           self.duration)
 
 
 # ==============================================================================
@@ -198,7 +197,7 @@ class GSPattern(object):
             lastNoteOff, i.e the time corresponding to the end of the last event
         """
 
-        if(len(self.events)):
+        if len(self.events):
             self.reorderEvents()
             return self.events[-1].duration + self.events[-1].startTime
         else:
@@ -208,47 +207,45 @@ class GSPattern(object):
         """Add an event increasing duration if needed.
 
         Args:
-            GSPatternEvent: the event to be added
+            event: the GSPatternEvent to be added
         """
         self.events += [event]
         self.setDurationFromLastEvent()
 
-    def removeEvent(self,event):
+    def removeEvent(self, event):
         """remove given event
         Args:
-            GSPatternEvent: the event to be added
+            event: the GSPatternEvent to be added
         """
         idxToRemove = []
-        idx = 0;
+        idx = 0
         for e in self.events:
-            if event==e or event.isSimilarTo(e):
-                idxToRemove+=[idx]
-            idx+=1
+            if event == e or event.isSimilarTo(e):
+                idxToRemove += [idx]
+            idx += 1
 
         for i in idxToRemove:
             del self.events[i]
 
-
-    def quantize(self, stepSize,quantizeStartTime=True,quantizeDuration = True):
+    def quantize(self, stepSize, quantizeStartTime=True, quantizeDuration=True):
         """ Quantize events.
 
         Args:
             stepSize: the duration that we want to quantize to
-            quantizeDuration : do we quantize duration ?
-            quantizeStartTime : do we quantize startTimes
+            quantizeDuration: do we quantize duration?
+            quantizeStartTime: do we quantize startTimes
         """
-        beatDivision = 1.0/stepSize
-        if(quantizeStartTime and quantizeDuration) :
+        beatDivision = 1.0 / stepSize
+        if quantizeStartTime and quantizeDuration:
             for e in self.events:
                 e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
                 e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
-        elif quantizeStartTime :
+        elif quantizeStartTime:
             for e in self.events:
                 e.startTime = int(e.startTime * beatDivision) * 1.0 / beatDivision
-        elif quantizeDuration :
+        elif quantizeDuration:
             for e in self.events:
                 e.duration = int(e.duration * beatDivision) * 1.0 / beatDivision
-
 
     def timeStretch(self, ratio):
         """Time-stretch a pattern.
@@ -276,7 +273,7 @@ class GSPattern(object):
                 res += [e]
         return res
 
-    def getActiveEventsAtTime(self, time):
+    def getActiveEventsAtTime(self, time): # todo: either implement or remove tolerance
         """ Get all events currently active at a givent time.
 
         Args:
@@ -290,7 +287,6 @@ class GSPattern(object):
             if(time - e.startTime >= 0 and time - e.startTime < e.duration):
                 res += [e]
         return res
-
 
     def copy(self):
         """Deepcopy a pattern
@@ -317,8 +313,8 @@ class GSPattern(object):
         """
         tags = []
         for e in self.events:
-            for  t in e.tags:
-                tags+=[t]
+            for t in e.tags:
+                tags += [t]
         tags = list(set(tags))
         return tags
 
@@ -330,7 +326,7 @@ class GSPattern(object):
         """
         pitchs = []
         for e in self.events:
-             pitchs+=[e.pitch]
+            pitchs += [e.pitch]
         pitchs = list(set(pitchs))
         return pitchs
 
@@ -344,7 +340,6 @@ class GSPattern(object):
         Returns:
             a GSPattern with only events that tags corresponds to given tags
         """
-
         if isinstance(tags, (list)):
             if exactSearch:
                 boolFunction = lambda inTags: inTags == tags
@@ -376,8 +371,6 @@ class GSPattern(object):
         Returns:
             a GSPattern with only events that pitch corresponds to given pitch
         """
-
-
         res = self.getACopyWithoutEvents()
         for e in self.events:
             found = (e.pitch == pitch)
@@ -399,19 +392,19 @@ class GSPattern(object):
         """
         res = self.getACopyWithoutEvents()
         for e in self.events:
-            if  exactSearch and e.tags==tags:
+            if exactSearch and e.tags == tags:
                 pass
             elif tags in e.tags:
                 newEv = e if not copy else e.copy()
                 for tRm in newEv.tags:
                     newEv.tags.remove(tRm)
-                res.events+=[newEv]
+                res.events += [newEv]
             else:
                 newEv = e if not copy else e.copy()
-                res.events+=[newEv]
+                res.events += [newEv]
         return res
 
-    def alignOnGrid(self, stepSize, repeatibleTags = ['silence']):
+    def alignOnGrid(self, stepSize, repeatibleTags=['silence']):
         """Align this pattern on a temporal grid.
         Very useful to deal with step-sequenced pattern:
         - all events durations are shortened to stepsize
@@ -502,7 +495,7 @@ class GSPattern(object):
         pattern.fillWithSilences(maxSilenceTime=maxSilenceTime, perTag=perTag, silenceTag=silenceTag)
         return pattern
 
-    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag ='silence',silencePitch = -1):
+    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag='silence', silencePitch=-1):
         """Fill empty time intervals (i.e no event) with silence event.
 
         Args:
@@ -513,7 +506,7 @@ class GSPattern(object):
         """
         self.reorderEvents()
 
-        def _fillListWithSilence(pattern, silenceTag,silencePitch =-1):
+        def _fillListWithSilence(pattern, silenceTag, silencePitch=-1):
             lastOff = 0
             newEvents = []
 
@@ -535,7 +528,6 @@ class GSPattern(object):
                 newEvents += [GSPatternEvent(lastOff, pattern.duration - lastOff, silencePitch, 0, [silenceTag])]
             return newEvents
 
-
         if not perTag:
             self.events = _fillListWithSilence(self, silenceTag,silencePitch)
         else:
@@ -544,27 +536,28 @@ class GSPattern(object):
                 allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag,silencePitch)
             self.events = allEvents
 
-    def applyLegato(self,usePitchValues=False):
-        """ this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
+    def applyLegato(self, usePitchValues=False):
+        """ this function supress the possible silences in this pattern by stretching consecutive identical events
+         (i.e identical tags or pitch values)
         Args:
             usePitchValues: should we consider pitch numbers instead of tags (bit faster)
-
         """
 
         def _perVoiceLegato(pattern):
             pattern.reorderEvents()
-            if(len(pattern)==0) :
+            if len(pattern) == 0:
                 patternLog.warning("try to apply legato on an empty voice")
                 return
-            for idx in range(1,len(pattern)):
-                diff =  pattern[idx].startTime-pattern[idx-1].getEndTime()
-                if(diff>0):
-                    pattern[idx-1].duration+=diff
+            for idx in range(1, len(pattern)):
+                print len(pattern)
+                diff = pattern[idx].startTime - pattern[idx-1].getEndTime()
+                print diff
+                if diff > 0:
+                    pattern[idx-1].duration += diff
 
             diff = pattern.duration - pattern[-1].getEndTime()
-            if(diff>0):
-                pattern[-1].duration+=diff
-
+            if diff > 0:
+                pattern[-1].duration += diff
 
         if usePitchValues:
             for p in self.getAllPitches():
@@ -573,7 +566,6 @@ class GSPattern(object):
         for t in self.getAllTags():
             voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
             _perVoiceLegato(voice)
-
 
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
         """Returns a pattern within given timeslice.
@@ -624,7 +616,7 @@ class GSPattern(object):
         """
         res = {}
         self.setDurationFromLastEvent()
-        allTags =self.getAllTags()
+        allTags = self.getAllTags()
         res['eventTags'] = allTags
         res['timeInfo'] = {'duration': self.duration, 'BPM': self.bpm}
         res['eventList'] = []
@@ -650,7 +642,12 @@ class GSPattern(object):
         self.duration = json['timeInfo']['duration']
         self.bpm = json['timeInfo']['BPM']
         for e in json['eventList']:
-            self.events += [GSPatternEvent(e['on'], e['duration'], e['pitch'], e['velocity'], [tags[f] for f in e['tagsIdx']])]
+            self.events += [GSPatternEvent(e['on'],
+                                           e['duration'],
+                                           e['pitch'],
+                                           e['velocity'],
+                                           [tags[f] for f in e['tagsIdx']]
+                                           )]
         self.setDurationFromLastEvent()
         return self
 
@@ -686,55 +683,48 @@ class GSPattern(object):
             res += [patterns[p]]
 
         return res
-    def printASCIIGrid(self,blockSize = 1):
+
+    def printASCIIGrid(self, blockSize=1):
         def __areSilenceEvts(l):
-            if len(l)>0:
+            if len(l) > 0:
                 for e in l:
-                    if not 'silence' in e.tags:
+                    if 'silence' not in e.tags:
                         return False
             return True
-
 
         for t in self.getAllTags():
             noteOnASCII = '|'
             sustainASCII = '>'
             silenceASCII = '-'
             out = "["
-            p = self.getPatternWithTags(t,copy=True);#.alignOnGrid(blockSize);
+            p = self.getPatternWithTags(t, copy=True)  #.alignOnGrid(blockSize);
             # p.fillWithSilences(maxSilenceTime = blockSize)
             isSilence = __areSilenceEvts(p.getActiveEventsAtTime(0))
             inited = False
             lastActiveEvent = p.events[0]
-            numSteps = int(self.duration*1.0/blockSize)
+            numSteps = int(self.duration * 1.0 / blockSize)
 
             for i in range(numSteps):
-                time = i*1.0*blockSize
-
+                time = i * 1.0 * blockSize
                 el = p.getActiveEventsAtTime(time)
-
                 newSilenceState = __areSilenceEvts(el)
-
-                if newSilenceState!=isSilence :
-
+                if newSilenceState != isSilence:
                     if newSilenceState:
-                        out+=silenceASCII
+                        out += silenceASCII
                     else:
-                        out+=noteOnASCII
+                        out += noteOnASCII
                         lastActiveEvent = el[0]
                 elif newSilenceState:
-                    out+=silenceASCII
+                    out += silenceASCII
                 elif not newSilenceState:
-                    if el[0].startTime==lastActiveEvent.startTime:
-                        out+=sustainASCII
+                    if el[0].startTime == lastActiveEvent.startTime:
+                        out += sustainASCII
                     else:
-                        out+=noteOnASCII
+                        out += noteOnASCII
                         lastActiveEvent = el[0]
 
                 isSilence = newSilenceState
                 inited = True
 
-
-            out+="] : "+t
+            out += "]: " + t
             print out
-
-

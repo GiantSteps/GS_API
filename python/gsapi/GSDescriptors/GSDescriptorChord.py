@@ -44,7 +44,7 @@ class GSDescriptorChord(GSBaseDescriptor):
         # 	return defaultPitchNames[ordered[0]['chroma']]
         profileToConsider = GSDescriptorChord.allProfiles
         if self.forceMajMin:
-            profileToConsider = {'min': profileToConsider['min'], 'maj':profileToConsider['maj']}
+            profileToConsider = {'min': profileToConsider['min'], 'maj': profileToConsider['maj']}
         bestScore = findBestScoreForProfiles(chromas, profileToConsider, penalityWeight=pattern.duration/2.0)
         return defaultPitchNames[bestScore[0]] + ' ' + bestScore[1]
 
