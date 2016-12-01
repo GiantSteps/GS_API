@@ -194,7 +194,6 @@ class GSPattern(object):
     def __setitem__(self, index, item):
         self.events[index] = item
 
-
     def applyLegato(self, usePitchValues=False):
         """ this function supress the possible silences in this pattern by stretching consecutive identical events
          (i.e identical tags or pitch values)
@@ -236,7 +235,7 @@ class GSPattern(object):
         for e in self.events:
             e.pitch += interval
             e.tags = [pitchToName(e.pitch, defaultPitchNames)]
-        return self
+        # return self
 
     def setDurationFromLastEvent(self, onlyIfBigger=True):
         """Sets duration to last event NoteOff
@@ -291,6 +290,16 @@ class GSPattern(object):
 
         for i in idxToRemove:
             del self.events[i]
+
+    def removeByTags(self, tags):
+        """Remove all event(s) in a pattern with specified tag(s).
+
+        Args:
+            tags: list of tag(s)
+        """
+        for e in self.events:
+            if e.hasOneOfTags(list(tags)):
+                self.removeEvent(e)
 
     def quantize(self, stepSize, quantizeStartTime=True, quantizeDuration=True):
         """ Quantize events.
@@ -526,17 +535,17 @@ class GSPattern(object):
                             newList += [e]
                             overLappedEv += [ee]
                         else:
-                            patternLog.info("strict overlapping of start times %s with %s"%(e, ee))
+                            patternLog.info("strict overlapping of start times %s with %s" % (e, ee))
 
                 if ee.startTime > (e.startTime + e.duration):
                     break
             if not found:
                 newList += [e]
             else:
-                patternLog.info("remove overlapping %s with %s"%(e, overLappedEv))
+                patternLog.info("remove overlapping %s with %s" % (e, overLappedEv))
             idx += 1
         self.events = newList
-        return self
+        # return self
 
     def getAllIdenticalEvents(self, event, allTagsMustBeEquals=True):
         """Get a list of event with same tags.
