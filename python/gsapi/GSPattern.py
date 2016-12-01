@@ -1,5 +1,12 @@
+"""
+====================
+= GSPattern module =
+====================
 
-"""GSPattern module holds classes :class:`GSPatternEvent` and :class:`GSPattern`
+It holds the following classes:
+
+    :class:`GSPatternEvent`
+    :class:`GSPattern`
 """
 
 import math
@@ -7,10 +14,9 @@ import copy
 import logging
 from GSPatternUtils import *
 
-
+# logger for pattern related operations
 patternLog = logging.getLogger("gsapi.GSPattern")
-"""logger for pattern related operations
-"""
+
 
 class GSPatternEvent(object):
     """Represents an event of a GSPattern.
@@ -118,9 +124,10 @@ class GSPatternEvent(object):
         return (self.startTime == event.startTime) and (self.duration == event.duration) and (self.tags == event.tags) and (self.pitch == event.pitch)
 
     def containsTime(self, time):
-        """return true if event is active at given time
+        """Return true if event is active at given time
+
         Args:
-            time : time to compare with
+            time: time to compare with
         """
         return (time >= self.startTime) and (time < self.startTime + self.duration)
 
@@ -142,11 +149,11 @@ class GSPattern(object):
 
     Args:
         duration: length of pattern. Usually in beats, but time scale is up to
-            the user (it can be useful if working on 32th note steps).
+         the user (it can be useful if working on 32th note steps).
         events: list of GSPatternEvent for this pattern.
         bpm: initial tempo in beats per minute for this pattern (default: 120).
         timeSignature: list of integers representing the time signature,
-            i.e [numerator, denominator].
+         i.e [numerator, denominator].
     """
     defaultTimeSignature = [4, 4]
     defaultBPM = 120
@@ -179,14 +186,13 @@ class GSPattern(object):
         if inner events have a bigger time span than self.duration, increase duration to fit
         """
         total = self.getLastNoteOff()
-        if (total and (total > self.duration or not onlyIfBigger)):
+        if total and (total > self.duration or not onlyIfBigger):
             # print "resizing : "+str(total) +'old : '+ str(self.duration)
             self.duration = total
 
     def reorderEvents(self):
-        """Ensure than our internal event list `events` is time sorted
-
-            can be useful for time sensitive events iteration
+        """Ensure than our internal event list `events` is time sorted.
+        It can be useful for time sensitive events iteration.
         """
         self.events.sort(key=lambda x: x.startTime, reverse=False)
 
@@ -196,7 +202,6 @@ class GSPattern(object):
         Returns:
             lastNoteOff, i.e the time corresponding to the end of the last event
         """
-
         if len(self.events):
             self.reorderEvents()
             return self.events[-1].duration + self.events[-1].startTime
@@ -273,7 +278,7 @@ class GSPattern(object):
                 res += [e]
         return res
 
-    def getActiveEventsAtTime(self, time): # todo: either implement or remove tolerance
+    def getActiveEventsAtTime(self, time, tolerance=0):  # todo: either implement or remove tolerance
         """ Get all events currently active at a givent time.
 
         Args:
@@ -425,7 +430,7 @@ class GSPattern(object):
             else:
                 evToAdd = [e]
             for ea in evToAdd:
-                ea.startTime = int(ea.startTime/stepSize+0.5)*stepSize
+                ea.startTime = int(ea.startTime / stepSize + 0.5) * stepSize
                 # avoid adding last event out of duration range
                 if ea.startTime < self.duration:
                     ea.duration = stepSize
@@ -436,7 +441,7 @@ class GSPattern(object):
         return self
 
     def removeOverlapped(self, usePitchValues=False):
-        """remove overlapped elements
+        """Remove overlapped elements.
 
             Args:
                 usePitchValues: use pitch to discriminate events
@@ -544,14 +549,14 @@ class GSPattern(object):
         """
 
         def _perVoiceLegato(pattern):
+            print pattern
             pattern.reorderEvents()
             if len(pattern) == 0:
                 patternLog.warning("try to apply legato on an empty voice")
                 return
             for idx in range(1, len(pattern)):
-                print len(pattern)
+                print idx
                 diff = pattern[idx].startTime - pattern[idx-1].getEndTime()
-                print diff
                 if diff > 0:
                     pattern[idx-1].duration += diff
 
@@ -567,6 +572,20 @@ class GSPattern(object):
             voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
             _perVoiceLegato(voice)
 
+    def fillWithPreviousEvent(self):
+        """
+        Fill gaps between onsets making longer the duration of the previous event.
+        """
+        onset_positions = []
+        for e in self.events:
+            if e.startTime not in onset_positions:
+                onset_positions.append(e.startTime)
+        onset_positions.append(self.duration)
+
+        for e in self.events:
+            e.duration = onset_positions[onset_positions.index(e.startTime) + 1] - e.startTime
+
+
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
         """Returns a pattern within given timeslice.
 
@@ -580,7 +599,7 @@ class GSPattern(object):
         p = self.getACopyWithoutEvents()
         p.duration = length
         for e in self.events:
-            if e.startTime - startTime >= 0 and e.startTime - startTime < length:
+            if 0 <= (e.startTime - startTime) < length:
                 newEv = e.copy()
                 newEv.startTime -= startTime
                 p.events += [newEv]
@@ -601,7 +620,7 @@ class GSPattern(object):
         return s
 
     def __getitem__(self, index):
-        """Utility to access events as list member : GSPattern[idx] = GSPattern.events[idx]
+        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
         """
         return self.events[index]
 

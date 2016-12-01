@@ -32,13 +32,10 @@ myPattern.transpose(transposition_interval)
 
 # POSIBLY USEFUL FUNCTIONS
 myPattern.removeOverlapped(usePitchValues=True)
+myPattern.reorderEvents()
 myPattern.quantize(0.25)
-myPattern.applyLegato(usePitchValues=True)  # TODO chech with martin if there is something strange here
-myPattern.fillWithSilences() # fills empty time intervals with silences
+myPattern.fillWithPreviousEvent()
+myPattern.fillWithSilences()  # fills empty time intervals with silences
 print myPattern
 
-
-# GSIO.toMIDI(myPattern, path='./', name='test')
-# s = converter.parse('./test.mid')
-# s.duration = duration.Duration(myPattern.duration)
-# s.show()
+GSIO.toMIDI(myPattern, path='./', name='test')

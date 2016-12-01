@@ -179,3 +179,7 @@ def complete_bar_with_rest(m21_stream):
         return m21_stream
 
 # todo tomorrow: skip these aesthetic steps... and go straight into extracting the pitch classes and finding out interesting tings.
+
+# s = converter.parse('./test.mid')
+# s.duration = duration.Duration(myPattern.duration)
+# s.show()
