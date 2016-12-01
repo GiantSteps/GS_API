@@ -1,13 +1,4 @@
 
-
-def pitchToName(pitch, pitchNames):
-    """Converts a midi note number to alphabetic notation with octave index (e.g. "C4", "Db5")"""
-    octaveLength = len(pitchNames)
-    octave = (pitch / octaveLength) - 1
-    note = pitch % octaveLength
-    return pitchNames[note] + str(octave)
-
-
 def GSPatternToList(GSPattern):
     """Converts a GSPattern to a regular python list."""
     list_of_events = []
@@ -18,7 +9,16 @@ def GSPatternToList(GSPattern):
     return list_of_events
 
 
-# ================ DEFAULT DICTIONARY DEFINITIONS ====================
+def pitchToName(pitch, pitchNames):
+    """Converts a midi note number to alphabetic notation with octave index (e.g. "C4", "Db5")"""
+    octaveLength = len(pitchNames)
+    octave = (pitch / octaveLength) - 1
+    note = pitch % octaveLength
+    return pitchNames[note] + str(octave)
+
+# ==============================
+# DEFAULT DICTIONARY DEFINITIONS
+# ==============================
 
 defaultPitchNames = ["C", "C#", "D", "Eb", "E", "F",
                      "F#", "G", "Ab", "A", "Bb", "B"]

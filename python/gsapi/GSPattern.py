@@ -174,6 +174,14 @@ class GSPattern(object):
         self.originFilePath = originFilePath
         self.name = name
 
+    def __getitem__(self, index):
+        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
+        """
+        return self.events[index]
+
+    def __len__(self):
+        return len(self.events)
+
     def __repr__(self):
         """Nicely print out the list of events.
         Each line represents an event formatted as "[tags] pitch startTime duration"
@@ -183,16 +191,40 @@ class GSPattern(object):
             s += str(e) + "\n"
         return s
 
-    def __getitem__(self, index):
-        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
-        """
-        return self.events[index]
-
     def __setitem__(self, index, item):
         self.events[index] = item
 
-    def __len__(self):
-        return len(self.events)
+
+    def applyLegato(self, usePitchValues=False):
+        """ this function supress the possible silences in this pattern by stretching consecutive identical events
+         (i.e identical tags or pitch values)
+        Args:
+            usePitchValues: should we consider pitch numbers instead of tags (bit faster)
+        """
+
+        def _perVoiceLegato(pattern):
+            print pattern
+            pattern.reorderEvents()
+            if len(pattern) == 0:
+                patternLog.warning("try to apply legato on an empty voice")
+                return
+            for idx in range(1, len(pattern)):
+                print idx
+                diff = pattern[idx].startTime - pattern[idx-1].getEndTime()
+                if diff > 0:
+                    pattern[idx-1].duration += diff
+
+            diff = pattern.duration - pattern[-1].getEndTime()
+            if diff > 0:
+                pattern[-1].duration += diff
+
+        if usePitchValues:
+            for p in self.getAllPitches():
+                voice = self.getPatternWithPitch(p)
+                _perVoiceLegato(voice)
+        for t in self.getAllTags():
+            voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
+            _perVoiceLegato(voice)
 
     def transpose(self, interval):
         """Transposes a GSPattern to the desired interval
@@ -568,37 +600,6 @@ class GSPattern(object):
             for t in self.getAllTags():
                 allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag,silencePitch)
             self.events = allEvents
-
-    def applyLegato(self, usePitchValues=False):
-        """ this function supress the possible silences in this pattern by stretching consecutive identical events
-         (i.e identical tags or pitch values)
-        Args:
-            usePitchValues: should we consider pitch numbers instead of tags (bit faster)
-        """
-
-        def _perVoiceLegato(pattern):
-            print pattern
-            pattern.reorderEvents()
-            if len(pattern) == 0:
-                patternLog.warning("try to apply legato on an empty voice")
-                return
-            for idx in range(1, len(pattern)):
-                print idx
-                diff = pattern[idx].startTime - pattern[idx-1].getEndTime()
-                if diff > 0:
-                    pattern[idx-1].duration += diff
-
-            diff = pattern.duration - pattern[-1].getEndTime()
-            if diff > 0:
-                pattern[-1].duration += diff
-
-        if usePitchValues:
-            for p in self.getAllPitches():
-                voice = self.getPatternWithPitch(p)
-                _perVoiceLegato(voice)
-        for t in self.getAllTags():
-            voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
-            _perVoiceLegato(voice)
 
     def fillWithPreviousEvent(self):
         """
