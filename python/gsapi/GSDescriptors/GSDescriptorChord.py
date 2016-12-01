@@ -7,7 +7,7 @@ def intervalListToProfile(intervalList, length=12):
     profile = [-1] * length
     for e in intervalList:
         profile[e % length] = 1
-        return profile
+    return profile
 
 
 class GSDescriptorChord(GSBaseDescriptor):
