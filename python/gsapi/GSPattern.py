@@ -22,22 +22,29 @@ class GSPatternEvent(object):
     """Represents an event of a GSPattern.
     An event has a startTime, duration, pitch, velocity and associated tags.
 
-    Attributes:
+    Class variables:
         startTime: startTime of event
         duration: duration of event
         pitch: pitch of event
         velocity: velocity of event
         tags: list of tags representing the event
     """
-    def __init__(self, startTime, duration, pitch, velocity=127, tags=[]):
+    def __init__(self, startTime, duration, pitch, velocity=100, tags=[]):
         self.duration = duration
         if not isinstance(tags, list):
             tags = [tags]
-        self.tags = tags
+        # self.tags = tags   # TODO check if this is a dupe!
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
-        self.tags = tags  # TODO check if this is a dupe...
+        self.tags = tags
+
+    def __repr__(self):
+        return "%s %i %i %05.2f %05.2f" % (self.tags,
+                                           self.pitch,
+                                           self.velocity,
+                                           self.startTime,
+                                           self.duration)
 
     def hasOneCommonTagWith(self, event):
         """Compare tags between events.
@@ -131,23 +138,16 @@ class GSPatternEvent(object):
         """
         return (time >= self.startTime) and (time < self.startTime + self.duration)
 
-    def __repr__(self):
-        return "%s %i %i %05.2f %05.2f" % (self.tags,
-                                           self.pitch,
-                                           self.velocity,
-                                           self.startTime,
-                                           self.duration)
-
 
 # ==============================================================================
 # *********************** GSPattern Class Declaration **************************
 # ==============================================================================
 
 class GSPattern(object):
-    """ Class representing a pattern made of GSPatternEvent.
+    """Class representing a pattern made of GSPatternEvent.
     Holds a list of GSEvents and provide basic manipulation function.
 
-    Args:
+    Class Variables:
         duration: length of pattern. Usually in beats, but time scale is up to
          the user (it can be useful if working on 32th note steps).
         events: list of GSPatternEvent for this pattern.
@@ -155,16 +155,44 @@ class GSPattern(object):
         timeSignature: list of integers representing the time signature,
          i.e [numerator, denominator].
     """
-    defaultTimeSignature = [4, 4]
-    defaultBPM = 120
+    # defaultTimeSignature = [4, 4]
+    # defaultBPM = 120
 
-    def __init__(self):
-        self.duration = 0
-        self.events = []
-        self.bpm = GSPattern.defaultBPM
-        self.timeSignature = GSPattern.defaultTimeSignature
-        self.originFilePath = ""
-        self.name = ""
+    #    def __init__(self):
+    #        self.duration = 0
+    #        self.events = []
+    #        self.bpm = GSPattern.defaultBPM
+    #        self.timeSignature = GSPattern.defaultTimeSignature
+    #        self.originFilePath = ""
+    #        self.name = ""
+
+    def __init__(self, duration=0, events=[], bpm=120, timeSignature=[4, 4], originFilePath="", name=""):
+        self.duration = duration
+        self.events = events
+        self.bpm = bpm
+        self.timeSignature = timeSignature
+        self.originFilePath = originFilePath
+        self.name = name
+
+    def __repr__(self):
+        """Nicely print out the list of events.
+        Each line represents an event formatted as "[tags] pitch startTime duration"
+        """
+        s = "GSPattern %s\n" % self.name
+        for e in self.events:
+            s += str(e) + "\n"
+        return s
+
+    def __getitem__(self, index):
+        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
+        """
+        return self.events[index]
+
+    def __setitem__(self, index, item):
+        self.events[index] = item
+
+    def __len__(self):
+        return len(self.events)
 
     def transpose(self, interval):
         """Transposes a GSPattern to the desired interval
@@ -358,7 +386,6 @@ class GSPattern(object):
         elif callable(tags):
             boolFunction = tags
 
-
         res = self.getACopyWithoutEvents()
         for e in self.events:
             found = boolFunction(e.tags)
@@ -422,6 +449,7 @@ class GSPattern(object):
 
         Args:
             stepSize: temporal definition of the grid
+            repeatibleTags: tags
         """
         newEvents = []
         for e in self.events:
@@ -585,7 +613,6 @@ class GSPattern(object):
         for e in self.events:
             e.duration = onset_positions[onset_positions.index(e.startTime) + 1] - e.startTime
 
-
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
         """Returns a pattern within given timeslice.
 
@@ -609,26 +636,6 @@ class GSPattern(object):
                 if toCrop > 0:
                     e.duration -= toCrop
         return p
-
-    def __repr__(self):
-        """Nicely print out the list of events.
-        Each line represents an event formatted as: tags pitch startTime duration
-        """
-        s = "GSPattern %s\n" % self.name
-        for e in self.events:
-            s += str(e) + "\n"
-        return s
-
-    def __getitem__(self, index):
-        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
-        """
-        return self.events[index]
-
-    def __setitem__(self, index, item):
-        self.events[index] = item
-
-    def __len__(self):
-        return len(self.events)
 
     def toJSONDict(self):
         """Gives a standard dict for json output.
