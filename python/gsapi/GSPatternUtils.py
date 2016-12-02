@@ -115,15 +115,20 @@ chordTypes = {"0":          [0],             # one note
               "min6":       [0, 3, 7, 9], #inversion (rotation) of min7(b5)
               "add9":       [0, 4, 7, 14],
               "min(add9)":  [0, 3, 7, 14],
+              "7sus4":      [0, 5, 7, 10],
+              "add11":      [0, 4, 7, 17],
+              "min(add11)": [0, 3, 7, 16],
               # pentads
-              "9":          [0, 4, 7, 10, 14],
-              "min9":       [0, 3, 7, 10, 14],
-              "maj9":       [0, 4, 7, 11, 14],
-              "6/9":        [0, 4, 7, 9, 14],
-              "min6/9":     [0, 4, 7, 9, 14],
+              # "9":          [0, 4, 7, 10, 14],
+              "maj9":       [0, 4, 7, 10, 14],
+              "dom9":       [0, 4, 7, 9, 14],
+              "min(maj9)":  [0, 3, 7, 10, 14],
+              "min9":       [0, 3, 7, 9, 14],
               # sextads
-              # "min11":       [0, 3, 7, 16],
-              # "maj11":       [0, 4, 7, 18],
+              "11":         [0, 4, 7, 10, 14, 17],
+              "maj11":      [0, 4, 7, 11, 14, 17],
+              "min(maj11)": [0, 3, 7, 11, 14, 17],
+              "min11":      [0, 3, 7, 10, 14, 17],
               # septads
               # "min13":       [0, 3, 7, 16],
               # "maj13":       [0, 4, 7, 18],
@@ -134,15 +139,15 @@ chordTypes = {"0":          [0],             # one note
 
 if __name__=='__main__':
   # check tetrads rotations (equivalence )
-  tetrads ={}
-  for k,v in chordTypes.iteritems():
-    if len(v)==4:
-      tetrads[k]=v
+
   def getConsecutiveIntervalList(l):
     res = []
+    lmod = map(lambda x:x%12,l)
+    lmod.sort()
     for i in range(1,len(l)):
-      res.append(l[i] - l[i-1])
-    res.append(12-l[-1])
+      res.append(lmod[i] - lmod[i-1])
+    res.append(12-lmod[-1])
+
     return res
   def hasCommonRotation(l1,l2):
     length = len(l1)
@@ -154,9 +159,20 @@ if __name__=='__main__':
       if isEqual:
         return start
     return None
-  for k,v in tetrads.iteritems():
-    for k2,v2 in tetrads.iteritems():
-      if k!=k2:
-        cR =hasCommonRotation(getConsecutiveIntervalList(v),getConsecutiveIntervalList(v2)) 
-        if cR:
-          print 'commonRotation',k,k2,cR
+
+  chords ={}
+  for k,v in chordTypes.iteritems():
+    numElem = len(v)
+    if not numElem in chords:
+      chords[numElem]={}
+    chords[numElem][k]=v
+
+    
+  for n,c in chords.iteritems():
+    if int(n)>1:
+      for k,v in c.iteritems():
+        for k2,v2 in c.iteritems():
+          if k!=k2:
+            cR =hasCommonRotation(getConsecutiveIntervalList(v),getConsecutiveIntervalList(v2)) 
+            if cR:
+              print 'commonRotation',k,k2,cR
