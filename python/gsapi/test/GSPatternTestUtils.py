@@ -66,20 +66,23 @@ class GSTestBase(unittest.TestCase):
 	def checkPatternValid(self,pattern,checkForDoublons =True,checkOverlap = True,msg=""):
 		self.assertTrue(len(pattern.events)>0,msg)
 		i=0
+		
 		for e in pattern.events:
-			self.assertTrue(e.duration>0,msg + str(e))
-			self.assertTrue(e.startTime>=0,msg + str(e))
+			errMsg = "%s %s"%(msg,e)
+			self.assertTrue(e.duration>0,errMsg)
+			self.assertTrue(e.startTime>=0,errMsg)
 			i+=1
 		
-		if(checkForDoublons):
+		if checkForDoublons :
 			i = 0 ;
 			for e in pattern.events:
 				for ii in range(i+1,len(pattern.events)):
 					ee = pattern.events[ii]
-					self.assertFalse((e.startTime==ee.startTime) and 
-						(e.duration==ee.duration) and
-						(e.pitch==ee.pitch) and 
-						(e.tags == ee.tags),"%s : %s doublons %s // %s"%(pattern.name, msg ,e,ee ))
+					if ((e.startTime==ee.startTime) and 
+									(e.duration==ee.duration) and
+									(e.pitch==ee.pitch) and 
+									(e.tags == ee.tags)):
+						self.assertTrue(False,"%s : %s doublons %s // %s"%(pattern.name, msg ,e,ee ))
 				i+=1
 
 		if checkOverlap : self.checkNoTagsOverlaps(pattern,msg )

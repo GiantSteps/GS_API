@@ -107,12 +107,12 @@ chordTypes = {"0":          [0],             # one note
               # tetrads
               "7":          [0, 4, 7, 10],
               "maj7":       [0, 4, 7, 11],
-              "min7":       [0, 3, 7, 10],
+              "min7":       [0, 3, 7, 10], #inversion (rotation) of 6
               "min(maj7)":  [0, 3, 7, 11],
-              "min7(b5)":   [0, 3, 6, 10],
+              "min7(b5)":   [0, 3, 6, 10], #inversion (rotation) of min6
               "dim7":       [0, 3, 6, 9],
-              "6":          [0, 4, 7, 9],
-              "min6":       [0, 3, 7, 9],
+              "6":          [0, 4, 7, 9], #inversion (rotation) of min7
+              "min6":       [0, 3, 7, 9], #inversion (rotation) of min7(b5)
               "add9":       [0, 4, 7, 14],
               "min(add9)":  [0, 3, 7, 14],
               # pentads
@@ -128,3 +128,35 @@ chordTypes = {"0":          [0],             # one note
               # "min13":       [0, 3, 7, 16],
               # "maj13":       [0, 4, 7, 18],
               }
+
+
+
+
+if __name__=='__main__':
+  # check tetrads rotations (equivalence )
+  tetrads ={}
+  for k,v in chordTypes.iteritems():
+    if len(v)==4:
+      tetrads[k]=v
+  def getConsecutiveIntervalList(l):
+    res = []
+    for i in range(1,len(l)):
+      res.append(l[i] - l[i-1])
+    res.append(12-l[-1])
+    return res
+  def hasCommonRotation(l1,l2):
+    length = len(l1)
+    for start in range(length):
+      isEqual = True
+      for i in range(length):
+        # print 'checking',i,l1[(start+i)%length] ,l2[i]
+        isEqual &= (l1[(-start+i+length)%length] == l2[i])
+      if isEqual:
+        return start
+    return None
+  for k,v in tetrads.iteritems():
+    for k2,v2 in tetrads.iteritems():
+      if k!=k2:
+        cR =hasCommonRotation(getConsecutiveIntervalList(v),getConsecutiveIntervalList(v2)) 
+        if cR:
+          print 'commonRotation',k,k2,cR

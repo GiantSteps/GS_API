@@ -5,8 +5,9 @@ from gsapi.GSPatternUtils import *
 
 def intervalListToProfile(intervalList, length=12):
     profile = [-1] * length
+    profile[0]=1
     for e in intervalList:
-        profile[e % length] = 1
+        profile[e % length] = .8
     return profile
 
 
@@ -14,17 +15,20 @@ class GSDescriptorChord(GSBaseDescriptor):
 
     allProfiles = {k: intervalListToProfile(v) for k, v in chordTypes.iteritems()}
 
-    def __init__(self, forceMajMin=False):
+    def __init__(self, forceMajMin=False,allowDuplicates=False):
         GSBaseDescriptor.__init__(self)
         self.densityDescriptor = GSDescriptorDensity()
         self.forceMajMin = forceMajMin
+        self.allowDuplicates = allowDuplicates
 
     def getDescriptorForPattern(self, pattern):
         allPitches = pattern.getAllPitches()
         pitchDensities = {}
+
         for p in allPitches:
             voice = pattern.getPatternWithPitch(p)
             pitchDensities[p] = self.densityDescriptor.getDescriptorForPattern(voice)
+
 
         chromas = [0] * 12
         for p, v in pitchDensities.iteritems():
@@ -45,14 +49,21 @@ class GSDescriptorChord(GSBaseDescriptor):
         profileToConsider = GSDescriptorChord.allProfiles
         if self.forceMajMin:
             profileToConsider = {'min': profileToConsider['min'], 'maj': profileToConsider['maj']}
-        bestScore = findBestScoreForProfiles(chromas, profileToConsider, penalityWeight=pattern.duration/2.0)
-        return defaultPitchNames[bestScore[0]] + ' ' + bestScore[1]
+        bestScore = findBestScoreForProfiles(chromas, profileToConsider, penalityWeight=pattern.duration/2.0,allowDuplicates=self.allowDuplicates)
+        if self.allowDuplicates:
+        	return [(defaultPitchNames[x[0]] ,x[1]) for x in bestScore]
+        else:
+        	return defaultPitchNames[bestScore[0]] , bestScore[1]
 
 
-def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight):
+def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDuplicates=False):
     maxScore = 0
-    bestProfile = ""
-    bestRoot = 0
+    if allowDuplicates:
+    	bestProfile = []
+    	bestRoot = []
+    else:
+    	bestProfile = ""
+    	bestRoot = 0
     for k, v in pitchProfileDict.iteritems():
         conv = convolveWithPitchProfile(chromas, v, penalityWeight)
         score = findMaxAndIdx(conv)
@@ -62,12 +73,25 @@ def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight):
         # print chromas
         # print conv
         # print  k,score[0]
-        if score[0] > maxScore:
+        if score[0] >= maxScore:
+            
+            if allowDuplicates:
+             if score[0] > maxScore:
+             	bestProfile = [k]
+             	bestRoot = [score[1]]
+             else:
+             	bestProfile += [k]
+             	bestRoot += [score[1]]
+            else:
+              bestProfile = k
+              bestRoot = score[1]
             maxScore = score[0]
-            bestProfile = k
-            bestRoot = score[1]
+             
             # print bestProfile,bestRoot,maxScore
-    return [bestRoot, bestProfile]
+    if allowDuplicates:
+    	return [(bestRoot[i], bestProfile[i]) for i in range(len(bestRoot))]
+    else:
+    	return (bestRoot, bestProfile)
 
 
 def getNumNonZero(li):

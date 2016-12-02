@@ -173,7 +173,7 @@ class GSPattern(object):
 
     def __repr__(self):
         """Nicely print out the list of events.
-        Each line represents an event formatted as "[tags] pitch startTime duration"
+        Each line represents an event formatted as "[tags] pitch velocity startTime duration"
         """
         s = "GSPattern %s\n" % self.name
         for e in self.events:
@@ -368,7 +368,7 @@ class GSPattern(object):
         """Copy all fields but events.
             Useful for creating patterns from patterns.
         """
-        p = GSPattern()
+        p = GSPattern(events=[])
         p.duration = self.duration
         p.bpm = self.bpm
         p.timeSignature = self.timeSignature
@@ -447,6 +447,7 @@ class GSPattern(object):
             if found:
                 newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
+
         return res
 
     def getPatternWithoutTags(self, tags, exactSearch=False, makeCopy=True):
@@ -684,35 +685,47 @@ class GSPattern(object):
         self.setDurationFromLastEvent()
         return self
 
-    def splitInEqualLengthPatterns(self, desiredLength, trimEnd=True, makeCopy=True):
+    def splitInEqualLengthPatterns(self, desiredLength, makeCopy=True):
         """Splits a pattern in consecutive equal length cuts.
 
         Args:
             desiredLength: length desired for each pattern
-            trimEnd: trim the end to exact desiredLength
             makeCopy: returns a distint copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
 
         Returns:
             a list of patterns of length desiredLength
         """
+        def _handleEvent(e,patterns,makeCopy):
+          p = int(math.floor(e.startTime * 1.0 / desiredLength))
+          numPattern = str(p)
+          if numPattern not in patterns:
+              patterns[numPattern] = self.getACopyWithoutEvents()
+              patterns[numPattern].duration = desiredLength
+              patterns[numPattern].name = self.name + "_" + numPattern
+          newEv = e if not makeCopy else e.copy()
+          newEv.startTime -= p*desiredLength
+          if (newEv.startTime + newEv.duration > desiredLength):
+              remainingEvent = e.copy()
+              newOnset = (p+1) * desiredLength
+              remainingEvent.duration = remainingEvent.getEndTime() - newOnset
+              remainingEvent.startTime = newOnset
+              _handleEvent(remainingEvent,patterns,makeCopy)
+              newEv.duration = desiredLength - newEv.startTime
+          
+          patterns[numPattern].events += [newEv]
         patterns = {}
+
         for e in self.events:
-            p = math.floor(e.startTime * 1.0 / desiredLength)
-            numPattern = str(p)
-            if numPattern not in patterns:
-                patterns[numPattern] = self.getACopyWithoutEvents()
-                patterns[numPattern].name += "_slice_" + numPattern
-                patterns[numPattern].duration = desiredLength
-                patterns[numPattern].name = self.name + "_" + numPattern
-            newEv = e if not makeCopy else e.copy()
-            newEv.startTime -= p * desiredLength
-            if trimEnd and (newEv.startTime + newEv.duration > desiredLength):
-                newEv.duration = desiredLength - newEv.startTime
-            patterns[numPattern].events += [newEv]
+            _handleEvent(e,patterns,makeCopy)
         res = []
-        for p in patterns:
-            patterns[p].setDurationFromLastEvent()
-            res += [patterns[p]]
+        maxListLen = int(math.ceil(self.duration*1.0/desiredLength))
+        for p in range(maxListLen):
+            if str(p) in patterns:
+            	curPattern = patterns[str(p)]
+            	curPattern.setDurationFromLastEvent()
+            else:
+            	curPattern = None
+            res += [curPattern]
         return res
 
     def printASCIIGrid(self, blockSize=1):
