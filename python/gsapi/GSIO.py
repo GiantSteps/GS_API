@@ -182,9 +182,15 @@ def __fromMidiFormatted(midiPath,
             isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
             isNoteOff = midi.NoteOffEvent.is_event(e.statusmsg)
 
+
             if isNoteOn or isNoteOff:
                 pitch = e.pitch  # optimize pitch property access
                 tick = e.tick
+                velocity = e.get_velocity()
+                if velocity==0:
+                	isNoteOff =True
+                	isNoteOn = False
+
                 curBeat = tick * 1.0 * tick_to_quarter_note
                 if noteTags == []:
                     if TagsFromTrackNameEvents:
@@ -206,24 +212,24 @@ def __fromMidiFormatted(midiPath,
                         continue
                     lastPitch = pitch
                     lastTick = tick
-                    # print "on"+str(pitch)+":"+str( tick*1.0*tick_to_quarter_note)
+                    gsiolog.info("on %d %f"%(pitch,curBeat))
                     pattern.events += [GSPatternEvent(startTime=curBeat,
                                                       duration=-1,
                                                       pitch=pitch,
-                                                      velocity=127,
+                                                      velocity=velocity,
                                                       tags=noteTags)]
 
-                if isNoteOn or isNoteOff:
-                    # print "off"+str(pitch)+":"+str( tick*1.0*tick_to_quarter_note)
+                if isNoteOff:
+                    gsiolog.info( "off %d %f"%(pitch,curBeat))
                     foundNoteOn = False
                     for i in reversed(pattern.events):
 
-                        if (i.pitch == pitch) and (i.tags==noteTags) and curBeat >= i.startTime and i.duration<=0.0001:
+                        if (i.pitch == pitch) and (i.tags==noteTags) and ((isNoteOff and(curBeat >= i.startTime))or curBeat>i.startTime) and i.duration<=0.0001:
                             foundNoteOn = True
 
                             i.duration = max(0.0001,curBeat - i.startTime)
                             lastNoteOff = max(curBeat,lastNoteOff)
-                            # print "set duration "+str(i.duration) + "at start " + str(i.startTime)
+                            gsiolog.info("set duration %f at start %f "%(i.duration,i.startTime))
                             break
                     if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
                         gsiolog.warning(pattern.name + ": not found note on " + str(e) + str(pattern.events[-1]))
