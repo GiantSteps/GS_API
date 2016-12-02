@@ -145,6 +145,9 @@ def __fromMidiFormatted(midiPath,
     pattern = GSPattern()
     pattern.name = os.path.basename(midiPath)
 
+		# boolean to avoid useless string creation
+    extremeLog = gsiolog.getEffectiveLevel()<=logging.DEBUG
+    
     # get time signature first
     gsiolog.info("start processing %s" % pattern.name)
     __findTimeInfoFromMidi(pattern, globalMidi)
@@ -212,7 +215,7 @@ def __fromMidiFormatted(midiPath,
                         continue
                     lastPitch = pitch
                     lastTick = tick
-                    gsiolog.info("on %d %f"%(pitch,curBeat))
+                    if extremeLog : gsiolog.debug("on %d %f"%(pitch,curBeat))
                     pattern.events += [GSPatternEvent(startTime=curBeat,
                                                       duration=-1,
                                                       pitch=pitch,
@@ -220,7 +223,7 @@ def __fromMidiFormatted(midiPath,
                                                       tags=noteTags)]
 
                 if isNoteOff:
-                    gsiolog.info( "off %d %f"%(pitch,curBeat))
+                    if extremeLog : gsiolog.debug( "off %d %f"%(pitch,curBeat))
                     foundNoteOn = False
                     for i in reversed(pattern.events):
 

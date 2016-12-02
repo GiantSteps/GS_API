@@ -699,7 +699,7 @@ class GSPattern(object):
             a list of patterns of length desiredLength
         """
         def _handleEvent(e,patterns,makeCopy):
-          p = math.floor(e.startTime * 1.0 / desiredLength)
+          p = int(math.floor(e.startTime * 1.0 / desiredLength))
           numPattern = str(p)
           if numPattern not in patterns:
               patterns[numPattern] = self.getACopyWithoutEvents()
@@ -721,9 +721,14 @@ class GSPattern(object):
         for e in self.events:
             _handleEvent(e,patterns,makeCopy)
         res = []
-        for p in patterns:
-            patterns[p].setDurationFromLastEvent()
-            res += [patterns[p]]
+        maxListLen = int(math.ceil(self.duration*1.0/desiredLength))
+        for p in range(maxListLen):
+            if str(p) in patterns:
+            	curPattern = patterns[str(p)]
+            	curPattern.setDurationFromLastEvent()
+            else:
+            	curPattern = None
+            res += [curPattern]
         return res
 
     def printASCIIGrid(self, blockSize=1):
