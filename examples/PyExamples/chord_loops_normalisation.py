@@ -5,6 +5,7 @@ if __name__ == '__main__':
 
 import logging
 from gsapi import *
+from music21 import *
 
 GSIO.gsiolog.setLevel(level=logging.ERROR)
 
@@ -23,12 +24,22 @@ myPattern.removeOverlapped(usePitchValues=True)
 myPattern.reorderEvents()
 myPattern.transpose(transposition_interval)
 myPattern.quantize(0.25)
-print myPattern
-myPattern.removeByTags(["silence"])
-print myPattern
 myPattern.fillWithPreviousEvent()
 myPattern.fillWithSilences()
 print myPattern
 
+aa = myPattern.getACopyWithoutEvents()
+aa.events = myPattern.getActiveEventsAtTime(0)
+print aa
 
-# GSIO.toMIDI(myPattern, path='./', name='test')
+
+
+#GSIO.toMIDI(myPattern, path='./', name='test')
+#s = converter.parse('./test.mid')
+# s.duration = duration.Duration(myPattern.duration)
+#s.show()
+
+# It would be good to create a simple script to load
+# midi files and rewrite them properly, perfectly aligned and quantized and so on...
+
+

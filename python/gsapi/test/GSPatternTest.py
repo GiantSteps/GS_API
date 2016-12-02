@@ -65,7 +65,7 @@ class GSPatternTest(GSTestBase):
 
 	def test_legato(self):
 		
-		patternList = self.cachedDataset[0].splitInEqualLengthPatterns(4,copy=False)
+		patternList = self.cachedDataset[0].splitInEqualLengthPatterns(4, makeCopy=False)
 		for p in patternList:
 			p.applyLegato()
 			self.checkPatternValid(p,msg='legato failed')

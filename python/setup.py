@@ -17,8 +17,8 @@ import glob
 
 
 import distutils.ccompiler
-import Utils.parallelComp
-distutils.ccompiler.CCompiler.compile=Utils.parallelComp.parallelCCompile
+import utils.parallelComp
+distutils.ccompiler.CCompiler.compile=utils.parallelComp.parallelCCompile
 
 if __name__ == '__main__':
       import sys
@@ -47,6 +47,7 @@ if __name__ == '__main__':
                     
 #                     sources = cppSources)
 import gsapi
+
 setup(name='gsapi',
       version=gsapi.getGSAPIFullVersion(),
       description='Python symbolic music manipulation tools',
@@ -55,7 +56,7 @@ setup(name='gsapi',
       author_email='',
       url='https://github.com/Giantsteps',
       license='',
-      packages=find_packages(exclude=['Utils','gen','test', 'docs']),
+      packages=find_packages(exclude=['utils','gen','test', 'docs']),
       # ext_modules=[gsapiModule],
       # package_data={'gsapi': package_data},
       exclude_package_data={'': ['tests', 'docs']},

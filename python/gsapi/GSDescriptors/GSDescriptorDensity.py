@@ -12,7 +12,7 @@ class GSDescriptorDensity(GSBaseDescriptor):
         density = 0
         _checkedPattern = pattern.getPatternWithoutTags(self.ignoredTags)
         if self.includedTags:
-            _checkedPattern = _checkedPattern.getPatternWithTags(self.includedTags, copy=False)
+            _checkedPattern = _checkedPattern.getPatternWithTags(self.includedTags, makeCopy=False)
 
         for e in _checkedPattern.events:
                 density += e.duration

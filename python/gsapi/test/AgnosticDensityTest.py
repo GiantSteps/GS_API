@@ -20,7 +20,7 @@ class AgnosticDensityTest(GSTestBase):
 		agnosticDensity = GSPatternTransformers.AgnosticDensity(numSteps=numSteps);
 		for p in self.cachedDataset:
 			
-			shortPatterns = p.splitInEqualLengthPatterns(4,copy=False)
+			shortPatterns = p.splitInEqualLengthPatterns(4, makeCopy=False)
 			for shortPattern in shortPatterns:
 				print 'checking pattern'+ shortPattern.name
 				randomDensity = {}

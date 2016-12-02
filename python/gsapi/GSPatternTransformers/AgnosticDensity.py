@@ -114,7 +114,7 @@ class AgnosticDensity(GSBasePatternTransformer):
 			del self.currentState[tag]['removedNotes'][idx]
 
 		self.currentState[tag]['addedNotes']+=[idxToAdd]
-		tPattern =self.currentPattern.getPatternWithTags(tag,copy=False);
+		tPattern =self.currentPattern.getPatternWithTags(tag, makeCopy=False);
 		newEv = tPattern.events[0].copy()
 		newEv.startTime = idxToAdd
 		newEv.duration = 1
@@ -142,7 +142,7 @@ class AgnosticDensity(GSBasePatternTransformer):
 			del self.currentState[tag]['addedNotes'][idx]
 
 		self.currentState[tag]['removedNotes']+=[idxToRemove]
-		tPattern =self.currentPattern.getPatternWithTags(tag,copy=False);
+		tPattern =self.currentPattern.getPatternWithTags(tag, makeCopy=False);
 		
 		eventToRemove = tPattern.getStartingEventsAtTime(idxToRemove)[0]
 		self.currentPattern.removeEvent(eventToRemove)

@@ -79,7 +79,7 @@ def fromMidiCollection(midiGlobPath,
                      TagsFromTrackNameEvents=TagsFromTrackNameEvents,
                      filterOutNotMapped=filterOutNotMapped)
         if desiredLength > 0:
-            res += p.splitInEqualLengthPatterns(desiredLength, copy=False)
+            res += p.splitInEqualLengthPatterns(desiredLength, makeCopy=False)
         else:
             res += [p]
     return res

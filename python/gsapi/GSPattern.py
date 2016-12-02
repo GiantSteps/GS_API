@@ -3,7 +3,7 @@
 = GSPattern module =
 ====================
 
-It holds the following classes:
+It contains the following classes:
 
     :class:`GSPatternEvent`
     :class:`GSPattern`
@@ -174,14 +174,6 @@ class GSPattern(object):
         self.originFilePath = originFilePath
         self.name = name
 
-    def __getitem__(self, index):
-        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
-        """
-        return self.events[index]
-
-    def __len__(self):
-        return len(self.events)
-
     def __repr__(self):
         """Nicely print out the list of events.
         Each line represents an event formatted as "[tags] pitch startTime duration"
@@ -190,6 +182,14 @@ class GSPattern(object):
         for e in self.events:
             s += str(e) + "\n"
         return s
+
+    def __len__(self):
+        return len(self.events)
+
+    def __getitem__(self, index):
+        """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
+        """
+        return self.events[index]
 
     def __setitem__(self, index, item):
         self.events[index] = item
@@ -222,7 +222,7 @@ class GSPattern(object):
                 voice = self.getPatternWithPitch(p)
                 _perVoiceLegato(voice)
         for t in self.getAllTags():
-            voice = self.getPatternWithTags(tags=[t], exactSearch=False, copy=False)
+            voice = self.getPatternWithTags(tags=[t], exactSearch=False, makeCopy=False)
             _perVoiceLegato(voice)
 
     def transpose(self, interval):
@@ -404,13 +404,13 @@ class GSPattern(object):
         pitchs = list(set(pitchs))
         return pitchs
 
-    def getPatternWithTags(self, tags, exactSearch=True, copy=True):
+    def getPatternWithTags(self, tags, exactSearch=True, makeCopy=True):
         """Returns a sub-pattern with the given tags.
 
         Args:
             tags: string list or lambda  expression (return boolean based on tag list input): tags to be checked for
             exactSearch: bool: if True the tags have to be exactly the same, else they can be included in events Tags
-            copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+            makeCopy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
         Returns:
             a GSPattern with only events that tags corresponds to given tags
         """
@@ -431,16 +431,16 @@ class GSPattern(object):
         for e in self.events:
             found = boolFunction(e.tags)
             if found:
-                newEv = e if not copy else e.copy()
+                newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
         return res
 
-    def getPatternWithPitch(self, pitch, copy=True):
+    def getPatternWithPitch(self, pitch, makeCopy=True):
         """Returns a sub-pattern with the given tags.
 
         Args:
             pitch: pitch to look for
-            copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+            makeCopy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
         Returns:
             a GSPattern with only events that pitch corresponds to given pitch
         """
@@ -448,17 +448,17 @@ class GSPattern(object):
         for e in self.events:
             found = (e.pitch == pitch)
             if found:
-                newEv = e if not copy else e.copy()
+                newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
         return res
 
-    def getPatternWithoutTags(self, tags, exactSearch=False, copy=True):
+    def getPatternWithoutTags(self, tags, exactSearch=False, makeCopy=True):
         """Returns a sub-pattern without the given tags.
 
         Args:
             tags: string list: tags to be checked for
             exactSearch: bool: if True the tags have to be exactly the same, else they can be included in events Tags
-            copy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
+            makeCopy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
 
         Returns:
             a GSPattern with events without given tags
@@ -468,12 +468,12 @@ class GSPattern(object):
             if exactSearch and e.tags == tags:
                 pass
             elif tags in e.tags:
-                newEv = e if not copy else e.copy()
+                newEv = e if not makeCopy else e.copy()
                 for tRm in newEv.tags:
                     newEv.tags.remove(tRm)
                 res.events += [newEv]
             else:
-                newEv = e if not copy else e.copy()
+                newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
         return res
 
@@ -569,7 +569,7 @@ class GSPattern(object):
         pattern.fillWithSilences(maxSilenceTime=maxSilenceTime, perTag=perTag, silenceTag=silenceTag)
         return pattern
 
-    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag='silence', silencePitch=-1):
+    def fillWithSilences(self, maxSilenceTime=0, perTag=False, silenceTag='silence', silencePitch=0):
         """Fill empty time intervals (i.e no event) with silence event.
 
         Args:
@@ -607,21 +607,21 @@ class GSPattern(object):
         else:
             allEvents = []
             for t in self.getAllTags():
-                allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, copy=False), silenceTag,silencePitch)
+                allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, makeCopy=False), silenceTag, silencePitch)
             self.events = allEvents
 
     def fillWithPreviousEvent(self):
         """
         Fill gaps between onsets making longer the duration of the previous event.
         """
-        onset_positions = []
+        onsets = []
         for e in self.events:
-            if e.startTime not in onset_positions:
-                onset_positions.append(e.startTime)
-        onset_positions.append(self.duration)
+           if e.startTime not in onsets:
+               onsets.append(e.startTime)
+        onsets.append(self.duration)
 
         for e in self.events:
-            e.duration = onset_positions[onset_positions.index(e.startTime) + 1] - e.startTime
+           e.duration = onsets[onsets.index(e.startTime) + 1] - e.startTime
 
     def getPatternForTimeSlice(self, startTime, length, trimEnd=True):
         """Returns a pattern within given timeslice.
@@ -687,13 +687,13 @@ class GSPattern(object):
         self.setDurationFromLastEvent()
         return self
 
-    def splitInEqualLengthPatterns(self, desiredLength, trimEnd=True, copy=True):
+    def splitInEqualLengthPatterns(self, desiredLength, trimEnd=True, makeCopy=True):
         """Splits a pattern in consecutive equal length cuts.
 
         Args:
             desiredLength: length desired for each pattern
             trimEnd: trim the end to exact desiredLength
-            copy: returns a distint copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
+            makeCopy: returns a distint copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
 
         Returns:
             a list of patterns of length desiredLength
@@ -707,17 +707,15 @@ class GSPattern(object):
                 patterns[numPattern].name += "_slice_" + numPattern
                 patterns[numPattern].duration = desiredLength
                 patterns[numPattern].name = self.name + "_" + numPattern
-            newEv = e if not copy else e.copy()
+            newEv = e if not makeCopy else e.copy()
             newEv.startTime -= p * desiredLength
             if trimEnd and (newEv.startTime + newEv.duration > desiredLength):
                 newEv.duration = desiredLength - newEv.startTime
             patterns[numPattern].events += [newEv]
-
         res = []
         for p in patterns:
             patterns[p].setDurationFromLastEvent()
             res += [patterns[p]]
-
         return res
 
     def printASCIIGrid(self, blockSize=1):
@@ -733,7 +731,7 @@ class GSPattern(object):
             sustainASCII = '>'
             silenceASCII = '-'
             out = "["
-            p = self.getPatternWithTags(t, copy=True)  #.alignOnGrid(blockSize);
+            p = self.getPatternWithTags(t, makeCopy=True)  #.alignOnGrid(blockSize);
             # p.fillWithSilences(maxSilenceTime = blockSize)
             isSilence = __areSilenceEvts(p.getActiveEventsAtTime(0))
             inited = False

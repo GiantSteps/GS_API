@@ -22,9 +22,9 @@ except:
 GSIO.gsiolog.setLevel(level=logging.ERROR)
 
 
-def GSPatternToList(GSPattern):
+def GSPatternToList(gspattern):
     list_of_events = []
-    for event in GSPattern.events:
+    for event in gspattern.events:
         list_of_events.append(str(event.tags))
         list_of_events.append(event.pitch)
         list_of_events.append(event.startTime)
@@ -42,6 +42,10 @@ def normalize_to_c4(midi_file):
     first_notes.sort()
     first_root = first_notes[0]
     transposition_interval = 60 - first_root
+    my_pattern.removeOverlapped(usePitchValues=True)
+    my_pattern.reorderEvents()
     my_pattern.transpose(transposition_interval)
+    my_pattern.quantize(0.25)
+    my_pattern.fillWithPreviousEvent()
     my_pattern.fillWithSilences()
     return GSPatternToList(my_pattern)
