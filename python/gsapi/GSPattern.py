@@ -155,22 +155,19 @@ class GSPattern(object):
         timeSignature: list of integers representing the time signature,
          i.e [numerator, denominator].
     """
-    # defaultTimeSignature = [4, 4]
-    # defaultBPM = 120
-
-    #    def __init__(self):
-    #        self.duration = 0
-    #        self.events = []
-    #        self.bpm = GSPattern.defaultBPM
-    #        self.timeSignature = GSPattern.defaultTimeSignature
-    #        self.originFilePath = ""
-    #        self.name = ""
-
-    def __init__(self, duration=0, events=[], bpm=120, timeSignature=[4, 4], originFilePath="", name=""):
+    def __init__(self,
+                 duration=0,
+                 events=[],
+                 bpm=120,
+                 timeSignature=[4, 4],
+                 key="C",
+                 originFilePath="",
+                 name=""):
         self.duration = duration
         self.events = events
         self.bpm = bpm
         self.timeSignature = timeSignature
+        self.key = key
         self.originFilePath = originFilePath
         self.name = name
 

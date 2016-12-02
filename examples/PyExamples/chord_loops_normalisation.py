@@ -43,3 +43,8 @@ print aa
 # midi files and rewrite them properly, perfectly aligned and quantized and so on...
 
 
+p = GSPattern(8.0)
+print p.timeSignature
+print p.bpm
+print p.duration
+print p.key
