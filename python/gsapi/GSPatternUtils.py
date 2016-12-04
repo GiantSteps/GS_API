@@ -9,19 +9,9 @@ def GSPatternToList(GSPattern):
     return list_of_events
 
 
-def pitchToName(pitch, pitchNames):
-    """Converts a midi note number to alphabetic notation with octave index (e.g. "C4", "Db5")"""
-    octaveLength = len(pitchNames)
-    octave = (pitch / octaveLength) - 1
-    note = pitch % octaveLength
-    return pitchNames[note] + str(octave)
-
 # ==============================
 # DEFAULT DICTIONARY DEFINITIONS
 # ==============================
-
-defaultPitchNames = ["C", "C#", "D", "Eb", "E", "F",
-                     "F#", "G", "Ab", "A", "Bb", "B"]
 
 simpleDrumMap = {"Kick": 36,
                  "Rimshot": 37,
@@ -91,88 +81,120 @@ generalMidiMap = {"Acoustic Bass Drum": 35,
                   "Open Triangle": 81
                   }
 
-chordTypes = {"0":          [0],             # one note
-              # two note reductions:
-              "5":          [0, 7],          # power chord
-              "maj(omit5)": [0, 4],          # power chord
-              "min(omit5)": [0, 3],          # power chord
-              "d5":         [0, 6],          # diminished fifth
-              # triads
+chordTypes = {"0":          [0],
+              "5":          [0, 7],
+              "maj(omit5)": [0, 4],
+              "min(omit5)": [0, 3],
+              "d5":         [0, 6],
               "maj":        [0, 4, 7],
               "min":        [0, 3, 7],
               "aug":        [0, 4, 8], 
               "dim":        [0, 3, 6],
               "sus4":       [0, 5, 7],
               "sus2":       [0, 2, 7],
-              # tetrads
               "7":          [0, 4, 7, 10],
               "maj7":       [0, 4, 7, 11],
-              "min7":       [0, 3, 7, 10], #inversion (rotation) of 6
+              "min7":       [0, 3, 7, 10],  # inversion (rotation) of 6
               "min(maj7)":  [0, 3, 7, 11],
-              "min7(b5)":   [0, 3, 6, 10], #inversion (rotation) of min6
+              "min7(b5)":   [0, 3, 6, 10],  # inversion (rotation) of min6
               "dim7":       [0, 3, 6, 9],
-              "6":          [0, 4, 7, 9], #inversion (rotation) of min7
-              "min6":       [0, 3, 7, 9], #inversion (rotation) of min7(b5)
+              "6":          [0, 4, 7, 9],   # inversion (rotation) of min7
+              "min6":       [0, 3, 7, 9],   # inversion (rotation) of min7(b5)
               "add9":       [0, 4, 7, 14],
               "min(add9)":  [0, 3, 7, 14],
               "7sus4":      [0, 5, 7, 10],
               "add11":      [0, 4, 7, 17],
               "min(add11)": [0, 3, 7, 16],
-              # pentads
-              # "9":          [0, 4, 7, 10, 14],
-              "maj9":       [0, 4, 7, 10, 14],
-              "dom9":       [0, 4, 7, 9, 14],
-              "min(maj9)":  [0, 3, 7, 10, 14],
-              "min9":       [0, 3, 7, 9, 14],
-              # sextads
+              "9":          [0, 4, 7, 10, 14],
+              "maj9":       [0, 4, 7, 11, 14],
+              "min9":       [0, 3, 7, 10, 14],
               "11":         [0, 4, 7, 10, 14, 17],
               "maj11":      [0, 4, 7, 11, 14, 17],
-              "min(maj11)": [0, 3, 7, 11, 14, 17],
               "min11":      [0, 3, 7, 10, 14, 17],
-              # septads
-              # "min13":       [0, 3, 7, 16],
-              # "maj13":       [0, 4, 7, 18],
               }
 
+chordIntervals = {"0":          [],
+                  "5":          [23],
+                  "maj(omit5)": [12],
+                  "min(omit5)": [11],
+                  "d5":         [22],
+
+                  "maj":        [12, 11],
+                  "min":        [11, 12],
+                  "aug":        [12, 12],
+                  "dim":        [11, 11],
+                  "sus4":       [17, 6],
+                  "sus2":       [6, 17],
+
+                  "7":          [12, 11, 11],
+                  "7sus4":      [17, 6, 11],
+                  "maj7":       [12, 11, 12],
+                  "min7":       [11, 12, 11],  # inversion (rotation) of 6
+                  "min(maj7)":  [11, 12, 12],
+                  "min7(b5)":   [11, 11, 12],  # inversion (rotation) of min6
+                  "dim7":       [11, 11, 11],
+
+                  "6":          [12, 11, 6],   # inversion (rotation) of min7
+                  "min6":       [11, 12, 6],   # inversion (rotation) of min7(b5)
+
+                  "add9":       [12, 11, 23],
+                  "min(add9)":  [11, 12, 23],
+                  "add11":      [12, 11, 34],
+                  "min(add11)": [11, 12, 34],
+                  "add#11":     [12, 11, 35],
+                  "min(add#11)":[11, 12, 35],
+
+                  "9":          [12, 11, 11, 12],
+                  "maj9":       [12, 11, 12, 11],
+                  "min9":       [11, 12, 11, 11],
+
+                  "11":         [12, 11, 11, 12, 11],
+                  "maj11":      [12, 11, 12, 11, 11],
+                  "min11":      [11, 12, 11, 12, 11],
+                  "#11":        [12, 11, 11, 12, 12],
+                  "maj#11":     [12, 11, 11, 12, 12],
+                  "min#11":     [11, 12, 11, 12, 12],
+                  }
 
 
+if __name__ == '__main__':
+    # check tetrads rotations (equivalence)
 
-if __name__=='__main__':
-  # check tetrads rotations (equivalence )
+    def getConsecutiveIntervalList(l):
+        res = []
+        lmod = map(lambda x: x % 12, l)
+        lmod.sort()
+        for i in range(1, len(l)):
+            res.append(lmod[i] - lmod[i-1])
+        res.append(12-lmod[-1])
+        return res
 
-  def getConsecutiveIntervalList(l):
-    res = []
-    lmod = map(lambda x:x%12,l)
-    lmod.sort()
-    for i in range(1,len(l)):
-      res.append(lmod[i] - lmod[i-1])
-    res.append(12-lmod[-1])
 
-    return res
-  def hasCommonRotation(l1,l2):
-    length = len(l1)
-    for start in range(length):
-      isEqual = True
-      for i in range(length):
-        # print 'checking',i,l1[(start+i)%length] ,l2[i]
-        isEqual &= (l1[(-start+i+length)%length] == l2[i])
-      if isEqual:
-        return start
-    return None
+    def hasCommonRotation(l1, l2):
+        length = len(l1)
+        for start in range(length):
+            isEqual = True
+        for i in range(length):
+            # print 'checking',i,l1[(start+i)%length] ,l2[i]
+            isEqual &= (l1[(-start + i + length) % length] == l2[i])
+        if isEqual:
+            return start
+        return None
 
-  chords ={}
-  for k,v in chordTypes.iteritems():
-    numElem = len(v)
-    if not numElem in chords:
-      chords[numElem]={}
-    chords[numElem][k]=v
 
-    
-  for n,c in chords.iteritems():
-    if int(n)>1:
-      for k,v in c.iteritems():
-        for k2,v2 in c.iteritems():
-          if k!=k2:
-            cR =hasCommonRotation(getConsecutiveIntervalList(v),getConsecutiveIntervalList(v2)) 
-            if cR:
-              print 'commonRotation',k,k2,cR
+    chords = {}
+    for k, v in chordTypes.iteritems():
+        numElem = len(v)
+        if numElem not in chords:
+            chords[numElem] = {}
+        chords[numElem][k] = v
+
+    for n, c in chords.iteritems():
+        if int(n) > 1:
+            for k, v in c.iteritems():
+                for k2, v2 in c.iteritems():
+                    if k != k2:
+                        cR = hasCommonRotation(getConsecutiveIntervalList(v),
+                                               getConsecutiveIntervalList(v2))
+                    if cR:
+                        print 'commonRotation', k, k2, cR

@@ -12,7 +12,7 @@ It contains the following classes:
 import math
 import copy
 import logging
-from GSPatternUtils import *
+from GSPitchSpelling import *
 
 # logger for pattern related operations
 patternLog = logging.getLogger("gsapi.GSPattern")
@@ -29,7 +29,7 @@ class GSPatternEvent(object):
         velocity: velocity of event
         tags: list of tags representing the event
     """
-    def __init__(self, startTime, duration, pitch, velocity=100, tags=[]):
+    def __init__(self, startTime=0, duration=1.0, pitch=60, velocity=100, tags=[]):
         self.duration = duration
         if not isinstance(tags, list):
             tags = [tags]
@@ -159,7 +159,7 @@ class GSPattern(object):
                  duration=0,
                  events=[],
                  bpm=120,
-                 timeSignature=[4, 4],
+                 timeSignature=(4, 4), # changed list to tuple.
                  key="C",
                  originFilePath="",
                  name=""):
@@ -231,7 +231,7 @@ class GSPattern(object):
                 """
         for e in self.events:
             e.pitch += interval
-            e.tags = [pitchToName(e.pitch, defaultPitchNames)]
+            e.tags = [pitch2name(e.pitch, defaultPitchNames)]
         # return self
 
     def setDurationFromLastEvent(self, onlyIfBigger=True):

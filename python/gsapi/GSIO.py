@@ -1,5 +1,6 @@
 import logging
 import glob
+from GSPitchSpelling import *
 from GSPattern import *
 from GSPatternUtils import *
 import os
@@ -299,7 +300,7 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
         return  pitchNames[note] + str(octave) # STANDARD NOTATION (ANGEL)
         """
     if "pitchNames" in noteMapping.keys():
-        return [pitchToName(pitch, noteMapping["pitchNames"])]
+        return [pitch2name(pitch, noteMapping["pitchNames"])]
 
     res = []
     for l in noteMapping:

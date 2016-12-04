@@ -14,12 +14,13 @@ source code:
 
 import logging
 from GSLogging import gsapiLogger
+import GSPitchSpelling
 import GSPatternUtils
 from GSPattern import GSPatternEvent, GSPattern
 from GSDataset import GSDataset
 import GSIO
 import GSStyles 
-import GSDescriptors 
+import GSDescriptors
 import GSPatternTransformers
 import GSBassmineAnalysis 
 import GSBassmineMarkov 

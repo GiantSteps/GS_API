@@ -8,19 +8,12 @@ BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ  = "\033[1m"
-
-
-
-
 COLORS = {'WARNING': YELLOW,
           'INFO': WHITE,
           'DEBUG': BLUE,
           'CRITICAL': YELLOW,
           'ERROR': RED
           }
-
-
-
 
 
 class ColoredFormatter(logging.Formatter):
@@ -44,23 +37,15 @@ class ColoredFormatter(logging.Formatter):
 
 class ColoredLogger(logging.Logger):
     """Custom logger class with multiple destinations."""
-    
-
     USE_COLOR_OUTPUT = False
-    
     FORMAT = "[%(boldSeq)s%(name)-15s%(resetSeq)s][%(levelname)-8s]  %(message)s (%(boldSeq)s%(filename)s%(resetSeq)s:%(lineno)d)"
-    
     color_formatter = ColoredFormatter(FORMAT)
     consoleHandler = logging.StreamHandler()
     consoleHandler.setFormatter(color_formatter)
     
-    
     def __init__(self, name):
         logging.Logger.__init__(self, name)
         return
-
-
-
 
 
 logging.setLoggerClass(ColoredLogger)
@@ -76,14 +61,13 @@ else:
     pass
 
 
-
-
 def setDefaultLoggingLevel(lvl):
     """ sets the default log level if not defined inner each module
     Args:
         lvl: one of default python's logging levels : logging.[CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET]
     """
     gsapiLogger.setLevel(lvl)
+
 
 def setUseColoredOutput(useColor):
     """ Enable or not colored console output powerful in the console, but annoying otherwise
