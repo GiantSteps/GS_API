@@ -1,6 +1,7 @@
 from GSBaseDescriptor import *
 from GSDescriptorDensity import GSDescriptorDensity
 from gsapi.GSPatternUtils import *
+from gsapi.GSPitchSpelling import *
 
 
 def intervalListToProfile(intervalList, length=12):
@@ -50,9 +51,9 @@ class GSDescriptorChord(GSBaseDescriptor):
             profileToConsider = {'min': profileToConsider['min'], 'maj': profileToConsider['maj']}
         bestScore = findBestScoreForProfiles(chromas, profileToConsider, penalityWeight=pattern.duration/2.0,allowDuplicates=self.allowDuplicates)
         if self.allowDuplicates:
-            return [(defaultPitchNames[x[0]] ,x[1]) for x in bestScore]
+            return [(defaultPitchNames[x[0]], x[1]) for x in bestScore]
         else:
-            return defaultPitchNames[bestScore[0]] , bestScore[1]
+            return defaultPitchNames[bestScore[0]], bestScore[1]
 
 
 def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDuplicates=False):
@@ -113,7 +114,7 @@ def convolveWithPitchProfile(chromas, pitchProfile, penalityWeight):
             idx = (c - i + convLen) % convLen
             conv += chromas[c] * pitchProfile[idx]
             # penalize if notes from pitch profile are missing
-            if pitchProfile[idx] > 0 and chromas[c] <= 0:
+            if pitchProfile[idx] > 0 >= chromas[c]:
                 conv -= penalityWeight
         convList[i] = conv
     return convList

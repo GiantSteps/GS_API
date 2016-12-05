@@ -5,6 +5,7 @@ if __name__ == '__main__':
 
 import logging
 from gsapi import *
+from gsapi.GSDescriptors import *
 from music21 import *
 
 GSIO.gsiolog.setLevel(level=logging.ERROR)
@@ -32,19 +33,15 @@ aa = myPattern.getACopyWithoutEvents()
 aa.events = myPattern.getActiveEventsAtTime(0)
 print aa
 
+c = GSDescriptorChord(aa)
+
+print c
+
+
+
 
 
 #GSIO.toMIDI(myPattern, path='./', name='test')
 #s = converter.parse('./test.mid')
 # s.duration = duration.Duration(myPattern.duration)
 #s.show()
-
-# It would be good to create a simple script to load
-# midi files and rewrite them properly, perfectly aligned and quantized and so on...
-
-
-p = GSPattern(8.0)
-print p.timeSignature
-print p.bpm
-print p.duration
-print p.key
