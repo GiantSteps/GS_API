@@ -1,11 +1,9 @@
-import unittest, os, sys
+import unittest
+import os
+import sys
 
-if __name__=='__main__':
-    sys.path.insert(1,
-                    os.path.abspath(os.path.join(__file__,
-                                                 os.pardir,
-                                                 os.pardir,
-                                                 os.pardir)))
+if __name__ == '__main__':
+    sys.path.insert(1, os.path.abspath(os.path.join(__file__, os.pardir, os.pardir, os.pardir)))
 
 from gsapi import *
 import random,glob
