@@ -41,14 +41,20 @@ class Chordify(GSBasePatternTransformer):
         self.numChords = len(self.currentPattern.events)
 
     def configure(self, paramDict):
-        """Configure current transformer based on implenmentation specific parameters passed in dict argument.
+        """Configure current transformer based on implementation
+        specific parameters passed in paramDict argument.
 
         Args:
-            paramDict: a dictionary filed with configuration values.
+            paramDict: a dictionary with configuration values.
         """
         raise NotImplementedError("Should have implemented this")
 
-    def transformPattern(self):
+    def transformPattern(self, pattern):
+        """Return a transformed GSPattern
+
+        Args:
+            pattern: the GSPattern to be transformed.
+        """
         self.currentPattern = self.originPattern.getACopyWithoutEvents()
         p = -1
         for e in self.originPattern:

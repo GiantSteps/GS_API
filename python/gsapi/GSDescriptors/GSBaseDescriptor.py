@@ -8,11 +8,11 @@ class GSBaseDescriptor(object):
         pass
 
     def getDescriptorForPattern(self, pattern):
-        """Compute a unique value for a given pattern (it can be a sliced part of a bigger one)
+        """Compute a unique value for a given pattern,
+        which can be a sliced part of a bigger one.
         """
         raise NotImplementedError("Should have implemented this")
 
     def configure(self, paramDict):
-        """configure current descriptor mapping dict to parameters
-        """
+        """Configure current descriptor mapping dict to parameters"""
         raise NotImplementedError("Should have implemented this")

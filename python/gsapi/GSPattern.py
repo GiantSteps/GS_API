@@ -1,14 +1,3 @@
-"""
-====================
-= GSPattern module =
-====================
-
-It contains the following classes:
-
-    :class:`GSPatternEvent`
-    :class:`GSPattern`
-"""
-
 import math
 import copy
 import logging
@@ -19,21 +8,20 @@ patternLog = logging.getLogger("gsapi.GSPattern")
 
 
 class GSPatternEvent(object):
-    """Represents an event of a GSPattern.
-    An event has a startTime, duration, pitch, velocity and associated tags.
+    """Represent an event of a GSPattern with startTime, duration, pitch,
+    velocity and tags variables.
 
     Class variables:
         startTime: startTime of event
         duration: duration of event
         pitch: pitch of event
-        velocity: velocity of event
+        vel: velocity of event
         tags: list of tags representing the event
     """
-    def __init__(self, startTime=0, duration=1.0, pitch=60, velocity=100, tags=[]):
+    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=[]):
         self.duration = duration
         if not isinstance(tags, list):
             tags = [tags]
-        # self.tags = tags   # TODO check if this is a dupe!
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
@@ -90,10 +78,10 @@ class GSPatternEvent(object):
         self.tagsAre(event.tags)
 
     def getEndTime(self):
-        """Returns the time when this events ends
+        """Return the time when this events ends
 
         Returns:
-            the time when this event ends
+            The time when this event ends
         """
         return self.startTime + self.duration
 
@@ -101,7 +89,8 @@ class GSPatternEvent(object):
         """ Copy an event.
 
         Returns:
-            A deep copy of this event to be manipulated without changing original
+            A deep copy of this event to be manipulated without changing
+            original.
         """
         return copy.deepcopy(self)
 
@@ -114,8 +103,7 @@ class GSPatternEvent(object):
             a list of events of length `stepSize`
         """
         res = []
-        # if smaller still take it
-        num = max(1, int(self.duration / stepSize))
+        num = max(1, int(self.duration / stepSize))  # if smaller still take it
         for i in range(num):
             newE = self.copy()
             newE.startTime = self.startTime + i * stepSize
@@ -124,11 +112,15 @@ class GSPatternEvent(object):
         return res
 
     def isSimilarTo(self, event):
-        """ helper to compare events that could have be copy of each other (equality compares reference not content...)
+        """Helper to compare events that could be copies of each other. The
+        equality compares reference not the content.
+
         Args:
-            event:event to compare wuith
+            event: event to compare with
         """
-        return (self.startTime == event.startTime) and (self.duration == event.duration) and (self.tags == event.tags) and (self.pitch == event.pitch)
+        return self.startTime == event.startTime and self.duration == event.duration and \
+               self.tags == event.tags and \
+               self.pitch == event.pitch
 
     def containsTime(self, time):
         """Return true if event is active at given time
@@ -720,10 +712,10 @@ class GSPattern(object):
         maxListLen = int(math.ceil(self.duration*1.0/desiredLength))
         for p in range(maxListLen):
             if str(p) in patterns:
-            	curPattern = patterns[str(p)]
-            	curPattern.setDurationFromLastEvent()
+                curPattern = patterns[str(p)]
+                curPattern.setDurationFromLastEvent()
             else:
-            	curPattern = None
+                curPattern = None
             res += [curPattern]
         return res
 
