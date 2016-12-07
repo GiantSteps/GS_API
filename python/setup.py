@@ -21,10 +21,12 @@ distutils.ccompiler.CCompiler.compile = utils.parallelComp.parallelCCompile
 
 if __name__ == '__main__':
     import sys
+    import gsapi  # TODo moved gsapi from line 44 to line 24
+
     toAppend = ['clean', '--all']
     toAppend = ['build']
     toAppend = ['install']
-    # toAppend  = ['sdist','bdist_wheel','install']
+    # toAppend  = ['sdist', 'bdist_wheel', 'install']
     if len(sys.argv) == 1:
         for s in toAppend:
             sys.argv.append(s)
@@ -33,13 +35,13 @@ if __name__ == '__main__':
 # gsapiModule = Extension('gsapi',
 #                     # define_macros = [('MAJOR_VERSION', '1'),
 #                     #                  ('MINOR_VERSION', '0')],
-#                     include_dirs = [libFolder,libFolder+"3rdParty/json/"],
+#                     include_dirs = [libFolder, libFolder + "3rdParty/json/"],
 #                     libraries = [],
-#                     extra_compile_args=['-std=c++11','-w'],
+#                     extra_compile_args=['-std=c++11', '-w'],
 #                     library_dirs = ['/usr/local/lib'],
-
 #                     sources = cppSources)
-import gsapi
+
+
 setup(name='gsapi',
       version=gsapi.getGSAPIFullVersion(),
       description='Python Symbolic Music Manipulation Tools',

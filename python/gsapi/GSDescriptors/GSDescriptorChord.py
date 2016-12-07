@@ -22,6 +22,10 @@ class GSDescriptorChord(GSBaseDescriptor):
         self.forceMajMin = forceMajMin
         self.allowDuplicates = allowDuplicates
 
+    def configure(self, paramDict):
+        """Configure current descriptor mapping dict to parameters."""
+        raise NotImplementedError("Should have implemented this")
+
     def getDescriptorForPattern(self, pattern):
         allPitches = pattern.getAllPitches()
         pitchDensities = {}
@@ -49,7 +53,10 @@ class GSDescriptorChord(GSBaseDescriptor):
         profileToConsider = GSDescriptorChord.allProfiles
         if self.forceMajMin:
             profileToConsider = {'min': profileToConsider['min'], 'maj': profileToConsider['maj']}
-        bestScore = findBestScoreForProfiles(chromas, profileToConsider, penalityWeight=pattern.duration/2.0,allowDuplicates=self.allowDuplicates)
+        bestScore = findBestScoreForProfiles(chromas,
+                                             profileToConsider,
+                                             penalityWeight=pattern.duration / 2.0,
+                                             allowDuplicates=self.allowDuplicates)
         if self.allowDuplicates:
             return [(defaultPitchNames[x[0]], x[1]) for x in bestScore]
         else:
@@ -68,7 +75,6 @@ def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDupl
         conv = convolveWithPitchProfile(chromas, v, penalityWeight)
         score = findMaxAndIdx(conv)
         nonZero = getNumNonZero(v)
-
         # print v
         # print chromas
         # print conv
@@ -85,12 +91,11 @@ def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDupl
                 bestProfile = k
                 bestRoot = score[1]
             maxScore = score[0]
-             
-            # print bestProfile,bestRoot,maxScore
+            # print bestProfile, bestRoot, maxScore
     if allowDuplicates:
         return [(bestRoot[i], bestProfile[i]) for i in range(len(bestRoot))]
     else:
-        return (bestRoot, bestProfile)
+        return bestRoot, bestProfile
 
 
 def getNumNonZero(li):

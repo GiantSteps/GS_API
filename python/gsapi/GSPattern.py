@@ -138,7 +138,6 @@ class GSPatternEvent(object):
         """
         return (time >= self.startTime) and (time < self.startTime + self.duration)
 
-
 # ==============================================================================
 # *********************** GSPattern Class Declaration **************************
 # ==============================================================================
@@ -711,7 +710,7 @@ class GSPattern(object):
               remainingEvent.startTime = newOnset
               _handleEvent(remainingEvent,patterns,makeCopy)
               newEv.duration = desiredLength - newEv.startTime
-          
+
           patterns[numPattern].events += [newEv]
         patterns = {}
 

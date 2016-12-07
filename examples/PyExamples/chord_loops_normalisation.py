@@ -6,6 +6,7 @@ if __name__ == '__main__':
 import logging
 from gsapi import *
 from gsapi.GSDescriptors import *
+from gsapi.GSPatternTransformers import *
 from music21 import *
 
 GSIO.gsiolog.setLevel(level=logging.ERROR)
@@ -29,13 +30,17 @@ myPattern.fillWithPreviousEvent()
 myPattern.fillWithSilences()
 print myPattern
 
-aa = myPattern.getACopyWithoutEvents()
-aa.events = myPattern.getActiveEventsAtTime(0)
-print aa
 
-c = GSDescriptorChord(aa)
+chord = Chordify(myPattern)
 
-print c
+# print chord.events
+
+c = GSChord(label='C:min')
+
+# print chord.currentPattern
+
+
+
 
 
 
