@@ -30,12 +30,13 @@ myPattern.fillWithPreviousEvent()
 myPattern.fillWithSilences()
 print myPattern
 
-
 chord = Chordify(myPattern)
+
 print chord.outputPattern
 
-#c = GSChord(label='C:min')
 
+# chord_name = GSDescriptorChord()
+# chord_name.getDescriptorForPattern(chord.outputPattern[0])
 
 #GSIO.toMIDI(myPattern, path='./', name='test')
 #s = converter.parse('./test.mid')
