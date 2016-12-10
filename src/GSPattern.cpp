@@ -25,7 +25,7 @@ void GSPattern::addEvent(GSPatternEvent * event){
 
 bool GSPattern::fillJSONData(json & j) {
     //	json  timeInfo = j["timeInfo"];
-    //	originBPM = timeInfo["BPM"].get<double>();
+    //	originBPM = timeInfo["bpm"].get<double>();
     //	timeSigNumerator = timeInfo["timeSignature"][0];
     //	timeSigDenominator = timeInfo["timeSignature"][1];
     //	duration = timeInfo["duration"];
@@ -75,7 +75,7 @@ vector<GSPatternEvent*> GSPattern::getEventsWithPitch(int pitch){
 	for(auto & e:events){
 			if(e->pitch==pitch){
 				res.push_back(e);
-			
+
 		}
 	}
 	return res;
@@ -88,7 +88,7 @@ GSPattern GSPattern::getCopyWithoutEvents(){
 	p.timeSigNumerator = timeSigNumerator;
 	p.originBPM = originBPM;
 	return p;
-	
+
 }
 GSPatternEvent * GSPattern::getLastEvent(){
     return (events.size()>0) ? events[events.size()-1] : nullptr;
@@ -105,7 +105,7 @@ bool GSPattern::removeEvent(GSPatternEvent * ev){
 
 bool GSPattern::getJSONData(const json & j) {
     json  timeInfo = j["timeInfo"];
-    originBPM = timeInfo["BPM"].get<double>();
+    originBPM = timeInfo["bpm"].get<double>();
     timeSigNumerator = timeInfo["timeSignature"][0];
     timeSigDenominator = timeInfo["timeSignature"][1];
     duration = timeInfo["duration"];
@@ -114,6 +114,6 @@ bool GSPattern::getJSONData(const json & j) {
     for(auto & e:j["eventList"]){
         events.push_back(new GSPatternEvent(e["on"],e["duration"],e["pitch"],e["velocity"],e["tagsIdx"]));
     }
-    
+
     return true;
 };
