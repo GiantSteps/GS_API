@@ -32,18 +32,9 @@ print myPattern
 
 
 chord = Chordify(myPattern)
+print chord.outputPattern
 
-# print chord.events
-
-c = GSChord(label='C:min')
-
-# print chord.currentPattern
-
-
-
-
-
-
+#c = GSChord(label='C:min')
 
 
 #GSIO.toMIDI(myPattern, path='./', name='test')

@@ -130,9 +130,10 @@ class GSPatternEvent(object):
         """
         return (time >= self.startTime) and (time < self.startTime + self.duration)
 
-# ==============================================================================
-# *********************** GSPattern Class Declaration **************************
-# ==============================================================================
+# ============================
+# GSPattern Class Declaration
+# ============================
+
 
 class GSPattern(object):
     """Class representing a pattern made of GSPatternEvent.

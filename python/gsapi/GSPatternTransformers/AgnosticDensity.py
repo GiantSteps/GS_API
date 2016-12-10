@@ -35,8 +35,8 @@ class AgnosticDensity(GSBasePatternTransformer):
         self.originDistribution = {}
 
     def configure(self, paramDict):
-        if 'originPattern' in paramDict:
-            buildDensityMap(paramDict['originPattern'])
+        if 'inputPattern' in paramDict:
+            buildDensityMap(paramDict['inputPattern'])
 
     def transformPattern(self, pattern, paramDict):
         if pattern!=None and pattern!=self.originPattern:

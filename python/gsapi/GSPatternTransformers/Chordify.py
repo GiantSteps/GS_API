@@ -34,11 +34,11 @@ class GSChord(GSPatternEvent):
 class Chordify(GSBasePatternTransformer):
     """Makes vertical slices of a pattern."""
     def __init__(self, pattern):
-        self.originPattern = pattern
-        self.currentPattern = self.transformPattern()
-        self.duration = self.currentPattern.duration
-        self.events = self.currentPattern.events
-        self.numChords = len(self.currentPattern.events)
+        self.inputPattern = pattern
+        self.outputPattern = self.transformPattern()
+        self.duration = self.outputPattern.duration
+        self.events = self.outputPattern.events
+        self.numChords = len(self.outputPattern.events)
 
     def configure(self, paramDict):
         """Configure current transformer based on implementation
@@ -49,30 +49,17 @@ class Chordify(GSBasePatternTransformer):
         """
         raise NotImplementedError("Should have implemented this")
 
-    def transformPattern(self, pattern):
-        """Return a transformed GSPattern
-
-        Args:
-            pattern: the GSPattern to be transformed.
-        """
-        self.currentPattern = self.originPattern.getACopyWithoutEvents()
+    def transformPattern(self):
+        """Return a transformed GSPattern"""
+        self.outputPattern = self.inputPattern.getACopyWithoutEvents()
         p = -1
-        for e in self.originPattern:
+        for e in self.inputPattern:
             if e.startTime != p:
-                new_chord = GSChord(startTime=e.startTime, duration=e.duration)
-                activePattern = GSPattern(self.originPattern.getActiveEventsAtTime(e.startTime))
-
-                print activePattern
-                for ee in activePattern:
-                    print ee
+                new_chord = GSChord(startTime=e.startTime, duration=e.duration, components=[], tags=[])
+                for ee in self.inputPattern.getActiveEventsAtTime(e.startTime):
                     new_chord.components.append((ee.pitch, ee.velocity))
-                #self.currentPattern.events.append(new_chord)
-                # print new_chord
+                    for tag in ee.tags:
+                        new_chord.tags.append(tag)
+                self.outputPattern.addEvent(new_chord)
             p = e.startTime
-        return self.currentPattern
-
-
-    #for e in self.events:
-    #    e.pitch += interval
-    #    e.tags = [pitch2name(e.pitch, defaultPitchNames)]
-    # return self
+        return self.outputPattern
