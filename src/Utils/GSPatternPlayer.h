@@ -1,10 +1,10 @@
 /*
  ==============================================================================
- 
+
  GSPatternPlayer.h
  Created: 8 Jun 2016 6:48:48pm
  Author:  martin hermant
- 
+
  ==============================================================================
  */
 
@@ -17,7 +17,7 @@
 #include <map>
 
 typedef struct MIDIMapEntry{
-	MIDIMapEntry(int ch,int pi,int vel):channel(ch),pitch(pi),velocity(vel){}
+	MIDIMapEntry(int ch,int pi,int velocity):channel(ch),pitch(pi),velocity(velocity){}
 	int channel;
 	int pitch;
 	int velocity;
@@ -29,9 +29,9 @@ typedef struct MIDIMapEntry{
 class GSPatternMidiMapper{
 public:
 	virtual ~GSPatternMidiMapper(){};
-	
+
 	virtual vector<MIDIMapEntry> getMIDINoteForEvent(const GSPatternEvent * e) =0;
-	
+
 };
 
 
@@ -45,12 +45,12 @@ public:
 //		}
 		return res;
 	}
-	
+
 };
 
 class GSLiveMapper:public GSPatternMidiMapper{
 public:
-	
+
 	std::map<string,int> tagToLiveMidi = {
 		{"Kick",36},
 		{"Snare",40},
@@ -70,44 +70,44 @@ public:
 		}
 		return res;
 	}
-	
+
 };
 
 class GSPatternPlayer{
 public:
-	
+
 	typedef struct{
 		vector<MIDIMapEntry> entries;
 		double duration;
 		double startTime;
 	}MIDINoteEntries;
-	
+
 	GSPatternPlayer(GSPatternMidiMapper * mmap):isLooping(true),ownedMapper(mmap){}
-	
-	
+
+
 	void updatePlayHead(double pH);
 	vector<MIDIMapEntry> &getCurrentNoteOn();
 	vector<MIDIMapEntry> &getCurrentNoteOff();
-	
-	
+
+
 	GSPattern  currentPattern;
-	
+
 	void setMidiMapper(GSPatternMidiMapper * mmap);
 	void setPattern(const GSPattern &);
 	void stop();
 	bool isLooping;
 private:
-	
+
 	double playHead,lastPlayHead;
 	GSPatternMidiMapper * ownedMapper;
-	
+
 	vector<MIDIMapEntry> currentNote;
 	vector<MIDIMapEntry> currentNoteOn;
 	vector<MIDIMapEntry> currentNoteOff;
-	
-	
-	
-	
+
+
+
+
 };
 
 

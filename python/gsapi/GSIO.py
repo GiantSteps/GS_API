@@ -146,9 +146,9 @@ def __fromMidiFormatted(midiPath,
     pattern = GSPattern()
     pattern.name = os.path.basename(midiPath)
 
-		# boolean to avoid useless string creation
+        # boolean to avoid useless string creation
     extremeLog = gsiolog.getEffectiveLevel()<=logging.DEBUG
-    
+
     # get time signature first
     gsiolog.info("start processing %s" % pattern.name)
     __findTimeInfoFromMidi(pattern, globalMidi)
@@ -186,14 +186,13 @@ def __fromMidiFormatted(midiPath,
             isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
             isNoteOff = midi.NoteOffEvent.is_event(e.statusmsg)
 
-
             if isNoteOn or isNoteOff:
                 pitch = e.pitch  # optimize pitch property access
                 tick = e.tick
                 velocity = e.get_velocity()
                 if velocity==0:
-                	isNoteOff =True
-                	isNoteOn = False
+                    isNoteOff =True
+                    isNoteOn = False
 
                 curBeat = tick * 1.0 * tick_to_quarter_note
                 if noteTags == []:
@@ -216,7 +215,7 @@ def __fromMidiFormatted(midiPath,
                         continue
                     lastPitch = pitch
                     lastTick = tick
-                    if extremeLog : gsiolog.debug("on %d %f"%(pitch,curBeat))
+                    if extremeLog : gsiolog.debug("on %d %f"%(pitch, curBeat))
                     pattern.events += [GSPatternEvent(startTime=curBeat,
                                                       duration=-1,
                                                       pitch=pitch,
@@ -224,7 +223,7 @@ def __fromMidiFormatted(midiPath,
                                                       tags=noteTags)]
 
                 if isNoteOff:
-                    if extremeLog : gsiolog.debug( "off %d %f"%(pitch,curBeat))
+                    if extremeLog: gsiolog.debug( "off %d %f"%(pitch,curBeat))
                     foundNoteOn = False
                     for i in reversed(pattern.events):
 
@@ -310,7 +309,7 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
     return res
 
 
-def toMIDI(gspattern, midiMap=None, path="output/", name="test"):
+def toMidi(gspattern, midiMap=None, path="output/", name="test"):
     """ Function to write GSPattern instance to MIDI.
 
     Args:

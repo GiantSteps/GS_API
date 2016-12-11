@@ -45,14 +45,14 @@ NHMvariation = markov.variationMM(MM, target_bass, _path)
 #patt_dict = markov.createMarkovGenerationDictionary(toJSON=True)
 #print patt_dict
 pattern = markov.generateBassRhythm(MM)
-GSIO.toMIDI(pattern,name='regular')
+GSIO.toMIDI(pattern, name='regular')
 
 inter_pattern = markov.generateBassRhythm(MM, target=target_kick)
 # Write pattern to MIDI
-GSIO.toMIDI(inter_pattern,name='interlock')
+GSIO.toMIDI(inter_pattern, name='interlock')
 
 var_mask = [1, 1, 1, -1, 1, 1, -1, 1]
-variation_pattern = markov.generateBassRhythmVariation(MM,inter_pattern,var_mask)
+variation_pattern = markov.generateBassRhythmVariation(MM, inter_pattern, var_mask)
 GSIO.toMIDI(variation_pattern,name='variation')
 #########################################
 #  DEBUG
@@ -70,18 +70,18 @@ print MM.get_interlocking()
 #  EXPORT TO CSV
 """
 with open('initial.csv', 'wb') as f:
-	writer = csv.writer(f)
-	writer.writerow(MM.get_initial())
+    writer = csv.writer(f)
+    writer.writerow(MM.get_initial())
 
 with open('temporal.csv', 'wb') as f:
-	writer = csv.writer(f)
-	temp = MM.get_temporal()
-	for row in temp:
-		writer.writerow(row)
+    writer = csv.writer(f)
+    temp = MM.get_temporal()
+    for row in temp:
+        writer.writerow(row)
 
 with open('interlocking.csv', 'wb') as f:
-	writer = csv.writer(f)
-	temp = MM.get_interlocking()
-	for row in temp:
-		writer.writerow(row)
+    writer = csv.writer(f)
+    temp = MM.get_interlocking()
+    for row in temp:
+        writer.writerow(row)
 """

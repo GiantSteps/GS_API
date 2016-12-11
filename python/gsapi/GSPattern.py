@@ -15,7 +15,7 @@ class GSPatternEvent(object):
         startTime: startTime of event
         duration: duration of event
         pitch: pitch of event
-        vel: velocity of event
+        velocity: velocity of event
         tags: list of tags representing the event
     """
     def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=[]):

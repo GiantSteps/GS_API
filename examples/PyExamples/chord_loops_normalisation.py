@@ -38,7 +38,6 @@ print chord.outputPattern
 # chord_name = GSDescriptorChord()
 # chord_name.getDescriptorForPattern(chord.outputPattern[0])
 
-#GSIO.toMIDI(myPattern, path='./', name='test')
-#s = converter.parse('./test.mid')
-# s.duration = duration.Duration(myPattern.duration)
-#s.show()
+GSIO.toMIDI(myPattern, path='./', name='test')
+s = converter.parse('./test.mid')
+s.show()
