@@ -141,7 +141,7 @@ class GSPatternEvent(object):
 
 class GSViewpoint(object):
 
-    def __init__(originPattern,descriptor,doNotCompute=False,sliceType):
+    def __init__(originPattern,descriptor,sliceType,doNotCompute=False):
         
         self.originPattern = originPattern
         self.descriptor = descriptor
