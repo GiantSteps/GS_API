@@ -1,8 +1,6 @@
 from GSBaseDescriptor import *
 import math
 
-<<<<<<< Updated upstream
-=======
 class GSDescriptorSyncopation(GSBaseDescriptor):
 	""" computes the syncopation value from a pattern : 
 	"""
@@ -49,8 +47,6 @@ class GSDescriptorSyncopation(GSBaseDescriptor):
 		for i in range(self.duration):
 			self.noteGrid[i] = len(pattern.getActiveEventsAtTime(i))
 
-
->>>>>>> Stashed changes
 
 class GSDescriptorSyncopation(GSBaseDescriptor):
     """Computes the syncopation value from a pattern:
