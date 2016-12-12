@@ -306,7 +306,7 @@ def constrainMM(markov_model, target, _path="output/"):
 	#print "Interlocking dict ", Dom_I
 
 	## Representation of target kick pattern as variable domain
-	#target = GSBassmineAnalysis.translate_rhythm(GSBassmineAnalysis.binaryBeatPattern([e.startTime for e in target.events],target.duration))
+	target = GSBassmineAnalysis.translate_rhythm(GSBassmineAnalysis.binaryBeatPattern([e.startTime for e in target.events],target.duration))
 
 	target_setlist = []
 	for t in target:

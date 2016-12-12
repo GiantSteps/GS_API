@@ -185,7 +185,7 @@ def translate_rhythm(rhythm):
 
 def corpus_analysis(bass_path, drum_path):
 	"""
-	This functions implement the rhythmic analysis used by Bassmine (bassline generator). The input is a corpus of related
+	TEST : This functions implement the rhythmic analysis used by Bassmine (bassline generator). The input is a corpus of related
 	Bass and Drum MIDI files.
 	Input files must match their names : i.e. bass_[trackname].mid , drums_[trackname].mid
 
