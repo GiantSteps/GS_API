@@ -14,13 +14,13 @@ class GSChord(GSPatternEvent):
         tags: list of tags representing the event
     """
 
-    def __init__(self, startTime=0, duration=1.0, components=[], tags=[], label="chord"):
+    def __init__(self, startTime=0, duration=1.0, components=None, tags=None, label="chord"):
         self.duration = duration
         if not isinstance(tags, list):
             tags = [tags]
         self.startTime = startTime
-        self.components = components
-        self.tags = tags
+        self.components = components or []
+        self.tags = tags or []
         self.label = label
 
     def __repr__(self):
