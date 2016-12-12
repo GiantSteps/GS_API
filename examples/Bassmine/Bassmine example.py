@@ -53,7 +53,6 @@ NHMvariation = markov.variationMM(MM, target_bass, _path)
 # Generation examples
 #patt_dict = markov.createMarkovGenerationDictionary(toJSON=True)
 #print patt_dict
-<<<<<<< Updated upstream:examples/Bassmine/Bassmine example.py
 pattern = markov.generateBassRhythm(MM)
 GSIO.toMIDI(pattern, name='regular')
 
