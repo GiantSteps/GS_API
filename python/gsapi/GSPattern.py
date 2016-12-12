@@ -220,7 +220,7 @@ class GSPattern(object):
                  duration=0,
                  events=None,
                  bpm=120,
-                 timeSignature=(4, 4), # changed list to tuple.
+                 timeSignature=(4, 4),  # changed list to tuple.
                  key="C",
                  originFilePath="",
                  name=""):

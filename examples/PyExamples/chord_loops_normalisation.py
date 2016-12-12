@@ -33,11 +33,12 @@ print myPattern
 chord = Chordify(myPattern)
 
 print chord.outputPattern
+print type(chord.outputPattern)
 
 
 # chord_name = GSDescriptorChord()
 # chord_name.getDescriptorForPattern(chord.outputPattern[0])
 
-GSIO.toMIDI(myPattern, path='./', name='test')
+GSIO.toMidi(myPattern, path='./', name='test')
 s = converter.parse('./test.mid')
 s.show()
