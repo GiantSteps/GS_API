@@ -12,7 +12,7 @@ gsiolog = logging.getLogger("gsapi.GSIO")
 
 def fromMidi(midiPath,
              NoteToTagsMap=defaultPitchNames,
-             tracksToGet=[],  # TODO: unnecessary parameter??
+             tracksToGet=None,  # TODO: unnecessary parameter??
              TagsFromTrackNameEvents=False,
              filterOutNotMapped=True,
              checkForOverlapped=False):
@@ -53,7 +53,7 @@ def fromMidi(midiPath,
 
 def fromMidiCollection(midiGlobPath,
                        NoteToTagsMap=defaultPitchNames,
-                       tracksToGet=[],
+                       tracksToGet=None,
                        TagsFromTrackNameEvents=False,
                        filterOutNotMapped=True,
                        desiredLength=0):
@@ -129,7 +129,7 @@ def __formatNoteToTags(_NoteToTags):
 
 def __fromMidiFormatted(midiPath,
                         NoteToTagsMap,
-                        tracksToGet=[],
+                        tracksToGet=None,
                         TagsFromTrackNameEvents=False,
                         filterOutNotMapped=True,
                         checkForOverlapped=False):
@@ -173,7 +173,7 @@ def __fromMidiFormatted(midiPath,
 
             if midi.MetaEvent.is_event(e.statusmsg):
                 if e.metacommand == midi.TrackNameEvent.metacommand:
-                    if tracksToGet != [] and not((e.text in tracksToGet) or (trackIdx in tracksToGet)):
+                    if tracksToGet and not((e.text in tracksToGet) or (trackIdx in tracksToGet)):
                         gsiolog.info("skipping track: %i %s" % (trackIdx, e.text))
                         shouldSkipTrack = True
                         continue
