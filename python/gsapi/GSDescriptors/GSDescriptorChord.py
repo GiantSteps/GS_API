@@ -8,7 +8,7 @@ def intervalListToProfile(intervalList, length=12):
     profile = [-1] * length
     profile[0] = 1
     for e in intervalList:
-        profile[e % length] = .8
+        profile[e % length] = 0.8
     return profile
 
 

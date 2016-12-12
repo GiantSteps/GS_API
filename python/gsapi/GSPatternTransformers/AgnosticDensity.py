@@ -39,7 +39,7 @@ class AgnosticDensity(GSBasePatternTransformer):
             buildDensityMap(paramDict['inputPattern'])
 
     def transformPattern(self, pattern, paramDict):
-        if pattern!=None and pattern!=self.originPattern:
+        if pattern!=None and pattern != self.originPattern:
             self.buildDensityMap(pattern)
         if self.originPattern==None:
             # print ("no pattern given for agnosticDensity transformation")
