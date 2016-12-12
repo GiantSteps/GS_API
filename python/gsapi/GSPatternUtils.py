@@ -113,7 +113,7 @@ chordTypes = {"0":          [0],
               "min11":      [0, 3, 7, 10, 14, 17],
               }
 
-chordIntervals = {"0":          [],
+chordIntervalsBase40 = {"0":          [],
                   "5":          [23],
                   "maj(omit5)": [12],
                   "min(omit5)": [11],
@@ -158,7 +158,7 @@ chordIntervals = {"0":          [],
 
 
 if __name__ == '__main__':
-    # check tetrads rotations (equivalence)
+    # utility to check tetrads rotations (equivalence)
 
     def getConsecutiveIntervalList(l):
         res = []
@@ -194,7 +194,7 @@ if __name__ == '__main__':
             for k, v in c.iteritems():
                 for k2, v2 in c.iteritems():
                     if k != k2:
-                        cR = hasCommonRotation(getConsecutiveIntervalList(v),
+                      cR = hasCommonRotation(getConsecutiveIntervalList(v),
                                                getConsecutiveIntervalList(v2))
-                    if cR:
-                        print 'commonRotation', k, k2, cR
+                      if cR:
+                          print 'commonRotation', k, k2, cR

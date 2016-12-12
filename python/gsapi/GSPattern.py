@@ -18,14 +18,19 @@ class GSPatternEvent(object):
         velocity: velocity of event
         tags: list of tags representing the event
     """
-    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=[]):
+    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=None):
         self.duration = duration
-        if not isinstance(tags, list):
-            tags = [tags]
+        if not tags: 
+            self.tags = []
+        elif isinstance(tags, str):
+            self.tags = [tags]
+        else:
+            self.tags = tags
+
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
-        self.tags = tags
+        
 
     def __repr__(self):
         return "%s %i %i %05.2f %05.2f" % (self.tags,
@@ -149,14 +154,17 @@ class GSPattern(object):
     """
     def __init__(self,
                  duration=0,
-                 events=[],
+                 events=None,
                  bpm=120,
                  timeSignature=(4, 4), # changed list to tuple.
                  key="C",
                  originFilePath="",
                  name=""):
         self.duration = duration
-        self.events = events
+        if events:
+            self.events = events
+        else:
+            self.events = []
         self.bpm = bpm
         self.timeSignature = timeSignature
         self.key = key
