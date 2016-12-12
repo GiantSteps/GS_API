@@ -306,6 +306,8 @@ def constrainMM(markov_model, target, _path="output/"):
 	#print "Interlocking dict ", Dom_I
 
 	## Representation of target kick pattern as variable domain
+	#target = GSBassmineAnalysis.translate_rhythm(GSBassmineAnalysis.binaryBeatPattern([e.startTime for e in target.events],target.duration))
+
 	target_setlist = []
 	for t in target:
 		# RELAXATION RULE: if the target kick is not in the model consider metronome pulse as kick
@@ -411,7 +413,7 @@ def constrainMM(markov_model, target, _path="output/"):
 		json.dump(init_dict, outfile)
 		outfile.close()
 
-	print("Interlocking model build!")
+	#print("Interlocking model build!")
 
 	return [init_dict, out_Model]
 
@@ -697,6 +699,44 @@ def generateBassRhythm(markov_model, beat_length=8, target=[]):
 	beat_count = 0
 	for idx in pattern_idx:
 		st = markov_model.model_dictionary['patterns'][idx]
+		if len(st)>0:
+			for s in st:
+				bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+		beat_count += 1
+
+	return bassline
+
+def _generateBassRhythm(markov_model, beat_length=8, target=[]):
+	"""
+	Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular
+	Markov model (computed by MarkovModel.rhythm_model()).
+	If target given it is assumed as target constraint for interlocking model.
+	Args:
+	    markov_model: output from  MarkovModel.rhythm_model()
+	    beat_length: desired length of the generated pattern
+	    target: Pattern used as constraint in Interlocking Model.
+
+	Returns:
+	    bassline: GSPattern containing bassline onset pattern
+
+	"""
+	bassline = GSPattern.GSPattern()
+	pattern_idx = []
+
+	markovDict = createMarkovGenerationDictionary()
+
+	pattern_idx.append(np.random.choice(markov_model[0]['initial']['pattern'], p=markov_model[0]['initial']['prob']))
+
+	for beat in range(beat_length-1):
+		pattern_idx.append(np.random.choice(markov_model[1][beat][pattern_idx[beat]]['pattern'],
+		                                    p=markov_model[1][beat][pattern_idx[beat]]['probs']))
+
+	bassline.duration = len(pattern_idx)
+
+	start_times = []
+	beat_count = 0
+	for idx in pattern_idx:
+		st = markovDict['patterns'][idx]
 		if len(st)>0:
 			for s in st:
 				bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))

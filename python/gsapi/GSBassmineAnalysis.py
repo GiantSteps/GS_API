@@ -258,7 +258,7 @@ def corpus_analysis(bass_path, drum_path):
 		# print kick_rhythm
 		# Translate
 		kick_id = translate_rhythm(kick_rhythm)
-		kick_patterns.append(kick_id)
+		kick_patterns.append(kick_pattern)
 		# Update interlocking model
 		rhythm_model.add_interlocking(kick_id, bass_id)
 
