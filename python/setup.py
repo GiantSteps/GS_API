@@ -2,52 +2,35 @@ from setuptools import setup, find_packages
 from distutils.extension import Extension
 # from Cython.Distutils import build_ext
 
-import glob
+# import distutils.ccompiler
+# import utils.parallelComp
 
-# libFolder = "src/"
-# bindingsFolder = "generated/"
-# libSources = [f for f in glob.glob(libFolder+"*.cpp")]
-# bindingSources = [f for f in glob.glob(bindingsFolder+"*.cpp")]
-# cppSources = libSources+bindingSources
+# distutils.ccompiler.CCompiler.compile = utils.parallelComp.parallelCCompile
 
-
-# from gen import genBindings
-# genBindings.generate(bindingsFolder)
-
-import distutils.ccompiler
-import utils.parallelComp
-
-distutils.ccompiler.CCompiler.compile = utils.parallelComp.parallelCCompile
-
-if __name__ == '__main__':
-    import sys
-    import gsapi  # TODo moved gsapi from line 44 to line 24
-
+def checkLazySetupCommands():
+      # utility when compiling from IDE, last uncommented executes desired action
     toAppend = ['clean', '--all']
-    # toAppend = ['build']
-    # toAppend = ['install']
-    # toAppend = ['test']
+    toAppend = ['build']
+    toAppend = ['install']
+    toAppend = ['test']
 
     toAppend  = ['sdist', 'bdist_wheel', 'install']
 
     # remainder for pip maintainers
-    # once .pypirc edited
-    # bump the version in __init__.py then :
-    # python setup.py sdist bdist_wheel upload
+    # (once .pypirc edited)
+    # bump the GSAPIFullVersion in __init__.py then : python setup.py sdist bdist_wheel upload
 
     if len(sys.argv) == 1:
         for s in toAppend:
             sys.argv.append(s)
     print sys.argv
 
-# gsapiModule = Extension('gsapi',
-#                     # define_macros = [('MAJOR_VERSION', '1'),
-#                     #                  ('MINOR_VERSION', '0')],
-#                     include_dirs = [libFolder, libFolder + "3rdParty/json/"],
-#                     libraries = [],
-#                     extra_compile_args=['-std=c++11', '-w'],
-#                     library_dirs = ['/usr/local/lib'],
-#                     sources = cppSources)
+
+if __name__ == '__main__':
+    import sys
+    import gsapi  # TODo moved gsapi from line 44 to line 24
+    checkLazySetupCommands()
+
 
 
 setup(name='gsapi',

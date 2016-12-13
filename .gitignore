@@ -23,3 +23,4 @@ python/gsapi/.idea/*
 examples/Bassmine/output/*
 
 profiled
+python/sandbox/midi/*

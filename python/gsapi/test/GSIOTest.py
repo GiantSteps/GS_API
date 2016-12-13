@@ -21,7 +21,7 @@ class GSPatternTest(GSTestBase):
     def test_ImportExport(self):
         for p in self.cachedDataset:
 
-            exportedPath = GSIO.toMidi(p,path="../../test/midi/",name=p.name)
+            exportedPath = GSIO.toMidi(p,path="../../sandbox/midi/",name=p.name)
             exportedP = GSIO.fromMidi(midiPath=os.path.abspath(exportedPath))
 
             print p.events[62].duration,exportedP.events[62].duration
