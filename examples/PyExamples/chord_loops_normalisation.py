@@ -40,5 +40,8 @@ print type(chord.outputPattern)
 # chord_name.getDescriptorForPattern(chord.outputPattern[0])
 
 GSIO.toMidi(myPattern, path='./', name='test')
+
+# needs notepad or musescore installed
 s = converter.parse('./test.mid')
+print s
 s.show()

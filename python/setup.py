@@ -24,9 +24,17 @@ if __name__ == '__main__':
     import gsapi  # TODo moved gsapi from line 44 to line 24
 
     toAppend = ['clean', '--all']
-    toAppend = ['build']
-    toAppend = ['install']
-    # toAppend  = ['sdist', 'bdist_wheel', 'install']
+    # toAppend = ['build']
+    # toAppend = ['install']
+    # toAppend = ['test']
+
+    toAppend  = ['sdist', 'bdist_wheel', 'install']
+
+    # remainder for pip maintainers
+    # once .pypirc edited
+    # bump the version in __init__.py then :
+    # python setup.py sdist bdist_wheel upload
+
     if len(sys.argv) == 1:
         for s in toAppend:
             sys.argv.append(s)

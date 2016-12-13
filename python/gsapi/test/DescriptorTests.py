@@ -40,7 +40,6 @@ class DescriptorTests(GSTestBase):
     # 		print p
     # 		for s in sliced:
     # 			syncopation =  descriptor.getDescriptorForPattern(s);
-
     # 			self.assertTrue(syncopation>=0 , "syncopation value not valid : %f"%(syncopation))
 
     def test_chords(self):

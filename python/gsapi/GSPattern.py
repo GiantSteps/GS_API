@@ -39,6 +39,16 @@ class GSPatternEvent(object):
                                            self.startTime,
                                            self.duration)
 
+    def __eq__(self, other):
+        if isinstance(other, GSPatternEvent):
+            return (self.startTime == other.startTime) and (self.pitch == other.pitch) and (self.velocity==other.velocity) and (self.duration==other.duration) and (self.tags==other.tags)
+        return NotImplemented
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
+
     def hasOneCommonTagWith(self, event):
         """Compare tags between events.
 
@@ -116,16 +126,6 @@ class GSPatternEvent(object):
             res += [newE]
         return res
 
-    def isSimilarTo(self, event):
-        """Helper to compare events that could be copies of each other. The
-        equality compares reference not the content.
-
-        Args:
-            event: event to compare with
-        """
-        return self.startTime == event.startTime and self.duration == event.duration and \
-               self.tags == event.tags and \
-               self.pitch == event.pitch
 
     def containsTime(self, time):
         """Return true if event is active at given time
@@ -247,7 +247,7 @@ class GSPattern(object):
         """Nicely print out the list of events.
         Each line represents an event formatted as "[tags] pitch velocity startTime duration"
         """
-        s = "GSPattern %s\n" % self.name
+        s = "GSPattern %s : duration: %.2f,bpm: %.2f,time signature: %d/%d\n" % (self.name,self.duration,self.bpm,self.timeSignature[0],self.timeSignature[1])
         for e in self.events:
             s += str(e) + "\n"
         return s
@@ -259,6 +259,16 @@ class GSPattern(object):
         """Utility to access events as list member: GSPattern[idx] = GSPattern.events[idx]
         """
         return self.events[index]
+
+    def __eq__(self, other):
+        if isinstance(other, GSPattern):
+            return (self.events == other.events) and (self.duration == other.duration) and (self.timeSignature==other.timeSignature) and (self.startTime==other.startTime)
+        return NotImplemented
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        return not result
 
     def __setitem__(self, index, item):
         self.events[index] = item
@@ -353,7 +363,7 @@ class GSPattern(object):
         idxToRemove = []
         idx = 0
         for e in self.events:
-            if event == e or event.isSimilarTo(e):
+            if event == e :
                 idxToRemove += [idx]
             idx += 1
 

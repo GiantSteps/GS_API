@@ -3,6 +3,7 @@ import glob
 from GSPitchSpelling import *
 from GSPattern import *
 from GSPatternUtils import *
+import GSPitchSpelling
 import os
 import json  # todo: check if we need to import this library
 
@@ -11,8 +12,8 @@ gsiolog = logging.getLogger("gsapi.GSIO")
 
 
 def fromMidi(midiPath,
-             NoteToTagsMap=defaultPitchNames,
-             tracksToGet=None,  # TODO: unnecessary parameter??
+             NoteToTagsMap="pitchNames",
+             tracksToGet=None,
              TagsFromTrackNameEvents=False,
              filterOutNotMapped=True,
              checkForOverlapped=False):
@@ -38,7 +39,7 @@ def fromMidi(midiPath,
         TagsFromTrackNameEvents: use only track names to resolve mapping,
             useful for midi containing named tracks
         filterOutNotMapped: if set to true, don't add event not represented by `NoteToTagsMap`
-        tracksToGet: if not empty, specifies tracks wanted either by name or index
+        tracksToGet: if not empty, specifies Midi tracks wanted either by name or index
         checkForOverlapped: if true will check that two consecutiveEvents with
             exactly same MidiNote are not overlapping
     """
@@ -142,8 +143,10 @@ def __fromMidiFormatted(midiPath,
     import os
 
     globalMidi = midi.read_midifile(midiPath)
+    
     globalMidi.make_ticks_abs()
     pattern = GSPattern()
+    pattern.resolution = globalMidi.resolution # hide it in pattern to be able to retrieve it when exporting
     pattern.name = os.path.basename(midiPath)
 
         # boolean to avoid useless string creation
@@ -210,6 +213,7 @@ def __fromMidiFormatted(midiPath,
 
                 if isNoteOn:
                     # ignore duplicated events (can't have 2 simultaneous NoteOn for the same pitch)
+                    
                     if pitch == lastPitch and tick == lastTick:
                         gsiolog.info(pattern.name + ": skip duplicated event: %i %f" % (pitch, curBeat))
                         continue
@@ -259,6 +263,7 @@ def __findTimeInfoFromMidi(pattern, midiFile):
 
     for tracks in midiFile:
         for e in tracks:
+            
             if midi.MetaEvent.is_event(e.statusmsg):
                 if e.metacommand == midi.TimeSignatureEvent.metacommand:
                     if foundTimeSignatureEvent and (pattern.timeSignature != [e.numerator, e.denominator]):
@@ -275,6 +280,7 @@ def __findTimeInfoFromMidi(pattern, midiFile):
                     pattern.bpm = e.bpm
 
         if foundTimeSignatureEvent:
+            # pass
             break
     if not foundTimeSignatureEvent:
         gsiolog.warning(pattern.name + ": no time signature event found")
@@ -318,6 +324,55 @@ def toMidi(gspattern, midiMap=None, path="output/", name="test"):
         name: name of the file
     """
 
+    import midi 
+    # Instantiate a MIDI Pattern (contains a list of tracks)
+    pattern = midi.Pattern(tick_relative=False,format=1)
+    pattern.resolution=gspattern.resolution or 960
+    # Instantiate a MIDI Track (contains a list of MIDI events)
+    track = midi.Track(tick_relative=False)
+    
+    
+    track.append(midi.TimeSignatureEvent(numerator = gspattern.timeSignature[0],denominator=gspattern.timeSignature[1]))
+    # obscure events
+    # timeSignatureEvent.set_metronome(32)
+    # timeSignatureEvent.set_thirtyseconds(4)
+    
+    track.append(midi.TrackNameEvent(text= gspattern.name))
+
+    track.append(midi.SetTempoEvent(bpm=gspattern.bpm))
+
+    # Append the track to the pattern
+    pattern.append(track)
+    beatToTick = pattern.resolution 
+    for e in gspattern.events:
+
+        startTick = int(beatToTick  * e.startTime)
+        endTick   = int(beatToTick  * e.getEndTime()) 
+        pitch = e.pitch
+        channel=1
+        if midiMap:
+            pitch = midiMap[e.tags[0]]
+        if midiMap is None:
+            track.append(midi.NoteOnEvent(tick=startTick, velocity=e.velocity, pitch=pitch,channel=channel))
+            track.append(midi.NoteOffEvent(tick=endTick, velocity=e.velocity, pitch=pitch,channel=channel))
+
+    track.append(midi.EndOfTrackEvent(tick=int(gspattern.duration * beatToTick)))
+
+
+
+    # make tick relatives
+    track.sort(key=lambda e:e.tick)
+    track.make_ticks_rel()
+
+    # Save the pattern to disk
+
+    exportedPath = path+name
+    if not ".mid" in exportedPath:
+        exportedPath+=".mid"
+    midi.write_midifile(exportedPath, pattern)
+    return exportedPath
+
+"""
     # Import the library
     from midiutil.MidiFile import MIDIFile
 
@@ -330,6 +385,7 @@ def toMidi(gspattern, midiMap=None, path="output/", name="test"):
 
     # Add track name and tempo.
     MyMIDI.addTrackName(track, time, "Sample Track")
+
     MyMIDI.addTempo(track, time, gspattern.bpm)
 
     # Add a note. addNote expects the following information:
@@ -347,3 +403,5 @@ def toMidi(gspattern, midiMap=None, path="output/", name="test"):
     binfile = open(path + name + ".mid", 'wb')
     MyMIDI.writeFile(binfile)
     binfile.close()
+
+    """
