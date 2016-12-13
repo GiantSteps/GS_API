@@ -18,14 +18,19 @@ class GSPatternEvent(object):
         velocity: velocity of event
         tags: list of tags representing the event
     """
-    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=[]):
+    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=None):
         self.duration = duration
-        if not isinstance(tags, list):
-            tags = [tags]
+        if not tags: 
+            self.tags = []
+        elif isinstance(tags, str):
+            self.tags = [tags]
+        else:
+            self.tags = tags
+
         self.startTime = startTime
         self.pitch = pitch
         self.velocity = velocity
-        self.tags = tags
+        
 
     def __repr__(self):
         return "%s %i %i %05.2f %05.2f" % (self.tags,
@@ -131,6 +136,68 @@ class GSPatternEvent(object):
         return (time >= self.startTime) and (time < self.startTime + self.duration)
 
 # ============================
+# GSViewpoint Class Declaration
+# ============================
+
+class GSViewpoint(object):
+
+    def __init__(originPattern,descriptor,sliceType,doNotCompute=False):
+        
+        self.originPattern = originPattern
+        self.descriptor = descriptor
+
+        if not doNotCompute :
+            self.compute(sliceType=sliceType)
+
+    def configure(paramDict):
+        self.descriptor.configure(paramDict)
+
+    def compute(sliceType=1): 
+        """
+        Args:
+            sliceType: type of slicing to compute viewPoint: 
+                if integer its duration based see:splitInEqualLengthPatterns
+                if "perEvents" generates new pattern every new events startTime, some events can have negative startTimes and each GSpattern.duration corresponds to difference between consideredEvent.startTime and lastEvent.startTime (if some events were existing before start of consideredEvent)
+                if "all" get the whole pattern (generate one and only viewPoint value)
+        """
+        self.events=[]
+
+        if isinstance(sliceType,int):
+            step = sliceType
+            patternsList = self.originPattern.splitInEqualLengthPatterns(step)
+
+        elif sliceType=="perEvents":
+            self.originPattern.reorderEvents()
+            lastTime = -1
+            patternsList=[]
+            for consideredEvent in self.originPattern:
+                if lastTime < consideredEvent.startTime: # group all identical startTimeEvents
+                    pattern = self.originPattern.getACopyWithoutEvents()
+                    pattern.startTime = consideredEvent.startTime
+                    pattern.events = self.originPattern.getActiveEventsAtTime(consideredEvent.startTime)
+                    pattern.duration = 0
+
+                    for se in pattern.events:
+                        se.startTime-=consideredEvent.startTime 
+                        eT = se.getEndTime()
+                        if eT>pattern.duration:
+                            pattern.duration = eT
+                    lastTime = consideredEvent.startTime
+
+                    patternsList+=[pattern]
+
+        elif sliceType== "all":
+            patternsList = [self.originPattern]
+
+
+        for subPattern in patternsList:
+            self.events+=GSPatternEvent(duration=subPattern.duration,startTime=subPattern.startTime,tags = self.descriptor.getDescriptorForPattern(subPattern))
+
+
+
+
+
+# ============================
 # GSPattern Class Declaration
 # ============================
 
@@ -146,22 +213,29 @@ class GSPattern(object):
         bpm: initial tempo in beats per minute for this pattern (default: 120).
         timeSignature: list of integers representing the time signature,
          i.e [numerator, denominator].
+         startTime : startTimeof pattern (useful when splitting in sub patterns)
+         viewPoints: dict of GSViewPoint
     """
     def __init__(self,
                  duration=0,
-                 events=[],
+                 events=None,
                  bpm=120,
-                 timeSignature=(4, 4), # changed list to tuple.
+                 timeSignature=(4, 4),  # changed list to tuple.
                  key="C",
                  originFilePath="",
                  name=""):
         self.duration = duration
-        self.events = events
+        if events:
+            self.events = events
+        else:
+            self.events = []
+        self.viewpoints = {}
         self.bpm = bpm
         self.timeSignature = timeSignature
         self.key = key
         self.originFilePath = originFilePath
         self.name = name
+        self.startTime =0
 
     def __repr__(self):
         """Nicely print out the list of events.
@@ -360,7 +434,7 @@ class GSPattern(object):
         """Copy all fields but events.
             Useful for creating patterns from patterns.
         """
-        p = GSPattern(events=[])
+        p = GSPattern()
         p.duration = self.duration
         p.bpm = self.bpm
         p.timeSignature = self.timeSignature
@@ -624,6 +698,7 @@ class GSPattern(object):
             a new GSpattern within time slice
         """
         p = self.getACopyWithoutEvents()
+        p.startTime = startTime
         p.duration = length
         for e in self.events:
             if 0 <= (e.startTime - startTime) < length:
@@ -646,6 +721,7 @@ class GSPattern(object):
         res['eventTags'] = allTags
         res['timeInfo'] = {'duration': self.duration, 'bpm': self.bpm}
         res['eventList'] = []
+        res['viewpoints'] = self.viewpoints
 
         def findIdxforTags(tags, allTags):
             return [allTags.index(x) for x in tags]
@@ -667,6 +743,7 @@ class GSPattern(object):
         tags = json['eventTags']
         self.duration = json['timeInfo']['duration']
         self.bpm = json['timeInfo']['bpm']
+        res['viewpoints'] = self.viewpoints
         for e in json['eventList']:
             self.events += [GSPatternEvent(e['on'],
                                            e['duration'],
@@ -675,6 +752,7 @@ class GSPattern(object):
                                            [tags[f] for f in e['tagsIdx']]
                                            )]
         self.setDurationFromLastEvent()
+
         return self
 
     def splitInEqualLengthPatterns(self, desiredLength, makeCopy=True):
@@ -692,6 +770,7 @@ class GSPattern(object):
           numPattern = str(p)
           if numPattern not in patterns:
               patterns[numPattern] = self.getACopyWithoutEvents()
+              patterns[numPattern].startTime = p*desiredLength
               patterns[numPattern].duration = desiredLength
               patterns[numPattern].name = self.name + "_" + numPattern
           newEv = e if not makeCopy else e.copy()
@@ -719,6 +798,23 @@ class GSPattern(object):
                 curPattern = None
             res += [curPattern]
         return res
+
+    def generateViewpoint(self,name,GSViewpointInstance=None):
+        """
+        generate viewpoints 
+        Args:
+            name: name of the viewpoint generated , if name is one of ["chords",] it will generate the default descriptor
+        """
+        if GSViewpointInstance :
+            self.viewpoints[name]=GSViewpointInstance
+        else:
+            if name == "chords":
+                from GSDescriptors.GSDescriptorChord import GSDescriptorChord
+                self.viewpoints[name] = GSViewpoint(originPattern=self,descriptor=ChordDescriptor,sliceType=4)
+
+
+
+
 
     def printASCIIGrid(self, blockSize=1):
         def __areSilenceEvts(l):
@@ -764,3 +860,4 @@ class GSPattern(object):
 
             out += "]: " + t
             print out
+

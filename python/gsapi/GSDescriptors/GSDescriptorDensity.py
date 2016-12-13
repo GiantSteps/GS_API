@@ -3,9 +3,9 @@ from GSBaseDescriptor import *
 
 class GSDescriptorDensity(GSBaseDescriptor):
 
-    def __init__(self, ignoredTags=["silence"], includedTags=[]):
+    def __init__(self, ignoredTags=None, includedTags=None):
         GSBaseDescriptor.__init__(self)
-        self.ignoredTags = ignoredTags
+        self.ignoredTags = ignoredTags or ["silence"]
         self.includedTags = includedTags
 
     def getDescriptorForPattern(self, pattern):

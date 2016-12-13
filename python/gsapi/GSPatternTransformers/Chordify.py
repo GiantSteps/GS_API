@@ -2,7 +2,7 @@ from GSBasePatternTransformer import *
 from gsapi.GSPattern import *
 
 
-class GSChord(GSPatternEvent):
+class GSPatternEventChord(GSPatternEvent):
     """Represents an event of a GSPattern.
     An event has a startTime, duration, pitch, velocity and associated tags.
 
@@ -14,13 +14,13 @@ class GSChord(GSPatternEvent):
         tags: list of tags representing the event
     """
 
-    def __init__(self, startTime=0, duration=1.0, components=[], tags=[], label="chord"):
+    def __init__(self, startTime=0, duration=1.0, components=None, tags=None, label="chord"):
         self.duration = duration
         if not isinstance(tags, list):
             tags = [tags]
         self.startTime = startTime
-        self.components = components
-        self.tags = tags
+        self.components = components or []
+        self.tags = tags or []
         self.label = label
 
     def __repr__(self):
@@ -55,7 +55,7 @@ class Chordify(GSBasePatternTransformer):
         p = -1
         for e in self.inputPattern:
             if e.startTime != p:
-                new_chord = GSChord(startTime=e.startTime, duration=e.duration, components=[], tags=[])
+                new_chord = GSPatternEventChord(startTime=e.startTime, duration=e.duration, components=[], tags=[])
                 for ee in self.inputPattern.getActiveEventsAtTime(e.startTime):
                     new_chord.components.append((ee.pitch, ee.velocity))
                     for tag in ee.tags:
