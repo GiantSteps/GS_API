@@ -16,7 +16,7 @@ import logging
 from GSLogging import gsapiLogger
 import GSPitchSpelling
 import GSPatternUtils
-from GSPattern import GSPatternEvent, GSPattern
+from GSPattern import GSPatternEvent, GSPattern,GSViewpoint
 from GSDataset import GSDataset
 import GSIO
 import GSStyles 
