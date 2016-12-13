@@ -774,15 +774,16 @@ class GSPattern(object):
               patterns[numPattern].duration = desiredLength
               patterns[numPattern].name = self.name + "_" + numPattern
           newEv = e if not makeCopy else e.copy()
-          newEv.startTime -= p*desiredLength
-          if (newEv.startTime + newEv.duration > desiredLength):
+          
+          if (newEv.startTime + newEv.duration > (p+1)*desiredLength):
               remainingEvent = e.copy()
               newOnset = (p+1) * desiredLength
               remainingEvent.duration = remainingEvent.getEndTime() - newOnset
               remainingEvent.startTime = newOnset
               _handleEvent(remainingEvent,patterns,makeCopy)
-              newEv.duration = desiredLength - newEv.startTime
+              newEv.duration = (p+1)*desiredLength - e.startTime
 
+          newEv.startTime -= p*desiredLength
           patterns[numPattern].events += [newEv]
         patterns = {}
 
