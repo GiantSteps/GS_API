@@ -141,7 +141,7 @@ class GSPatternEvent(object):
 
 class GSViewpoint(object):
 
-    def __init__(originPattern,descriptor,sliceType,doNotCompute=False):
+    def __init__(self,originPattern,descriptor,sliceType,doNotCompute=False):
         
         self.originPattern = originPattern
         self.descriptor = descriptor
@@ -149,10 +149,10 @@ class GSViewpoint(object):
         if not doNotCompute :
             self.compute(sliceType=sliceType)
 
-    def configure(paramDict):
+    def configure(self,paramDict):
         self.descriptor.configure(paramDict)
 
-    def compute(sliceType=1): 
+    def compute(self,sliceType=1): 
         """
         Args:
             sliceType: type of slicing to compute viewPoint: 
@@ -191,7 +191,7 @@ class GSViewpoint(object):
 
 
         for subPattern in patternsList:
-            self.events+=GSPatternEvent(duration=subPattern.duration,startTime=subPattern.startTime,tags = self.descriptor.getDescriptorForPattern(subPattern))
+            self.events+=[GSPatternEvent(duration=subPattern.duration,startTime=subPattern.startTime,tags = self.descriptor.getDescriptorForPattern(subPattern))]
 
 
 
@@ -265,13 +265,13 @@ class GSPattern(object):
         """
 
         def _perVoiceLegato(pattern):
-            print pattern
+            
             pattern.reorderEvents()
             if len(pattern) == 0:
                 patternLog.warning("try to apply legato on an empty voice")
                 return
             for idx in range(1, len(pattern)):
-                print idx
+                
                 diff = pattern[idx].startTime - pattern[idx-1].getEndTime()
                 if diff > 0:
                     pattern[idx-1].duration += diff
@@ -811,7 +811,7 @@ class GSPattern(object):
         else:
             if name == "chords":
                 from GSDescriptors.GSDescriptorChord import GSDescriptorChord
-                self.viewpoints[name] = GSViewpoint(originPattern=self,descriptor=ChordDescriptor,sliceType=4)
+                self.viewpoints[name] = GSViewpoint(originPattern=self,descriptor=GSDescriptorChord(),sliceType=4)
 
 
 

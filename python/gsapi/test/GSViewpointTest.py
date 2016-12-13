@@ -13,16 +13,21 @@ from GSPatternTestUtils import *
 class GSViewpointTest(GSTestBase):
 
     def generateCachedDataset(self):
-        return GSDataset(midiGlob="funkyfresh.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+        return GSDataset(midiGlob="*.mid",
+                         midiFolder=self.getLocalCorpusPath('harmony'),
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
     def test_viewpoint(self):
-        patternList = self.cachedDataset[0].splitInEqualLengthPatterns(4, makeCopy=False)
-        for p in patternList:
-            p.generateViewpoint("chord")
-            self.checkPatternValid(p, msg='chordviewPoint failed')
+        for midiPattern in self.cachedDataset:
+            print "\n"+ midiPattern.name
+            patternList = midiPattern.splitInEqualLengthPatterns(4, makeCopy=False)
+            for p in patternList:
+                print p.startTime
+                p.generateViewpoint("chords")
+                self.checkPatternValid(p, msg='chordviewPoint failed')
+                for e in p.viewpoints["chords"].events:
+                    print e
 
 
 if __name__ == '__main__':
