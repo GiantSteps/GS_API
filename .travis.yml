@@ -10,6 +10,6 @@ before_install:
     - sudo apt-get -qq update
     - sudo apt-get install build-essential python-dev swig libasound2-dev
 install:
-    - python python/setup.py install
+    - python python/setup.py install 
 script:
     - nosetests
