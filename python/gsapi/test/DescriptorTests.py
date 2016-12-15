@@ -19,28 +19,28 @@ class DescriptorTests(GSTestBase):
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
-    # def test_density_simple(self):
+    def test_density_simple(self):
 
-    # 	descriptor = GSDescriptors.GSDescriptorDensity();
-    # 	for p in self.cachedDataset.patterns:
-    # 		allTags = p.getAllTags()
-    # 		density = descriptor.getDescriptorForPattern(p);
-    # 		p2 = p.getPatternWithTags([allTags[0]])
-    # 		density2 = descriptor.getDescriptorForPattern(p2)
-    # 		print density,density2,p.duration
-    # 		self.assertTrue(density>=0,p.name + " negative density : "+str(density))
-    # 		self.assertTrue(density< p.duration * len(allTags),p.name +" density over maximum bound : %f %f %f"%(density,p.duration ,len(allTags)))
-    # 		self.assertTrue(density2<=density,"part of the pattern has a bigger density than the whole")
+    	descriptor = GSDescriptors.GSDescriptorDensity();
+    	for p in self.cachedDataset.patterns:
+    		allTags = p.getAllTags()
+    		density = descriptor.getDescriptorForPattern(p);
+    		p2 = p.getPatternWithTags([allTags[0]])
+    		density2 = descriptor.getDescriptorForPattern(p2)
+    		#print density,density2,p.duration
+    		self.assertTrue(density>=0,p.name + " negative density : "+str(density))
+    		self.assertTrue(density< p.duration * len(allTags),p.name +" density over maximum bound : %f %f %f"%(density,p.duration ,len(allTags)))
+    		self.assertTrue(density2<=density,"part of the pattern has a bigger density than the whole")
 
-    # def test_syncopation(self):
-    # 	descriptor = GSDescriptors.GSDescriptorSyncopation();
-    # 	for p in self.cachedDataset.patterns:
-    # 		# p = p.getPatternWithTags(p.getAllTags()[0])
-    # 		sliced = p.splitInEqualLengthPatterns(descriptor.duration)
-    # 		print p
-    # 		for s in sliced:
-    # 			syncopation =  descriptor.getDescriptorForPattern(s);
-    # 			self.assertTrue(syncopation>=0 , "syncopation value not valid : %f"%(syncopation))
+    def test_syncopation(self):
+    	descriptor = GSDescriptors.GSDescriptorSyncopation();
+    	for p in self.cachedDataset.patterns:
+    		# p = p.getPatternWithTags(p.getAllTags()[0])
+    		sliced = p.splitInEqualLengthPatterns(descriptor.duration)
+    		#print p
+    		for s in sliced:
+    			syncopation =  descriptor.getDescriptorForPattern(s);
+    			self.assertTrue(syncopation>=0 , "syncopation value not valid : %f"%(syncopation))
 
     def test_chords(self):
         descriptor = GSDescriptors.GSDescriptorChord(forceMajMin=False,
@@ -58,7 +58,7 @@ class DescriptorTests(GSTestBase):
             return res
 
         for p in harmonyDataset:
-            print "checking %s" % p.name
+            testLog.info( "checking %s" % p.name)
 
             gtList = p.name.split('.')[0].split('-')
             groundTruth = map(stringToChord, gtList)
@@ -81,7 +81,7 @@ class DescriptorTests(GSTestBase):
                              " and midi has %d chromas:" \
                              "\nannotation: %s\nmidiPattern: %s" \
                              % (len(gtArm), len(curChromas), gtArm, curChromas)
-                    print errMsg
+                    testLog.error( errMsg)
                     # self.assertTrue(False,errMsg)
                 chords.append(descriptor.getDescriptorForPattern(s))
                 gtIdx += 1
@@ -106,14 +106,14 @@ class DescriptorTests(GSTestBase):
             if len(chords) == len(groundTruth):
                 hasValidProposition = checkProposition(0, chords, groundTruth, 0)
                 if not hasValidProposition:
-                    print "\nwrong: " + p.name
-                    print "proposition not valid:" \
+                    testLog.error( "\nwrong: " + p.name+"\n" \
+                     "proposition not valid:" \
                           "\nproposition: %s" \
                           "\ngroundTruth: %s" \
-                          "\n" % (chords, groundTruth)
+                          "\n" % (chords, groundTruth))
                     # self.assertTrue(False,"proposition not valid :\nproposition: %s\ngroundTruth: %s"%(chords,groundTruthBase))
             else:
-                print p
+                
                 self.assertTrue(False, 'annotation not based on 4beat division '
                                        'or midiFile larger')
 

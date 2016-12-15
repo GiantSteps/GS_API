@@ -12,9 +12,9 @@ def checkLazySetupCommands():
     toAppend = ['clean', '--all']
     toAppend = ['build']
     toAppend = ['install']
-    toAppend = ['test']
+    toAppend = ['test']; import logging;gsapi.GSLogging.setDefaultLoggingLevel(logging.ERROR)
 
-    toAppend  = ['sdist', 'bdist_wheel', 'install']
+    # toAppend  = ['sdist', 'bdist_wheel', 'install']
 
     # remainder for pip maintainers
     # (once .pypirc edited)

@@ -23,7 +23,7 @@ class AgnosticDensityTest(GSTestBase):
         for p in self.cachedDataset:
             shortPatterns = p.splitInEqualLengthPatterns(4, makeCopy=False)
             for shortPattern in shortPatterns:
-                print 'checking pattern' + shortPattern.name
+                testLog.info( 'checking pattern' + shortPattern.name)
                 randomDensity = {}
                 for t in shortPattern.getAllTags():
                     randomDensity[t] = random.random()*2.0

@@ -24,7 +24,7 @@ class GSPatternTest(GSTestBase):
             exportedPath = GSIO.toMidi(p,path="../../sandbox/midi/",name=p.name)
             exportedP = GSIO.fromMidi(midiPath=os.path.abspath(exportedPath))
 
-            print p.events[62].duration,exportedP.events[62].duration
+            testLog.info( p.events[62].duration,exportedP.events[62].duration)
             self.assertEqual(p.events,exportedP.events)
             self.assertEqual(p,exportedP)
 

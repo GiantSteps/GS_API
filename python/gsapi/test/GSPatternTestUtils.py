@@ -10,6 +10,8 @@ if __name__ == '__main__':
 
 from gsapi import *
 
+testLog = logging.getLogger("gsapi.GSTest")
+
 def runTest(profile=False, getStat=False):
     if profile:
         import cProfile
@@ -25,7 +27,8 @@ def runTest(profile=False, getStat=False):
 
 
 class singleTonDataset(GSDataset):
-
+    """class to parse only once a dataset and share it between tests
+    """
     def __init__(self, **kwargs):
         self.creationArgs = kwargs
         self.dataset = None
@@ -63,6 +66,7 @@ class GSTestBase(unittest.TestCase):
 
     def checkNoTagsOverlaps(self, pattern, msg=None):
         tags = pattern.getAllTags()
+        pattern.reorderEvents();
         for t in tags:
             lastTimeOff = 0
             for e in pattern.events:
@@ -73,6 +77,7 @@ class GSTestBase(unittest.TestCase):
 
     def checkPatternValid(self, pattern, checkForDoublons=True, checkOverlap=True, msg=""):
         self.assertTrue(len(pattern.events) > 0, msg)
+        self.assertTrue(pattern.duration > 0, msg)
         i = 0
         for e in pattern.events:
             errMsg = "%s %s" % (msg, e)
@@ -93,6 +98,7 @@ class GSTestBase(unittest.TestCase):
             self.checkNoTagsOverlaps(pattern, msg)
 
     def setUp(self):
-        print '-------------------------------------'
-        print "Starting test: ", self._testMethodName
-        print '-------------------------------------'
+        testLog.info(
+        '-------------------------------------\n' \
+        'Starting test: '+ self._testMethodName +\
+        '-------------------------------------')

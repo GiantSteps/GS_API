@@ -18,41 +18,48 @@ class GSViewpointTest(GSTestBase):
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
-    def test_viewpoint_defaults(self):
-        for midiPattern in self.cachedDataset:
-            print "\n"+ midiPattern.name
-            # checking default implementation
-            midiPattern.generateViewpoint("chords")
-            self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
-            for e in midiPattern.viewpoints["chords"].events:
-                print e
+    # def test_viewpoint_defaults(self):
+    #     for midiPattern in self.cachedDataset:
+    #         print "\n"+ midiPattern.name
+    #         # checking default implementation
+    #         midiPattern.generateViewpoint("chords")
+    #         self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
+    #         for e in midiPattern.viewpoints["chords"].events:
+    #             print e
             
 
     def test_viewpoint_custom(self):
 
 
-        def _testAndPrint(descriptor,sliceType):
-            print "\n"+ midiPattern.name
+        def _testAndPrint(sliceType):
+            
             # checking default implementation
-            midiPattern.generateViewpoint("chords",descriptor=descriptor,sliceType=sliceType)
-            self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
-            for e in midiPattern.viewpoints["chords"].events:
-                print e
+            patternBeforeVP = midiPattern.copy()
+            midiPattern.generateViewpoint(descriptorName,descriptor=descriptor,sliceType=sliceType)
+            self.assertTrue(patternBeforeVP==midiPattern, msg='viewpoint generation modified original pattern failed')
+            self.checkPatternValid(midiPattern.viewpoints[descriptorName],checkOverlap=False, msg='generated viewpoint is not a valid pattern %s'%midiPattern.viewpoints[descriptorName])
+            # for e in midiPattern.viewpoints["chords"].events:
+            #     print e
 
 
-        def _testDescriptor(descriptor):
-            _testAndPrint(descriptor = descriptor,sliceType="perEvent")
-            _testAndPrint(descriptor = descriptor,sliceType="all")
-            _testAndPrint(descriptor = descriptor,sliceType=1)
-            _testAndPrint(descriptor = descriptor,sliceType=4)
+        def _testDescriptor(name,descriptor):
+
+            _testAndPrint(sliceType="perEvent")
+            _testAndPrint(sliceType="all")
+            _testAndPrint(sliceType=1)
+            _testAndPrint(sliceType=4)
+            _testAndPrint(sliceType=3)
 
         for midiPattern in self.cachedDataset:
-            for descriptor in getAllDescriptors():
-                _testDescriptor(GSDescriptors.GSDescriptorChord());
-                _testDescriptor(GSDescriptors.GSDescriptorDensity());
-            
+
+            for descriptorName in getAllDescriptors():
+                descriptor= getattr(GSDescriptors,descriptorName,None)()
+                _testDescriptor(name=descriptorName,descriptor = descriptor);
+                
+            testLog.info( midiPattern.name+" ok")
 
 def getAllDescriptors():
+    return ['GSDescriptorSyncopation']
     res = []
     for elem in dir(GSDescriptors):
         if not '__' in elem and (not 'GSBase' in elem):
