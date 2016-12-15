@@ -6,14 +6,14 @@ if __name__ == '__main__':
 
 from gsapi import *
 from GSPatternTestUtils import *
-# GSDataset.defaultMidiFolder = os.path.abspath(__file__ + "../../../corpus/midiTests/")
+
 
 
 class AgnosticDensityTest(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="funkyfresh.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+                         midiFolder=self.getLocalCorpusPath('drums'),
                          midiMap=GSPatternUtils.simpleDrumMap,
                          checkForOverlapped=True)
 

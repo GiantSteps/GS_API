@@ -13,7 +13,7 @@ class GSDataset(object):
     TODO documentation
     """
 
-    defaultMidiFolder = os.path.abspath(__file__ + "../../../../corpus/midiTests/")
+    defaultMidiFolder = os.path.abspath(__file__ + "../../../../corpus/drums/")
     defaultMidiGlob = "*.mid"
 
     def __init__(self,

@@ -10,4 +10,5 @@ from MarkovPatternTest import *
 
 
 if __name__ == "__main__":
+	# shortcut to run all tests
     runTest(profile=False, getStat=False)

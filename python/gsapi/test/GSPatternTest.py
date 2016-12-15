@@ -14,7 +14,7 @@ class GSPatternTest(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="funkyfresh.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+                         midiFolder=self.getLocalCorpusPath('drums'),
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 

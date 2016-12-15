@@ -5,8 +5,8 @@ from GSPattern import *
 from GSPatternUtils import *
 import GSPitchSpelling
 import os
-import json  # todo: check if we need to import this library
-
+import json  
+import cPickle as pickle
 gsiolog = logging.getLogger("gsapi.GSIO")
 # gsiolog.setLevel(level=logging.INFO)
 
@@ -87,28 +87,83 @@ def fromMidiCollection(midiGlobPath,
     return res
 
 
-def fromJSONFile(filePath):
+def fromJSONFile(filePath,conserveTuple=False):
     """Load a pattern to internal JSON Format.
 
     Args:
         filePath: filePath where to load it
     """
+
+
+    def hinted_tuple_hook(obj):
+        # print obj
+        
+        if isinstance(obj, list):return [hinted_tuple_hook(e) for e in obj]
+        if isinstance(obj, dict):
+            if '__tuple__' in obj:return tuple(obj['items'])
+            return {k:hinted_tuple_hook(e) for k,e in obj.iteritems()}
+        else:
+            return obj
+
     with open(filePath, 'r') as f:
-        return GSPattern().fromJSONDict(json.load(f))
+        return GSPattern().fromJSONDict(json.load(f,object_hook=hinted_tuple_hook if conserveTuple else None))
 
 
-def toJSONFile(pattern, folderPath,nameSuffix=None):
+
+def toJSONFile(pattern, folderPath,useTagIndexing=True,nameSuffix=None,conserveTuple = False):
     """Save a pattern to internal JSON Format.
 
     Args:
         pattern: a GSPattern
         folderPath: folder where to save it, fileName will be pattern.name+nameSuffix+".json"
+        nameSuffix : string to append to name of the file
+        useTagIndexing: if true, tags are stored as indexes from a list of all tags (reduce size of json files)
+        ConserveTuple : useful if some tags can be tuple but much slower
     """
+
     filePath = os.path.join(folderPath,pattern.name+(nameSuffix or "")+".json")
     if(not os.path.exists(folderPath)) : 
         os.makedirs(folderPath)
+
+
+    class TupleEncoder(json.JSONEncoder):
+        """ encoder conserving tuple type info"""
+        def checkTuple(self,item):
+            if isinstance(item, tuple):return {'__tuple__': True, 'items': item}
+            if isinstance(item, list):return [self.checkTuple(e) for e in item]
+            if isinstance(item, dict):return {k:self.checkTuple(e) for k,e in item.iteritems()}
+            else:return item
+
+        def iterencode(self,item):
+            return json.JSONEncoder.iterencode(self, self.checkTuple(item))
+
+    encoderClass =  TupleEncoder if conserveTuple else None;
     with open(filePath, 'w') as f:
-        json.dump(pattern.toJSONDict(), f,indent=1)
+        json.dump(pattern.toJSONDict(useTagIndexing=useTagIndexing), f,cls=encoderClass,indent=1,separators=(',', ':'))
+    return os.path.abspath(filePath)
+
+def fromPickleFile(filePath):
+    """Load a pattern from pickle Format.
+
+    Args:
+        filePath: filePath where to load it
+    """
+    with open(filePath, 'rb') as f:
+        return pickle.load(f)
+
+def toPickleFile(pattern,folderPath,nameSuffix=None):
+    """Save a pattern to python's pickle Format.
+
+    Args:
+        pattern: a GSPattern
+        folderPath: folder where to save it, fileName will be pattern.name+nameSuffix+".json"
+        nameSuffix : string to append to name of the file
+    """
+    filePath = os.path.join(folderPath,pattern.name+(nameSuffix or "")+".pickle")
+    if(not os.path.exists(folderPath)) : 
+        os.makedirs(folderPath)
+    with open(filePath, 'wb') as f:
+        pickle.dump(pattern, f)
     return os.path.abspath(filePath)
 
 
@@ -379,36 +434,3 @@ def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
     midi.write_midifile(exportedPath, pattern)
     return exportedPath
 
-"""
-    # Import the library
-    from midiutil.MidiFile import MIDIFile
-
-    # Create the MIDIFile Object with 1 track
-    MyMIDI = MIDIFile(1, adjust_origin=False)
-
-    # Tracks are numbered from zero. Times are measured in beats.
-    track = 0
-    time = 0
-
-    # Add track name and tempo.
-    MyMIDI.addTrackName(track, time, "Sample Track")
-
-    MyMIDI.addTempo(track, time, gspattern.bpm)
-
-    # Add a note. addNote expects the following information:
-    track = 0
-    channel = 0
-
-    # Now add the note.
-    for e in gspattern.events:
-        if midiMap is None:
-            MyMIDI.addNote(track, channel, e.pitch, e.startTime, e.duration, e.velocity)
-        else:
-            MyMIDI.addNote(track, channel, midiMap[e.tags[0]], e.startTime, e.duration, e.velocity)
-
-    # And write it to disk.
-    binfile = open(path + name + ".mid", 'wb')
-    MyMIDI.writeFile(binfile)
-    binfile.close()
-
-    """

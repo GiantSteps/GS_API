@@ -37,7 +37,7 @@ class GSPatternEvent(object):
         
 
     def __repr__(self):
-        return "%s %i %i %05.2f %05.2f" % (self.tags,
+        return "%s %i %i %05.4f %05.4f" % (self.tags,
                                            self.pitch,
                                            self.velocity,
                                            self.startTime,
@@ -668,46 +668,85 @@ class GSPattern(object):
                     e.duration -= toCrop
         return p
 
-    def toJSONDict(self):
+    def toJSONDict(self,useTagIndexing=True):
         """Gives a standard dict for json output.
+        Args:
+        useTagIndexing: if true, tags are stored as indexes from a list of all tags (reduce size of json files)
         """
         res = {}
         self.setDurationFromLastEvent()
-        allTags = self.getAllTags()
-        res['eventTags'] = allTags
+        res['name'] = self.name
+        if self.originPattern : res['originPattern'] = self.originPattern.name
         res['timeInfo'] = {'duration': self.duration, 'bpm': self.bpm,'timeSignature':self.timeSignature}
         res['eventList'] = []
-        res['viewpoints'] = {k: v.toJSONDict() for k, v in self.viewpoints.items()}
+        res['viewpoints'] = {k: v.toJSONDict(useTagIndexing) for k, v in self.viewpoints.items()}
+        if useTagIndexing:
+            allTags = self.getAllTags()
+            res['eventTags'] = allTags
+            def findIdxforTags(tags, allTags):
+                return [allTags.index(x) for x in tags]
+            for e in self.events:
+                res['eventList'] += [{'on': e.startTime,
+                                      'duration': e.duration,
+                                      'pitch': e.pitch,
+                                      'velocity': e.velocity,
+                                      'tagsIdx': findIdxforTags(e.tags, allTags)
+                                      }]
+        else:
+            for e in self.events:
+                res['eventList'] += [{'on': e.startTime,
+                                      'duration': e.duration,
+                                      'pitch': e.pitch,
+                                      'velocity': e.velocity,
+                                      'tags': e.tags
+                                      }]
 
-        def findIdxforTags(tags, allTags):
-            return [allTags.index(x) for x in tags]
-        for e in self.events:
-            res['eventList'] += [{'on': e.startTime,
-                                  'duration': e.duration,
-                                  'pitch': e.pitch,
-                                  'velocity': e.velocity,
-                                  'tagsIdx': findIdxforTags(e.tags, allTags)
-                                  }]
         return res
 
-    def fromJSONDict(self, json):
+    def fromJSONDict(self, json,parentPattern=None):
         """Loads a json API dict object to this pattern
 
         Args:
             json: a dict created from reading json file with GS API JSON format
         """
-        tags = json['eventTags']
+        self.name = json['name']
         self.duration = json['timeInfo']['duration']
         self.bpm = json['timeInfo']['bpm']
-        self.viewpoints = json['viewpoints']
         self.timeSignature = tuple(json['timeInfo']['timeSignature'])
-        for e in json['eventList']:
-            self.events += [GSPatternEvent(e['on'],
-                                           e['duration'],
-                                           e['pitch'],
-                                           e['velocity'],
-                                           [tags[f] for f in e['tagsIdx']]
-                                           )]
+        if 'originPattern' in json:
+            def findOriginPatternInParent(name):
+                if not name:
+                    return None
+                checkedPattern = parentPattern
+                while( checkedPattern):
+                    if checkedPattern.name==name:
+                        return checkedPattern
+                    checkedPattern = checkedPattern.originPattern
+
+                assert False, "no origin pattern found"
+
+            self.originPattern = findOriginPatternInParent(json['originPattern'])
+
+        hasIndexedTags = 'eventTags' in json.keys()
+        if hasIndexedTags:
+            tags = json['eventTags']
+            for e in json['eventList']:
+                self.events += [GSPatternEvent(startTime = e['on'],
+                                               duration = e['duration'],
+                                               pitch = e['pitch'],
+                                               velocity = e['velocity'],
+                                               tags = [tags[f] for f in e['tagsIdx']]
+                                               )]
+        else:
+            for e in json['eventList']:
+                self.events += [GSPatternEvent(startTime = e['on'],
+                                               duration = e['duration'],
+                                               pitch = e['pitch'],
+                                               velocity =e['velocity'],
+                                               tags = e['tags']
+                                               )]
+
+        self.viewpoints = {k: GSPattern().fromJSONDict(v,parentPattern=self) for k, v in json['viewpoints'].items()}
         self.setDurationFromLastEvent()
 
         return self
@@ -749,8 +788,9 @@ class GSPattern(object):
         res = []
         maxListLen = int(math.ceil(self.duration*1.0/desiredLength))
         for p in range(maxListLen):
-            if str(p) in patterns:
-                curPattern = patterns[str(p)]
+            pName = str(p)
+            if pName in patterns:
+                curPattern = patterns[pName]
                 curPattern.setDurationFromLastEvent()
             else:
                 curPattern = None
@@ -810,6 +850,7 @@ class GSPattern(object):
                 patternsList = [originPattern]
             else:
                 patternLog.error("sliceType %s not valid"%(sliceType))
+                assert False
 
 
             for subPattern in patternsList:

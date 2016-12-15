@@ -30,14 +30,27 @@ class GSIOTest(GSTestBase):
 
     def test_ImportExportJSON(self):
         for p in self.cachedDataset:
+            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=False)
+            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
+            self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
+
+    def test_ImportExportJSONTuples(self):
+        for p in self.cachedDataset:
+            for name,descriptorClass in getAllDescriptorsClasses():
+                p.generateViewpoint(name,descriptorClass(),sliceType=4)
+            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
+            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
+            self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
+
+
+    def test_ImportExportPickle(self):
+        for p in self.cachedDataset:
             p.generateViewpoint("chords")
 
-            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/")
-            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath))
+            exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
+            picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))
 
-            self.checkPatternEquals(p,jsonPattern)
-
-  
+            self.checkPatternEquals(p,picklePattern,checkViewpoints = True)
 
 if __name__ == '__main__':
     runTest(profile=True, getStat=False)

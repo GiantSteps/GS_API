@@ -38,6 +38,14 @@ class singleTonDataset(GSDataset):
             self.dataset = GSDataset(**self.creationArgs)
         return self.dataset  # Todo: check prepent self to variable
 
+def getAllDescriptorsClasses():
+    """return list of tuples (descriptorName, descriptorClass)
+    """
+    res = []
+    for elem in dir(GSDescriptors):
+        if not '__' in elem and (not 'GSBase' in elem):
+            res+=[ (elem, getattr(GSDescriptors,elem,None))]
+    return res
 
 class GSTestBase(unittest.TestCase):
     """
@@ -52,10 +60,10 @@ class GSTestBase(unittest.TestCase):
         return self.__cachedDataset
 
     # sub class can override that to load a cached dataset only once per session (not per test)
-    #  default will crawl all midiTests Folder
+    #  default will crawl all drums Folder
     def generateCachedDataset(self):
         raise GSDataset(midiGlob="*.mid",
-                        midiFolder=self.getLocalCorpusPath('midiTests'),
+                        midiFolder=self.getLocalCorpusPath('drums'),
                         midiMap="pitchNames",
                         checkForOverlapped=True)
 
@@ -97,7 +105,7 @@ class GSTestBase(unittest.TestCase):
         if checkOverlap:
             self.checkNoTagsOverlaps(pattern, msg)
 
-    def checkPatternEquals(self,patternA,patternB):
+    def checkPatternEquals(self,patternA,patternB,checkViewpoints = False):
         if patternA!=patternB:
             self.assertEquals(patternA.duration,patternB.duration)
             self.assertEquals(patternA.bpm,patternB.bpm)
@@ -107,7 +115,11 @@ class GSTestBase(unittest.TestCase):
 
             # if we hit next line, no exception were raised so we may have forgotten to check something
             self.assertTrue(False,'pattern not equals for unknown reasons')
-        
+        if checkViewpoints and patternA.viewpoints!=patternB.viewpoints:
+            self.assertEquals(len(patternA.viewpoints),len(patternB.viewpoints))
+            for k in patternA.viewpoints:
+                self.checkPatternEquals(patternA.viewpoints[k],patternB.viewpoints[k],checkViewpoints=checkViewpoints)
+
 
 
     def checkEventsEquals(self,patternA,patternB):

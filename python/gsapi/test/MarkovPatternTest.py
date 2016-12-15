@@ -20,7 +20,7 @@ class MarkovPatternTest(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="miniDaftPunk.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+                         midiFolder=self.getLocalCorpusPath('drums'),
                          midiMap="pitchNames")
 
     def buildMarkov(self, order, numSteps, loopDuration):
@@ -30,10 +30,10 @@ class MarkovPatternTest(GSTestBase):
             self.patternList += p.splitInEqualLengthPatterns(loopDuration, False)
 
         for p in self.patternList:
-            print p
+            testLog.info( p)
         self.markovChain = PatternMarkov(order=order, numSteps=numSteps, loopDuration=loopDuration)
         self.markovChain.generateTransitionTableFromPatternList(self.patternList)
-        print self.markovChain
+        testLog.info( self.markovChain)
         self.assertTrue(self.markovChain.isBuilt(), "markov has not been built")
         self.__testMarkov(10)
 

@@ -18,14 +18,14 @@ class GSViewpointTest(GSTestBase):
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
-    # def test_viewpoint_defaults(self):
-    #     for midiPattern in self.cachedDataset:
-    #         print "\n"+ midiPattern.name
-    #         # checking default implementation
-    #         midiPattern.generateViewpoint("chords")
-    #         self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
-    #         for e in midiPattern.viewpoints["chords"].events:
-    #             print e
+    def test_viewpoint_defaults(self):
+        for midiPattern in self.cachedDataset:
+            print "\n"+ midiPattern.name
+            # checking default implementation
+            midiPattern.generateViewpoint("chords")
+            self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
+            for e in midiPattern.viewpoints["chords"].events:
+                print e
             
 
     def test_viewpoint_custom(self):
@@ -42,7 +42,7 @@ class GSViewpointTest(GSTestBase):
             #     print e
 
 
-        def _testDescriptor(name,descriptor):
+        def _testDescriptor(name):
 
             _testAndPrint(sliceType="perEvent")
             _testAndPrint(sliceType="all")
@@ -52,22 +52,16 @@ class GSViewpointTest(GSTestBase):
 
         for midiPattern in self.cachedDataset:
 
-            for descriptorName in getAllDescriptors():
-                descriptor= getattr(GSDescriptors,descriptorName,None)()
-                _testDescriptor(name=descriptorName,descriptor = descriptor);
+            for descriptorName,descriptorClass in getAllDescriptorsClasses():
+                descriptor = descriptorClass()
+                _testDescriptor(name=descriptorName);
                 
             testLog.info( midiPattern.name+" ok")
 
-def getAllDescriptors():
-    return ['GSDescriptorSyncopation']
-    res = []
-    for elem in dir(GSDescriptors):
-        if not '__' in elem and (not 'GSBase' in elem):
-            res+=[ elem]
-    return res
+
     
 if __name__ == '__main__':
     print getAllDescriptors()
-    runTest(profile=True, getStat=False)
+    runTest(profile=False, getStat=False)
 
 

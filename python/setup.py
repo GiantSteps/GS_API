@@ -1,10 +1,10 @@
 from setuptools import setup, find_packages
 from distutils.extension import Extension
-# from Cython.Distutils import build_ext
 
+# legacy imports
+# from Cython.Distutils import build_ext
 # import distutils.ccompiler
 # import utils.parallelComp
-
 # distutils.ccompiler.CCompiler.compile = utils.parallelComp.parallelCCompile
 
 def checkLazySetupCommands():
@@ -28,7 +28,7 @@ def checkLazySetupCommands():
 
 if __name__ == '__main__':
     import sys
-    import gsapi  # TODo moved gsapi from line 44 to line 24
+    import gsapi
     checkLazySetupCommands()
 
 

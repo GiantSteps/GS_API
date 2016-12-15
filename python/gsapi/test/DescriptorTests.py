@@ -7,15 +7,12 @@ if __name__ == '__main__':
 
 from gsapi import *
 from GSPatternTestUtils import *
-from gsapi.GSPatternUtils import *
-from gsapi.GSPitchSpelling import *
-
 
 class DescriptorTests(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="funkyfresh.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+                         midiFolder=self.getLocalCorpusPath('drums'),
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 

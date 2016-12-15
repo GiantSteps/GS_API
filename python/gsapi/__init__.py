@@ -14,8 +14,9 @@ source code:
 
 import logging
 from GSLogging import gsapiLogger
-import GSPitchSpelling
-import GSPatternUtils
+from GSPitchSpelling import *
+from GSPatternUtils import *
+
 from GSPattern import GSPatternEvent, GSPattern
 from GSDataset import GSDataset
 import GSIO
