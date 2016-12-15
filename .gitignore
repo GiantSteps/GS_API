@@ -24,3 +24,5 @@ examples/Bassmine/output/*
 
 profiled
 python/sandbox/midi/*
+.coverage
+htmlcov/

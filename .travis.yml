@@ -12,4 +12,4 @@ before_install:
 install:
     - python python/setup.py install 
 script:
-    - nosetests
+    - python python/setup.py test

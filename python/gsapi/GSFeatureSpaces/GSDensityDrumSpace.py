@@ -49,5 +49,5 @@ if __name__=='__main__':
 	drumSpace = GSDensityDrumSpace()
 	for p in dataset.patterns:
 		
-		print drumSpace.getFeatureSpace(p)
+		print (drumSpace.getFeatureSpace(p))
 

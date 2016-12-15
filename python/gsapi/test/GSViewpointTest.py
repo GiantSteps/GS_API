@@ -1,3 +1,8 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import unittest
 import os
 import sys
@@ -7,7 +12,7 @@ if __name__ == '__main__':
 
 from gsapi import *
 import random,glob
-from GSPatternTestUtils import *
+from .GSPatternTestUtils import *
 
 
 class GSViewpointTest(GSTestBase):
@@ -20,12 +25,12 @@ class GSViewpointTest(GSTestBase):
 
     def test_viewpoint_defaults(self):
         for midiPattern in self.cachedDataset:
-            print "\n"+ midiPattern.name
+            print( "\n"+ midiPattern.name)
             # checking default implementation
             midiPattern.generateViewpoint("chords")
             self.checkPatternValid(midiPattern, msg='chordviewPoint failed')
             for e in midiPattern.viewpoints["chords"].events:
-                print e
+                print (e)
             
 
     def test_viewpoint_custom(self):
@@ -61,7 +66,7 @@ class GSViewpointTest(GSTestBase):
 
     
 if __name__ == '__main__':
-    print getAllDescriptors()
+    print( getAllDescriptors())
     runTest(profile=False, getStat=False)
 
 

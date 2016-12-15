@@ -15,7 +15,7 @@ from gsapi import *
 from gsapi.MathUtils import *
 # todo check we need these libraries
 import random, glob
-from GSPatternTestUtils import *
+from .GSPatternTestUtils import *
 
 
 class MarkovPatternTest(GSTestBase):

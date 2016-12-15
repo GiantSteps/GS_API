@@ -73,7 +73,7 @@ def setDefaultLoggingLevel(lvl):
     """
     gsapiLogger.setLevel(lvl)
 
-
+setDefaultLoggingLevel(logging.WARNING)
 def setUseColoredOutput(useColor):
     """ Enable or not colored console output powerful in the console, but annoying otherwise
     Args:
