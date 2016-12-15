@@ -11,10 +11,10 @@ def checkLazySetupCommands():
       # utility when compiling from IDE, last uncommented executes desired action
     toAppend = ['clean', '--all']
     toAppend = ['build']
-    toAppend = ['install']
+    # toAppend  = ['sdist', 'bdist_wheel', 'install']
     toAppend = ['test']; import logging;gsapi.GSLogging.setDefaultLoggingLevel(logging.ERROR)
 
-    # toAppend  = ['sdist', 'bdist_wheel', 'install']
+    
 
     # remainder for pip maintainers
     # (once .pypirc edited)

@@ -675,9 +675,9 @@ class GSPattern(object):
         self.setDurationFromLastEvent()
         allTags = self.getAllTags()
         res['eventTags'] = allTags
-        res['timeInfo'] = {'duration': self.duration, 'bpm': self.bpm}
+        res['timeInfo'] = {'duration': self.duration, 'bpm': self.bpm,'timeSignature':self.timeSignature}
         res['eventList'] = []
-        res['viewpoints'] = self.viewpoints
+        res['viewpoints'] = {k: v.toJSONDict() for k, v in self.viewpoints.items()}
 
         def findIdxforTags(tags, allTags):
             return [allTags.index(x) for x in tags]
@@ -699,7 +699,8 @@ class GSPattern(object):
         tags = json['eventTags']
         self.duration = json['timeInfo']['duration']
         self.bpm = json['timeInfo']['bpm']
-        res['viewpoints'] = self.viewpoints
+        self.viewpoints = json['viewpoints']
+        self.timeSignature = tuple(json['timeInfo']['timeSignature'])
         for e in json['eventList']:
             self.events += [GSPatternEvent(e['on'],
                                            e['duration'],

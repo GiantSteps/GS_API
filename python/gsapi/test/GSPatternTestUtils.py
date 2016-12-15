@@ -97,6 +97,26 @@ class GSTestBase(unittest.TestCase):
         if checkOverlap:
             self.checkNoTagsOverlaps(pattern, msg)
 
+    def checkPatternEquals(self,patternA,patternB):
+        if patternA!=patternB:
+            self.assertEquals(patternA.duration,patternB.duration)
+            self.assertEquals(patternA.bpm,patternB.bpm)
+            self.assertEquals(patternA.startTime,patternB.startTime)
+            self.assertEquals(patternA.timeSignature,patternB.timeSignature)
+            self.checkEventsEquals(patternA,patternB)
+
+            # if we hit next line, no exception were raised so we may have forgotten to check something
+            self.assertTrue(False,'pattern not equals for unknown reasons')
+        
+
+
+    def checkEventsEquals(self,patternA,patternB):
+        self.assertEquals(len(patternA.events),len(patternB.events))
+        patternA.reorderEvents();
+        patternB.reorderEvents();
+        for i in range(len(patternA.events)):
+            self.assertEquals(patternA.events[i],patternB.events[i])
+
     def setUp(self):
         testLog.info(
         '-------------------------------------\n' \

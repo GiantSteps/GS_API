@@ -10,23 +10,32 @@ import random,glob
 from GSPatternTestUtils import *
 
 
-class GSPatternTest(GSTestBase):
+
+
+class GSIOTest(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="*.mid",
-                         midiFolder=self.getLocalCorpusPath('midiTests'),
+                         midiFolder=self.getLocalCorpusPath('harmony'),
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
-    def test_ImportExport(self):
+    def test_ImportExportMidi(self):
         for p in self.cachedDataset:
 
-            exportedPath = GSIO.toMidi(p,path="../../sandbox/midi/",name=p.name)
+            exportedPath = GSIO.toMidi(p,folderPath="../../sandbox/midi/",name=p.name)
             exportedP = GSIO.fromMidi(midiPath=os.path.abspath(exportedPath))
 
-            testLog.info( p.events[62].duration,exportedP.events[62].duration)
-            self.assertEqual(p.events,exportedP.events)
-            self.assertEqual(p,exportedP)
+            self.checkPatternEquals(p,exportedP)
+
+    def test_ImportExportJSON(self):
+        for p in self.cachedDataset:
+            p.generateViewpoint("chords")
+
+            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/")
+            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath))
+
+            self.checkPatternEquals(p,jsonPattern)
 
   
 

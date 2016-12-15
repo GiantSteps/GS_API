@@ -87,7 +87,7 @@ def fromMidiCollection(midiGlobPath,
     return res
 
 
-def PatternFromJSONFile(filePath):
+def fromJSONFile(filePath):
     """Load a pattern to internal JSON Format.
 
     Args:
@@ -97,15 +97,19 @@ def PatternFromJSONFile(filePath):
         return GSPattern().fromJSONDict(json.load(f))
 
 
-def PatternToJSONFile(pattern, filePath):
+def toJSONFile(pattern, folderPath,nameSuffix=None):
     """Save a pattern to internal JSON Format.
 
     Args:
         pattern: a GSPattern
-        filePath: filePath where to save it+
+        folderPath: folder where to save it, fileName will be pattern.name+nameSuffix+".json"
     """
+    filePath = os.path.join(folderPath,pattern.name+(nameSuffix or "")+".json")
+    if(not os.path.exists(folderPath)) : 
+        os.makedirs(folderPath)
     with open(filePath, 'w') as f:
-        return json.dump(pattern.toJSONDict(), f)
+        json.dump(pattern.toJSONDict(), f,indent=1)
+    return os.path.abspath(filePath)
 
 
 def __formatNoteToTags(_NoteToTags):
@@ -258,7 +262,7 @@ def __findTimeInfoFromMidi(pattern, midiFile):
 
     foundTimeSignatureEvent = False
     foundTempo = False
-    pattern.timeSignature = [4, 4]
+    pattern.timeSignature = (4, 4)
     pattern.bpm = 60
 
     for tracks in midiFile:
@@ -266,12 +270,12 @@ def __findTimeInfoFromMidi(pattern, midiFile):
             
             if midi.MetaEvent.is_event(e.statusmsg):
                 if e.metacommand == midi.TimeSignatureEvent.metacommand:
-                    if foundTimeSignatureEvent and (pattern.timeSignature != [e.numerator, e.denominator]):
+                    if foundTimeSignatureEvent and (pattern.timeSignature != (e.numerator, e.denominator)):
                         gsiolog.error(pattern.name + ": multiple time "
                                                      "signature found, not supported, "
                                                      "result can be alterated")
                     foundTimeSignatureEvent = True
-                    pattern.timeSignature = [e.numerator, e.denominator]
+                    pattern.timeSignature = (e.numerator, e.denominator)
                     #  e.metronome = e.thirtyseconds ::  do we need that ???
                 elif e.metacommand == midi.SetTempoEvent.metacommand:
                     if foundTempo:
@@ -315,12 +319,12 @@ def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
     return res
 
 
-def toMidi(gspattern, midiMap=None, path="output/", name="test"):
+def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
     """ Function to write GSPattern instance to MIDI.
 
     Args:
         midiMap: mapping used to translate tags to MIDI pitch
-        path: folder where MIDI file is stored
+        folderPath: folder where MIDI file is stored
         name: name of the file
     """
 
@@ -366,9 +370,12 @@ def toMidi(gspattern, midiMap=None, path="output/", name="test"):
 
     # Save the pattern to disk
 
-    exportedPath = path+name
-    if not ".mid" in exportedPath:
-        exportedPath+=".mid"
+    if(not os.path.exists(folderPath)) : 
+        os.makedirs(folderPath)
+    if not ".mid" in name:
+        name+=".mid"
+    exportedPath = os.path.join(folderPath,name)
+    
     midi.write_midifile(exportedPath, pattern)
     return exportedPath
 
