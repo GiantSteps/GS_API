@@ -9,7 +9,6 @@ before_install:
     - lsb_release -a
     - sudo apt-get -qq update
     - sudo apt-get install build-essential python-dev swig libasound2-dev
-    - python from sys import version_info
     - pip install -e git://github.com/vishnubob/python-midi.git@feature/python3#egg="midi"
 install:
     - python python/setup.py install 
