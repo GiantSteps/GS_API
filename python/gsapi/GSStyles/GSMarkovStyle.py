@@ -1,5 +1,10 @@
-from GSBaseStyle import *
-from gsapi.MathUtils import PatternMarkov
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from .GSBaseStyle import *
+from ..MathUtils import PatternMarkov
 import logging
 markovLog = logging.getLogger('gsapi.GSStyle.GSMarkovStyle')
 
@@ -16,17 +21,17 @@ class GSMarkovStyle(GSBaseStyle, PatternMarkov):  # TODO: check added PatternMar
         numSteps: number of steps to consider (binarization of pattern)
     """
     def __init__(self, order, numSteps, loopDuration):
-        super(GSBaseStyle, self).__init__()
+        super(GSMarkovStyle, self).__init__()
         self.type = "None"
         self.markovChain = PatternMarkov(order=order, numSteps=numSteps, loopDuration=loopDuration)
 
-    def generateStyle(self, PatternClasses):
+    def generateStyle(self, PatternList):
         """Generates a style based on list of GSPatterns.
 
         Args:
-            PatternClasses:  list of GSPatterns
+            PatternList:  list of GSPatterns
         """
-        self.markovChain.generateTransitionTableFromPatternList(PatternClasses)
+        self.markovChain.generateTransitionTableFromPatternList(PatternList)
 
     def buildStyle(self):
         """Builds transition table for a previously given list of GSPatterns."""

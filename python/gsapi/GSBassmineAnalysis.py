@@ -1,8 +1,13 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 # Read Midi Folders from style
 
 import numpy as np
-import GSBassmineMarkov as markov
-import GSIO
+from . import GSBassmineMarkov as markov
+from . import GSIO
 import pickle
 
 
@@ -148,7 +153,7 @@ def binaryBeatPattern(pattern, noBeats_bass, resolution=4):
 	"""
 	# resolution = 4
 	# noBeats_bass = uf.numberOfBeats(pattern)  # Bass files length set the global length of analysis
-	print '\n# of beats: ', noBeats_bass
+	print( '\n# of beats: ', noBeats_bass)
 	# beat_subdiv = np.arange(start=0, step=0.25, stop=(noBeats_bass * RES) - 1)
 	subdiv_aux = np.array([0., 0.25, 0.5, 0.75])
 	# Matrix to store the binary representation of the midi files
@@ -211,15 +216,15 @@ def corpus_analysis(bass_path, drum_path):
 	bass_names = []
 	drum_names = []
 
-	print "Bass Files"
+	print( "Bass Files")
 	for bf in bass_files:
 		bass_names.append(bf[len(bass_path) + 1:-len('.mid')])
-	print "\nNumber of files: ", len(bass_files)
+	print( "\nNumber of files: ", len(bass_files))
 
-	print "\nDrums Files"
+	print( "\nDrums Files")
 	for df in drum_files:
 		drum_names.append(df[len(drum_path) + 1:-len('.mid')])
-	print "\nNumber of files: ", len(drum_files)
+	print( "\nNumber of files: ", len(drum_files))
 
 	# File counter
 	file_it = 0
@@ -236,16 +241,16 @@ def corpus_analysis(bass_path, drum_path):
 		match = str(match_files('drums' + bass_names[f][4:], drum_names))
 		match_file = drum_path + '/' + match[2:-2] + '.mid'
 
-		print ('Bass file: '), bass_files[f]
-		print ('Drum file: '), match_file
-		print bass_names[f][5:-3]
+		print( ('Bass file: '), bass_files[f])
+		print( ('Drum file: '), match_file)
+		print( bass_names[f][5:-3])
 
 		# Read Bassline files
 		bass_pattern = GSIO.fromMidi(bass_files[f], "pitchNames", TagsFromTrackNameEvents=False)
 		onset_bass = [x.startTime for x in bass_pattern.events]
 
 		bass_rhythm = binaryBeatPattern(onset_bass, bass_pattern.duration)
-		# print(bass_rhythm)
+		# print((bass_rhythm))
 		bass_id = translate_rhythm(bass_rhythm)
 		rhythm_model.add_temporal(bass_id)
 
@@ -255,7 +260,7 @@ def corpus_analysis(bass_path, drum_path):
 		onset_kick = [x.startTime for x in kick_pattern.events]
 		# Quantize
 		kick_rhythm = binaryBeatPattern(onset_kick, kick_pattern.duration)
-		# print kick_rhythm
+		# print( kick_rhythm)
 		# Translate
 		kick_id = translate_rhythm(kick_rhythm)
 		kick_patterns.append(kick_pattern)

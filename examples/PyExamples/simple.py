@@ -4,20 +4,22 @@ if __name__=='__main__':
 
 from gsapi import *
 
-defaultMidiFolder = "../../corpus/midiTests"
 
+# choose base folder to crawl
+defaultMidiFolder = "../../corpus/drums"
+# generate a dataset from all midi files in defaultMidiFolder
+# all events will have tags corresponding to generalMIDI mapping see generalMidiMap
+dataset = GSDataset(midiFolder=defaultMidiFolder,midiGlob="*.mid",midiMap=GSPatternUtils.generalMidiMap,checkForOverlapped = True)
 
-
-dataset = GSDataset(midiFolder=defaultMidiFolder,midiGlob="*.mid",midiMap=GSIO.generalMidiMap,checkForOverlapped = True)
-
-
+# GSDataset is nothing more than a class containing a list of datasets
+# let say we want to retrieve every 16 beat long slice from this dataset
 allPatternsSliced = []
-
 sizeOfSlice = 16
 for midiPattern in dataset.patterns:
 	for sliced in midiPattern.splitInEqualLengthPatterns(4):
 		allPatternsSliced+=[sliced]
 
+# 
 markovStyle = GSStyles.GSMarkovStyle(order=3,numSteps=32,loopDuration=sizeOfSlice);
 markovStyle.generateStyle(allPatternsSliced)
 newPattern = markovStyle.generatePattern()

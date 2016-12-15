@@ -12,33 +12,26 @@ source code:
     https://github.com/GiantSteps/GS_API
 """
 
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import logging
-from GSLogging import gsapiLogger
-from GSPitchSpelling import *
-from GSPatternUtils import *
-
-from GSPattern import GSPatternEvent, GSPattern
-from GSDataset import GSDataset
-import GSIO
-import GSStyles 
-import GSDescriptors
-import GSPatternTransformers
-import GSBassmineAnalysis 
-import GSBassmineMarkov 
-
-# this is the full version name
-# changing it will change version when uploading to pip and in the documentation
-GSAPIFullVersion = u'1.0.1'
+from .GSAPIVersion import *
+from .GSLogging import gsapiLogger
+from . import GSPitchSpelling
+from . import GSPatternUtils
+from .GSPattern import GSPatternEvent, GSPattern
+from .GSDataset import GSDataset
+from . import GSIO
+from . import GSStyles 
+from . import GSDescriptors
+from . import GSPatternTransformers
+# from . import GSBassmineAnalysis 
+# from . import GSBassmineMarkov 
 
 
-def getGSAPIFullVersion():
-    """Helper to get full version name."""
-    return GSAPIFullVersion
-
-
-def getGSAPIShortVersion():
-    """Helper to get only first two elements of full version name."""
-    return u'.'.join(GSAPIFullVersion.split('.')[:2])
 
 
 if __name__ == '__main__':

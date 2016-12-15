@@ -1,7 +1,12 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import math
 import copy
 import logging
-from GSPitchSpelling import *
+from .GSPitchSpelling import *
 
 # logger for pattern related operations
 patternLog = logging.getLogger("gsapi.GSPattern")
@@ -916,5 +921,5 @@ class GSPattern(object):
                 inited = True
 
             out += "]: " + t
-            print out
+            print (out)
 

@@ -1,5 +1,11 @@
-from GSBaseDescriptor import *
-from GSDescriptorDensity import GSDescriptorDensity
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from .GSBaseDescriptor import  *
+
+from .GSDescriptorDensity import GSDescriptorDensity
 from gsapi.GSPatternUtils import *
 from gsapi.GSPitchSpelling import *
 
@@ -14,7 +20,7 @@ def intervalListToProfile(intervalList, length=12):
 
 class GSDescriptorChord(GSBaseDescriptor):
 
-    allProfiles = {k: intervalListToProfile(v) for k, v in chordTypes.iteritems()}
+    allProfiles = {k: intervalListToProfile(v) for k, v in chordTypes.items()}
 
     def __init__(self, forceMajMin=False, allowDuplicates=False):
         GSBaseDescriptor.__init__(self)
@@ -35,7 +41,7 @@ class GSDescriptorChord(GSBaseDescriptor):
             pitchDensities[p] = self.densityDescriptor.getDescriptorForPattern(voice)
 
         chromas = [0] * 12
-        for p, v in pitchDensities.iteritems():
+        for p, v in pitchDensities.items():
             chroma = p % 12
             chromas[chroma] += v
 
@@ -71,7 +77,7 @@ def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDupl
     else:
         bestProfile = ""
         bestRoot = 0
-    for k, v in pitchProfileDict.iteritems():
+    for k, v in pitchProfileDict.items():
         conv = convolveWithPitchProfile(chromas, v, penalityWeight)
         score = findMaxAndIdx(conv)
         nonZero = getNumNonZero(v)
@@ -108,7 +114,7 @@ def getNumNonZero(li):
 
 def convolveWithPitchProfile(chromas, pitchProfile, penalityWeight):
     if len(pitchProfile) != len(chromas):
-        print 'chroma and pitchProfile of different length'
+        print ('chroma and pitchProfile of different length')
         return None
 
     convLen = len(chromas)

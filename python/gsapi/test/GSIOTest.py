@@ -28,16 +28,18 @@ class GSIOTest(GSTestBase):
 
             self.checkPatternEquals(p,exportedP)
 
-    def test_ImportExportJSON(self):
-        for p in self.cachedDataset:
-            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=False)
-            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
-            self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
+    # def test_ImportExportJSON(self):
+    #     for p in self.cachedDataset:
+    #         exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=False)
+    #         jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
+    #         self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
 
-    def test_ImportExportJSONTuples(self):
+    def test_ImportExportJSONTuplesAndViewpoints(self):
+        # chords descriptor return tuple so save it in json
         for p in self.cachedDataset:
             for name,descriptorClass in getAllDescriptorsClasses():
                 p.generateViewpoint(name,descriptorClass(),sliceType=4)
+            
             exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
             jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
             self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
@@ -45,7 +47,9 @@ class GSIOTest(GSTestBase):
 
     def test_ImportExportPickle(self):
         for p in self.cachedDataset:
-            p.generateViewpoint("chords")
+            for name,descriptorClass in getAllDescriptorsClasses():
+                p.generateViewpoint(name,descriptorClass(),sliceType=4)
+            
 
             exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
             picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))

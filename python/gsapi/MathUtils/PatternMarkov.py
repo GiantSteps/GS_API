@@ -1,8 +1,13 @@
-from gsapi import GSPattern, GSPatternEvent
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from .. import GSPattern, GSPatternEvent
 import copy
 import random
 import logging
-patternMarkovLog = logging.getLogger('MathUtils.PatternMarkov')
+patternMarkovLog = logging.getLogger('gsapi.MathUtils.PatternMarkov')
 
 
 class PatternMarkov(object):
@@ -174,12 +179,12 @@ class PatternMarkov(object):
         for i in range(int(p.duration)):
             c = p.getStartingEventsAtTime(i)
             if len(c) > 1 and ("silence" in c):
-                print "wrong silence"
+                print ("wrong silence")
                 exit()
 
     def checkSilenceInList(self, c):
         if len(c) > 1 and( 'silence' in c):
-            print "wrong silence"
+            print ("wrong silence")
             exit()
 
     def _buildNameForEvents(self, events):

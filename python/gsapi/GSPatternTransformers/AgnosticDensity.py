@@ -1,9 +1,11 @@
-from GSBasePatternTransformer import *
-from gsapi.GSDescriptors import GSDescriptorDensity
-import random
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
-################
-# WIP
+from .GSBasePatternTransformer import *
+from ..GSDescriptors import GSDescriptorDensity
+import random
 
 
 class AgnosticDensity(GSBasePatternTransformer):
@@ -53,7 +55,7 @@ class AgnosticDensity(GSBasePatternTransformer):
         return res
 
     def updateNormalizedDensities(self, normalizedDict):
-        for k,v in normalizedDict.iteritems():
+        for k,v in normalizedDict.items():
             if k in self.normalizedDensities:
                 originDensity = self.normalizedDensities[k]
     # if we cross density one, reset to one then do the subsequent calculations

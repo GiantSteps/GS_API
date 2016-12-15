@@ -1,12 +1,17 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import logging
 import glob
-from GSPitchSpelling import *
-from GSPattern import *
-from GSPatternUtils import *
-import GSPitchSpelling
+from .GSPitchSpelling import *
+from .GSPattern import *
+from .GSPatternUtils import *
+from . import GSPitchSpelling
 import os
 import json  
-import cPickle as pickle
+# import cPickle as pickle
 gsiolog = logging.getLogger("gsapi.GSIO")
 # gsiolog.setLevel(level=logging.INFO)
 
@@ -101,7 +106,7 @@ def fromJSONFile(filePath,conserveTuple=False):
         if isinstance(obj, list):return [hinted_tuple_hook(e) for e in obj]
         if isinstance(obj, dict):
             if '__tuple__' in obj:return tuple(obj['items'])
-            return {k:hinted_tuple_hook(e) for k,e in obj.iteritems()}
+            return {k:hinted_tuple_hook(e) for k,e in obj.items()}
         else:
             return obj
 
@@ -131,7 +136,7 @@ def toJSONFile(pattern, folderPath,useTagIndexing=True,nameSuffix=None,conserveT
         def checkTuple(self,item):
             if isinstance(item, tuple):return {'__tuple__': True, 'items': item}
             if isinstance(item, list):return [self.checkTuple(e) for e in item]
-            if isinstance(item, dict):return {k:self.checkTuple(e) for k,e in item.iteritems()}
+            if isinstance(item, dict):return {k:self.checkTuple(e) for k,e in item.items()}
             else:return item
 
         def iterencode(self,item):

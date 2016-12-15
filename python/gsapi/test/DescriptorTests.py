@@ -7,6 +7,8 @@ if __name__ == '__main__':
 
 from gsapi import *
 from GSPatternTestUtils import *
+from gsapi.GSPatternUtils import *
+from gsapi.GSPitchSpelling import *
 
 class DescriptorTests(GSTestBase):
 

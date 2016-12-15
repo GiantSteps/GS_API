@@ -1,4 +1,11 @@
-from GSBaseStyle import *
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+
+
+from .GSBaseStyle import *
 
 
 class GSDBStyle(GSBaseStyle):
@@ -19,7 +26,7 @@ class GSDBStyle(GSBaseStyle):
         if self.generatePatternOrdering == 'increasing':
             p = self.patternList[self.currentIdx]
             self.currentIdx += 1
-            print "reading", self.currentIdx
+            print ("reading", self.currentIdx)
             return p
         elif self.generatePatternOrdering == 'random':
             return self.patternList[int(random.random() * len(self.patternList))]

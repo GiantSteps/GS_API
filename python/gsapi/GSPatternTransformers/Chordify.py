@@ -1,6 +1,14 @@
-from GSBasePatternTransformer import *
-from gsapi.GSPattern import *
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
+
+from .GSBasePatternTransformer import *
+from ..GSPattern import *
+
+# legacy class
+# can be replaced by GSPattern.generateViewpoint("chords")
 
 class GSPatternEventChord(GSPatternEvent):
     """Represents an event of a GSPattern.

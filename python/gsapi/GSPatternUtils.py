@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 def GSPatternToList(GSPattern):
     """Converts a GSPattern to a regular python list."""
@@ -176,18 +180,18 @@ if __name__ == '__main__':
 
 
     chords = {}
-    for k, v in chordTypes.iteritems():
+    for k, v in chordTypes.items():
         numElem = len(v)
         if numElem not in chords:
             chords[numElem] = {}
         chords[numElem][k] = v
 
-    for n, c in chords.iteritems():
+    for n, c in chords.items():
         if int(n) > 1:
-            for k, v in c.iteritems():
-                for k2, v2 in c.iteritems():
+            for k, v in c.items():
+                for k2, v2 in c.items():
                     if k != k2:
                         cR = hasCommonRotation(getConsecutiveIntervalList(v),
                                                getConsecutiveIntervalList(v2))
                         if cR:
-                            print 'commonRotation', k, k2, cR
+                            print ('commonRotation', k, k2, cR)

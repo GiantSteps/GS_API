@@ -1,4 +1,9 @@
-from gsapi.GSPattern import GSPattern
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
+from ..GSPattern import GSPattern
 
 
 class GSBasePatternTransformer(object):
