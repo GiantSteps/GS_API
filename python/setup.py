@@ -35,7 +35,7 @@ def checkLazySetupCommands():
 if __name__ == '__main__':
     import sys
     from gsapi import *
-    print (getGSAPIFullVersion())
+    print ("gsapi v%s"%getGSAPIFullVersion())
     checkLazySetupCommands()
 
 
