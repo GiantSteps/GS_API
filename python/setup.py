@@ -39,6 +39,8 @@ if __name__ == '__main__':
     checkLazySetupCommands()
 
 
+# for now python-midi is not officially on pip3 so we need to install it manually and it's name become midi...
+midiRequiredName = 'midi' if sys.version_info >= (3,0) else 'python-midi' 
 
 setup(name='gsapi',
       version=getGSAPIFullVersion(),
@@ -55,8 +57,8 @@ setup(name='gsapi',
       # scripts=scripts,
       # cmdclass={'build_ext': build_ext},
       test_suite='nose.collector',
-      install_requires=['python-midi'],
-      # dependency_links = ['https://github.com/vishnubob/python-midi.git@feature/python3#egg="python-midi"'],
+      install_requires=[midiRequiredName],
+      # dependency_links = ['https://github.com/vishnubob/python-midi.git@feature/python3#egg="midi"'],
       zip_safe=True
       # classifiers=classifiers
       )
