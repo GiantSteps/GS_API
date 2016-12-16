@@ -1,3 +1,8 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
+
 import math
 import numpy as np
 import music21 as m21
@@ -89,12 +94,12 @@ def count_pc(my_stream):
 def transpose_dict(my_dict):
     modes = my_dict.keys()
     for mode in modes:
-        print mode
+        print (mode)
         pc = 0
         pattern = my_dict[mode]
         while pc <= 11:
             transposed_mode = [(x + pc) % 12 for x in pattern]
-            print transposed_mode
+            print (transposed_mode)
             pc += 1
 """
 
@@ -121,7 +126,7 @@ def extract_chords(m21_stream):
     last_chord = m21.chord.Chord()
     for c in m21_stream.recurse().getElementsByClass('Chord'):
         c.sortAscending(inPlace=True)
-        print c.pitches
+        print (c.pitches)
         if c.pitches != last_chord.pitches:
             new_stream.insert(c.offset, c.__deepcopy__())
         last_chord = c
@@ -137,10 +142,10 @@ def base_transposition(m21_stream):
     first_chord = m21_stream.flat.getElementsByClass('Chord')[0]
     root = first_chord.root().pitchClass
     octave = first_chord.root().octave
-    print root, octave
+    print (root, octave)
     mode = first_chord.quality
     transposition = (0 - root) + (4 - octave) * 12
-    print transposition
+    print (transposition)
     key = 'C'
     if mode == 'minor':
         key = key.lower()
@@ -174,7 +179,7 @@ def complete_bar_with_rest(m21_stream):
     else:
         add_rest = m21.note.Rest()
         add_rest.quarterLengthFloat = math.fabs(2.00 ** (m21_stream.quarterLengthFloat // 2.0) - m21_stream.quarterLengthFloat)
-        print add_rest.quarterLengthFloat
+        print (add_rest.quarterLengthFloat)
         m21_stream.append(add_rest)
         return m21_stream
 
