@@ -10,9 +10,9 @@ before_install:
     - sudo apt-get -qq update
     - sudo apt-get install build-essential python-dev swig libasound2-dev
 install:
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.5']]; then travis_retry pip install -e git://github.com/vishnubob/python-midi.git@feature/python3#egg=midi ; fi
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.5']]; then cd src/midi ; fi
-    - if [[ $TRAVIS_PYTHON_VERSION == '3.5']]; then python setup.py install ; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then travis_retry pip install -e git://github.com/vishnubob/python-midi.git@feature/python3#egg=midi; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then cd src/midi; fi
+    - if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then python setup.py install; fi
     - python python/setup.py install 
 script:
     - python python/setup.py test
