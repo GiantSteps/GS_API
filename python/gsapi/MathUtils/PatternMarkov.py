@@ -128,7 +128,7 @@ class PatternMarkov(object):
                         chosenIdx = i - 1
                         break
                 # print chosenIdx
-            return d.keys()[chosenIdx]
+            return list(d.keys())[chosenIdx]
 
         cIdx = self.order
         startHypothesis = []

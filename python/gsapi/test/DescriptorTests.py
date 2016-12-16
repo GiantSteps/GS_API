@@ -47,6 +47,10 @@ class DescriptorTests(GSTestBase):
     			self.assertTrue(syncopation>=0 , "syncopation value not valid : %f"%(syncopation))
 
     def test_chords(self):
+
+        # TODO we only print errors for now needs fix to consider it as true errors:
+        #   . wrong annotation : b9? / armature with wrong number of chromas
+
         descriptor = GSDescriptors.GSDescriptorChord(forceMajMin=False,
                                                      allowDuplicates=True)
         # GSIO.gsiolog.setLevel('INFO')
@@ -65,9 +69,9 @@ class DescriptorTests(GSTestBase):
             testLog.info( "checking %s" % p.name)
 
             gtList = p.name.split('.')[0].split('-')
-            groundTruth = map(stringToChord, gtList)
+            groundTruth = list(map(stringToChord, gtList))
             # print groundTruthBase
-            lengthOfChords = p.duration / len(groundTruth)
+            lengthOfChords = int(p.duration / len(groundTruth))
             # print lengthOfChords
             sliced = p.splitInEqualLengthPatterns(lengthOfChords)
             chords = []

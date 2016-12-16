@@ -53,7 +53,7 @@ class GSDescriptorChord(GSBaseDescriptor):
         if elemNum == 0:
             return "silence"
         ordered = [{'chroma': i, 'density': chromas[i]} for i in range(len(chromas))]
-        ordered.sort(cmp=lambda x, y: int(x['density'] - y['density']))
+        ordered.sort(key=lambda x: (x['density']))
         # if elemNum <= 2:
         # 	return defaultPitchNames[ordered[0]['chroma']]
         profileToConsider = GSDescriptorChord.allProfiles
