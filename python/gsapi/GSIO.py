@@ -9,9 +9,12 @@ from .GSPitchSpelling import *
 from .GSPattern import *
 from .GSPatternUtils import *
 from . import GSPitchSpelling
-import os
+import os,sys
 import json  
-# import cPickle as pickle
+if sys.version_info >= (3,0):
+    import pickle
+else:
+    import cPickle as pickle
 gsiolog = logging.getLogger("gsapi.GSIO")
 # gsiolog.setLevel(level=logging.INFO)
 

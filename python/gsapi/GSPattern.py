@@ -443,13 +443,13 @@ class GSPattern(object):
                 boolFunction = lambda inTags: inTags == tags
             else:
                 boolFunction = lambda inTags: not set(tags).isdisjoint(inTags)
-        elif isinstance(tags, (str)):
+        elif callable(tags):
+            boolFunction = tags
+        else:
             if exactSearch:
                 boolFunction = lambda inTags: len(inTags) == 1 and inTags[0] == tags
             else:
                 boolFunction = lambda inTags: len(inTags)>0 and tags in inTags
-        elif callable(tags):
-            boolFunction = tags
 
         res = self.getACopyWithoutEvents()
         for e in self.events:
@@ -871,7 +871,7 @@ class GSPattern(object):
             self.viewpoints[name]=_computeViewpoint(originPattern=self,descriptor=descriptor,sliceType=sliceType,name=name)
         else:
             if name == "chords":
-                from GSDescriptors.GSDescriptorChord import GSDescriptorChord
+                from .GSDescriptors.GSDescriptorChord import GSDescriptorChord
                 self.viewpoints[name] = _computeViewpoint(originPattern=self,descriptor=GSDescriptorChord(),sliceType=4,name=name)
 
 

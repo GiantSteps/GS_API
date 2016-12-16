@@ -43,6 +43,7 @@ class GSIOTest(GSTestBase):
         # chords descriptor return tuple so save it in json
         for p in self.cachedDataset:
             for name,descriptorClass in getAllDescriptorsClasses():
+                print (descriptorClass)
                 p.generateViewpoint(name,descriptorClass(),sliceType=4)
             
             exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)

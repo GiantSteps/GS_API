@@ -48,7 +48,8 @@ def getAllDescriptorsClasses():
     """
     res = []
     for elem in dir(GSDescriptors):
-        if not '__' in elem and (not 'GSBase' in elem):
+        print (elem)
+        if  'GSDescriptor' in elem:
             res+=[ (elem, getattr(GSDescriptors,elem,None))]
     return res
 
