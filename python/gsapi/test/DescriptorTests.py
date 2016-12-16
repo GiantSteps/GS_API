@@ -3,8 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import os
-import sys
+import os,sys,math
 
 if __name__ == '__main__':
     sys.path.insert(1, os.path.abspath(os.path.join(__file__, os.pardir, os.pardir, os.pardir)))
@@ -71,7 +70,7 @@ class DescriptorTests(GSTestBase):
             gtList = p.name.split('.')[0].split('-')
             groundTruth = list(map(stringToChord, gtList))
             # print groundTruthBase
-            lengthOfChords = int(p.duration / len(groundTruth))
+            lengthOfChords = int(math.ceil(p.duration / len(groundTruth)))
             # print lengthOfChords
             sliced = p.splitInEqualLengthPatterns(lengthOfChords)
             chords = []
