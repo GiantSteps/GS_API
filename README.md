@@ -1,6 +1,7 @@
 GS_API
 ===
-<a href="https://travis-ci.org/GiantSteps/GS_API"><img src="https://travis-ci.org/GiantSteps/GS_API.svg?branch=master" alt='Build Status' /></a>
+[![Build Status](https://travis-ci.org/GiantSteps/GS_API.svg?branch=master)](https://travis-ci.org/GiantSteps/GS_API)
+[![codecov.io](https://codecov.io/github/cainus/codecov.io/coverage.svg?branch=master)](https://codecov.io/github/cainus/codecov.io?branch=master)
 
 The GS_API is a Python/C++ library for manipulating musical symbolic data.
 
