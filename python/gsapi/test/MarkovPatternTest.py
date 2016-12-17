@@ -66,7 +66,7 @@ class MarkovPatternTest(GSTestBase):
         print(self.markovChain)
         # print(self.markovChain.getAllPossibleStates())
         # self.markovChain.plotMatrixAtStep(2)
-        self.markovChain.plotGlobalMatrix()
+        # self.markovChain.plotGlobalMatrix()
     
     
 
