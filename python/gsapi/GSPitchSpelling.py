@@ -65,7 +65,7 @@ pitch40 = ["Cbb", "Cb", "C", "C#", "C##", "",
 def pitch2name(pitch, pitchNames):
     """Converts a midi note number to alphabetic notation with octave index (e.g. "C4", "Db5")"""
     octaveLength = len(pitchNames)
-    octave = (pitch / octaveLength) - 1
+    octave = int(pitch / octaveLength) - 1
     note = pitch % octaveLength
     return pitchNames[note] + str(octave)
 

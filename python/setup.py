@@ -18,13 +18,13 @@ def checkLazySetupCommands():
     toAppend = ['clean', '--all']
     toAppend = ['build']
     toAppend  = ['sdist', 'bdist_wheel', 'install']
-    # toAppend = ['test']; import logging;gsapi.GSLogging.setDefaultLoggingLevel(logging.ERROR)
+    # toAppend = ['test']; 
 
     
 
     # remainder for pip maintainers
     # (once .pypirc edited)
-    # bump the GSAPIFullVersion in __init__.py then : python setup.py sdist bdist_wheel upload
+    # bump the GSAPIFullVersion in GSAPIFullVersion.py then : python setup.py sdist bdist_wheel upload
 
     if len(sys.argv) == 1:
         for s in toAppend:

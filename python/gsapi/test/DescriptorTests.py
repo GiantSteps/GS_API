@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 import os,sys,math
 
@@ -26,9 +24,9 @@ class DescriptorTests(GSTestBase):
 
     	descriptor = GSDescriptors.GSDescriptorDensity();
     	for p in self.cachedDataset.patterns:
-    		allTags = p.getAllTags()
+    		allTags = list(p.getAllTags())
     		density = descriptor.getDescriptorForPattern(p);
-    		p2 = p.getPatternWithTags([allTags[0]])
+    		p2 = p.getPatternWithTags(allTags[0])
     		density2 = descriptor.getDescriptorForPattern(p2)
     		#print density,density2,p.duration
     		self.assertTrue(density>=0,p.name + " negative density : "+str(density))

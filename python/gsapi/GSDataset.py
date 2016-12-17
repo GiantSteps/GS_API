@@ -48,11 +48,16 @@ class GSDataset(object):
             self.idx = random.randint(0, len(self.files) - 1)
 
 
-    def getAllSliceOfDuration(self, desiredDuration):
+    def getAllSliceOfDuration(self, desiredDuration,viewpointName=None,supressEmptyPattern=True):
         res = []
         for p in self.patterns:
-            res += p.splitInEqualLengthPatterns(desiredLength=desiredDuration)
+            res += p.splitInEqualLengthPatterns(viewpointName=viewpointName,desiredLength=desiredDuration,supressEmptyPattern=supressEmptyPattern)
         return res
+
+    def generateViewpoint(self, name,descriptor=None,sliceType=None):
+        for p in self.patterns:
+            p.generateViewpoint(name=name,descriptor=descriptor,sliceType=sliceType);
+        
 
 
     def importMIDI(self, fileName=""):

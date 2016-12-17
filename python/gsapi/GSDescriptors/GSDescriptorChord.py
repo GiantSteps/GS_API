@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 from .GSBaseDescriptor import  *
 
@@ -17,6 +15,12 @@ def intervalListToProfile(intervalList, length=12):
         profile[e % length] = 0.8
     return profile
 
+class ChordTag(tuple):
+    """ helper for nicely print chords tags
+    chord tags are tuples (root, type), ex : ('C','maj')
+    """
+    def __repr__(self):
+        return "".join(self)
 
 class GSDescriptorChord(GSBaseDescriptor):
 
@@ -64,9 +68,9 @@ class GSDescriptorChord(GSBaseDescriptor):
                                              penalityWeight=pattern.duration / 2.0,
                                              allowDuplicates=self.allowDuplicates)
         if self.allowDuplicates:
-            return [(defaultPitchNames[x[0]], x[1]) for x in bestScore]
+            return [ChordTag((defaultPitchNames[x[0]], x[1])) for x in bestScore]
         else:
-            return defaultPitchNames[bestScore[0]], bestScore[1]
+            return ChordTag((defaultPitchNames[bestScore[0]], bestScore[1]))
 
 
 def findBestScoreForProfiles(chromas, pitchProfileDict, penalityWeight,allowDuplicates=False):

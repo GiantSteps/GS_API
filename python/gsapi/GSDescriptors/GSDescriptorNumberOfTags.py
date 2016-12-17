@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 from .GSBaseDescriptor import  *
 
@@ -15,8 +13,8 @@ class GSDescriptorNumberOfTags(GSBaseDescriptor):
 
     def getDescriptorForPattern(self, pattern):
         density = 0
-        _checkedPattern = pattern.getPatternWithoutTags(self.ignoredTags)
+        _checkedPattern = pattern.getPatternWithoutTags(tagToLookFor=self.ignoredTags)
         if self.includedTags:
-            _checkedPattern = _checkedPattern.getPatternWithTags(self.includedTags, makeCopy=False)
+            _checkedPattern = _checkedPattern.getPatternWithTags(tagToLookFor=self.includedTags, makeCopy=False)
 
         return len(_checkedPattern.getAllTags())

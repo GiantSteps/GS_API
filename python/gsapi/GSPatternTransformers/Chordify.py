@@ -22,18 +22,14 @@ class GSPatternEventChord(GSPatternEvent):
         tags: list of tags representing the event
     """
 
-    def __init__(self, startTime=0, duration=1.0, components=None, tags=None, label="chord"):
-        self.duration = duration
-        if not isinstance(tags, list):
-            tags = [tags]
-        self.startTime = startTime
+    def __init__(self, startTime=0, duration=1.0, components=None, tag=None, label="chord"):
+        GSPatternEvent.__init__(self,startTime=startTime,duration=duration,tag=tag)
         self.components = components or []
-        self.tags = tags or []
         self.label = label
 
     def __repr__(self):
         return "%s %s %s %05.2f %05.2f" % (self.label,
-                                           self.tags,
+                                           self.tag,
                                            str(self.components),
                                            self.startTime,
                                            self.duration)
@@ -63,11 +59,11 @@ class Chordify(GSBasePatternTransformer):
         p = -1
         for e in self.inputPattern:
             if e.startTime != p:
-                new_chord = GSPatternEventChord(startTime=e.startTime, duration=e.duration, components=[], tags=[])
+                new_chord = GSPatternEventChord(startTime=e.startTime, duration=e.duration, components=[], tag=())
                 for ee in self.inputPattern.getActiveEventsAtTime(e.startTime):
                     new_chord.components.append((ee.pitch, ee.velocity))
-                    for tag in ee.tags:
-                        new_chord.tags.append(tag)
+                    for tag in ee.tag:
+                        new_chord.tag.append(tag)
                 self.outputPattern.addEvent(new_chord)
             p = e.startTime
         return self.outputPattern

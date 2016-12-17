@@ -1,18 +1,17 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 import unittest
-import os
-import sys
+import os,sys
 
 if __name__ == '__main__':
     sys.path.insert(1, os.path.abspath(os.path.join(__file__, os.pardir, os.pardir, os.pardir)))
-
+    from GSPatternTestUtils import *
+else:
+    from .GSPatternTestUtils import *
 from gsapi import *
 import random,glob
-from .GSPatternTestUtils import *
+
 
 
 
@@ -29,7 +28,10 @@ class GSIOTest(GSTestBase):
         for p in self.cachedDataset:
 
             exportedPath = GSIO.toMidi(p,folderPath="../../sandbox/midi/",name=p.name)
-            exportedP = GSIO.fromMidi(midiPath=os.path.abspath(exportedPath))
+            exportedPath =os.path.abspath(exportedPath)
+            self.assertTrue(os.path.exists(exportedPath))
+            print ("path",exportedPath)
+            exportedP = GSIO.fromMidi(midiPath=exportedPath)
 
             self.checkPatternEquals(p,exportedP)
 
@@ -39,28 +41,30 @@ class GSIOTest(GSTestBase):
     #         jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
     #         self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
 
-    def test_ImportExportJSONTuplesAndViewpoints(self):
-        # chords descriptor return tuple so save it in json
-        for p in self.cachedDataset:
-            for name,descriptorClass in getAllDescriptorsClasses():
-                print (descriptorClass)
-                p.generateViewpoint(name,descriptorClass(),sliceType=4)
+    # def test_ImportExportJSONTuplesAndViewpoints(self):
+    #     # chords descriptor return tuple so save it in json
+    #     for p in self.cachedDataset:
+    #         for name,descriptorClass in getAllDescriptorsClasses():
+    #             print (descriptorClass)
+    #             p.generateViewpoint(name,descriptorClass(),sliceType=4)
             
-            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
-            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
-            self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
+    #         exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
+    #         self.assertTrue(os.path.exists(exportedPath))
+    #         jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
+    #         self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
 
 
-    def test_ImportExportPickle(self):
-        for p in self.cachedDataset:
-            for name,descriptorClass in getAllDescriptorsClasses():
-                p.generateViewpoint(name,descriptorClass(),sliceType=4)
+    # def test_ImportExportPickle(self):
+    #     for p in self.cachedDataset:
+    #         for name,descriptorClass in getAllDescriptorsClasses():
+    #             p.generateViewpoint(name,descriptorClass(),sliceType=4)
             
 
-            exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
-            picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))
+    #         exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
+    #         self.assertTrue(os.path.exists(exportedPath))
+    #         picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))
 
-            self.checkPatternEquals(p,picklePattern,checkViewpoints = True)
+    #         self.checkPatternEquals(p,picklePattern,checkViewpoints = True)
 
 if __name__ == '__main__':
     runTest(profile=True, getStat=False)

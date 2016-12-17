@@ -1,15 +1,12 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 from .GSBaseStyle import *
 from ..MathUtils import PatternMarkov
 import logging
 markovLog = logging.getLogger('gsapi.GSStyle.GSMarkovStyle')
 
 
-class GSMarkovStyle(GSBaseStyle, PatternMarkov):  # TODO: check added PatternMarkov here, needed?
+class GSMarkovStyle(GSBaseStyle):  # TODO: check added PatternMarkov here, needed?
     """Computes a style based on markov chains.
 
     Args:
@@ -21,7 +18,7 @@ class GSMarkovStyle(GSBaseStyle, PatternMarkov):  # TODO: check added PatternMar
         numSteps: number of steps to consider (binarization of pattern)
     """
     def __init__(self, order, numSteps, loopDuration):
-        super(GSMarkovStyle, self).__init__()
+        GSBaseStyle.__init__(self)
         self.type = "None"
         self.markovChain = PatternMarkov(order=order, numSteps=numSteps, loopDuration=loopDuration)
 

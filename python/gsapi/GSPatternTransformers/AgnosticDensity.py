@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 from .GSBasePatternTransformer import *
 from ..GSDescriptors import GSDescriptorDensity
@@ -43,6 +41,7 @@ class AgnosticDensity(GSBasePatternTransformer):
     def transformPattern(self, pattern, paramDict):
         if pattern!=None and pattern != self.originPattern:
             self.buildDensityMap(pattern)
+        
         if self.originPattern==None:
             # print ("no pattern given for agnosticDensity transformation")
             return
@@ -64,7 +63,9 @@ class AgnosticDensity(GSBasePatternTransformer):
                     self.resetDensities()
 
                 diffNormalized =  v-self.normalizedDensities[k]
-
+                if diffNormalized==0:
+                    # were already here
+                    continue
 
                 # here we are sure to not need to crossdensity one (and have to do both increment styles)
                 if originDensity>=1 and v >=1:
@@ -182,11 +183,13 @@ class AgnosticDensity(GSBasePatternTransformer):
         self.targetDensities = {}
         self.normalizedDensities = {}
         for t in self.originPattern.getAllTags():
-            self.densityDescriptor.includedTags = [t]
+
+            self.densityDescriptor.includedTags = t
             density = self.densityDescriptor.getDescriptorForPattern(self.originPattern)
             self.originDensities[t] = density * self.numSteps * 1.0 / self.originPattern.duration
             self.targetDensities[t] = density * self.numSteps * 1.0 / self.originPattern.duration
             self.normalizedDensities[t] = 1
+        
 
     def buildDensityMap(self, pattern):
         self.originPattern = pattern.copy()

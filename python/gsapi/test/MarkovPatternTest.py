@@ -9,13 +9,15 @@ import sys
 
 if __name__ == '__main__':
     sys.path.insert(1, os.path.abspath(os.path.join(__file__, os.pardir, os.pardir, os.pardir)))
-
+    from GSPatternTestUtils import *
+else:
+    from .GSPatternTestUtils import *
 
 from gsapi import *
 from gsapi.MathUtils import *
 # todo check we need these libraries
 import random, glob
-from .GSPatternTestUtils import *
+
 
 
 class MarkovPatternTest(GSTestBase):
@@ -24,14 +26,17 @@ class MarkovPatternTest(GSTestBase):
     # 	GSPatternTestUtils.__init__(self,*args)
 
     def generateCachedDataset(self):
-        return GSDataset(midiGlob="miniDaftPunk.mid",
+        return GSDataset(midiGlob="daftpunk.mid",
                          midiFolder=self.getLocalCorpusPath('drums'),
-                         midiMap="pitchNames")
+                         midiMap=GSPatternUtils.verySimpleDrumMap
+                         # midiMap="pitchNames"
+                         )
 
     def buildMarkov(self, order, numSteps, loopDuration):
         self.patternList = []
 
         for p in self.cachedDataset.patterns:
+
             self.patternList += p.splitInEqualLengthPatterns(loopDuration, False)
 
         for p in self.patternList:
@@ -48,8 +53,27 @@ class MarkovPatternTest(GSTestBase):
             self.checkPatternValid(pattern, msg="markov generated a wrong patternat iteration: " + str(i))
             self.assertTrue(pattern.duration == self.markovChain.loopDuration)
 
-    def test_Markov_1_32_8(self):
-        self.buildMarkov(1, 32, 16)
+    def testMarkovMatrix(self):
+        loopDuration = 32
+        
+        self.cachedDataset.generateViewpoint("chords",sliceType=loopDuration)
+        self.patternList = self.cachedDataset.getAllSliceOfDuration(loopDuration)#,viewpointName="chords")
+        
+        self.markovChain = PatternMarkov(order=2, numSteps=4, loopDuration=loopDuration)
+        self.markovChain.generateTransitionTableFromPatternList(self.patternList)
+        # print (self.markovChain.getStringTransitionTable(reduceTuples=False,jsonStyle=True))
+        # print("ended generation")
+        print(self.markovChain)
+        # print(self.markovChain.getAllPossibleStates())
+        # self.markovChain.plotMatrixAtStep(2)
+        self.markovChain.plotGlobalMatrix()
+    
+    
+
+       
+
+    # def test_Markov_1_32_8(self):
+    #     self.buildMarkov(1, 32, 16)
     # def test_Markov_2_32_4(self):
     # 	self.buildMarkov(2,32,4);
     # def test_Markov_3_32_4(self):

@@ -1,17 +1,20 @@
 import os,sys
-#if __name__=='__main__':
-#	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir,"python")))
+if __name__=='__main__':
+	sys.path.insert(1,os.path.abspath(os.path.join(__file__,os.pardir,os.pardir,os.pardir,"python")))
 
 
 from gsapi import *
+
 import gsapi.GSBassmineAnalysis as bassmine
 import gsapi.GSBassmineMarkov as markov
-import gsapi.GSDescriptors
+# import gsapi.GSDescriptors
 
 import matplotlib.pyplot as plt
 import json
 import csv
 import random
+
+
 
 # STYLE DICTIONARY
 style = {1: 'booka_shade', 2: 'mr_scruff'}
@@ -19,8 +22,8 @@ style = {1: 'booka_shade', 2: 'mr_scruff'}
 # SELECT STYLE
 style_id = 2
 
-bass_path = '../../corpus/bassmine/' + style[style_id] + '/bass'
-drum_path = '../../corpus/bassmine/' + style[style_id] + '/drums'
+bass_path = os.path.abspath('../../corpus/bassmine/' + style[style_id] + '/bass')
+drum_path = os.path.abspath('../../corpus/bassmine/' + style[style_id] + '/drums')
 
 # Output folder (to use with Max this folder should be Bassmine-master/models/)
 _path = 'output/'
@@ -29,6 +32,7 @@ _path = 'output/'
 MM, kick_patterns = bassmine.corpus_analysis(bass_path, drum_path)
 # Normalize transition matrices
 MM.normalize_model()
+
 # Compute Rhythm Homogeneous MM and export to JSON
 HModel = MM.rhythm_model(_path)
 
@@ -40,8 +44,8 @@ bassmine.write2pickle('interlocking', MM.get_interlocking(), _path + style[style
 
 # EXAMPLES OF MARKOV INTERLOCKING CONSTRAINED MODEL
 # Given a Kick pattern generate a NHMM with interlocking constraint
-#target_kick = kick_patterns[random.randint(0,len(kick_patterns)-1)]
-#print target_kick
+target_kick = kick_patterns[random.randint(0,len(kick_patterns)-1)]
+# print target_kick
 #target = [8,8,8,9,8,8,9,0]
 #NHMinter = markov.constrainMM(MM, target_kick, _path)
 
@@ -54,30 +58,32 @@ NHMvariation = markov.variationMM(MM, target_bass, _path)
 #patt_dict = markov.createMarkovGenerationDictionary(toJSON=True)
 #print patt_dict
 pattern = markov.generateBassRhythm(MM)
-GSIO.toMIDI(pattern, name='regular')
+
+GSIO.toMidi(pattern, name='regular')
 
 inter_pattern = markov.generateBassRhythm(MM, target=target_kick)
 # Write pattern to MIDI
-GSIO.toMIDI(inter_pattern, name='interlock')
+GSIO.toMidi(inter_pattern, name='interlock')
 
 var_mask = [1, 1, 1, -1, 1, 1, -1, 1]
 variation_pattern = markov.generateBassRhythmVariation(MM, inter_pattern, var_mask)
-GSIO.toMIDI(variation_pattern,name='variation')
+GSIO.toMidi(variation_pattern,name='variation')
 #########################################
 #  DEBUG
-=======
 
 
-syncDescriptor = GSDescriptors.GSDescriptorSyncopation()
-densDescriptor = GSDescriptors.GSDescriptorDensity()
->>>>>>> Stashed changes:examples/Bassmine/example.py
+
+# syncDescriptor = GSDescriptors.GSDescriptorSyncopation()
+# densDescriptor = GSDescriptors.GSDescriptorDensity()
+
 
 # experiment paramters
 it_values = [500]
 
-<<<<<<< Updated upstream:examples/Bassmine/Bassmine example.py
-print "Interlocking"
-print MM.get_interlocking()
+
+# print "Interlocking"
+# print MM.get_interlocking()
+
 """
 ##########################################
 #  EXPORT TO CSV
@@ -197,4 +203,4 @@ with open('output/midi_gen/generated_patterns.json', 'w') as fp:
 
 print len(patternDict.keys())
 print sum(aux_sum)
->>>>>>> Stashed changes:examples/Bassmine/example.py
+"""

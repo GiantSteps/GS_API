@@ -4,11 +4,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import numpy as np
-import copy
+import copy,os
 import random
 import json
-from . import GSPattern
-from . import GSBassmineAnalysis
+from . import GSPattern,GSPatternEvent
+from . import GSBassmineUtils
+
 
 def normalize(a):
 	"""
@@ -236,7 +237,8 @@ class MarkovModel:
 			rhythm_dict[key]['pattern'] = [int(r) for r in rhythm_temporal_model[key]]
 			rhythm_dict[key]['probs'] = list(tmp/sum(tmp))
 
-		with open( path + 'HModel.json', 'w') as outfile:
+		ePath = os.path.abspath(os.path.join(path,'HModel.json'))
+		with open( ePath  , 'w') as outfile:
 			json.dump(rhythm_dict, outfile)
 			outfile.close()
 
@@ -286,7 +288,7 @@ def constrainMM(markov_model, target, _path="output/"):
 	This function is also implemented as a pyext class.
 
 	Args:
-		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())
+		markov_model: MarkovModel instance (output from GSBassmineUtils.corpus_analysis())
 		target: Target pattern for interlocking (kick) represented by its pattern ids.
 		_path: Path to where the Markov models will be stored
 
@@ -311,7 +313,7 @@ def constrainMM(markov_model, target, _path="output/"):
 	#print( "Interlocking dict ", Dom_I)
 
 	## Representation of target kick pattern as variable domain
-	target = GSBassmineAnalysis.translate_rhythm(GSBassmineAnalysis.binaryBeatPattern([e.startTime for e in target.events],target.duration))
+	target = GSBassmineUtils.translate_rhythm(GSBassmineUtils.binaryBeatPattern([e.startTime for e in target.events],target.duration))
 
 	target_setlist = []
 	for t in target:
@@ -434,7 +436,7 @@ def variationMM(markov_model, target, _path="output/"):
 	    Positive values will be preserved.
 
 	Args:
-		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())
+		markov_model: MarkovModel instance (output from GSBassmineUtils.corpus_analysis())
 		target: Variation Mask (list with negative numbers indicating variation of that time frame)
 		_path: Path to where the Markov models will be stored
 
@@ -673,7 +675,7 @@ def generateBassRhythm(markov_model, beat_length=8, target=[]):
 	    bassline: GSPattern containing bassline onset pattern
 
 	"""
-	bassline = GSPattern.GSPattern()
+	bassline = GSPattern()
 	pattern_idx = []
 
 	if len(target) == 0:  # no constraints
@@ -706,7 +708,7 @@ def generateBassRhythm(markov_model, beat_length=8, target=[]):
 		st = markov_model.model_dictionary['patterns'][idx]
 		if len(st)>0:
 			for s in st:
-				bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+				bassline.events.append(GSPatternEvent(s + beat_count,0.25,36,velocity=110,tag="bass"))
 		beat_count += 1
 
 	return bassline
@@ -725,7 +727,7 @@ def _generateBassRhythm(markov_model, beat_length=8, target=[]):
 	    bassline: GSPattern containing bassline onset pattern
 
 	"""
-	bassline = GSPattern.GSPattern()
+	bassline = GSPattern()
 	pattern_idx = []
 
 	markovDict = createMarkovGenerationDictionary()
@@ -744,7 +746,7 @@ def _generateBassRhythm(markov_model, beat_length=8, target=[]):
 		st = markovDict['patterns'][idx]
 		if len(st)>0:
 			for s in st:
-				bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+				bassline.events.append(GSPatternEvent(s + beat_count,0.25,36,velocity=110,tag="bass"))
 		beat_count += 1
 
 	return bassline
@@ -764,7 +766,7 @@ def generateBassRhythmVariation(markov_model, target_pattern, variation_mask):
 		bassline: generated GSPattern
 	"""
 
-	bassline = GSPattern.GSPattern()
+	bassline = GSPattern()
 	pattern_idx = []
 
 	if len(variation_mask) < target_pattern.duration:
@@ -773,8 +775,8 @@ def generateBassRhythmVariation(markov_model, target_pattern, variation_mask):
 	else:
 		#Convert target pattern to markov dictionary
 		onset_target = [x.startTime for x in target_pattern.events]
-		target_rhythm = GSBassmineAnalysis.binaryBeatPattern(onset_target, target_pattern.duration)
-		target_id = GSBassmineAnalysis.translate_rhythm(target_rhythm)
+		target_rhythm = GSBassmineUtils.binaryBeatPattern(onset_target, target_pattern.duration)
+		target_id = GSBassmineUtils.translate_rhythm(target_rhythm)
 		#Mask formatted pattern
 		masked_target = [target_id[i] * variation_mask[i] for i in range(len(variation_mask) - 1)]
 
@@ -794,7 +796,7 @@ def generateBassRhythmVariation(markov_model, target_pattern, variation_mask):
 			st = markov_model.model_dictionary['patterns'][idx]
 			if len(st)>0:
 				for s in st:
-					bassline.events.append(GSPattern.GSPatternEvent(s + beat_count,0.25,36,velocity=110,tags=["bass"]))
+					bassline.events.append(GSPatternEvent(s + beat_count,0.25,36,velocity=110,tag=("bass")))
 			beat_count += 1
 
 		return bassline

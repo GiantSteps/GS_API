@@ -239,7 +239,7 @@ def __fromMidiFormatted(midiPath,
                 continue
 
             if not TagsFromTrackNameEvents:
-                noteTags = []
+                noteTag = ()
 
             if midi.MetaEvent.is_event(e.statusmsg):
                 if e.metacommand == midi.TrackNameEvent.metacommand:
@@ -251,7 +251,7 @@ def __fromMidiFormatted(midiPath,
                         gsiolog.info(pattern.name + ": getting track: %i %s" % (trackIdx, e.text))
 
                     if TagsFromTrackNameEvents:
-                        noteTags = __findTagsFromName(e.text, NoteToTagsMap)
+                        noteTag = __findTagsFromName(e.text, NoteToTagsMap)
 
             isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
             isNoteOff = midi.NoteOffEvent.is_event(e.statusmsg)
@@ -265,12 +265,12 @@ def __fromMidiFormatted(midiPath,
                     isNoteOn = False
 
                 curBeat = tick * 1.0 * tick_to_quarter_note
-                if noteTags == []:
+                if not noteTag:
                     if TagsFromTrackNameEvents:
                         continue
-                    noteTags = __findTagsFromPitchAndChannel(pitch, e.channel, NoteToTagsMap)
+                    noteTag = __findTagsFromPitchAndChannel(pitch, e.channel, NoteToTagsMap)
 
-                if noteTags == []:
+                if not noteTag:
                     if [e.channel, pitch] not in notFoundTags:
                         gsiolog.info(pattern.name + ": no tags found for "
                                                     "pitch %d on channel %d" % (pitch, e.channel))
@@ -291,14 +291,14 @@ def __fromMidiFormatted(midiPath,
                                                       duration=-1,
                                                       pitch=pitch,
                                                       velocity=velocity,
-                                                      tags=noteTags)]
+                                                      tag=noteTag)]
 
                 if isNoteOff:
                     if extremeLog: gsiolog.debug( "off %d %f"%(pitch,curBeat))
                     foundNoteOn = False
                     for i in reversed(pattern.events):
 
-                        if (i.pitch == pitch) and (i.tags==noteTags) and ((isNoteOff and(curBeat >= i.startTime))or curBeat>i.startTime) and i.duration<=0.0001:
+                        if (i.pitch == pitch) and (i.tag==noteTag) and ((isNoteOff and(curBeat >= i.startTime))or curBeat>i.startTime) and i.duration<=0.0001:
                             foundNoteOn = True
 
                             i.duration = max(0.0001,curBeat - i.startTime)
@@ -350,11 +350,11 @@ def __findTimeInfoFromMidi(pattern, midiFile):
             # pass
             break
     if not foundTimeSignatureEvent:
-        gsiolog.warning(pattern.name + ": no time signature event found")
+        gsiolog.info(pattern.name + ": no time signature event found")
 
 
 def __findTagsFromName(name, noteMapping):
-    res = []
+    res = tuple()
     for l in noteMapping:
         if l in name:
             res += [l]
@@ -362,27 +362,21 @@ def __findTagsFromName(name, noteMapping):
 
 
 def __findTagsFromPitchAndChannel(pitch, channel, noteMapping):
-    """
-    def pitchToName(pitch, pitchNames):
-        octaveLength = len(pitchNames)
-        # octave  = (pitch / octaveLength) - 2  # 0 is C-2
-        octave = (pitch / octaveLength) - 1  # 0 is C-1
-        note = pitch % octaveLength
-        # return  pitchNames[note] + "_" + str(octave) martin NOTATION
-        return  pitchNames[note] + str(octave) # STANDARD NOTATION (ANGEL)
-        """
+    
     if "pitchNames" in noteMapping.keys():
-        return [pitch2name(pitch, noteMapping["pitchNames"])]
+        return pitch2name(pitch, noteMapping["pitchNames"])
 
-    res = []
+    res = tuple()
     for l in noteMapping:
         for le in noteMapping[l]:
             if (le[0] in {"*", pitch}) and (le[1] in {"*", channel}):
-                res += [l]
+                res += (l,)
+    if len(res)==1:
+        return res[0]
     return res
 
 
-def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
+def toMidi(gspattern, midiMap=None, folderPath="output/", name=None):
     """ Function to write GSPattern instance to MIDI.
 
     Args:
@@ -394,7 +388,7 @@ def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
     import midi 
     # Instantiate a MIDI Pattern (contains a list of tracks)
     pattern = midi.Pattern(tick_relative=False,format=1)
-    pattern.resolution=gspattern.resolution or 960
+    pattern.resolution=getattr(gspattern,'resolution' , 960)
     # Instantiate a MIDI Track (contains a list of MIDI events)
     track = midi.Track(tick_relative=False)
     
@@ -418,7 +412,7 @@ def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
         pitch = e.pitch
         channel=1
         if midiMap:
-            pitch = midiMap[e.tags[0]]
+            pitch = midiMap[e.tag[0]]
         if midiMap is None:
             track.append(midi.NoteOnEvent(tick=startTick, velocity=e.velocity, pitch=pitch,channel=channel))
             track.append(midi.NoteOffEvent(tick=endTick, velocity=e.velocity, pitch=pitch,channel=channel))
@@ -435,6 +429,8 @@ def toMidi(gspattern, midiMap=None, folderPath="output/", name="test"):
 
     if(not os.path.exists(folderPath)) : 
         os.makedirs(folderPath)
+    name = name or gspattern.name
+    name = name or "test"
     if not ".mid" in name:
         name+=".mid"
     exportedPath = os.path.join(folderPath,name)

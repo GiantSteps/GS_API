@@ -1,7 +1,5 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 
 import unittest
 import os
@@ -48,7 +46,6 @@ def getAllDescriptorsClasses():
     """
     res = []
     for elem in dir(GSDescriptors):
-        print (elem)
         if  'GSDescriptor' in elem:
             res+=[ (elem, getattr(GSDescriptors,elem,None))]
     return res
@@ -82,12 +79,13 @@ class GSTestBase(unittest.TestCase):
         tags = pattern.getAllTags()
         pattern.reorderEvents();
         for t in tags:
-            lastTimeOff = 0
-            for e in pattern.events:
-                if t in e.tags:
-                    self.assertTrue(e.startTime >= lastTimeOff,
-                                    "%s: (%f < %f) tag: %s" % (msg, e.startTime, lastTimeOff, t))
-                    lastTimeOff = e.getEndTime()
+            lastEvent = None
+            _checkedP = pattern.getPatternWithTags(tagToLookFor=t)
+            for e in _checkedP.events:
+                if lastEvent:
+                    self.assertTrue(e.startTime >= lastEvent.getEndTime(),
+                                "%s: event : (%s \noverlaps with %s)" % (msg, e, lastEvent))
+                lastEvent = e
 
     def checkPatternValid(self, pattern, checkForDoublons=True, checkOverlap=True, msg=""):
         self.assertTrue(len(pattern.events) > 0, msg)
@@ -104,7 +102,7 @@ class GSTestBase(unittest.TestCase):
             for e in pattern.events:
                 for ii in range(i + 1, len(pattern.events)):
                     ee = pattern.events[ii]
-                    if e.startTime == ee.startTime and e.duration == ee.duration and e.pitch == ee.pitch and e.tags == ee.tags:
+                    if e.startTime == ee.startTime and e.duration == ee.duration and e.pitch == ee.pitch and e.tag == ee.tag:
                         self.assertTrue(False, "%s: %s doublons %s // %s" % (pattern.name, msg, e, ee))
                 i += 1
 

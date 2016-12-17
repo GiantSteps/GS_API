@@ -12,6 +12,7 @@ from .GSIOTest import *
 from .GSPatternTest import *
 from .GSViewpointTest import *
 from .MarkovPatternTest import *
+from .GSStylesTest import *
 
 
 

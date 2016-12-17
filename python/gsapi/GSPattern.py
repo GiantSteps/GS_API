@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import math
 import copy
 import logging
+import collections
 from .GSPitchSpelling import *
 
 # logger for pattern related operations
@@ -14,27 +15,32 @@ patternLog = logging.getLogger("gsapi.GSPattern")
 
 class GSPatternEvent(object):
     """Represent an event of a GSPattern with startTime, duration, pitch,
-    velocity and tags variables.
+    velocity and tag variables.
 
     Class variables:
         startTime: startTime of event
         duration: duration of event
         pitch: pitch of event
         velocity: velocity of event
-        tags: list of tags representing the event
+        tag: any hashable object representing the event , i.e strings, tuples, objects (but not lists) 
         originPattern : keeps track of origin pattern for events generated from pattern, example a chord event can still access to its individual components via originPattern (see GSPattern.generateViewpoints)
     """
-    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tags=None,originPattern=None):
+    def __init__(self, startTime=0, duration=1, pitch=60, velocity=80, tag=None,originPattern=None):
         self.duration = duration
         self.startTime = startTime
 
         self.originPattern = originPattern 
-        if not tags: 
-            self.tags = []
-        elif not isinstance(tags, list):
-            self.tags = [tags]
+        if not tag: 
+            self.tag = ()
+        elif isinstance(tag,list):
+            patternLog.error("tag cannot be list, converting to tuple")
+            self.tag = tuple(tag)
+
+        elif not isinstance(tag, collections.Hashable):
+            patternLog.error("tag has to be hashable, trying conversion to tuple")
+            self.tag = (tag,)
         else:
-            self.tags = tags
+            self.tag = tag
 
         
         self.pitch = pitch
@@ -42,7 +48,7 @@ class GSPatternEvent(object):
         
 
     def __repr__(self):
-        return "%s %i %i %05.4f %05.4f" % (self.tags,
+        return "%s %i %i %05.4f %05.4f" % (self.tag,
                                            self.pitch,
                                            self.velocity,
                                            self.startTime,
@@ -50,7 +56,7 @@ class GSPatternEvent(object):
 
     def __eq__(self, other):
         if isinstance(other, GSPatternEvent):
-            return (self.startTime == other.startTime) and (self.pitch == other.pitch) and (self.velocity==other.velocity) and (self.duration==other.duration) and (self.tags==other.tags)
+            return (self.startTime == other.startTime) and (self.pitch == other.pitch) and (self.velocity==other.velocity) and (self.duration==other.duration) and (self.tag==other.tag)
         return NotImplemented
     def __ne__(self, other):
         result = self.__eq__(other)
@@ -66,40 +72,42 @@ class GSPatternEvent(object):
         Returns:
             True if at least one tag is equal
         """
-        return self.hasOneOfTags(event.tags)
+        # if type(self.tag)!=type(event.tag):
+        #     return False
+        return self.hasOneOfTags(event.tag)
 
     def hasOneOfTags(self, tags):
-        """Compare this event's tags with a list of strings.
+        """Compare this event's tags with a list of possible tag.
 
         Args:
-            tags: list of strings to compare with
+            tags: list of tags to compare with
         Returns:
             True if at least one tag is equal
         """
         for t in tags:
-            if t in self.tags:
+            if (t==self.tag) or (t in self.tag):
                 return True
         return False
 
-    def tagsAre(self, tags):
-        """Compare this event's tags with a list of strings.
+    def tagIs(self, tag):
+        """Compare this event's tag with a a given tag.
 
         Args:
-            tags: list of strings to compare with
+            tag: tag to compare with
         Returns:
-            True if all tags are equal
+            True if all event tag is equal to given tag
         """
-        return all([x in self.tags for x in tags])
+        return self.tag == tag
 
     def allTagsAreEqualWith(self, event):
-        """Compare this event's tags with an other event.
+        """Compare this event's tag with an other event.
 
         Args:
             event: event to compare with
         Returns:
-            True if all tags are equal
+            True if tags are equal
         """
-        self.tagsAre(event.tags)
+        self.tagIs(event.tag)
 
     def getEndTime(self):
         """Return the time when this events ends
@@ -190,7 +198,7 @@ class GSPattern(object):
 
     def __repr__(self):
         """Nicely print out the list of events.
-        Each line represents an event formatted as "[tags] pitch velocity startTime duration"
+        Each line represents an event formatted as "[tag] pitch velocity startTime duration"
         """
         s = "GSPattern %s : duration: %.2f,bpm: %.2f,time signature: %d/%d\n" % (self.name,self.duration,self.bpm,self.timeSignature[0],self.timeSignature[1])
         for e in self.events:
@@ -230,6 +238,7 @@ class GSPattern(object):
             pattern.reorderEvents()
             if len(pattern) == 0:
                 patternLog.warning("try to apply legato on an empty voice")
+
                 return
             for idx in range(1, len(pattern)):
                 
@@ -246,7 +255,7 @@ class GSPattern(object):
                 voice = self.getPatternWithPitch(p)
                 _perVoiceLegato(voice)
         for t in self.getAllTags():
-            voice = self.getPatternWithTags(tags=[t], exactSearch=False, makeCopy=False)
+            voice = self.getPatternWithTags(tagToLookFor=t, exactSearch=False, makeCopy=False)
             _perVoiceLegato(voice)
 
     def transpose(self, interval):
@@ -258,7 +267,7 @@ class GSPattern(object):
                 """
         for e in self.events:
             e.pitch += interval
-            e.tags = [pitch2name(e.pitch, defaultPitchNames)]
+            e.tag = [pitch2name(e.pitch, defaultPitchNames)]
         # return self
 
     def setDurationFromLastEvent(self, onlyIfBigger=True):
@@ -270,7 +279,6 @@ class GSPattern(object):
         """
         total = self.getLastNoteOff()
         if total and (total > self.duration or not onlyIfBigger):
-            # print "resizing : "+str(total) +'old : '+ str(self.duration)
             self.duration = total
 
     def reorderEvents(self):
@@ -322,7 +330,7 @@ class GSPattern(object):
             tags: list of tag(s)
         """
         for e in self.events:
-            if e.hasOneOfTags(list(tags)):
+            if e.hasOneOfTags(tuple(tags)):
                 self.removeEvent(e)
 
     def quantize(self, stepSize, quantizeStartTime=True, quantizeDuration=True):
@@ -407,14 +415,13 @@ class GSPattern(object):
         """ Returns all used tags in this pattern.
 
         Returns:
-            list of string composed of all possible tags
+            set of tags composed of all possible tags
         """
-        tags = []
+        tagsList = []
         for e in self.events:
-            for t in e.tags:
-                tags += [t]
-        tags = list(set(tags))
-        return tags
+            tagsList += [e.tag]
+        tagsList = set(tagsList)
+        return tagsList
 
     def getAllPitches(self):
         """ Returns all used pitch in this pattern.
@@ -428,39 +435,39 @@ class GSPattern(object):
         pitchs = list(set(pitchs))
         return pitchs
 
-    def getPatternWithTags(self, tags, exactSearch=True, makeCopy=True):
+    def getPatternWithTags(self, tagToLookFor, exactSearch=True, makeCopy=True):
         """Returns a sub-pattern with the given tags.
 
         Args:
-            tags: string list or lambda  expression (return boolean based on tag list input): tags to be checked for
-            exactSearch: bool: if True the tags have to be exactly the same, else they can be included in events Tags
+            tagToLookFor: tag,tags list or lambda  expression (return boolean based on tag input): tags to be checked for
+            exactSearch: bool: if True the tags argument can be an element of tag to look for, example : if we set tags='maj',an element with tag ('C','maj') will be valid
             makeCopy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
         Returns:
-            a GSPattern with only events that tags corresponds to given tags
+            a GSPattern with only events that tags corresponds to given tagToLookFor
         """
-        if isinstance(tags, (list)):
+        if isinstance(tagToLookFor, list):
             if exactSearch:
-                boolFunction = lambda inTags: inTags == tags
-            else:
-                boolFunction = lambda inTags: not set(tags).isdisjoint(inTags)
-        elif callable(tags):
-            boolFunction = tags
+                patternLog.error("cannot search exactly with a list of elements")
+            boolFunction = lambda inTags:len(inTags)>0 and inTags in tagToLookFor
+        elif callable(tagToLookFor):
+            boolFunction = tagToLookFor
         else:
+            # tuple / string or any hashable object
             if exactSearch:
-                boolFunction = lambda inTags: len(inTags) == 1 and inTags[0] == tags
+                boolFunction = lambda inTags: inTags == tagToLookFor
             else:
-                boolFunction = lambda inTags: len(inTags)>0 and tags in inTags
+                boolFunction = lambda inTags: (inTags == tagToLookFor) or (len(inTags)>0 and tagToLookFor in inTags)
 
         res = self.getACopyWithoutEvents()
         for e in self.events:
-            found = boolFunction(e.tags)
+            found = boolFunction(e.tag)
             if found:
                 newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
         return res
 
     def getPatternWithPitch(self, pitch, makeCopy=True):
-        """Returns a sub-pattern with the given tags.
+        """Returns a sub-pattern with the given pitch.
 
         Args:
             pitch: pitch to look for
@@ -477,27 +484,35 @@ class GSPattern(object):
 
         return res
 
-    def getPatternWithoutTags(self, tags, exactSearch=False, makeCopy=True):
+    def getPatternWithoutTags(self, tagToLookFor, exactSearch=False, makeCopy=True):
         """Returns a sub-pattern without the given tags.
 
         Args:
-            tags: string list: tags to be checked for
-            exactSearch: bool: if True the tags have to be exactly the same, else they can be included in events Tags
+            tagToLookFor: tag or tag list: tags to be checked for
+            exactSearch: bool: if True the tags have to be exactly the same as tagToLookFor, else they can be included in events tag
             makeCopy: do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)
 
         Returns:
             a GSPattern with events without given tags
         """
+
+        if isinstance(tagToLookFor, list):
+            if exactSearch:
+                patternLog.error("cannot search exactly with a list of elements")
+            boolFunction = lambda inTags:len(inTags)>0 and inTags in tagToLookFor
+        elif callable(tagToLookFor):
+            boolFunction = tagToLookFor
+        else:
+            # tuple / string or any hashable object
+            if exactSearch:
+                boolFunction = lambda inTags: inTags == tagToLookFor
+            else:
+                boolFunction = lambda inTags: (inTags == tagToLookFor) or (len(inTags)>0 and tagToLookFor in inTags)
+
         res = self.getACopyWithoutEvents()
         for e in self.events:
-            if exactSearch and e.tags == tags:
-                pass
-            elif tags in e.tags:
-                newEv = e if not makeCopy else e.copy()
-                for tRm in newEv.tags:
-                    newEv.tags.remove(tRm)
-                res.events += [newEv]
-            else:
+            needToExclude = boolFunction(e.tag)
+            if not needToExclude :
                 newEv = e if not makeCopy else e.copy()
                 res.events += [newEv]
         return res
@@ -519,7 +534,7 @@ class GSPattern(object):
         """
         newEvents = []
         for e in self.events:
-            if e.tagsAre(repeatibleTags):
+            if e.tagIs(repeatibleTags):
                 evToAdd = e.cutInSteps(stepSize)
             else:
                 evToAdd = [e]
@@ -551,7 +566,7 @@ class GSPattern(object):
                 if usePitchValues:
                     equals = (ee.pitch == e.pitch)
                 else:
-                    equals = (ee.tags == e.tags)
+                    equals = (ee.tag == e.tag)
                 if equals:
                     if (ee.startTime >= e.startTime) and (ee.startTime < e.startTime + e.duration):
                         found = True
@@ -577,7 +592,7 @@ class GSPattern(object):
 
         Args:
             event:event to compare with
-            allTagsMustBeEquals: shall we get exact tags equality or be fine with one common tag
+            allTagsMustBeEquals: shall we get exact tags equality or be fine with one common tag (valable if tags are tuple)
 
         Returns:
             list of events that have all or one tags in common
@@ -613,18 +628,18 @@ class GSPattern(object):
                 if e.startTime > lastOff:
                     if maxSilenceTime > 0:
                         while e.startTime - lastOff > maxSilenceTime:
-                            newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, [silenceTag])]
+                            newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, silenceTag)]
                             lastOff += maxSilenceTime
-                    newEvents += [GSPatternEvent(lastOff, e.startTime - lastOff, silencePitch, 0, [silenceTag])]
+                    newEvents += [GSPatternEvent(lastOff, e.startTime - lastOff, silencePitch, 0, silenceTag)]
                 newEvents += [e]
                 lastOff = max(lastOff, e.startTime + e.duration)
 
             if lastOff < pattern.duration:
                 if maxSilenceTime > 0:
                     while lastOff < pattern.duration - maxSilenceTime:
-                        newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, [silenceTag])]
+                        newEvents += [GSPatternEvent(lastOff, maxSilenceTime, silencePitch, 0, silenceTag)]
                         lastOff += maxSilenceTime
-                newEvents += [GSPatternEvent(lastOff, pattern.duration - lastOff, silencePitch, 0, [silenceTag])]
+                newEvents += [GSPatternEvent(lastOff, pattern.duration - lastOff, silencePitch, 0, silenceTag)]
             return newEvents
 
         if not perTag:
@@ -632,7 +647,7 @@ class GSPattern(object):
         else:
             allEvents = []
             for t in self.getAllTags():
-                allEvents += _fillListWithSilence(self.getPatternWithTags(tags=[t], exactSearch=False, makeCopy=False), silenceTag, silencePitch)
+                allEvents += _fillListWithSilence(self.getPatternWithTags(tagToLookFor=t, exactSearch=False, makeCopy=False), silenceTag, silencePitch)
             self.events = allEvents
 
     def fillWithPreviousEvent(self):
@@ -695,7 +710,7 @@ class GSPattern(object):
                                       'duration': e.duration,
                                       'pitch': e.pitch,
                                       'velocity': e.velocity,
-                                      'tagsIdx': findIdxforTags(e.tags, allTags)
+                                      'tagIdx': findIdxforTags(e.tag, allTags)
                                       }]
         else:
             for e in self.events:
@@ -703,7 +718,7 @@ class GSPattern(object):
                                       'duration': e.duration,
                                       'pitch': e.pitch,
                                       'velocity': e.velocity,
-                                      'tags': e.tags
+                                      'tag': e.tag
                                       }]
 
         return res
@@ -740,7 +755,7 @@ class GSPattern(object):
                                                duration = e['duration'],
                                                pitch = e['pitch'],
                                                velocity = e['velocity'],
-                                               tags = [tags[f] for f in e['tagsIdx']]
+                                               tag = tuple([tags[f] for f in e['tagsIdx']])
                                                )]
         else:
             for e in json['eventList']:
@@ -748,7 +763,7 @@ class GSPattern(object):
                                                duration = e['duration'],
                                                pitch = e['pitch'],
                                                velocity =e['velocity'],
-                                               tags = e['tags']
+                                               tag = e['tag']
                                                )]
 
         self.viewpoints = {k: GSPattern().fromJSONDict(v,parentPattern=self) for k, v in json['viewpoints'].items()}
@@ -756,11 +771,12 @@ class GSPattern(object):
 
         return self
 
-    def splitInEqualLengthPatterns(self, desiredLength, makeCopy=True):
+    def splitInEqualLengthPatterns(self, desiredLength,viewpointName=None ,makeCopy=True,supressEmptyPattern=True):
         """Splits a pattern in consecutive equal length cuts.
 
         Args:
             desiredLength: length desired for each pattern
+            viewpointName : if given, slice the underneath viewpoint instead
             makeCopy: returns a distint copy of original pattern events, if you don't need original pattern anymore setting it to False will increase speed
 
         Returns:
@@ -770,10 +786,10 @@ class GSPattern(object):
           p = int(math.floor(e.startTime * 1.0 / desiredLength))
           numPattern = str(p)
           if numPattern not in patterns:
-              patterns[numPattern] = self.getACopyWithoutEvents()
+              patterns[numPattern] = patternToSlice.getACopyWithoutEvents()
               patterns[numPattern].startTime = p*desiredLength
               patterns[numPattern].duration = desiredLength
-              patterns[numPattern].name = self.name + "_" + numPattern
+              patterns[numPattern].name = patternToSlice.name + "_" + numPattern
           newEv = e if not makeCopy else e.copy()
           
           if (newEv.startTime + newEv.duration > (p+1)*desiredLength):
@@ -788,10 +804,11 @@ class GSPattern(object):
           patterns[numPattern].events += [newEv]
         patterns = {}
 
-        for e in self.events:
+        patternToSlice = self.viewpoints[viewpointName] if viewpointName else self
+        for e in patternToSlice.events:
             _handleEvent(e,patterns,makeCopy)
         res = []
-        maxListLen = int(math.ceil(self.duration*1.0/desiredLength))
+        maxListLen = int(math.ceil(patternToSlice.duration*1.0/desiredLength))
         for p in range(maxListLen):
             pName = str(p)
             if pName in patterns:
@@ -799,7 +816,8 @@ class GSPattern(object):
                 curPattern.setDurationFromLastEvent()
             else:
                 curPattern = None
-            res += [curPattern]
+            if (not supressEmptyPattern )or curPattern:
+                res += [curPattern]
         return res
 
     def generateViewpoint(self,name,descriptor=None,sliceType=None):
@@ -860,7 +878,7 @@ class GSPattern(object):
 
             for subPattern in patternsList:
                 if subPattern:
-                    viewpoint.events+=[GSPatternEvent(duration=subPattern.duration,startTime=subPattern.startTime,tags = descriptor.getDescriptorForPattern(subPattern),originPattern=subPattern)]
+                    viewpoint.events+=[GSPatternEvent(duration=subPattern.duration,startTime=subPattern.startTime,tag = descriptor.getDescriptorForPattern(subPattern),originPattern=subPattern)]
 
             return viewpoint
 
@@ -874,6 +892,9 @@ class GSPattern(object):
                 from .GSDescriptors.GSDescriptorChord import GSDescriptorChord
                 self.viewpoints[name] = _computeViewpoint(originPattern=self,descriptor=GSDescriptorChord(),sliceType=4,name=name)
 
+        # can use it as a return value 
+        return self.viewpoints[name]
+
 
 
 
@@ -882,7 +903,7 @@ class GSPattern(object):
         def __areSilenceEvts(l):
             if len(l) > 0:
                 for e in l:
-                    if 'silence' not in e.tags:
+                    if 'silence' not in e.tag:
                         return False
             return True
 

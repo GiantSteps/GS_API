@@ -36,6 +36,12 @@ simpleDrumMap = {"Kick": 36,
                  }
 
 
+verySimpleDrumMap = {"Kick": 36,
+                 "Snare": 38,
+                 "ClosedHH": 42,
+                 "OpenHH": 46,
+                 }
+
 generalMidiMap = {"Acoustic Bass Drum": 35,
                   "Bass Drum 1": 36,
                   "Side Stick": 37,

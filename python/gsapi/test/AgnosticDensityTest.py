@@ -1,16 +1,15 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
+# python 3 compatibility
+from __future__ import absolute_import, division, print_function,unicode_literals
 import os
 import sys
 
 if __name__ == '__main__':
     sys.path.insert(1, os.path.abspath(os.path.join(__file__, os. pardir, os.pardir, os.pardir)))
-
+    from GSPatternTestUtils import *
+else:
+    from .GSPatternTestUtils import *
 from gsapi import *
-from .GSPatternTestUtils import *
+
 
 
 
