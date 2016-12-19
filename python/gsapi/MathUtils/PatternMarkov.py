@@ -263,6 +263,8 @@ class PatternMarkov(object):
         return events
 
     def getInternalState(self):
+    	"""utility function to save current state
+        """
         res = {"transitionTable": self.transitionTable,
                "order": self.order,
                "numSteps": self.numSteps,
@@ -270,6 +272,8 @@ class PatternMarkov(object):
         return res
 
     def setInternalState(self, state):
+        """utility function to load current state
+        """
         self.transitionTable = state["transitionTable"]
         self.order = state["order"]
         self.numSteps = state["numSteps"]
@@ -292,6 +296,8 @@ class PatternMarkov(object):
         return list(set(self.getPossibleInStatesAtStep(step)+self.getPossibleOutStatesAtStep(step)))
 
     def getPossibleOutStatesAtStep(self,step):
+        if step < 0 : step+= len(self.transitionTable)
+        step%=len(self.transitionTable)
         d=self.transitionTable[step]
         possibleStates=[]
         for v in d.values():
@@ -301,10 +307,13 @@ class PatternMarkov(object):
         return possibleStates
 
     def getPossibleInStatesAtStep(self,step):
+        if step < 0 : step+= len(self.transitionTable)
+        step%=len(self.transitionTable)
         d=self.transitionTable[step]
         return list(d.keys())
 
     def getMatrixAtStep(self,step,possibleStatesIn=None, possibleStatesOut = None,matrix=None):
+    	if step < 0 : step+= len(self.transitionTable)
         possibleStatesIn = possibleStatesIn or self.getPossibleInStatesAtStep(step)
         possibleStatesOut = possibleStatesOut or self.getPossibleOutStatesAtStep(step)
         sizeIn = len(possibleStatesIn)
@@ -338,6 +347,7 @@ class PatternMarkov(object):
         plt.show()
 
     def plotMatrixAtStep(self,step):
+    	if step < 0 : step+= len(self.transitionTable)
         mat,labelsIn,labelsOut = self.getMatrixAtStep(step)#,possibleStates = allTags)
         self.__plotMatrix(mat,labelsIn,labelsOut)
 
