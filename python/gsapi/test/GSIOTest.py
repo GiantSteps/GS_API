@@ -1,5 +1,5 @@
 # python 3 compatibility
-from __future__ import absolute_import, division, print_function,unicode_literals
+from __future__ import absolute_import, division, print_function
 
 import unittest
 import os,sys
@@ -32,7 +32,7 @@ class GSIOTest(GSTestBase):
             self.assertTrue(os.path.exists(exportedPath))
             print ("path",exportedPath)
             exportedP = GSIO.fromMidi(midiPath=exportedPath)
-
+            print (exportedP)
             self.checkPatternEquals(p,exportedP)
 
     # def test_ImportExportJSON(self):

@@ -39,11 +39,11 @@ PythonWrap::~PythonWrap(){
 PythonWrap::PipeIntercepter * PythonWrap::getIntercepter(){return &errIntercept;}
 
 PythonWrap * PythonWrap::getCurrentPythonWrap(){
-  PyThreadState * st = PyGILState_GetThisThreadState();
+
   HashMap<int64, PythonWrap* >::Iterator it(interpreters);
   while(it.next()){
     if(PythonWrap * pyW=it.getValue()){
-      if(st == pyW->threadState){
+      if(_PyThreadState_Current == pyW->threadState){
         return pyW;
       }
     }
@@ -146,8 +146,10 @@ void PythonWrap::redirectStd(bool t){
 
 
   if(t){
+
     PySys_SetObject("stderr", customStdErr);
     PySys_SetObject("stdout", customStdOut);
+    
   }
   else{
     PySys_SetObject("stderr", originStdErr);
@@ -198,6 +200,7 @@ void PythonWrap::addSearchPath(const string & p){
 
 PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
   // Import the module "plugin" (from the file "plugin.py")
+
   if(threadState){
     jassert(PyThreadState_Swap(threadState));
   }
@@ -205,12 +208,21 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
     jassertfalse;
   }
   PyObject* moduleName = PyFromString(name.c_str());
+  bool hasChangedModule = false;
+  if(oldModule){
+    if(PyModule_GetName(oldModule) != name){
+      Py_DECREF(oldModule);
+      hasChangedModule = true;
+      
+    }
 
+  }
   PyObject * newModule = nullptr;
-  if (oldModule) {
+  if (oldModule && !hasChangedModule ) {
     //        cout << "reloading : " << name << endl;
     //        const string reloadS = "reload("+name+")";
-    setFolderPath(curentFolderPath);
+      setFolderPath(curentFolderPath);
+    
     newModule= PyImport_ReloadModule(oldModule);
     if(newModule){
       Py_DECREF(oldModule);
@@ -220,10 +232,12 @@ PyObject * PythonWrap::loadModule(const string & name,PyObject * oldModule){
       printPyState();
       PyErr_Print();
 
-
     }
 
-    //        PyRun_SimpleString(reloadS.c_str());
+
+    //    newModule = PyImport_Import(moduleName);
+
+
   }
   else{
     //    dlopen("libpython2.7.so", RTLD_LAZY | RTLD_GLOBAL);

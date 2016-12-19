@@ -24,7 +24,7 @@ public:
     DurationObjName = PyFromString("duration");
     PitchObjName = PyFromString("pitch");
     VelocityObjName = PyFromString("velocity");
-    TagsObjName = PyFromString("tags");
+    TagsObjName = PyFromString("tag");
 
     init();
   }
@@ -72,18 +72,26 @@ public:
       {
         PyObject * n = PyDict_GetItem(dict, TagsObjName);
         if(n){
-          if(PyList_Check(n)){
-            e->eventTags.clear();
-            int s = PyList_GET_SIZE(n);
-            for(int i = 0 ; i < s; i++){
-              PyObject * to = PyList_GET_ITEM(n,i);
-              if(PyUnicode_Check(to)){to = PyUnicode_AsUTF8String(to);}
-              if(PyString_Check(to)){e->eventTags.push_back(PyToString(to));}
+          e->eventTags.clear();
+          if(PyTuple_Check(n)){
 
-              else{DBG("wrong type of tags : " << to->ob_type->tp_name);}
+            int s = PyTuple_Size(n);
+            for(int i = 0 ; i < s; i++){
+              if(PyObject * to = PyTuple_GetItem(n,i)){
+                if(PyObject * stringOb = PyObject_Str(to)){
+                  e->eventTags.push_back(PyToString(stringOb));
+                }
+                else{DBG("wrong type of tags in tuple : " << to->ob_type->tp_name);}
+              }
+
             }
 
           }
+          else if(PyObject * stringOb = PyObject_Str(n)) {
+            e->eventTags.push_back(PyToString(stringOb));
+          }
+          else{DBG("wrong type of tags : " << n->ob_type->tp_name);}
+
         }
       }
 
@@ -98,22 +106,29 @@ public:
     PyObject * res = original;
 
     PyObject* start = PyFloat_FromDouble(e->start);
+
     PyObject *duration= PyFloat_FromDouble(e->duration);
-    PyObject *pitch=PyFloat_FromDouble(e->pitch);
-    PyObject *velocity =PyFloat_FromDouble(e->velocity);
+    PyObject *pitch=PyInt_FromLong(e->pitch);
+    PyObject *velocity =PyInt_FromLong(e->velocity);
 
     int size = e->eventTags.size();
-    PyObject * tags = PyList_New(size);
+    PyObject * tags =nullptr;
+    if(size==1){
+      cout << e->eventTags[0] << endl;
+      tags = PyFromString(e->eventTags[0].c_str());
+    }
+    else{
+    tags = PyTuple_New(size);
     for(int i = 0 ; i < size; i++){
       PyObject * pe = PyFromString(e->eventTags[i].c_str());
-      if(pe)PyList_SetItem(tags,i,pe);
+      if(pe)PyTuple_SetItem(tags,i,pe);
       else{DBG("can't create event");}
     }
-
+    }
 
     if(res==nullptr){
 
-      PyObject * creationArg = Py_BuildValue("(i,i,i,i,O)",start,duration,pitch,velocity,tags);
+      PyObject * creationArg = Py_BuildValue("(f,f,i,i,O)",start,duration,pitch,velocity,tags);
       res = PyObject_Call((PyObject*)gsPatternEventType,creationArg,nullptr);
     }
     else{
@@ -124,7 +139,7 @@ public:
       if(PyObject_SetAttr(res, TagsObjName, tags) == -1){DBG("can't set tag");}
     }
 
-    Py_DecRef(tags);
+    //Py_DecRef(tags);
 
     return res;
 

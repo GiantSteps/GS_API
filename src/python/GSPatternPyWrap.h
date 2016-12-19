@@ -82,8 +82,8 @@ public:
     {
       PyObject * n = PyDict_GetItem(dict, timeSignatureName);
       if(n && PyList_GET_SIZE(n)==2){
-        p->timeSigNumerator=  PyInt_AsLong( PyList_GET_ITEM(n, 0));
-        p->timeSigDenominator=  PyInt_AsLong( PyList_GET_ITEM(n, 1));
+        p->timeSigNumerator=  PyInt_AsLong( PyTuple_GetItem(n, 0));
+        p->timeSigDenominator=  PyInt_AsLong( PyTuple_GetItem(n, 1));
       }
     }
 

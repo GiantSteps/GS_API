@@ -1,5 +1,5 @@
 # python 3 compatibility
-from __future__ import absolute_import, division, print_function,unicode_literals
+from __future__ import absolute_import, division, print_function
 
 from .. import GSPattern, GSPatternEvent
 import copy
@@ -171,7 +171,7 @@ class PatternMarkov(object):
 
         cIdx = self.order
         startHypothesis = tuple()
-        maxNumtries = 10
+        maxNumtries = 30
         while not _isValidState(cIdx, startHypothesis):
             startHypothesis = tuple()
             for n in range(self.order):

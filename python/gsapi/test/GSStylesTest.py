@@ -1,5 +1,5 @@
 # python 3 compatibility
-from __future__ import absolute_import, division, print_function,unicode_literals
+from __future__ import absolute_import, division, print_function
 
 import unittest
 import os
@@ -27,12 +27,12 @@ class GSStylesTest(GSTestBase):
                        midiMap="pitchNames",
                        checkForOverlapped=True)
 
-    # def testGSMarkovStyleSimple(self):
-    #   loopDuration=4
-    #   markov = GSStyles.GSMarkovStyle(order = 1,numSteps=32,loopDuration=loopDuration)
-    #   pList = self.cachedDataset.getAllSliceOfDuration(loopDuration);
-    #   markov.generateStyle(pList)
-    #   self.checkPatternValid(markov.generatePattern())
+    def testGSMarkovStyleSimple(self):
+      loopDuration=4
+      markov = GSStyles.GSMarkovStyle(order = 1,numSteps=32,loopDuration=loopDuration)
+      pList = self.cachedDataset.getAllSliceOfDuration(loopDuration);
+      markov.generateStyle(pList)
+      self.checkPatternValid(markov.generatePattern())
 
 
     def testMarkovFromViewpointChords(self):

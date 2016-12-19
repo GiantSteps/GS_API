@@ -33,7 +33,8 @@ PyPatternParameter::~PyPatternParameter(){
 }
 void PyPatternParameter::registerListener(Component *c) {((PatternComponent*)c)->addPatternListener(this);}
 void PyPatternParameter::removeListener(Component *c){((PatternComponent*)c)->removePatternListener(this);}
-void PyPatternParameter::patternChanged(PatternComponent * ){
+void PyPatternParameter::patternChanged(PatternComponent * p){
+  pattern = p->getPattern();
   setValue(var());
 }
 void PyPatternParameter::updateComponentState(Component *c) {

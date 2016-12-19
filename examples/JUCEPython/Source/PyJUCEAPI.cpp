@@ -110,12 +110,25 @@ void PyJUCEAPI::callSetupFunction(){
 //
 
 
-String getVSTPluginPythonName(File & folder){
-	jassert(folder.isDirectory());
-	Array<File> res;
-	folder.findChildFiles (res,File::TypesOfFileToFind::findFiles,false,"VSTPlugi*.py");
-	if (res.size()) {return res[0].getFileNameWithoutExtension();}
+String PyJUCEAPI::getVSTPluginNameByIndex(int idx){
+  Array<File> res = getAllPythonFiles();
+	if (idx<res.size()) {return res[idx].getFileNameWithoutExtension();}
 	return "";
+}
+Array<File> PyJUCEAPI::getAllPythonFiles(){
+
+  jassert(VSTPluginFolder.isDirectory());
+  
+  Array<File> tmp ,res;
+  VSTPluginFolder.findChildFiles(tmp, File::TypesOfFileToFind::findFiles, false,"*.py");
+  for (auto & f : tmp){
+    String name=f.getFileNameWithoutExtension();
+    if(!name.endsWith("_interface") && name.startsWith("VST")){
+      res.add(f);
+    }
+  }
+
+  return res;
 }
 void PyJUCEAPI::init(){
   if(!isInitialized){
@@ -140,11 +153,12 @@ void PyJUCEAPI::init(){
 		if (!loadCustom) {
 			if (loadDefault  ) {
 				VSTPluginFolder = File (getVSTPath()+"/../../Resources/python/");
-				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
+				VSTPluginName = getVSTPluginNameByIndex(0);
+        
 			}
 			else{
 				VSTPluginFolder = pythonFolder;
-				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
+				VSTPluginName = getVSTPluginNameByIndex(0);
 			}
 		}
 		
@@ -154,7 +168,7 @@ void PyJUCEAPI::init(){
 			juce::FileChooser fc("select Folder containing VSTPlugin.py");
 			if(fc.browseForDirectory()){
 				VSTPluginFolder = fc.getResult();
-				VSTPluginName = getVSTPluginPythonName(VSTPluginFolder);
+				VSTPluginName = getVSTPluginNameByIndex(0);
 				getVSTProperties().setValue("VSTPythonFolderPath",fc.getResult().getFullPathName());
 			}
 			

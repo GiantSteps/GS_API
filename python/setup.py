@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+
 
 from setuptools import setup, find_packages
 from distutils.extension import Extension
@@ -17,10 +17,9 @@ def checkLazySetupCommands():
       # utility when compiling from IDE, last uncommented executes desired action
     toAppend = ['clean', '--all']
     toAppend = ['build']
-    toAppend  = ['sdist', 'bdist_wheel', 'install']
-    # toAppend = ['test']; 
 
-    
+
+
 
     # remainder for pip maintainers
     # (once .pypirc edited)

@@ -380,6 +380,7 @@ void VoiceComponent::mouseDoubleClick (const MouseEvent& event) {
   // click on blick
   else if (BlockComponent * bk = dynamic_cast<BlockComponent*>(event.originalComponent)){
     owner->pattern.removeEvent(bk->evt);
+    bk->evt = nullptr;
     update();
   }
 }

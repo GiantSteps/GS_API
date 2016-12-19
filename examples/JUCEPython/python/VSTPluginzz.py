@@ -22,6 +22,8 @@ import JUCEAPI
 from UIParameter import *
 
 
+print (gsapi.__file__)
+
 
 """ this example generates stylistic markovian pattern to demonstrate passing GSPattern to C++ plugin
 """
@@ -33,12 +35,11 @@ localDirectory = os.path.abspath(os.path.join(__file__,os.path.pardir))
 # # searchPath = os.path.join(localDirectory,"midi","daftpunk2.mid");
 # searchPath = os.path.join(localDirectory,"midi","motown.mid");
 # searchPath = "/Users/Tintamar/Dev/GS_API/corpus/midiTests/miniDaftPunk.mid";
-searchPath = os.path.join(localDirectory,"midi")
-styleName = 'daftpunk2.mid'
+searchPath = os.path.join(localDirectory,"midi","nj-house.mid");
 # searchPath = os.path.join(localDirectory,"midi/corpus-harmony","*.mid");
 #searchPath = os.path.join(localDirectory,"*.mid");
 # midiMap = "pitchNames"
-dataSet = GSDataset(midiFolder = searchPath, midiGlob=styleName,midiMap=GSPatternUtils.simpleDrumMap)
+dataSet = GSDataset(midiGlob=searchPath,midiMap=GSPatternUtils.simpleDrumMap)
 # searchPath = os.path.join(localDirectory,"midi","*.mid");
 
 # searchPath =os.path.join(localDirectory,"/Users/Tintamar/Downloads/renamed/*.mid");
@@ -47,10 +48,6 @@ styleSavingPath = os.path.join(localDirectory,"DBStyle.json");
 numSteps = NumParameter(32)
 loopDuration = NumParameter(8)
 generateNewP = EventParameter()
-
-
-
-
 style = GSStyles.GSMarkovStyle(order=numSteps.value/(loopDuration.value+1),numSteps=int(numSteps.value),loopDuration=int(loopDuration.value))
 patterns = None
 # style = GSDBStyle(generatePatternOrdering = "increasing");
@@ -91,13 +88,11 @@ def tagToPitch(tag):
 def mapMidi(pattern,midiMap):
 	if midiMap=="pitchNames" : 
 		for e in pattern.events:
-			e.pitch = tagToPitch(e.tag)
+			e.pitch = tagToPitch(e.tags[0])
 	else:
 		for e in pattern.events:
-			if e.tag in midiMap:
-				e.pitch = midiMap[e.tag]
-			elif len(e.tag) > 0 and (e.tag[0] in midiMap):
-				e.pitch = midiMap[e.tag[0]]
+			if len(e.tags) > 0 and (e.tags[0] in midiMap):
+				e.pitch = midiMap[e.tags[0]]
 			else:
 				print "no custom map possible"
 	return pattern
@@ -123,7 +118,7 @@ def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFrom
 			
 	if forceRebuild:
 		print "startGenerating for "+searchPath+" : "+str(glob.glob(searchPath))
-		# patterns = dataSet.patterns#gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = int(loopDuration.value))
+		patterns = dataSet.patterns#gsapi.GSIO.fromMidiCollection(searchPath,NoteToTagsMap=midiMap,TagsFromTrackNameEvents=False,desiredLength = int(loopDuration.value))
 		
 
 	if forceRebuild or forceParamUpdate :
@@ -131,10 +126,7 @@ def generateStyleIfNeeded(forceRebuild = False,forceParamUpdate = False,loadFrom
 		patterns = []
 		for p in dataSet.patterns:
 			patterns += p.splitInEqualLengthPatterns(loopDuration.value);
-		if patterns:
-			style.generateStyle(patterns)
-		else:
-			print ("errror, no pattern found")
+		style.generateStyle(patterns)
 
 
 		

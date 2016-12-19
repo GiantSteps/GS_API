@@ -76,6 +76,9 @@ public:
   int64 pyUID;
   
   static int instanceCount ;
+
+  String getVSTPluginNameByIndex(int i);
+  Array<File> getAllPythonFiles();
 protected:
 	
   void timerCallback()override;

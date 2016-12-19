@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+
 import os
 import random
 from . import GSIO,GSPatternUtils
@@ -25,7 +25,7 @@ class GSDataset(object):
                  midiGlob=defaultMidiGlob,
                  midiMap=GSPatternUtils.simpleDrumMap,
                  checkForOverlapped=True):
-
+        
         self.midiFolder = midiFolder
         self.midiMap = midiMap
         self.checkForOverlapped = checkForOverlapped

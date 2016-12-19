@@ -202,7 +202,7 @@ class EnumParameter(UIParameter):
 		UIParameter.__init__(self,name=name,value=value,x=x,y=y,width=width,height=height)
 
 	def setValue(self, v):
-		print "overriden"
+		print "overriden"+str(v)
 		if(type(v)==int):
 			v=self.getValueForIndex(v)
 		if type(v)==list and len(v)>0 and all([type(x)==str for x in v]):

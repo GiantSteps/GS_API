@@ -1,12 +1,6 @@
-# inject develop version of gsapi if debugging
-if __name__=='__main__':
-	import sys,os
-	pathToAdd = os.path.abspath(os.path.join(__file__,os.path.pardir,os.path.pardir,os.path.pardir,os.path.pardir,"python"))
-	sys.path.insert(1,pathToAdd)
-import VSTPlugin
+import VSTPluginzz as VSTPlugin
 import JUCEAPI
 from UIParameter import *
-import glob,os
 
 
 
@@ -20,9 +14,6 @@ class Dummy(object):
 dummy = Dummy(8)
 test4 = EnumParameter(choicesList={"lala":dummy.fun,"lolo":{"fesse":["loulou"]}},name="list")
 
-listOfStyle = map(os.path.basename,glob.glob(os.path.join(VSTPlugin.localDirectory,"midi","*.mid")))
-listOfStyle+=["*"]
-styleParam = EnumParameter(choicesList = listOfStyle)
 
 def updateSlaveSlider(self,sliderToUpdate):
 	sliderToUpdate.value = self.value *8.2
@@ -45,8 +36,8 @@ def createLayout():
 	masterSlider.setBoundsRect(secondStack.removeFromTop(50))
 	slaveSlider.setBoundsRect(secondStack)
 
-	styleParam.setBoundsRect(area.removeFromLeft(20))
-	VSTPlugin.generateNewP.setBoundsRect(area.removeFromLeft(20))
+	# VSTPlugin.eachBarIsNew.setBoundsRect(area.removeFromLeft(20))
+	# VSTPlugin.generateNewP.setBoundsRect(area.removeFromLeft(20))
 
 
 	test4.setBoundsRect(area)
@@ -55,7 +46,6 @@ def configureParams():
 	VSTPlugin.loopDuration.setMinMax(1,16).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
 	VSTPlugin.numSteps.setMinMax(4,32).setCallbackFunction(VSTPlugin.generateStyleIfNeeded,forceParamUpdate=True)
 	VSTPlugin.generateNewP.setCallbackFunction(VSTPlugin.generatePattern)
-	styleParam.setCallbackFunction(styleChanged,styleParam.value)
 	# add others ..
 	test4.onChange = updateList
 
@@ -71,8 +61,8 @@ def getAllParameters():
 	res = []
 	res+=[VSTPlugin.loopDuration]
 	res+=[VSTPlugin.numSteps]
-	res+=[styleParam]
-	res+=[VSTPlugin.generateNewP]
+	# res+=[VSTPlugin.eachBarIsNew]
+	# res+=[VSTPlugin.generateNewP]
 
 	res+=[masterSlider]
 	res+=[slaveSlider]
@@ -98,14 +88,6 @@ def updateList(param):
 		param.value()
 		
 
-def styleChanged(style):
-
-	style = styleParam.value
-	VSTPlugin.dataSet.importMIDI(style)
-	print(VSTPlugin.dataSet.files)
-	
-	# VSTPlugin.setup()
-	# VSTPlugin.generateStyleIfNeeded(forceRebuild = True,forceParamUpdate = False,loadFromJSON = False)
 	
 
 
@@ -119,7 +101,6 @@ if __name__ == '__main__':
 	VSTPlugin.generateNewP.addListener('tst',dummy.fun)
 	VSTPlugin.numSteps.value = 32
 	VSTPlugin.generateNewP.setValueFrom('tst', 1)
-	styleChanged('*')
 
 	
 	

@@ -26,6 +26,9 @@ JucepythonAudioProcessorEditor::JucepythonAudioProcessorEditor (JucepythonAudioP
   addAndMakeVisible(reloadB);
   reloadB.setButtonText("load");
 
+  addChildComponent(pyFileChooser);
+  pyFileChooser.addListener(this);
+
   addAndMakeVisible(autoWatchB);
   autoWatchB.setButtonText("autoWatch");
   addAndMakeVisible(showB);
@@ -64,7 +67,7 @@ JucepythonAudioProcessorEditor::~JucepythonAudioProcessorEditor()
 
   pyCnv.paramsBeingCleared();
   pyCnv.removeCanvasListener(this);
-  
+
   owner->pyAPI.removeListener(this);
 
   owner->pyAPI.removeListener(&pyCnv);
@@ -149,9 +152,35 @@ void JucepythonAudioProcessorEditor::widgetRemoved(Component *c) {
   }
 }
 
+void JucepythonAudioProcessorEditor::comboBoxChanged (ComboBox* cbC) {
+  if(cbC==&pyFileChooser){
+    int id = pyFileChooser.getSelectedId()-1;
+    if(id>=0){
+      owner->pyAPI.VSTPluginName = owner->pyAPI.getVSTPluginNameByIndex(id);
+      owner->pyAPI.load();
+    }
+  }
+}
+
 void JucepythonAudioProcessorEditor::buttonClicked (Button* b){
   if(b==&reloadB){
-    owner->pyAPI.load();
+    Array<File> allFiles = owner->pyAPI.getAllPythonFiles();
+    if (allFiles.size()){
+
+      StringArray arr;
+      for(auto & f:allFiles){
+        arr.add(f.getFileName());
+      }
+      pyFileChooser.clear();
+      pyFileChooser.addItemList(arr, 1);
+      pyFileChooser.setBounds(reloadB.getBounds());
+      pyFileChooser.showPopup();
+
+
+    }
+    else{
+      owner->pyAPI.load();
+    }
     updateButtonColor();
   }
   else if(b==&autoWatchB){
@@ -177,7 +206,7 @@ bool JucepythonAudioProcessorEditor::keyPressed (const KeyPress& key,
 #else
   static KeyPress showLoggerKeyPress =KeyPress ('r', ModifierKeys::ctrlModifier,0);
 #endif
-  
+
   if (key ==showLoggerKeyPress ) {
     showLogger(logger==nullptr);
     return true;

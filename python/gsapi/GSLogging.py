@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+
 
 import logging
 
@@ -46,6 +46,7 @@ class ColoredLogger(logging.Logger):
     FORMAT = "[%(boldSeq)s%(name)-15s%(resetSeq)s][%(levelname)-8s]  %(message)s (%(boldSeq)s%(filename)s%(resetSeq)s:%(lineno)d)"
     color_formatter = ColoredFormatter(FORMAT)
     consoleHandler = logging.StreamHandler()
+
     consoleHandler.setFormatter(color_formatter)
     
     def __init__(self, name):

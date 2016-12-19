@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from __future__ import unicode_literals
+
 
 import unittest
 import os
@@ -54,17 +54,27 @@ class MarkovPatternTest(GSTestBase):
             self.assertTrue(pattern.duration == self.markovChain.loopDuration)
 
     def testMarkovMatrix(self):
+
+        def _testIt():
+            self.markovChain = PatternMarkov(order=2, numSteps=4, loopDuration=loopDuration)
+            self.markovChain.generateTransitionTableFromPatternList(self.patternList)
+            tstP = self.markovChain.generatePattern()
+            print (tstP)
+            self.checkPatternValid(tstP)
+            self.assertTrue(self.markovChain.__repr__()!="")
+            self.assertTrue(self.markovChain.getAllPossibleStates())
+            self.assertTrue(self.markovChain.getMatrixAtStep(0),"matrix failed");
+
         loopDuration = 32
         
         self.cachedDataset.generateViewpoint("chords",sliceType=loopDuration)
-        self.patternList = self.cachedDataset.getAllSliceOfDuration(loopDuration)#,viewpointName="chords")
         
-        self.markovChain = PatternMarkov(order=2, numSteps=4, loopDuration=loopDuration)
-        self.markovChain.generateTransitionTableFromPatternList(self.patternList)
-        # print (self.markovChain.getStringTransitionTable(reduceTuples=False,jsonStyle=True))
-        # print("ended generation")
-        print(self.markovChain)
-        # print(self.markovChain.getAllPossibleStates())
+        self.patternList = self.cachedDataset.getAllSliceOfDuration(loopDuration,viewpointName="chords")
+        _testIt();
+        self.patternList = self.cachedDataset.getAllSliceOfDuration(loopDuration)
+        _testIt();
+
+        
         # self.markovChain.plotMatrixAtStep(2)
         # self.markovChain.plotGlobalMatrix()
     

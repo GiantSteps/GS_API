@@ -22,7 +22,7 @@
 /**
  */
 class JucepythonAudioProcessorEditor  : public AudioProcessorEditor,
-public ButtonListener,
+public ButtonListener,public ComboBoxListener,
 public PyJUCEAPI::Listener,
 public KeyListener,
 public PythonCanvas::Listener
@@ -52,6 +52,9 @@ public:
 	 bool keyPressed (const KeyPress& key, Component* originatingComponent)override;
 
   SharedResourcePointer<TooltipWindow> tooltipWindow;
+
+  void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+  ComboBox pyFileChooser;
 private:
 
   // This reference is provided as a quick way for your editor to
