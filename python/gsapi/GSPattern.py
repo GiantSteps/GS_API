@@ -61,6 +61,8 @@ class GSPatternEvent(object):
             return result
         return not result
 
+
+    
     def hasOneCommonTagWith(self, event):
         """Compare tags between events.
 

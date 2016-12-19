@@ -109,29 +109,32 @@ class GSTestBase(unittest.TestCase):
         if checkOverlap:
             self.checkNoTagsOverlaps(pattern, msg)
 
-    def checkPatternEquals(self,patternA,patternB,checkViewpoints = False):
+    def checkPatternEquals(self,patternA,patternB,checkViewpoints = False,tolerance = 0):
         if patternA!=patternB:
             self.assertEquals(patternA.duration,patternB.duration)
             self.assertEquals(patternA.bpm,patternB.bpm)
             self.assertEquals(patternA.startTime,patternB.startTime)
             self.assertEquals(patternA.timeSignature,patternB.timeSignature)
-            self.checkEventsEquals(patternA,patternB)
+            self.checkEventsEquals(patternA,patternB,tolerance=tolerance)
 
             # if we hit next line, no exception were raised so we may have forgotten to check something
-            self.assertTrue(False,'pattern not equals for unknown reasons')
+            if(tolerance==0):
+                self.assertTrue(False,'pattern not equals for unknown reasons')
         if checkViewpoints and patternA.viewpoints!=patternB.viewpoints:
             self.assertEquals(len(patternA.viewpoints),len(patternB.viewpoints))
             for k in patternA.viewpoints:
                 self.checkPatternEquals(patternA.viewpoints[k],patternB.viewpoints[k],checkViewpoints=checkViewpoints)
 
 
+    def AreEventEquals(self,eA,eB,tolerance=0):
+        return abs(eA.startTime - eB.startTime) < tolerance and abs(eA.duration-eB.duration)<tolerance and (eA.pitch == eB.pitch) and (eA.velocity==eB.velocity) and (eA.tag==eB.tag)
 
-    def checkEventsEquals(self,patternA,patternB):
+    def checkEventsEquals(self,patternA,patternB,tolerance):
         self.assertEquals(len(patternA.events),len(patternB.events))
         patternA.reorderEvents();
         patternB.reorderEvents();
         for i in range(len(patternA.events)):
-            self.assertEquals(patternA.events[i],patternB.events[i])
+            self.assertTrue(self.AreEventEquals(patternA.events[i],patternB.events[i],tolerance),msg="%s \n %s"%(patternA.events[i],patternB.events[i]))
 
     def setUp(self):
         testLog.info(

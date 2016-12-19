@@ -18,9 +18,6 @@ def checkLazySetupCommands():
     toAppend = ['clean', '--all']
     toAppend = ['build']
 
-
-
-
     # remainder for pip maintainers
     # (once .pypirc edited)
     # bump the GSAPIFullVersion in GSAPIFullVersion.py then : python setup.py sdist bdist_wheel upload

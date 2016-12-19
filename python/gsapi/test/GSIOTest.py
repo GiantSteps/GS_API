@@ -20,53 +20,52 @@ class GSIOTest(GSTestBase):
 
     def generateCachedDataset(self):
         return GSDataset(midiGlob="*.mid",
-                         midiFolder=self.getLocalCorpusPath('harmony'),
+                         midiFolder=self.getLocalCorpusPath('drums'),
                          midiMap="pitchNames",
                          checkForOverlapped=True)
 
     def test_ImportExportMidi(self):
         for p in self.cachedDataset:
-
+            print(p.name)
+            self.assertTrue(len(p.events)>0)
             exportedPath = GSIO.toMidi(p,folderPath="../../sandbox/midi/",name=p.name)
             exportedPath =os.path.abspath(exportedPath)
             self.assertTrue(os.path.exists(exportedPath))
-            print ("path",exportedPath)
             exportedP = GSIO.fromMidi(midiPath=exportedPath)
-            print (exportedP)
-            self.checkPatternEquals(p,exportedP)
 
-    # def test_ImportExportJSON(self):
-    #     for p in self.cachedDataset:
-    #         exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=False)
-    #         jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
-    #         self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
+            self.checkPatternEquals(p,exportedP,tolerance = 0.02) # we have roundings error when converting to beats back and forth...
 
-    # def test_ImportExportJSONTuplesAndViewpoints(self):
-    #     # chords descriptor return tuple so save it in json
-    #     for p in self.cachedDataset:
-    #         for name,descriptorClass in getAllDescriptorsClasses():
-    #             print (descriptorClass)
-    #             p.generateViewpoint(name,descriptorClass(),sliceType=4)
+    def test_ImportExportJSON(self):
+        for p in self.cachedDataset:
+            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=False)
+            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=False)
+            self.checkPatternEquals(p,jsonPattern,checkViewpoints=False)
+
+    def test_ImportExportJSONTuplesAndViewpoints(self):
+        # chords descriptor return tuple so save it in json
+        for p in self.cachedDataset:
+            for name,descriptorClass in getAllDescriptorsClasses():
+                p.generateViewpoint(name,descriptorClass(),sliceType=4)
             
-    #         exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
-    #         self.assertTrue(os.path.exists(exportedPath))
-    #         jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
-    #         self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
+            exportedPath = GSIO.toJSONFile(p,folderPath="../../sandbox/json/",useTagIndexing=False,conserveTuple=True)
+            self.assertTrue(os.path.exists(exportedPath))
+            jsonPattern = GSIO.fromJSONFile(filePath=os.path.abspath(exportedPath),conserveTuple=True)
+            self.checkPatternEquals(p,jsonPattern,checkViewpoints=True)
 
 
-    # def test_ImportExportPickle(self):
-    #     for p in self.cachedDataset:
-    #         for name,descriptorClass in getAllDescriptorsClasses():
-    #             p.generateViewpoint(name,descriptorClass(),sliceType=4)
+    def test_ImportExportPickle(self):
+        for p in self.cachedDataset:
+            for name,descriptorClass in getAllDescriptorsClasses():
+                p.generateViewpoint(name,descriptorClass(),sliceType=4)
             
 
-    #         exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
-    #         self.assertTrue(os.path.exists(exportedPath))
-    #         picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))
+            exportedPath = GSIO.toPickleFile(p,folderPath="../../sandbox/pickle/")
+            self.assertTrue(os.path.exists(exportedPath))
+            picklePattern = GSIO.fromPickleFile(filePath=os.path.abspath(exportedPath))
 
-    #         self.checkPatternEquals(p,picklePattern,checkViewpoints = True)
+            self.checkPatternEquals(p,picklePattern,checkViewpoints = True)
 
 if __name__ == '__main__':
-    runTest(profile=True, getStat=False)
+    runTest(profile=False, getStat=False)
 
 

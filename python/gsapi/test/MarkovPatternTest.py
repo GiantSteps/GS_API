@@ -82,8 +82,8 @@ class MarkovPatternTest(GSTestBase):
 
        
 
-    # def test_Markov_1_32_8(self):
-    #     self.buildMarkov(1, 32, 16)
+    def test_Markov_1_32_8(self):
+        self.buildMarkov(1, 32, 16)
     # def test_Markov_2_32_4(self):
     # 	self.buildMarkov(2,32,4);
     # def test_Markov_3_32_4(self):

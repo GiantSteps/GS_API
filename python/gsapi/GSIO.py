@@ -213,7 +213,7 @@ def __fromMidiFormatted(midiPath,
     
     globalMidi.make_ticks_abs()
     pattern = GSPattern()
-    pattern.resolution = globalMidi.resolution # hide it in pattern to be able to retrieve it when exporting
+    
     pattern.name = os.path.basename(midiPath)
 
         # boolean to avoid useless string creation
@@ -229,11 +229,9 @@ def __fromMidiFormatted(midiPath,
     lastNoteOff = 0
     notFoundTags = []
     trackIdx = 0
-
+    trackDuration = None
     for tracks in globalMidi:
         shouldSkipTrack = False
-        lastPitch = -1
-        lastTick = -1
         for e in tracks:
             if shouldSkipTrack:
                 continue
@@ -253,6 +251,11 @@ def __fromMidiFormatted(midiPath,
                     if TagsFromTrackNameEvents:
                         noteTag = __findTagsFromName(e.text, NoteToTagsMap)
 
+            if midi.EndOfTrackEvent.is_event(e.statusmsg):
+                thisDuration = e.tick * tick_to_quarter_note
+                trackDuration = max(trackDuration,thisDuration) if trackDuration else thisDuration
+                continue
+
             isNoteOn = midi.NoteOnEvent.is_event(e.statusmsg)
             isNoteOff = midi.NoteOffEvent.is_event(e.statusmsg)
 
@@ -260,6 +263,7 @@ def __fromMidiFormatted(midiPath,
                 pitch = e.pitch  # optimize pitch property access
                 tick = e.tick
                 velocity = e.get_velocity()
+
                 if velocity==0:
                     isNoteOff =True
                     isNoteOn = False
@@ -279,13 +283,6 @@ def __fromMidiFormatted(midiPath,
                         continue
 
                 if isNoteOn:
-                    # ignore duplicated events (can't have 2 simultaneous NoteOn for the same pitch)
-                    
-                    if pitch == lastPitch and tick == lastTick:
-                        gsiolog.info(pattern.name + ": skip duplicated event: %i %f" % (pitch, curBeat))
-                        continue
-                    lastPitch = pitch
-                    lastTick = tick
                     if extremeLog : gsiolog.debug("on %d %f"%(pitch, curBeat))
                     pattern.events += [GSPatternEvent(startTime=curBeat,
                                                       duration=-1,
@@ -296,23 +293,26 @@ def __fromMidiFormatted(midiPath,
                 if isNoteOff:
                     if extremeLog: gsiolog.debug( "off %d %f"%(pitch,curBeat))
                     foundNoteOn = False
+                    isTrueNoteOff = midi.NoteOffEvent.is_event(e.statusmsg)
                     for i in reversed(pattern.events):
 
-                        if (i.pitch == pitch) and (i.tag==noteTag) and ((isNoteOff and(curBeat >= i.startTime))or curBeat>i.startTime) and i.duration<=0.0001:
+                        if (i.pitch == pitch) and (i.tag==noteTag) and ((isTrueNoteOff and(curBeat >= i.startTime))or curBeat>i.startTime) and i.duration<=0.0001:
                             foundNoteOn = True
 
                             i.duration = max(0.0001,curBeat - i.startTime)
                             lastNoteOff = max(curBeat,lastNoteOff)
                             gsiolog.info("set duration %f at start %f "%(i.duration,i.startTime))
                             break
-                    if not foundNoteOn and midi.NoteOffEvent.is_event(e.statusmsg):
-                        gsiolog.warning(pattern.name + ": not found note on " + str(e) + str(pattern.events[-1]))
+                    if not foundNoteOn :
+
+                        gsiolog.warning(pattern.name + ": not found note on\n %s\n%s\n%s , %s "% (e,pattern.events[-1],noteTag,curBeat))
+                        
         trackIdx += 1
 
     elementSize = 4.0 / pattern.timeSignature[1]
     barSize = pattern.timeSignature[0] * elementSize
     lastBarPos = math.ceil(lastNoteOff*1.0/barSize) * barSize
-    pattern.duration = lastBarPos
+    pattern.duration = trackDuration or lastBarPos
     if checkForOverlapped:
         pattern.removeOverlapped(usePitchValues=True)
 
@@ -327,6 +327,7 @@ def __findTimeInfoFromMidi(pattern, midiFile):
     foundTempo = False
     pattern.timeSignature = (4, 4)
     pattern.bpm = 60
+    pattern.resolution = midiFile.resolution # hide it in pattern to be able to retrieve it when exporting
 
     for tracks in midiFile:
         for e in tracks:
@@ -389,6 +390,7 @@ def toMidi(gspattern, midiMap=None, folderPath="output/", name=None):
     # Instantiate a MIDI Pattern (contains a list of tracks)
     pattern = midi.Pattern(tick_relative=False,format=1)
     pattern.resolution=getattr(gspattern,'resolution' , 960)
+    
     # Instantiate a MIDI Track (contains a list of MIDI events)
     track = midi.Track(tick_relative=False)
     
