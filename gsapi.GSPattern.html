@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gsapi.GSPattern module &mdash; GS_API 1.0.1 documentation</title>
+  <title>gsapi.GSPattern module &mdash; GS_API 1.0.3 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
-    <link rel="top" title="GS_API 1.0.1 documentation" href="index.html"/>
+    <link rel="top" title="GS_API 1.0.3 documentation" href="index.html"/>
         <link rel="up" title="gsapi package" href="gsapi.html"/>
         <link rel="next" title="gsapi.GSIO module" href="gsapi.GSIO.html"/>
         <link rel="prev" title="gsapi package" href="gsapi.html"/> 
@@ -144,48 +144,20 @@
             
   <div class="section" id="module-gsapi.GSPattern">
 <span id="gsapi-gspattern-module"></span><h1>gsapi.GSPattern module<a class="headerlink" href="#module-gsapi.GSPattern" title="Permalink to this headline">¶</a></h1>
-<p>GSPattern module holds classes <a class="reference internal" href="#gsapi.GSPattern.GSPatternEvent" title="gsapi.GSPattern.GSPatternEvent"><code class="xref py py-class docutils literal"><span class="pre">GSPatternEvent</span></code></a> and <a class="reference internal" href="#gsapi.GSPattern.GSPattern" title="gsapi.GSPattern.GSPattern"><code class="xref py py-class docutils literal"><span class="pre">GSPattern</span></code></a></p>
-<dl class="data">
-<dt id="gsapi.GSPattern.patternLog">
-<code class="descclassname">gsapi.GSPattern.</code><code class="descname">patternLog</code><em class="property"> = &lt;gsapi.GSLogging.ColoredLogger object&gt;</em><a class="headerlink" href="#gsapi.GSPattern.patternLog" title="Permalink to this definition">¶</a></dt>
-<dd><p>logger for pattern related operations</p>
-</dd></dl>
-
 <dl class="class">
 <dt id="gsapi.GSPattern.GSPatternEvent">
-<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime</em>, <em>duration</em>, <em>pitch</em>, <em>velocity=127</em>, <em>tags=[]</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Represents an event of a GSPattern.
-An event has a startTime, duration, pitch, velocity and associated tags.</p>
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPatternEvent.startTime">
-<code class="descname">startTime</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.startTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>startTime of event</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPatternEvent.duration">
-<code class="descname">duration</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.duration" title="Permalink to this definition">¶</a></dt>
-<dd><p>duration of event</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPatternEvent.pitch">
-<code class="descname">pitch</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.pitch" title="Permalink to this definition">¶</a></dt>
-<dd><p>pitch of event</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPatternEvent.velocity">
-<code class="descname">velocity</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.velocity" title="Permalink to this definition">¶</a></dt>
-<dd><p>velocity of event</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPatternEvent.tags">
-<code class="descname">tags</code><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.tags" title="Permalink to this definition">¶</a></dt>
-<dd><p>list of tags representing the event</p>
-</dd></dl>
-
+<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPatternEvent</code><span class="sig-paren">(</span><em>startTime=0</em>, <em>duration=1</em>, <em>pitch=60</em>, <em>velocity=80</em>, <em>tag=None</em>, <em>originPattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represent an event of a GSPattern with startTime, duration, pitch,
+velocity and tag variables.</p>
+<dl class="docutils">
+<dt>Class variables:</dt>
+<dd>startTime: startTime of event
+duration: duration of event
+pitch: pitch of event
+velocity: velocity of event
+tag: any hashable object representing the event , i.e strings, tuples, objects (but not lists)
+originPattern : keeps track of origin pattern for events generated from pattern, example a chord event can still access to its individual components via originPattern (see GSPattern.generateViewpoints)</dd>
+</dl>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith">
 <code class="descname">hasOneCommonTagWith</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.hasOneCommonTagWith"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.hasOneCommonTagWith" title="Permalink to this definition">¶</a></dt>
@@ -205,12 +177,12 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.hasOneOfTags">
 <code class="descname">hasOneOfTags</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.hasOneOfTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.hasOneOfTags" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with a list of strings.</p>
+<dd><p>Compare this event&#8217;s tags with a list of possible tag.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of strings to compare with</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of tags to compare with</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if at least one tag is equal</td>
 </tr>
@@ -219,16 +191,16 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSPattern.GSPatternEvent.tagsAre">
-<code class="descname">tagsAre</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.tagsAre"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.tagsAre" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with a list of strings.</p>
+<dt id="gsapi.GSPattern.GSPatternEvent.tagIs">
+<code class="descname">tagIs</code><span class="sig-paren">(</span><em>tag</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.tagIs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.tagIs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compare this event&#8217;s tag with a a given tag.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of strings to compare with</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> &#8211; tag to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all tags are equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all event tag is equal to given tag</td>
 </tr>
 </tbody>
 </table>
@@ -237,14 +209,14 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith">
 <code class="descname">allTagsAreEqualWith</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.allTagsAreEqualWith"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.allTagsAreEqualWith" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compare this event&#8217;s tags with an other event.</p>
+<dd><p>Compare this event&#8217;s tag with an other event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> &#8211; event to compare with</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if all tags are equal</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if tags are equal</td>
 </tr>
 </tbody>
 </table>
@@ -253,12 +225,12 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPatternEvent.getEndTime">
 <code class="descname">getEndTime</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.getEndTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.getEndTime" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the time when this events ends</p>
+<dd><p>Return the time when this events ends</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the time when this event ends</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The time when this event ends</td>
 </tr>
 </tbody>
 </table>
@@ -272,7 +244,8 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A deep copy of this event to be manipulated without changing original</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A deep copy of this event to be manipulated without changing
+original.</td>
 </tr>
 </tbody>
 </table>
@@ -294,38 +267,58 @@ An event has a startTime, duration, pitch, velocity and associated tags.</p>
 </table>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="gsapi.GSPattern.GSPattern">
-<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPattern</code><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern" title="Permalink to this definition">¶</a></dt>
-<dd><p>Class representing a pattern made of GSPatternEvent.
-Holds a list of GSEvents and provide basic manipulation function.</p>
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPatternEvent.containsTime">
+<code class="descname">containsTime</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPatternEvent.containsTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPatternEvent.containsTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if event is active at given time</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>duration</strong> &#8211; length of pattern. Usually in beats, but time scale is up to
-the user (it can be useful if working on 32th note steps).</li>
-<li><strong>events</strong> &#8211; list of GSPatternEvent for this pattern.</li>
-<li><strong>bpm</strong> &#8211; initial tempo in beats per minute for this pattern (default: 120).</li>
-<li><strong>timeSignature</strong> &#8211; list of integers representing the time signature,
-i.e [numerator, denominator].</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>time</strong> &#8211; time to compare with</td>
 </tr>
 </tbody>
 </table>
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPattern.defaultTimeSignature">
-<code class="descname">defaultTimeSignature</code><em class="property"> = [4, 4]</em><a class="headerlink" href="#gsapi.GSPattern.GSPattern.defaultTimeSignature" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
 
-<dl class="attribute">
-<dt id="gsapi.GSPattern.GSPattern.defaultBPM">
-<code class="descname">defaultBPM</code><em class="property"> = 120</em><a class="headerlink" href="#gsapi.GSPattern.GSPattern.defaultBPM" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+</dd></dl>
+
+<dl class="class">
+<dt id="gsapi.GSPattern.GSPattern">
+<em class="property">class </em><code class="descclassname">gsapi.GSPattern.</code><code class="descname">GSPattern</code><span class="sig-paren">(</span><em>duration=0</em>, <em>events=None</em>, <em>bpm=120</em>, <em>timeSignature=(4</em>, <em>4)</em>, <em>key='C'</em>, <em>originFilePath=''</em>, <em>name=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class representing a pattern made of GSPatternEvent.
+Holds a list of GSEvents and provide basic manipulation function.</p>
+<dl class="docutils">
+<dt>Class Variables:</dt>
+<dd><dl class="first docutils">
+<dt>duration: length of pattern. Usually in beats, but time scale is up to</dt>
+<dd>the user (it can be useful if working on 32th note steps).</dd>
+</dl>
+<p>events: list of GSPatternEvent for this pattern.
+bpm: initial tempo in beats per minute for this pattern (default: 120).
+timeSignature: list of integers representing the time signature,</p>
+<blockquote class="last">
+<div>i.e [numerator, denominator].
+startTime : startTimeof pattern (useful when splitting in sub patterns)
+viewPoints: dict of GSViewPoint</div></blockquote>
+</dd>
+</dl>
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.applyLegato">
+<code class="descname">applyLegato</code><span class="sig-paren">(</span><em>usePitchValues=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.applyLegato"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.applyLegato" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>this function supress the possible silences in this pattern by stretching consecutive identical events</dt>
+<dd>(i.e identical tags or pitch values)</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>usePitchValues</strong> &#8211; should we consider pitch numbers instead of tags (bit faster)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.transpose">
@@ -363,8 +356,8 @@ i.e [numerator, denominator].</li>
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.reorderEvents">
 <code class="descname">reorderEvents</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.reorderEvents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.reorderEvents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Ensure than our internal event list <cite>events</cite> is time sorted</p>
-<p>can be useful for time sensitive events iteration</p>
+<dd><p>Ensure than our internal event list <cite>events</cite> is time sorted.
+It can be useful for time sensitive events iteration.</p>
 </dd></dl>
 
 <dl class="method">
@@ -383,13 +376,34 @@ i.e [numerator, denominator].</li>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.addEvent">
-<code class="descname">addEvent</code><span class="sig-paren">(</span><em>GSPatternEvent</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.addEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.addEvent" title="Permalink to this definition">¶</a></dt>
+<code class="descname">addEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.addEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.addEvent" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add an event increasing duration if needed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>GSPatternEvent</strong> &#8211; the event to be added</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>event</strong> &#8211; the GSPatternEvent to be added</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.removeEvent">
+<code class="descname">removeEvent</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>remove given event
+:param event: the GSPatternEvent to be added</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.removeByTags">
+<code class="descname">removeByTags</code><span class="sig-paren">(</span><em>tags</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeByTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeByTags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all event(s) in a pattern with specified tag(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tags</strong> &#8211; list of tag(s)</td>
 </tr>
 </tbody>
 </table>
@@ -405,7 +419,7 @@ i.e [numerator, denominator].</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>stepSize</strong> &#8211; the duration that we want to quantize to</li>
-<li><strong>quantizeDuration</strong> &#8211; do we quantize duration ?</li>
+<li><strong>quantizeDuration</strong> &#8211; do we quantize duration?</li>
 <li><strong>quantizeStartTime</strong> &#8211; do we quantize startTimes</li>
 </ul>
 </td>
@@ -451,7 +465,7 @@ i.e [numerator, denominator].</li>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getActiveEventsAtTime">
-<code class="descname">getActiveEventsAtTime</code><span class="sig-paren">(</span><em>time</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getActiveEventsAtTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getActiveEventsAtTime" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getActiveEventsAtTime</code><span class="sig-paren">(</span><em>time</em>, <em>tolerance=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getActiveEventsAtTime"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getActiveEventsAtTime" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get all events currently active at a givent time.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -491,7 +505,7 @@ Useful for creating patterns from patterns.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">list of string composed of all possible tags</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">set of tags composed of all possible tags</td>
 </tr>
 </tbody>
 </table>
@@ -513,20 +527,20 @@ Useful for creating patterns from patterns.</p>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithTags">
-<code class="descname">getPatternWithTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithTags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getPatternWithTags</code><span class="sig-paren">(</span><em>tagToLookFor</em>, <em>exactSearch=True</em>, <em>makeCopy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithTags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a sub-pattern with the given tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tags</strong> &#8211; string list or lambda  expression (return boolean based on tag list input): tags to be checked for</li>
-<li><strong>exactSearch</strong> &#8211; bool: if True the tags have to be exactly the same, else they can be included in events Tags</li>
-<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+<li><strong>tagToLookFor</strong> &#8211; tag,tags list or lambda  expression (return boolean based on tag input): tags to be checked for</li>
+<li><strong>exactSearch</strong> &#8211; bool: if True the tags argument can be an element of tag to look for, example : if we set tags=&#8217;maj&#8217;,an element with tag (&#8216;C&#8217;,&#8217;maj&#8217;) will be valid</li>
+<li><strong>makeCopy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that tags corresponds to given tags</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a GSPattern with only events that tags corresponds to given tagToLookFor</p>
 </td>
 </tr>
 </tbody>
@@ -535,15 +549,15 @@ Useful for creating patterns from patterns.</p>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithPitch">
-<code class="descname">getPatternWithPitch</code><span class="sig-paren">(</span><em>pitch</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithPitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithPitch" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns a sub-pattern with the given tags.</p>
+<code class="descname">getPatternWithPitch</code><span class="sig-paren">(</span><em>pitch</em>, <em>makeCopy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithPitch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithPitch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sub-pattern with the given pitch.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>pitch</strong> &#8211; pitch to look for</li>
-<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+<li><strong>makeCopy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
 </tr>
@@ -556,16 +570,16 @@ Useful for creating patterns from patterns.</p>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.getPatternWithoutTags">
-<code class="descname">getPatternWithoutTags</code><span class="sig-paren">(</span><em>tags</em>, <em>exactSearch=False</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithoutTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithoutTags" title="Permalink to this definition">¶</a></dt>
+<code class="descname">getPatternWithoutTags</code><span class="sig-paren">(</span><em>tagToLookFor</em>, <em>exactSearch=False</em>, <em>makeCopy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.getPatternWithoutTags"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.getPatternWithoutTags" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns a sub-pattern without the given tags.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tags</strong> &#8211; string list: tags to be checked for</li>
-<li><strong>exactSearch</strong> &#8211; bool: if True the tags have to be exactly the same, else they can be included in events Tags</li>
-<li><strong>copy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
+<li><strong>tagToLookFor</strong> &#8211; tag or tag list: tags to be checked for</li>
+<li><strong>exactSearch</strong> &#8211; bool: if True the tags have to be exactly the same as tagToLookFor, else they can be included in events tag</li>
+<li><strong>makeCopy</strong> &#8211; do we return a copy of original events (avoid modifying originating events when modifying the returned subpattern)</li>
 </ul>
 </td>
 </tr>
@@ -590,7 +604,11 @@ Very useful to deal with step-sequenced pattern:
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>stepSize</strong> &#8211; temporal definition of the grid</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>stepSize</strong> &#8211; temporal definition of the grid</li>
+<li><strong>repeatibleTags</strong> &#8211; tags</li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -599,7 +617,7 @@ Very useful to deal with step-sequenced pattern:
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.removeOverlapped">
 <code class="descname">removeOverlapped</code><span class="sig-paren">(</span><em>usePitchValues=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.removeOverlapped"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.removeOverlapped" title="Permalink to this definition">¶</a></dt>
-<dd><p>remove overlapped elements</p>
+<dd><p>Remove overlapped elements.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -620,7 +638,7 @@ Very useful to deal with step-sequenced pattern:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>event</strong> &#8211; event to compare with</li>
-<li><strong>allTagsMustBeEquals</strong> &#8211; shall we get exact tags equality or be fine with one common tag</li>
+<li><strong>allTagsMustBeEquals</strong> &#8211; shall we get exact tags equality or be fine with one common tag (valable if tags are tuple)</li>
 </ul>
 </td>
 </tr>
@@ -638,7 +656,7 @@ Very useful to deal with step-sequenced pattern:
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fillWithSilences">
-<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em>, <em>silencePitch=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fillWithSilences</code><span class="sig-paren">(</span><em>maxSilenceTime=0</em>, <em>perTag=False</em>, <em>silenceTag='silence'</em>, <em>silencePitch=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithSilences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithSilences" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fill empty time intervals (i.e no event) with silence event.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -657,10 +675,9 @@ Very useful to deal with step-sequenced pattern:
 </dd></dl>
 
 <dl class="method">
-<dt id="gsapi.GSPattern.GSPattern.applyLegato">
-<code class="descname">applyLegato</code><span class="sig-paren">(</span><em>usePitchValues=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.applyLegato"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.applyLegato" title="Permalink to this definition">¶</a></dt>
-<dd><p>this function supress the possible silences in this pattern by stretching consecutive identical events (i.e identical tags or pitch values)
-:param usePitchValues: should we consider pitch numbers instead of tags (bit faster)</p>
+<dt id="gsapi.GSPattern.GSPattern.fillWithPreviousEvent">
+<code class="descname">fillWithPreviousEvent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fillWithPreviousEvent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fillWithPreviousEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill gaps between onsets making longer the duration of the previous event.</p>
 </dd></dl>
 
 <dl class="method">
@@ -687,13 +704,15 @@ Very useful to deal with step-sequenced pattern:
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.toJSONDict">
-<code class="descname">toJSONDict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.toJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.toJSONDict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gives a standard dict for json output.</p>
+<code class="descname">toJSONDict</code><span class="sig-paren">(</span><em>useTagIndexing=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.toJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.toJSONDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives a standard dict for json output.
+Args:
+useTagIndexing: if true, tags are stored as indexes from a list of all tags (reduce size of json files)</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.fromJSONDict">
-<code class="descname">fromJSONDict</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fromJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fromJSONDict" title="Permalink to this definition">¶</a></dt>
+<code class="descname">fromJSONDict</code><span class="sig-paren">(</span><em>json</em>, <em>parentPattern=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.fromJSONDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.fromJSONDict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads a json API dict object to this pattern</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -707,7 +726,7 @@ Very useful to deal with step-sequenced pattern:
 
 <dl class="method">
 <dt id="gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns">
-<code class="descname">splitInEqualLengthPatterns</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>trimEnd=True</em>, <em>copy=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.splitInEqualLengthPatterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns" title="Permalink to this definition">¶</a></dt>
+<code class="descname">splitInEqualLengthPatterns</code><span class="sig-paren">(</span><em>desiredLength</em>, <em>viewpointName=None</em>, <em>makeCopy=True</em>, <em>supressEmptyPattern=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.splitInEqualLengthPatterns"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.splitInEqualLengthPatterns" title="Permalink to this definition">¶</a></dt>
 <dd><p>Splits a pattern in consecutive equal length cuts.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -715,8 +734,8 @@ Very useful to deal with step-sequenced pattern:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>desiredLength</strong> &#8211; length desired for each pattern</li>
-<li><strong>trimEnd</strong> &#8211; trim the end to exact desiredLength</li>
-<li><strong>copy</strong> &#8211; returns a distint copy of original pattern events, if you don&#8217;t need original pattern anymore setting it to False will increase speed</li>
+<li><strong>viewpointName</strong> &#8211; if given, slice the underneath viewpoint instead</li>
+<li><strong>makeCopy</strong> &#8211; returns a distint copy of original pattern events, if you don&#8217;t need original pattern anymore setting it to False will increase speed</li>
 </ul>
 </td>
 </tr>
@@ -726,6 +745,24 @@ Very useful to deal with step-sequenced pattern:
 </tbody>
 </table>
 </dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.generateViewpoint">
+<code class="descname">generateViewpoint</code><span class="sig-paren">(</span><em>name</em>, <em>descriptor=None</em>, <em>sliceType=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.generateViewpoint"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.generateViewpoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>generate viewpoints in this GSPattern
+:param name: name of the viewpoint generated , if name is one of [&#8220;chords&#8221;,] it will generate the default descriptor
+:param descriptor: if given it&#8217;s the descriptor used
+:param sliceType: type of slicing to compute viewPoint:</p>
+<blockquote>
+<div>if integer its duration based see:splitInEqualLengthPatterns
+if &#8220;perEvent&#8221; generates new pattern every new events startTime,
+if &#8220;all&#8221; get the whole pattern (generate one and only viewPoint value)</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="gsapi.GSPattern.GSPattern.printASCIIGrid">
+<code class="descname">printASCIIGrid</code><span class="sig-paren">(</span><em>blockSize=1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gsapi/GSPattern.html#GSPattern.printASCIIGrid"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gsapi.GSPattern.GSPattern.printASCIIGrid" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 </dd></dl>
 
@@ -772,7 +809,7 @@ Very useful to deal with step-sequenced pattern:
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'./',
-            VERSION:'1.0.1',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

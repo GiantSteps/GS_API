@@ -1,6 +1,7 @@
 GS_API
 ===
-
+[![Build Status](https://travis-ci.org/GiantSteps/GS_API.svg?branch=master)](https://travis-ci.org/GiantSteps/GS_API)
+[![codecov](https://codecov.io/gh/GiantSteps/GS_API/branch/master/graph/badge.svg)](https://codecov.io/gh/GiantSteps/GS_API)
 
 The GS_API is a Python/C++ library for manipulating musical symbolic data.
 
@@ -42,8 +43,8 @@ python setup.py install
 ```python
 from gsapi import *
 p = GSPattern()
-p.addEvent(GSPatternEvent(startTime=0,duration=1,pitch=64,velocity=127,tags=["Kick"]))
-p.addEvent(GSPatternEvent(1,3,62,51,["Snare"]))
+p.addEvent(GSPatternEvent(startTime=0,duration=1,pitch=64,velocity=127,tag="Kick")
+p.addEvent(GSPatternEvent(1,3,62,51,"Snare")
 ```
 will fill *GSPattern* p with :
 * one event tagged Kick starting at 0 with a duration of 1 a Midi Note Number of 64 and a velocity of 127
@@ -65,7 +66,7 @@ print allPatternSliced
 ```python
 densityDescriptor = GSDescriptorDensity();
 for pattern in dataset.patterns:
-	kickPattern = pattern.getPatternWithTags(tags="kick")
+	kickPattern = pattern.getPatternWithTags(tagToLookFor="kick")
 	densityOfKick = densityDescriptor.getDescriptorForPattern(kickPattern)
 ```
 

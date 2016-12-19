@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gsapi.GSPatternTransformers.AgnosticDensity &mdash; GS_API 1.0.1 documentation</title>
+  <title>gsapi.GSPatternTransformers.AgnosticDensity &mdash; GS_API 1.0.3 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="GS_API 1.0.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="GS_API 1.0.3 documentation" href="../../../index.html"/>
         <link rel="up" title="gsapi" href="../../gsapi.html"/> 
 
   
@@ -134,49 +134,207 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gsapi.GSPatternTransformers.AgnosticDensity</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">GSBasePatternTransformer</span> <span class="k">import</span> <span class="o">*</span>
+<span></span><span class="c1"># python 3 compatibility</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
+<span class="kn">from</span> <span class="nn">.GSBasePatternTransformer</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..GSDescriptors</span> <span class="k">import</span> <span class="n">GSDescriptorDensity</span>
+<span class="kn">import</span> <span class="nn">random</span>
 
-<span class="c1">################</span>
-<span class="c1">## WIP</span>
 
 <div class="viewcode-block" id="AgnosticDensity"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity">[docs]</a><span class="k">class</span> <span class="nc">AgnosticDensity</span><span class="p">(</span><span class="n">GSBasePatternTransformer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Agnostic transformation algorithm.</span>
 
-	<span class="sd">&quot;&quot;&quot; Agnostic transformation algorithm</span>
-<span class="sd">	Args:</span>
-<span class="sd">		numSteps : number of steps to consider</span>
-<span class="sd">		mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used </span>
+<span class="sd">    Args:</span>
+<span class="sd">        numSteps : number of steps to consider</span>
+<span class="sd">        mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used</span>
 
-<span class="sd">	Attributes:</span>
-<span class="sd">		globalDensity: float (0..2) the desired global density ,i.e 0 is an empty pattern, 1 matches the origin pattern, 2 is a pattern with all events</span>
-<span class="sd">		individualDensities: dict[tag]=density :  a per Tag density, densities should be in the same range as globalDensity</span>
-<span class="sd">		mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used </span>
-<span class="sd">		originPattern: the origin pattern, e.g : the one given if all densities are equals to 1</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">numSteps</span> <span class="o">=</span> <span class="mi">32</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">globalDensity</span><span class="o">=</span><span class="mi">1</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">individualdensities</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="kc">None</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">=</span> <span class="n">numSteps</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        globalDensity: float (0..2) the desired global density,</span>
+<span class="sd">        (0 = empty pattern, 1 = origin pattern, 2 = pattern with all events)</span>
+<span class="sd">        individualDensities: dict[tag]=density :  a per Tag density, densities should be in the same range as globalDensity</span>
+<span class="sd">        mode:[&#39;random&#39;,&#39;syncopation&#39;] :  algorithm used</span>
+<span class="sd">        originPattern: the origin pattern, e.g : the one given if all densities are equals to 1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">numSteps</span><span class="o">=</span><span class="mi">32</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">globalDensity</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targetDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;random&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originDuration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">=</span> <span class="n">numSteps</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">densityDescriptor</span> <span class="o">=</span> <span class="n">GSDescriptorDensity</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentDistribution</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originDistribution</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="AgnosticDensity.configure"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.configure">[docs]</a>	<span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
-		<span class="k">if</span> <span class="s1">&#39;originPattern&#39;</span> <span class="ow">in</span> <span class="n">paramDict</span><span class="p">:</span>
-			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">paramDict</span><span class="p">[</span><span class="s1">&#39;originPattern&#39;</span><span class="p">])</span></div>
+<div class="viewcode-block" id="AgnosticDensity.configure"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;inputPattern&#39;</span> <span class="ow">in</span> <span class="n">paramDict</span><span class="p">:</span>
+            <span class="n">buildDensityMap</span><span class="p">(</span><span class="n">paramDict</span><span class="p">[</span><span class="s1">&#39;inputPattern&#39;</span><span class="p">])</span></div>
 
-<div class="viewcode-block" id="AgnosticDensity.TransformPattern"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.TransformPattern">[docs]</a>	<span class="k">def</span> <span class="nf">TransformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">paramDict</span><span class="p">):</span>
-		<span class="k">if</span> <span class="n">pattern</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">pattern</span><span class="o">!=</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">:</span>
-			<span class="n">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">);</span>
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
-			<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;no pattern given for agnosticDensity transformation&quot;</span><span class="p">)</span>
-			<span class="k">return</span> </div>
+<div class="viewcode-block" id="AgnosticDensity.transformPattern"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.transformPattern">[docs]</a>    <span class="k">def</span> <span class="nf">transformPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">paramDict</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pattern</span><span class="o">!=</span><span class="kc">None</span> <span class="ow">and</span> <span class="n">pattern</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># print (&quot;no pattern given for agnosticDensity transformation&quot;)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="s1">&#39;normalizedDensities&#39;</span> <span class="ow">in</span> <span class="n">paramDict</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateNormalizedDensities</span><span class="p">(</span><span class="n">paramDict</span><span class="p">[</span><span class="s1">&#39;normalizedDensities&#39;</span><span class="p">])</span>
 
-<div class="viewcode-block" id="AgnosticDensity.buildDensityMap"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">[docs]</a>	<span class="k">def</span> <span class="nf">buildDensityMap</span><span class="p">(</span><span class="n">pattern</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">copy</span><span class="p">();</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">alignOnGrid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div></div>
-		
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">originDuration</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="p">)</span>
 
+        <span class="k">return</span> <span class="n">res</span></div>
 
+<div class="viewcode-block" id="AgnosticDensity.updateNormalizedDensities"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.updateNormalizedDensities">[docs]</a>    <span class="k">def</span> <span class="nf">updateNormalizedDensities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normalizedDict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">normalizedDict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">:</span>
+                <span class="n">originDensity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+    <span class="c1"># if we cross density one, reset to one then do the subsequent calculations</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">v</span><span class="o">&lt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">originDensity</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">v</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">originDensity</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="c1"># print &quot;reset densities&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">resetDensities</span><span class="p">()</span>
+
+                <span class="n">diffNormalized</span> <span class="o">=</span>  <span class="n">v</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">diffNormalized</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># were already here</span>
+                    <span class="k">continue</span>
+
+                <span class="c1"># here we are sure to not need to crossdensity one (and have to do both increment styles)</span>
+                <span class="k">if</span> <span class="n">originDensity</span><span class="o">&gt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">&gt;=</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">originDensities</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                    <span class="n">n</span>  <span class="o">=</span> <span class="n">originDensity</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span><span class="o">-</span><span class="n">step</span>
+                    <span class="k">if</span> <span class="n">diffNormalized</span><span class="o">&gt;</span><span class="n">step</span><span class="p">:</span>
+
+                        <span class="k">while</span><span class="p">(</span> <span class="n">n</span><span class="o">&lt;</span><span class="n">v</span> <span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">addEventForTag</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+                            <span class="n">n</span><span class="o">+=</span><span class="n">step</span>
+                    <span class="k">if</span> <span class="n">diffNormalized</span><span class="o">&lt;-</span><span class="n">step</span><span class="p">:</span>
+                        <span class="k">while</span><span class="p">(</span> <span class="n">n</span><span class="o">&gt;</span><span class="n">v</span> <span class="p">)</span> <span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">removeEventForTag</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+                            <span class="n">n</span><span class="o">-=</span><span class="n">step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">+</span><span class="nb">int</span><span class="p">((</span><span class="n">v</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">/</span><span class="n">step</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span><span class="o">*</span><span class="n">step</span>
+
+                <span class="k">if</span> <span class="n">originDensity</span><span class="o">&lt;=</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">v</span> <span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+                    <span class="n">step</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">originDensities</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                    <span class="n">n</span>  <span class="o">=</span> <span class="n">originDensity</span>
+                    <span class="n">v</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">+</span><span class="n">step</span>
+                    <span class="k">if</span> <span class="n">diffNormalized</span><span class="o">&gt;</span><span class="n">step</span><span class="p">:</span>
+                        <span class="k">while</span><span class="p">(</span> <span class="n">n</span><span class="o">&lt;</span><span class="n">v</span> <span class="p">)</span> <span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">addEventForTag</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+                            <span class="n">n</span><span class="o">+=</span><span class="n">step</span>
+                    <span class="k">if</span> <span class="n">diffNormalized</span><span class="o">&lt;-</span><span class="n">step</span><span class="p">:</span>
+                        <span class="k">while</span><span class="p">(</span><span class="n">n</span><span class="o">&gt;</span><span class="n">v</span> <span class="p">):</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">removeEventForTag</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+                            <span class="n">n</span><span class="o">-=</span><span class="n">step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="o">/</span><span class="n">step</span><span class="p">)</span><span class="o">*</span><span class="mf">1.0</span><span class="o">*</span><span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">reorderEvents</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AgnosticDensity.addEventForTag"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.addEventForTag">[docs]</a>    <span class="k">def</span> <span class="nf">addEventForTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">tag</span><span class="p">,</span><span class="n">targetDensity</span><span class="p">):</span>
+
+        <span class="n">availableIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;silences&#39;</span><span class="p">]</span>
+        <span class="c1"># we need to go toward origin pattern if adding while having lower density</span>
+        <span class="k">if</span> <span class="n">targetDensity</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">availableIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;removedNotes&#39;</span><span class="p">]</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;hysteresis&#39;</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span> <span class="p">(</span><span class="n">availableIdx</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">idxToAdd</span> <span class="o">=</span> <span class="n">availableIdx</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="n">orIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;silences&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">idxToAdd</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;silences&#39;</span><span class="p">][</span><span class="n">orIdx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">targetDensity</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;removedNotes&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;addedNotes&#39;</span><span class="p">]</span><span class="o">+=</span><span class="p">[</span><span class="n">idxToAdd</span><span class="p">]</span>
+        <span class="n">tPattern</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">makeCopy</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
+        <span class="n">newEv</span> <span class="o">=</span> <span class="n">tPattern</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">newEv</span><span class="o">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="n">idxToAdd</span>
+        <span class="n">newEv</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">events</span><span class="o">+=</span><span class="p">[</span><span class="n">newEv</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="AgnosticDensity.removeEventForTag"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.removeEventForTag">[docs]</a>    <span class="k">def</span> <span class="nf">removeEventForTag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tag</span><span class="p">,</span> <span class="n">targetDensity</span><span class="p">):</span>
+
+        <span class="n">availableIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span>
+
+        <span class="c1"># we need to go toward origin pattern if removing while having higher density</span>
+        <span class="k">if</span> <span class="n">targetDensity</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">availableIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;addedNotes&#39;</span><span class="p">]</span>
+
+        <span class="n">idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;hysteresis&#39;</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span> <span class="p">(</span><span class="n">availableIdx</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">idxToRemove</span> <span class="o">=</span> <span class="n">availableIdx</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="n">orIdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">idxToRemove</span><span class="p">)</span>
+        <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;notes&#39;</span><span class="p">][</span><span class="n">orIdx</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">targetDensity</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;addedNotes&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">][</span><span class="s1">&#39;removedNotes&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">idxToRemove</span><span class="p">]</span>
+        <span class="n">tPattern</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span> <span class="n">makeCopy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">eventToRemove</span> <span class="o">=</span> <span class="n">tPattern</span><span class="o">.</span><span class="n">getStartingEventsAtTime</span><span class="p">(</span><span class="n">idxToRemove</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span><span class="o">.</span><span class="n">removeEvent</span><span class="p">(</span><span class="n">eventToRemove</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AgnosticDensity.createCurrentState"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.createCurrentState">[docs]</a>    <span class="k">def</span> <span class="nf">createCurrentState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">getAllTags</span><span class="p">():</span>
+            <span class="n">dist</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__initStateFromVoice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">getPatternWithTags</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentState</span><span class="p">[</span><span class="n">tag</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span></div>
+
+    <span class="k">def</span> <span class="nf">__shuffleList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)):</span>
+            <span class="n">idx1</span> <span class="o">=</span> <span class="n">iteration</span>
+            <span class="n">idx2</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">idx1</span><span class="p">]</span>
+            <span class="n">l</span><span class="p">[</span><span class="n">idx1</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">idx2</span><span class="p">]</span>
+            <span class="n">l</span><span class="p">[</span><span class="n">idx2</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+
+    <span class="k">def</span> <span class="nf">__initStateFromVoice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">voice</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;notes&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;silences&#39;</span><span class="p">:</span> <span class="p">[],</span> <span class="s1">&#39;addedNotes&#39;</span><span class="p">:[],</span> <span class="s1">&#39;removedNotes&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="n">curEvent</span> <span class="o">=</span> <span class="n">voice</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">curEvtIdx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">curEvent</span><span class="o">.</span><span class="n">containsTime</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+                <span class="n">curEvtIdx</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">curEvtIdx</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">voice</span><span class="o">.</span><span class="n">events</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">curEvtIdx</span><span class="p">)</span>
+                <span class="n">curEvent</span> <span class="o">=</span> <span class="n">voice</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="n">curEvtIdx</span><span class="p">]</span>
+                <span class="n">state</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">state</span><span class="p">[</span><span class="s1">&#39;silences&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shuffleList</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;notes&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__shuffleList</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s1">&#39;silences&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+<div class="viewcode-block" id="AgnosticDensity.resetDensities"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.resetDensities">[docs]</a>    <span class="k">def</span> <span class="nf">resetDensities</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">targetDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">getAllTags</span><span class="p">():</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">densityDescriptor</span><span class="o">.</span><span class="n">includedTags</span> <span class="o">=</span> <span class="n">t</span>
+            <span class="n">density</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">densityDescriptor</span><span class="o">.</span><span class="n">getDescriptorForPattern</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">originDensities</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">density</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">duration</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">targetDensities</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">density</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">duration</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">normalizedDensities</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span></div>
+        
+
+<div class="viewcode-block" id="AgnosticDensity.buildDensityMap"><a class="viewcode-back" href="../../../gsapi.GSPatternTransformers.html#gsapi.GSPatternTransformers.AgnosticDensity.AgnosticDensity.buildDensityMap">[docs]</a>    <span class="k">def</span> <span class="nf">buildDensityMap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originDuration</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">duration</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">alignOnGrid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentPattern</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">originPattern</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resetDensities</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">createCurrentState</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>
@@ -210,7 +368,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gsapi.GSBassmineMarkov &mdash; GS_API 1.0.1 documentation</title>
+  <title>gsapi.GSBassmineMarkov &mdash; GS_API 1.0.3 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="GS_API 1.0.1 documentation" href="../../index.html"/>
+    <link rel="top" title="GS_API 1.0.3 documentation" href="../../index.html"/>
         <link rel="up" title="gsapi" href="../gsapi.html"/> 
 
   
@@ -134,12 +134,18 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gsapi.GSBassmineMarkov</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">copy</span><span class="o">,</span><span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">GSPattern</span>
-<span class="kn">import</span> <span class="nn">GSBassmineAnalysis</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">GSPattern</span><span class="p">,</span><span class="n">GSPatternEvent</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">GSBassmineUtils</span>
+
 
 <div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineMarkov.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
@@ -343,38 +349,39 @@
 		<span class="n">path</span> <span class="o">=</span> <span class="n">_path</span>
 
 		<span class="n">init_set</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span><span class="p">)</span>
-		<span class="c1">#print self.initial_model</span>
+		<span class="c1">#print( self.initial_model)</span>
 		<span class="n">init</span> <span class="o">=</span> <span class="p">[]</span>
 
 		<span class="n">init_dict</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">init_set</span><span class="p">]</span>
 		<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_model</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]]</span>
-		<span class="c1">#print &quot;init\n&quot;, init_dict</span>
+		<span class="c1">#print( &quot;init\n&quot;, init_dict)</span>
 
 		<span class="n">rhythm_temporal_model</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">())</span>
 		<span class="n">rhythm_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-		<span class="c1">#print(pitch_temporal_model)</span>
+		<span class="c1">#print((pitch_temporal_model))</span>
 		<span class="c1">## Temporal model</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">rhythm_temporal_model</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">rhythm_temporal_model</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-			<span class="c1">#print key # parent</span>
-			<span class="c1">#print list(val) # child</span>
+			<span class="c1">#print( key # parent)</span>
+			<span class="c1">#print( list(val) # child)</span>
 			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
 				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">()[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-			<span class="c1">#print list(tmp/sum(tmp))</span>
+			<span class="c1">#print( list(tmp/sum(tmp)))</span>
 			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rhythm_temporal_model</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
 			<span class="n">rhythm_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
 
-		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;HModel.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+		<span class="n">ePath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span><span class="s1">&#39;HModel.json&#39;</span><span class="p">))</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">ePath</span>  <span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
 			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">rhythm_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 			<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;HModel_init.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
 			<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 			<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-		<span class="c1">#print &quot;Rhythm model computed\n&quot;, rhythm_dict</span>
+		<span class="c1">#print( &quot;Rhythm model computed\n&quot;, rhythm_dict)</span>
 		<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">rhythm_dict</span><span class="p">]</span></div>
 
 
@@ -391,20 +398,20 @@
 <span class="sd">		&quot;&quot;&quot;</span>
 		<span class="n">pitch_temporal_model</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">())</span>
 		<span class="n">pitch_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-		<span class="c1">#print(pitch_temporal_model)</span>
+		<span class="c1">#print((pitch_temporal_model))</span>
 		<span class="c1">## Temporal model</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">pitch_temporal_model</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">pitch_temporal_model</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-			<span class="c1">#print key # parent</span>
-			<span class="c1">#print list(val) # child</span>
+			<span class="c1">#print( key # parent)</span>
+			<span class="c1">#print( list(val) # child)</span>
 			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
 				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_temporal</span><span class="p">()[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-			<span class="c1">#print list(tmp/sum(tmp))</span>
+			<span class="c1">#print( list(tmp/sum(tmp)))</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">][</span><span class="s1">&#39;interval&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">-</span><span class="mi">12</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
 			<span class="n">pitch_dict</span><span class="p">[</span><span class="n">key</span><span class="o">-</span><span class="mi">12</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
 
-		<span class="nb">print</span> <span class="s2">&quot;Pitch model computed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pitch_dict</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Pitch model computed</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">pitch_dict</span><span class="p">)</span>
 		<span class="k">return</span> <span class="n">pitch_dict</span></div></div>
 
 
@@ -417,7 +424,7 @@
 <span class="sd">	This function is also implemented as a pyext class.</span>
 
 <span class="sd">	Args:</span>
-<span class="sd">		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())</span>
+<span class="sd">		markov_model: MarkovModel instance (output from GSBassmineUtils.corpus_analysis())</span>
 <span class="sd">		target: Target pattern for interlocking (kick) represented by its pattern ids.</span>
 <span class="sd">		_path: Path to where the Markov models will be stored</span>
 
@@ -437,11 +444,13 @@
 	<span class="n">Dom_B</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 	<span class="n">Dom_I</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="n">inter</span><span class="p">)</span>
 
-	<span class="c1">#print &quot;Initial dict &quot;, Dom_init</span>
-	<span class="c1">#print &quot;Temporal dict &quot;, Dom_B</span>
-	<span class="c1">#print &quot;Interlocking dict &quot;, Dom_I</span>
+	<span class="c1">#print( &quot;Initial dict &quot;, Dom_init)</span>
+	<span class="c1">#print( &quot;Temporal dict &quot;, Dom_B)</span>
+	<span class="c1">#print( &quot;Interlocking dict &quot;, Dom_I)</span>
 
 	<span class="c1">## Representation of target kick pattern as variable domain</span>
+	<span class="n">target</span> <span class="o">=</span> <span class="n">GSBassmineUtils</span><span class="o">.</span><span class="n">translate_rhythm</span><span class="p">(</span><span class="n">GSBassmineUtils</span><span class="o">.</span><span class="n">binaryBeatPattern</span><span class="p">([</span><span class="n">e</span><span class="o">.</span><span class="n">startTime</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">target</span><span class="o">.</span><span class="n">events</span><span class="p">],</span><span class="n">target</span><span class="o">.</span><span class="n">duration</span><span class="p">))</span>
+
 	<span class="n">target_setlist</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
 		<span class="c1"># RELAXATION RULE: if the target kick is not in the model consider metronome pulse as kick</span>
@@ -449,30 +458,30 @@
 			<span class="n">target_setlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dom_I</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
 		<span class="k">else</span><span class="p">:</span>
 			<span class="n">target_setlist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Dom_I</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span>
-			<span class="nb">print</span> <span class="s2">&quot;Kick pattern mistmatch&quot;</span>
-	<span class="c1">#print target_setlist</span>
+			<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Kick pattern mistmatch&quot;</span><span class="p">)</span>
+	<span class="c1">#print( target_setlist)</span>
 
 	<span class="c1">## V store the domain of patterns at each step</span>
 	<span class="n">V</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="n">filter_init</span> <span class="o">=</span> <span class="n">Dom_init</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_setlist</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-	<span class="c1">#print list(filter_init)</span>
+	<span class="c1">#print( list(filter_init))</span>
 	<span class="c1">## Look for possible continuations of filter_init in Dom_B, constrained to target_list[1]</span>
 	<span class="n">V</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">())</span>
 	<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filter_init</span><span class="p">:</span>
-	<span class="c1">#	print &quot;Possible intital continuations&quot;,f, Dom_B[int(f)]</span>
-	<span class="c1">#	print &quot;Kick constrain&quot;, target_setlist[1]</span>
-	<span class="c1">#	print &quot;Intersection&quot;, Dom_B[int(f)].intersection(target_setlist[1])</span>
+	<span class="c1">#	print( &quot;Possible intital continuations&quot;,f, Dom_B[int(f)])</span>
+	<span class="c1">#	print( &quot;Kick constrain&quot;, target_setlist[1])</span>
+	<span class="c1">#	print( &quot;Intersection&quot;, Dom_B[int(f)].intersection(target_setlist[1]))</span>
 
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Dom_B</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_setlist</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span> <span class="o">=</span> <span class="n">Dom_B</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_setlist</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 			<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-	<span class="c1">#	print &quot;\n\n&quot;</span>
-	<span class="c1">#print &quot;Kick constr&quot;, list(target_setlist[0])</span>
-	<span class="c1">#print &quot;V0&quot;, V[0]</span>
-	<span class="c1">#print &quot;V1&quot;, V[1].keys()	# Domain for step 1 / rows  of transition matrix</span>
-	<span class="c1">#print V[1]</span>
+	<span class="c1">#	print( &quot;\n\n&quot;)</span>
+	<span class="c1">#print( &quot;Kick constr&quot;, list(target_setlist[0]))</span>
+	<span class="c1">#print( &quot;V0&quot;, V[0])</span>
+	<span class="c1">#print( &quot;V1&quot;, V[1].keys()	# Domain for step 1 / rows  of transition matrix)</span>
+	<span class="c1">#print( V[1])</span>
 
 	<span class="c1">## Create rest of V</span>
 	<span class="c1">##############################################</span>
@@ -480,13 +489,13 @@
 	<span class="c1">##############################################</span>
 	<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 		<span class="n">V</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dict</span><span class="p">())</span>
-		<span class="c1">#print &quot;Kick constr&quot;, list(target_setlist[step])</span>
+		<span class="c1">#print( &quot;Kick constr&quot;, list(target_setlist[step]))</span>
 		<span class="c1"># for each v in V[step] keep continuations that match interlocking with step+1</span>
 		<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">target_setlist</span><span class="p">[</span><span class="n">step</span><span class="p">]:</span>
 			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">Dom_B</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_setlist</span><span class="p">[</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">])):</span>
 				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span> <span class="o">=</span>  <span class="n">Dom_B</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">t</span><span class="p">)]</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">target_setlist</span><span class="p">[</span><span class="n">step</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
-		<span class="c1">#print &quot;check\n&quot;</span>
-		<span class="c1">#print &quot;V&quot;, step, V[step].keys()</span>
+		<span class="c1">#print( &quot;check\n&quot;)</span>
+		<span class="c1">#print( &quot;V&quot;, step, V[step].keys())</span>
 
 	<span class="c1">## Delete values from each key in V[i] that are not in V[i+1]</span>
 	<span class="n">val_del</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -494,28 +503,28 @@
 	<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 		<span class="n">val_del_temp</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">next_key</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
-		<span class="c1">#print next_key</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-			<span class="c1">#print key, value</span>
+		<span class="c1">#print( next_key)</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="c1">#print( key, value)</span>
 			<span class="n">tmp_int</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">next_key</span><span class="p">)</span>
 			<span class="c1">#if len(tmp_int) &gt; 0:</span>
 			<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_int</span>
 			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_int</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 				<span class="n">val_del_temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 		<span class="n">val_del</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_del_temp</span>
-	<span class="c1">#print val_del</span>
+	<span class="c1">#print( val_del)</span>
 	<span class="c1">## Back-propagation</span>
-	<span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">val_del</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+	<span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">val_del</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 				<span class="c1">## Delete key</span>
 				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 			<span class="c1">## Delete in previous continuations</span>
-			<span class="c1">#print V[step-2]</span>
+			<span class="c1">#print( V[step-2])</span>
 			<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">idx</span><span class="p">])</span>
 	<span class="c1"># BUILD FINAL DICTIONARY</span>
-	<span class="c1">#print &quot;\nFinal Model:&quot;</span>
+	<span class="c1">#print( &quot;\nFinal Model:&quot;)</span>
 	<span class="n">out_Model</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="n">init</span> <span class="o">=</span> <span class="p">[]</span>
 	<span class="n">init_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -524,21 +533,21 @@
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">init</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">init</span><span class="p">))</span>
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">V</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
-	<span class="c1">#print init_dict</span>
+	<span class="c1">#print( init_dict)</span>
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)):</span>
 		<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="c1">#print &quot;step:&quot;,i</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+		<span class="c1">#print( &quot;step:&quot;,i)</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-			<span class="c1">#print key # parent</span>
-			<span class="c1">#print list(val) # child</span>
+			<span class="c1">#print( key # parent)</span>
+			<span class="c1">#print( list(val) # child)</span>
 			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
 				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-			<span class="c1">#print list(tmp/sum(tmp))</span>
+			<span class="c1">#print( list(tmp/sum(tmp)))</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
-	<span class="c1">#print out_Model</span>
+	<span class="c1">#print( out_Model)</span>
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;NHModel.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">out_Model</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -547,7 +556,7 @@
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Interlocking model build!&quot;</span><span class="p">)</span>
+	<span class="c1">#print((&quot;Interlocking model build!&quot;))</span>
 
 	<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">out_Model</span><span class="p">]</span></div>
 
@@ -563,7 +572,7 @@
 <span class="sd">	    Positive values will be preserved.</span>
 
 <span class="sd">	Args:</span>
-<span class="sd">		markov_model: MarkovModel instance (output from GSBassmineAnalysis.corpus_analysis())</span>
+<span class="sd">		markov_model: MarkovModel instance (output from GSBassmineUtils.corpus_analysis())</span>
 <span class="sd">		target: Variation Mask (list with negative numbers indicating variation of that time frame)</span>
 <span class="sd">		_path: Path to where the Markov models will be stored</span>
 
@@ -580,9 +589,9 @@
 	<span class="n">Dom_B</span> <span class="o">=</span> <span class="n">markov_tm_2dict</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
 	<span class="c1">#Dom_I = markov_tm_2dict(inter)</span>
 
-	<span class="c1">#print &quot;Initial dict &quot;, Dom_init</span>
-	<span class="c1">#print &quot;Temporal dict &quot;, Dom_B</span>
-	<span class="c1">#print &quot;Interlocking dict &quot;, Dom_I</span>
+	<span class="c1">#print( &quot;Initial dict &quot;, Dom_init)</span>
+	<span class="c1">#print( &quot;Temporal dict &quot;, Dom_B)</span>
+	<span class="c1">#print( &quot;Interlocking dict &quot;, Dom_I)</span>
 
 	<span class="c1"># target</span>
 	<span class="c1">#target = [8,8,4,-2,2,0,4,-2,8]</span>
@@ -606,7 +615,7 @@
 
 		<span class="k">if</span> <span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Current beat don&#39;t vary</span>
 
-			<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+			<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
 				<span class="c1"># store keys that match target[i]</span>
 				<span class="n">tmp_key</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">i</span><span class="p">])})</span>
@@ -617,19 +626,19 @@
 		<span class="k">else</span><span class="p">:</span>  <span class="c1"># Current beat varies</span>
 
 			<span class="c1">#Check possible continuations from V[i-1] as Key candidates in V[i]</span>
-			<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+			<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
 				<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 					<span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span> <span class="o">=</span> <span class="n">Dom_B</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
 
-			<span class="c1">#print &quot;h&quot;</span>
+			<span class="c1">#print( &quot;h&quot;)</span>
 
 
 	<span class="c1">#V.append(dict())</span>
 
 	<span class="c1">#V[len(target)-1][target[len(target)-1]] = set([str(target[len(target)-1])])</span>
 
-	<span class="c1">#print V</span>
+	<span class="c1">#print( V)</span>
 
 
 	<span class="c1">## Delete values from each key in V[i] that are not in V[i+1]</span>
@@ -638,38 +647,38 @@
 	<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
 		<span class="n">val_del_temp</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">next_key</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
-		<span class="c1">#print next_key</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
-			<span class="c1">#print key, value</span>
+		<span class="c1">#print( next_key)</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="c1">#print( key, value)</span>
 			<span class="n">tmp_int</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">next_key</span><span class="p">)</span>
 			<span class="c1">#if len(tmp_int) &gt; 0:</span>
 			<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_int</span>
 			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_int</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
 				<span class="n">val_del_temp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 		<span class="n">val_del</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">val_del_temp</span>
-	<span class="c1">#print val_del</span>
+	<span class="c1">#print( val_del)</span>
 	<span class="c1">## Back-propagation</span>
-	<span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">val_del</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+	<span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">val_del</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
 				<span class="c1">## Delete key</span>
 				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 			<span class="c1">## Delete in previous continuations</span>
-			<span class="c1">#print V[step-2]</span>
+			<span class="c1">#print( V[step-2])</span>
 			<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
 				<span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="n">step</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">idx</span><span class="p">])</span>
 	<span class="c1"># BUILD FINAL DICTIONARY</span>
-	<span class="c1">#print &quot;\nFinal Model:&quot;</span>
+	<span class="c1">#print( &quot;\nFinal Model:&quot;)</span>
 
-	<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+	<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 		<span class="n">tmp_val</span>  <span class="o">=</span> <span class="n">val</span><span class="o">.</span><span class="n">intersection</span><span class="p">({</span><span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])})</span>
-		<span class="c1">#print tmp_val</span>
+		<span class="c1">#print( tmp_val)</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_val</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 			<span class="n">V</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp_val</span>
 
 	<span class="c1">#for v in V:</span>
-	<span class="c1">#	print v</span>
-	<span class="c1">#	print &quot;\n&quot;</span>
+	<span class="c1">#	print( v)</span>
+	<span class="c1">#	print( &quot;\n&quot;)</span>
 
 	<span class="n">out_Model</span> <span class="o">=</span> <span class="p">{}</span>
 	<span class="c1"># Force last beat</span>
@@ -680,23 +689,23 @@
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.00</span>
 	<span class="n">init_dict</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-	<span class="c1">#print init_dict</span>
+	<span class="c1">#print( init_dict)</span>
 
 	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">V</span><span class="p">)):</span>
 		<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="c1">#print &quot;step:&quot;,i</span>
-		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+		<span class="c1">#print( &quot;step:&quot;,i)</span>
+		<span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">V</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-			<span class="c1">#print key # parent</span>
-			<span class="c1">#print list(val) # child</span>
+			<span class="c1">#print( key # parent)</span>
+			<span class="c1">#print( list(val) # child)</span>
 			<span class="n">tmp</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># child</span>
 			<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
 				<span class="n">tmp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span>
-			<span class="c1">#print list(tmp/sum(tmp))</span>
-			<span class="c1">#print tmp</span>
+			<span class="c1">#print( list(tmp/sum(tmp)))</span>
+			<span class="c1">#print( tmp)</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">val</span><span class="p">]</span>
 			<span class="n">out_Model</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;probs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">tmp</span><span class="o">/</span><span class="nb">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">))</span>
-	<span class="c1">#print out_Model</span>
+	<span class="c1">#print( out_Model)</span>
 	<span class="k">with</span> <span class="nb">open</span><span class="p">(</span> <span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;NHModel_var.json&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">out_Model</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -705,7 +714,7 @@
 		<span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">outfile</span><span class="p">)</span>
 		<span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Variation model build!&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">((</span><span class="s2">&quot;Variation model build!&quot;</span><span class="p">))</span>
 	<span class="k">return</span> <span class="p">[</span><span class="n">init_dict</span><span class="p">,</span> <span class="n">out_Model</span><span class="p">]</span></div>
 
 
@@ -745,7 +754,7 @@
 
 		<span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">tmp_dom</span><span class="p">)</span>
 	<span class="k">else</span><span class="p">:</span>
-		<span class="nb">print</span> <span class="s2">&quot;Wrong size&quot;</span></div>
+		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Wrong size&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="createMarkovGenerationDictionary"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineMarkov.createMarkovGenerationDictionary">[docs]</a><span class="k">def</span> <span class="nf">createMarkovGenerationDictionary</span><span class="p">(</span><span class="n">toJSON</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">_path</span><span class="o">=</span><span class="s2">&quot;output/&quot;</span><span class="p">):</span>
@@ -775,7 +784,7 @@
 		<span class="n">out</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
 
-	<span class="c1">#print out</span>
+	<span class="c1">#print( out)</span>
 
 	<span class="n">path</span> <span class="o">=</span> <span class="n">_path</span>
 	<span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;pattern_dict&#39;</span>
@@ -802,7 +811,7 @@
 <span class="sd">	    bassline: GSPattern containing bassline onset pattern</span>
 
 <span class="sd">	&quot;&quot;&quot;</span>
-	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPattern</span><span class="p">()</span>
+	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
 	<span class="n">pattern_idx</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># no constraints</span>
@@ -835,10 +844,48 @@
 		<span class="n">st</span> <span class="o">=</span> <span class="n">markov_model</span><span class="o">.</span><span class="n">model_dictionary</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
 		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
-				<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bass&quot;</span><span class="p">]))</span>
+				<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;bass&quot;</span><span class="p">))</span>
 		<span class="n">beat_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
 	<span class="k">return</span> <span class="n">bassline</span></div>
+
+<span class="k">def</span> <span class="nf">_generateBassRhythm</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">beat_length</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="p">[]):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Function to generate a rhythmic bassline. If no target given the system assume no constraints and uses the regular</span>
+<span class="sd">	Markov model (computed by MarkovModel.rhythm_model()).</span>
+<span class="sd">	If target given it is assumed as target constraint for interlocking model.</span>
+<span class="sd">	Args:</span>
+<span class="sd">	    markov_model: output from  MarkovModel.rhythm_model()</span>
+<span class="sd">	    beat_length: desired length of the generated pattern</span>
+<span class="sd">	    target: Pattern used as constraint in Interlocking Model.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">	    bassline: GSPattern containing bassline onset pattern</span>
+
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
+	<span class="n">pattern_idx</span> <span class="o">=</span> <span class="p">[]</span>
+
+	<span class="n">markovDict</span> <span class="o">=</span> <span class="n">createMarkovGenerationDictionary</span><span class="p">()</span>
+
+	<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">markov_model</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="n">markov_model</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;initial&#39;</span><span class="p">][</span><span class="s1">&#39;prob&#39;</span><span class="p">]))</span>
+
+	<span class="k">for</span> <span class="n">beat</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">beat_length</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">pattern_idx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">markov_model</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;pattern&#39;</span><span class="p">],</span>
+		                                    <span class="n">p</span><span class="o">=</span><span class="n">markov_model</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">beat</span><span class="p">][</span><span class="n">pattern_idx</span><span class="p">[</span><span class="n">beat</span><span class="p">]][</span><span class="s1">&#39;probs&#39;</span><span class="p">]))</span>
+
+	<span class="n">bassline</span><span class="o">.</span><span class="n">duration</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pattern_idx</span><span class="p">)</span>
+
+	<span class="n">start_times</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">beat_count</span> <span class="o">=</span> <span class="mi">0</span>
+	<span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">pattern_idx</span><span class="p">:</span>
+		<span class="n">st</span> <span class="o">=</span> <span class="n">markovDict</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
+				<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tag</span><span class="o">=</span><span class="s2">&quot;bass&quot;</span><span class="p">))</span>
+		<span class="n">beat_count</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">return</span> <span class="n">bassline</span>
 
 
 <div class="viewcode-block" id="generateBassRhythmVariation"><a class="viewcode-back" href="../../gsapi.GSBassmine.html#gsapi.GSBassmineMarkov.generateBassRhythmVariation">[docs]</a><span class="k">def</span> <span class="nf">generateBassRhythmVariation</span><span class="p">(</span><span class="n">markov_model</span><span class="p">,</span> <span class="n">target_pattern</span><span class="p">,</span> <span class="n">variation_mask</span><span class="p">):</span>
@@ -855,17 +902,17 @@
 <span class="sd">		bassline: generated GSPattern</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
-	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPattern</span><span class="p">()</span>
+	<span class="n">bassline</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
 	<span class="n">pattern_idx</span> <span class="o">=</span> <span class="p">[]</span>
 
 	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">variation_mask</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">:</span>
-		<span class="nb">print</span> <span class="s2">&quot;Variation mask must be same length as target_pattern (in beats)&quot;</span>
+		<span class="nb">print</span><span class="p">(</span> <span class="s2">&quot;Variation mask must be same length as target_pattern (in beats)&quot;</span><span class="p">)</span>
 		<span class="k">return</span>
 	<span class="k">else</span><span class="p">:</span>
 		<span class="c1">#Convert target pattern to markov dictionary</span>
 		<span class="n">onset_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">startTime</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">events</span><span class="p">]</span>
-		<span class="n">target_rhythm</span> <span class="o">=</span> <span class="n">GSBassmineAnalysis</span><span class="o">.</span><span class="n">binaryBeatPattern</span><span class="p">(</span><span class="n">onset_target</span><span class="p">,</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
-		<span class="n">target_id</span> <span class="o">=</span> <span class="n">GSBassmineAnalysis</span><span class="o">.</span><span class="n">translate_rhythm</span><span class="p">(</span><span class="n">target_rhythm</span><span class="p">)</span>
+		<span class="n">target_rhythm</span> <span class="o">=</span> <span class="n">GSBassmineUtils</span><span class="o">.</span><span class="n">binaryBeatPattern</span><span class="p">(</span><span class="n">onset_target</span><span class="p">,</span> <span class="n">target_pattern</span><span class="o">.</span><span class="n">duration</span><span class="p">)</span>
+		<span class="n">target_id</span> <span class="o">=</span> <span class="n">GSBassmineUtils</span><span class="o">.</span><span class="n">translate_rhythm</span><span class="p">(</span><span class="n">target_rhythm</span><span class="p">)</span>
 		<span class="c1">#Mask formatted pattern</span>
 		<span class="n">masked_target</span> <span class="o">=</span> <span class="p">[</span><span class="n">target_id</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">variation_mask</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">variation_mask</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)]</span>
 
@@ -885,7 +932,7 @@
 			<span class="n">st</span> <span class="o">=</span> <span class="n">markov_model</span><span class="o">.</span><span class="n">model_dictionary</span><span class="p">[</span><span class="s1">&#39;patterns&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
 			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 				<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
-					<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPattern</span><span class="o">.</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;bass&quot;</span><span class="p">]))</span>
+					<span class="n">bassline</span><span class="o">.</span><span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">GSPatternEvent</span><span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="n">beat_count</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mi">36</span><span class="p">,</span><span class="n">velocity</span><span class="o">=</span><span class="mi">110</span><span class="p">,</span><span class="n">tag</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;bass&quot;</span><span class="p">)))</span>
 			<span class="n">beat_count</span> <span class="o">+=</span> <span class="mi">1</span>
 
 		<span class="k">return</span> <span class="n">bassline</span></div>
@@ -925,7 +972,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

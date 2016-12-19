@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gsapi.GSStyles.GSDBStyle &mdash; GS_API 1.0.1 documentation</title>
+  <title>gsapi.GSStyles.GSDBStyle &mdash; GS_API 1.0.3 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="GS_API 1.0.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="GS_API 1.0.3 documentation" href="../../../index.html"/>
         <link rel="up" title="gsapi" href="../../gsapi.html"/> 
 
   
@@ -134,64 +134,62 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gsapi.GSStyles.GSDBStyle</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">from</span> <span class="nn">GSBaseStyle</span> <span class="k">import</span> <span class="o">*</span>
+<span></span><span class="c1"># python 3 compatibility</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
 
-<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">.GSBaseStyle</span> <span class="k">import</span> <span class="o">*</span>
+
 
 <div class="viewcode-block" id="GSDBStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle">[docs]</a><span class="k">class</span> <span class="nc">GSDBStyle</span><span class="p">(</span><span class="n">GSBaseStyle</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot; A database based style</span>
-<span class="sd">	simply generatePatterns from existing patterns</span>
+    <span class="sd">&quot;&quot;&quot;A database based style. It generates GSPatterns from existing patterns</span>
 
-<span class="sd">	Args:</span>
-<span class="sd">		generatePatternOrdering: can be &#39;indexed&#39;,&#39;increasing&#39;,&#39;random&#39; , defining the generatePattern behaviour</span>
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">generatePatternOrdering</span> <span class="o">=</span> <span class="s2">&quot;indexed&quot;</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">=</span><span class="n">generatePatternOrdering</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-<div class="viewcode-block" id="GSDBStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="n">PatternClasses</span><span class="p">;</span></div>
+<span class="sd">    Args:</span>
+<span class="sd">        generatePatternOrdering: {&#39;indexed&#39;, &#39;increasing&#39;, &#39;random&#39;}. Defines the generatePattern behaviour</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generatePatternOrdering</span><span class="o">=</span><span class="s2">&quot;indexed&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span> <span class="o">=</span> <span class="n">generatePatternOrdering</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span> <span class="o">=</span> <span class="mi">0</span>
 
-<div class="viewcode-block" id="GSDBStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="GSDBStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.generateStyle">[docs]</a>    <span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="n">PatternClasses</span></div>
 
-		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">==</span><span class="s1">&#39;increasing&#39;</span><span class="p">:</span>
-			<span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">]</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="o">+=</span><span class="mi">1</span>
-			<span class="nb">print</span> <span class="s2">&quot;reading &quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span>
-			<span class="k">return</span> <span class="n">p</span>
-		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">==</span><span class="s1">&#39;random&#39;</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">))]</span>
-		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span><span class="o">==</span><span class="s1">&#39;indexed&#39;</span><span class="p">:</span>
-			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">]</span></div>
+<div class="viewcode-block" id="GSDBStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.generatePattern">[docs]</a>    <span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span> <span class="o">==</span> <span class="s1">&#39;increasing&#39;</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;reading&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">p</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span> <span class="o">==</span> <span class="s1">&#39;random&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">))]</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">generatePatternOrdering</span> <span class="o">==</span> <span class="s1">&#39;indexed&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">currentIdx</span><span class="p">]</span></div>
 
+<div class="viewcode-block" id="GSDBStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getDistanceFromStyle">[docs]</a>    <span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getDistanceFromStyle">[docs]</a>	<span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
+<div class="viewcode-block" id="GSDBStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getClosestPattern">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getClosestPattern">[docs]</a>	<span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
+<div class="viewcode-block" id="GSDBStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getInterpolated">[docs]</a>    <span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternA</span><span class="p">,</span> <span class="n">PatternB</span><span class="p">,</span> <span class="n">distanceFromA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getInterpolated">[docs]</a>	<span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PatternA</span><span class="p">,</span><span class="n">PatternB</span><span class="p">,</span><span class="n">distanceFromA</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
+<div class="viewcode-block" id="GSDBStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getInternalState">[docs]</a>    <span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;patternList&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">:</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;patternList&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">toJSONDict</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.getInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;patternList&quot;</span><span class="p">:[]}</span>
-		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="p">:</span>
-			<span class="n">res</span><span class="p">[</span><span class="s2">&quot;patternList&quot;</span><span class="p">]</span><span class="o">+=</span><span class="p">[</span><span class="n">e</span><span class="o">.</span><span class="n">toJSONDict</span><span class="p">()]</span>
-		<span class="k">return</span> <span class="n">res</span></div>
+<div class="viewcode-block" id="GSDBStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.setInternalState">[docs]</a>    <span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">internalStateDict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">internalStateDict</span><span class="p">[</span><span class="s2">&quot;patternList&quot;</span><span class="p">]:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">fromJSONDict</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">+=</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="GSDBStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.setInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">internalStateDict</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">internalStateDict</span><span class="p">[</span><span class="s2">&quot;patternList&quot;</span><span class="p">]:</span>
-			<span class="n">p</span> <span class="o">=</span> <span class="n">GSPattern</span><span class="p">()</span>
-			<span class="n">p</span><span class="o">.</span><span class="n">fromJSONDict</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
-			<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">+=</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="GSDBStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.isBuilt">[docs]</a>	<span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">patternList</span><span class="o">!=</span><span class="p">[]</span></div></div>
-
-
+<div class="viewcode-block" id="GSDBStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSDBStyle.GSDBStyle.isBuilt">[docs]</a>    <span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patternList</span> <span class="o">!=</span> <span class="p">[]</span></div></div>
 </pre></div>
 
            </div>
@@ -225,7 +223,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

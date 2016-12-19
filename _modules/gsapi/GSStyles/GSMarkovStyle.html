@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>gsapi.GSStyles.GSMarkovStyle &mdash; GS_API 1.0.1 documentation</title>
+  <title>gsapi.GSStyles.GSMarkovStyle &mdash; GS_API 1.0.3 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../../genindex.html"/>
         <link rel="search" title="Search" href="../../../search.html"/>
-    <link rel="top" title="GS_API 1.0.1 documentation" href="../../../index.html"/>
+    <link rel="top" title="GS_API 1.0.3 documentation" href="../../../index.html"/>
         <link rel="up" title="gsapi" href="../../gsapi.html"/> 
 
   
@@ -134,100 +134,84 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gsapi.GSStyles.GSMarkovStyle</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">GSBaseStyle</span> <span class="k">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">gsapi.MathUtils</span> <span class="k">import</span> <span class="n">PatternMarkov</span>
-<span class="kn">import</span> <span class="nn">random</span>
-
-
-<span class="kn">import</span> <span class="nn">copy</span>
+<span></span><span class="c1"># python 3 compatibility</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span><span class="p">,</span> <span class="n">division</span><span class="p">,</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">.GSBaseStyle</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">..MathUtils</span> <span class="k">import</span> <span class="n">PatternMarkov</span>
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">markovLog</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s1">&#39;gsapi.GSStyle.GSMarkovStyle&#39;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="GSMarkovStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle">[docs]</a><span class="k">class</span> <span class="nc">GSMarkovStyle</span><span class="p">(</span><span class="n">GSBaseStyle</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot; compute sa style based on markov chains</span>
 
-<span class="sd">	Args:</span>
-<span class="sd">		order: order used for markov computation</span>
-<span class="sd">		numSteps: number of steps to consider (binarization of pattern)</span>
+<div class="viewcode-block" id="GSMarkovStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle">[docs]</a><span class="k">class</span> <span class="nc">GSMarkovStyle</span><span class="p">(</span><span class="n">GSBaseStyle</span><span class="p">):</span>  <span class="c1"># TODO: check added PatternMarkov here, needed?</span>
+    <span class="sd">&quot;&quot;&quot;Computes a style based on markov chains.</span>
 
-<span class="sd">	Attributes:</span>
-<span class="sd">		order: order used for markov computation</span>
-<span class="sd">		numSteps: number of steps to consider (binarization of pattern)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        order: order used for markov computation</span>
+<span class="sd">        numSteps: number of steps to consider (binarization of pattern)</span>
 
-<span class="sd">	&quot;&quot;&quot;</span>
-	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="n">numSteps</span><span class="p">,</span><span class="n">loopDuration</span><span class="p">):</span>
-		<span class="nb">super</span><span class="p">(</span><span class="n">GSBaseStyle</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span> <span class="o">=</span> <span class="n">PatternMarkov</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span><span class="n">numSteps</span><span class="o">=</span><span class="n">numSteps</span><span class="p">,</span><span class="n">loopDuration</span><span class="o">=</span><span class="n">loopDuration</span><span class="p">)</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        order: order used for markov computation</span>
+<span class="sd">        numSteps: number of steps to consider (binarization of pattern)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">numSteps</span><span class="p">,</span> <span class="n">loopDuration</span><span class="p">):</span>
+        <span class="n">GSBaseStyle</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="s2">&quot;None&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span> <span class="o">=</span> <span class="n">PatternMarkov</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">,</span> <span class="n">numSteps</span><span class="o">=</span><span class="n">numSteps</span><span class="p">,</span> <span class="n">loopDuration</span><span class="o">=</span><span class="n">loopDuration</span><span class="p">)</span>
 
+<div class="viewcode-block" id="GSMarkovStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.generateStyle">[docs]</a>    <span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternList</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generates a style based on list of GSPatterns.</span>
 
+<span class="sd">        Args:</span>
+<span class="sd">            PatternList:  list of GSPatterns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generateTransitionTableFromPatternList</span><span class="p">(</span><span class="n">PatternList</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSMarkovStyle.generateStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.generateStyle">[docs]</a>	<span class="k">def</span> <span class="nf">generateStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternClasses</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot; generate style based on list of GSPattern</span>
-<span class="sd">		Args:</span>
-<span class="sd">			PatternClasses :  list of GSPatterns</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generateTransitionTableFromPatternList</span><span class="p">(</span><span class="n">PatternClasses</span><span class="p">)</span></div>
+<div class="viewcode-block" id="GSMarkovStyle.buildStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.buildStyle">[docs]</a>    <span class="k">def</span> <span class="nf">buildStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Builds transition table for a previously given list of GSPatterns.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">buildTransitionTable</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="GSMarkovStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.generatePattern">[docs]</a>    <span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generates a new pattern.</span>
 
-<div class="viewcode-block" id="GSMarkovStyle.buildStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.buildStyle">[docs]</a>	<span class="k">def</span> <span class="nf">buildStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot; builds transisiont table for the previously given list of GSPattern</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">buildTransitionTable</span><span class="p">()</span></div>
+<span class="sd">        Args:</span>
+<span class="sd">            seed: seed used for random initialisation of pattern (value of None generates a new one)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span></div>
 
-		
-		
+<div class="viewcode-block" id="GSMarkovStyle.formatPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.formatPattern">[docs]</a>    <span class="k">def</span> <span class="nf">formatPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="c1"># p.quantize(self.loopDuration * 1.0 / self.numSteps, self.numSteps * 1.0/ self.loopDuration)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span> <span class="o">*</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">alignOnGrid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">removeOverlapped</span><span class="p">()</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="n">maxSilenceTime</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSMarkovStyle.generatePattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.generatePattern">[docs]</a>	<span class="k">def</span> <span class="nf">generatePattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">seed</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-		<span class="sd">&quot;&quot;&quot; generate a new pattern</span>
-<span class="sd">		Args:</span>
-<span class="sd">			seed: seed used for random initialisation of pattern (value of None generates a new one)</span>
-<span class="sd">		&quot;&quot;&quot;</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">generatePattern</span><span class="p">(</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span><span class="p">)</span></div>
+<div class="viewcode-block" id="GSMarkovStyle.getLastEvents"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getLastEvents">[docs]</a>    <span class="k">def</span> <span class="nf">getLastEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="n">num</span><span class="p">,</span> <span class="n">stepSize</span><span class="p">):</span>
+        <span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">step</span> <span class="o">-</span> <span class="n">i</span> <span class="o">*</span> <span class="n">stepSize</span>
+            <span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">+=</span> <span class="n">pattern</span><span class="o">.</span><span class="n">duration</span>
+            <span class="n">events</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pattern</span><span class="o">.</span><span class="n">getStartingEventsAtTime</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="n">events</span></div>
 
+<div class="viewcode-block" id="GSMarkovStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getDistanceFromStyle">[docs]</a>    <span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="GSMarkovStyle.formatPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.formatPattern">[docs]</a>	<span class="k">def</span> <span class="nf">formatPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-		<span class="c1"># p.quantize(self.loopDuration*1.0/self.numSteps,self.numSteps*1.0/self.loopDuration);</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">timeStretch</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">numSteps</span><span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">loopDuration</span><span class="p">)</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">alignOnGrid</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">removeOverlapped</span><span class="p">()</span>
-		<span class="n">p</span><span class="o">.</span><span class="n">fillWithSilences</span><span class="p">(</span><span class="n">maxSilenceTime</span> <span class="o">=</span> <span class="mi">1</span><span class="p">);</span>	</div>
+<div class="viewcode-block" id="GSMarkovStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getClosestPattern">[docs]</a>    <span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GSMarkovStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getInterpolated">[docs]</a>    <span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PatternA</span><span class="p">,</span> <span class="n">PatternB</span><span class="p">,</span> <span class="n">distanceFromA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Should have implemented this&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="GSMarkovStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getInternalState">[docs]</a>    <span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;markovChain&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">getInternalState</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">res</span></div>
 
-<div class="viewcode-block" id="GSMarkovStyle.getLastEvents"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getLastEvents">[docs]</a>	<span class="k">def</span> <span class="nf">getLastEvents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pattern</span><span class="p">,</span><span class="n">step</span><span class="p">,</span><span class="n">num</span><span class="p">,</span><span class="n">stepSize</span><span class="p">):</span>
-		<span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
-		<span class="k">for</span> <span class="n">i</span>  <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">num</span><span class="o">+</span><span class="mi">1</span><span class="p">)):</span>
-			<span class="n">idx</span> <span class="o">=</span> <span class="n">step</span> <span class="o">-</span> <span class="n">i</span><span class="o">*</span><span class="n">stepSize</span><span class="p">;</span>
-			<span class="k">if</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">:</span>
-				<span class="n">idx</span><span class="o">+=</span><span class="n">pattern</span><span class="o">.</span><span class="n">duration</span>
-			<span class="n">events</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pattern</span><span class="o">.</span><span class="n">getStartingEventsAtTime</span><span class="p">(</span><span class="n">idx</span><span class="p">)]</span>
-		<span class="k">return</span> <span class="n">events</span></div>
+<div class="viewcode-block" id="GSMarkovStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.setInternalState">[docs]</a>    <span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">setInternalState</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;markovChain&quot;</span><span class="p">])</span></div>
 
-
-
-
-<div class="viewcode-block" id="GSMarkovStyle.getDistanceFromStyle"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getDistanceFromStyle">[docs]</a>	<span class="k">def</span> <span class="nf">getDistanceFromStyle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
-
-<div class="viewcode-block" id="GSMarkovStyle.getClosestPattern"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getClosestPattern">[docs]</a>	<span class="k">def</span> <span class="nf">getClosestPattern</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Pattern</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
-
-<div class="viewcode-block" id="GSMarkovStyle.getInterpolated"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getInterpolated">[docs]</a>	<span class="k">def</span> <span class="nf">getInterpolated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PatternA</span><span class="p">,</span><span class="n">PatternB</span><span class="p">,</span><span class="n">distanceFromA</span><span class="p">,</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
-		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span> <span class="s2">&quot;Should have implemented this&quot;</span> <span class="p">)</span></div>
-
-<div class="viewcode-block" id="GSMarkovStyle.getInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.getInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">getInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
-		<span class="n">res</span><span class="p">[</span><span class="s2">&quot;markovChain&quot;</span><span class="p">]</span> 	<span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">getInternalState</span><span class="p">()</span>
-		<span class="k">return</span> <span class="n">res</span></div>
-<div class="viewcode-block" id="GSMarkovStyle.setInternalState"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.setInternalState">[docs]</a>	<span class="k">def</span> <span class="nf">setInternalState</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">state</span><span class="p">):</span>
-		<span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">setInternalState</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;markovChain&quot;</span><span class="p">])</span></div>
-
-<div class="viewcode-block" id="GSMarkovStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.isBuilt">[docs]</a>	<span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">isBuilt</span><span class="p">()</span></div></div>
-
-
-
+<div class="viewcode-block" id="GSMarkovStyle.isBuilt"><a class="viewcode-back" href="../../../gsapi.GSStyles.html#gsapi.GSStyles.GSMarkovStyle.GSMarkovStyle.isBuilt">[docs]</a>    <span class="k">def</span> <span class="nf">isBuilt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">markovChain</span><span class="o">.</span><span class="n">isBuilt</span><span class="p">()</span></div></div>
 </pre></div>
 
            </div>
@@ -261,7 +245,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../../',
-            VERSION:'1.0.1',
+            VERSION:'1.0.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
